@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <title>ISICO - INDIAN SKILL INSTUTUTE CO-OPERATION</title>
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="assets/media/favicon.png">
+    <!-- All CSS files -->
+    <link rel="stylesheet" href="assets/css/vendor/font-awesome.css">
+    <link rel="stylesheet" href="assets/css/vendor/slick-theme.css">
+    <link rel="stylesheet" href="assets/css/vendor/slick-slider.css">
+    <link rel="stylesheet" href="assets/css/vendor/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/vendor/wow.min.css">
+    <link rel="stylesheet" href="assets/css/app.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+</head>
+
+<body>
+    <!-- Cursor Style -->
+    <div id="cursor"></div>
+    <div id="cursor-border"></div>
+    <!-- Cursor Style -->
+    <!-- PRELOADER START -->
+    <!-- <div id="preloader">
+         <div class="book">
+           <div class="inner">
+             <div class="left"></div>
+             <div class="middle"></div>
+             <div class="right"></div>
+           </div>
+           <ul>
+             <li></li>
+             <li></li>
+             <li></li>
+             <li></li>
+             <li></li>
+             <li></li>
+             <li></li>
+             <li></li>
+             <li></li>
+             <li></li>
+             <li></li>
+             <li></li>
+             <li></li>
+             <li></li>
+             <li></li>
+             <li></li>
+             <li></li>
+             <li></li>
+           </ul>
+         </div>
+         </div> -->
+    <!-- PRELOADER END -->
+    <!-- PRELOADER START -->
+    <div id="preloader">
+        <div class="zip-loader">
+            <img src="assets/media/zip-loader.gif" alt="Loading..." />
+        </div>
+    </div>
+    <!-- PRELOADER END -->
+    <style>
+        #preloader {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 9999;
+            background-color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .zip-loader img {
+            width: 100px;
+            /* adjust size as needed */
+            height: auto;
+        }
+
+        @media (max-width: 767.98px) {
+            .col-md-4.d-flex.align-items-center.gap-3.order-2.order-md-1.justify-content-center.justify-content-md-start {
+                display: flex !important;
+                margin-top: 10px;
+            }
+
+            .justify-content-between-sm {
+                justify-content: space-between !important;
+            }
+
+            .text-center-sm {
+                text-align: center;
+            }
+
+            .d-none-tblet {
+                display: none;
+            }
+        }
+
+        @media only screen and (min-width: 768px) {
+            .d-lg-block-one {
+                display: none;
+            }
+
+            @media only screen and (min-width: 992px) {
+                .d-lg-block-one {
+                    display: inline-block;
+                }
+            }
+        }
+
+        .swiper {
+            width: 100%;
+            padding-top: 50px;
+            padding-bottom: 50px;
+        }
+
+        .swiper-slide {
+            background-position: center;
+            background-size: cover;
+            width: 300px;
+            height: auto;
+        }
+
+        .swiper-slide img {
+            display: block;
+            width: 100%;
+        }
+    </style>
+    <!-- Main Wrapper Start -->
+    <div id="scroll-container" class="main-wrapper">
+        <!-- Header Menu Start -->
+        <div class="header-wrapper">
+            <div class="header-top">
+                <div class="container-fluid">
+                    <p class="white"> Indian Skill Institute Co-operation (ISICO)</p>
+                </div>
+            </div>
+            <div class="main-header" style="background-color: #fafafa;border-bottom: 1px solid rgb(202, 202, 202);">
+                <div class="container-fluid">
+                    <div class="row p-2 bg-white text-dark justify-content-between align-items-center">
+                        <div class="col-md-6 text-center-sm">
+                            <img src="https://www.skillindiadigital.gov.in/assets/new-ux-img/india-flag.svg" alt=""
+                                srcset=""> |
+                            Indian Skill Institute
+                        </div>
+                        <div class="col-md-6 d-flex justify-content-between-sm" style="align-items: center;">
+                            <p class="p-2 d-none d-lg-block">Skip To Main Content</p>
+                            <div class="item p-2">
+                                <i class="bi bi-badge-ad p-2"></i>
+                            </div>
+                            <div class="item p-2">
+                                <i class="bi bi-geo-alt-fill"></i> Chennai
+                            </div>
+                            <div class="item p-2 text-light-gray">
+                                <i class="bi bi-house-fill"></i> Home
+                            </div>
+                            <div class="item p-2 text-light-gray">
+                                <i class="bi bi-three-dots-vertical"></i> More
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <header class="main-menu">
+                <div class="header-section">
+                    <div class="container-fluid"
+                        style="background-color: #fafafa;border-bottom: 0px solid rgb(202, 202, 202);">
+                        <div class="hero-topbar-block py-2 bg-white"
+                            style="background-color: #fafafa;border-bottom: 0px solid rgb(202, 202, 202);">
+                            <div class="row align-items-center justify-content-between gy-2">
+                                <!-- Search Bar (Always First on Mobile) -->
+                                <div class="col-12 d-block d-md-none order-1">
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-white border-end-0">
+                                            <i class="fa fa-search"></i>
+                                        </span>
+                                        <input type="text" class="form-control border-start-0"
+                                            placeholder="Search Skill Courses">
+                                    </div>
+                                </div>
+                                <!-- Logos -->
+                                <div
+                                    class="col-md-4 d-flex align-items-center gap-3 order-2 order-md-1 justify-content-center justify-content-md-start">
+                                    <img src="https://www.skillindiadigital.gov.in/assets/new-ux-img/minstry-bigsize-logo.svg"
+                                        alt="Govt Logo" style="height: 44px;">
+                                    <img src="https://www.skillindiadigital.gov.in/assets/new-ux-img/skill-india-big-logo.svg"
+                                        alt="Skill India Logo" style="height: 44px;">
+                                </div>
+                                <!-- Search Bar (Visible on md+ screens only) -->
+                                <div class="col-md-4 my-2 d-none d-md-block order-md-2 mt-2">
+                                    <div class="input-group mt-2 rounded-1">
+                                        <span class="input-group-text bg-white border-end-0"><i
+                                                class="fa fa-search"></i></span>
+                                        <input type="text" class="form-control border-start-0 p-2"
+                                            placeholder="Search Skill Courses">
+                                    </div>
+                                </div>
+                                <!-- Right Buttons -->
+                                <div class="col-md-4 text-end gap-3 order-3 d-none d-md-block">
+                                    <a href="#" class="btn btn-outline-success btn-sm d-none-tblet d-lg-block-one">
+                                        <i class="fa fa-tachometer-alt me-1 p-2"></i> Dashboards
+                                    </a>
+                                    <button class="btn btn-warning text-white btn-sm fw-bold p-2">REGISTER</button>
+                                    <button class="btn btn-outline-warning btn-sm fw-bold p-2">LOGIN</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="container-fluid">
+                        <!-- <div class="hero-topbar-block">
+                        <div class="row align-items-center">
+                          <div class="col-xl-5 col-lg-3 col-1">
+                            <a href="index-2.html" class="header-logo d-lg-flex d-none">
+                              <img src="assets/media/logo.png" alt="">
+                            </a>
+                          </div>
+                          <div class="col-xl-7 col-lg-9 col-md-11">
+                            <div class="d-flex align-items-center gap-24">
+                              <div class="dropdown flex-shrink-0">
+                                <a href="javascript:void(0);" class="fw-600 black"><svg xmlns="http://www.w3.org/2000/svg" width="33" height="32" viewBox="0 0 33 32" fill="none">
+                                  <g clip-path="url(#clip0_9539_215)">
+                                    <path d="M31.25 5H1.75C1.05963 5 0.5 5.4477 0.5 6C0.5 6.5523 1.05963 7 1.75 7H31.25C31.9404 7 32.5 6.5523 32.5 6C32.5 5.4477 31.9404 5 31.25 5Z" fill="#141516"/>
+                                    <path d="M31.25 15H1.75C1.05963 15 0.5 15.4477 0.5 16C0.5 16.5523 1.05963 17 1.75 17H31.25C31.9404 17 32.5 16.5523 32.5 16C32.5 15.4477 31.9404 15 31.25 15Z" fill="#141516"/>
+                                    <path d="M31.25 25H1.75C1.05963 25 0.5 25.4477 0.5 26C0.5 26.5523 1.05963 27 1.75 27H31.25C31.9404 27 32.5 26.5523 32.5 26C32.5 25.4477 31.9404 25 31.25 25Z" fill="#141516"/>
+                                  </g>
+                                  <defs>
+                                    <clipPath>
+                                      <rect width="32" height="32" fill="white" transform="translate(0.5)"/>
+                                    </clipPath>
+                                  </defs>
+                                </svg>&nbsp;&nbsp;&nbsp;Categories&nbsp;<i
+                                    class="fa-solid fa-chevron-down"></i></a>
+                                <ul class="sub-menu unstyled">
+                                  <li><a href="#">Programming & IT</a></li>
+                                  <li><a href="#">Business & Marketing</a></li>
+                                  <li><a href="#">Design & Creativity</a></li>
+                                  <li><a href="#">Copy Writing</a></li>
+                                  <li><a href="#">Business Studies</a></li>
+                                </ul>
+                              </div>
+                              <form class="searchbar">
+                                <svg class="searchbar-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                  viewBox="0 0 20 20" fill="none">
+                                  <path
+                                    d="M17.5 17.5L14.5834 14.5833M16.6667 9.58333C16.6667 13.4954 13.4954 16.6667 9.58333 16.6667C5.67132 16.6667 2.5 13.4954 2.5 9.58333C2.5 5.67132 5.67132 2.5 9.58333 2.5C13.4954 2.5 16.6667 5.67132 16.6667 9.58333Z"
+                                    stroke="#92949F" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                                <input type="text" name="search" id="searchbar" placeholder="Search for a course">
+                              </form>
+                            </div>
+                          </div>
+                        </div>
+                        </div> -->
+                        <div style="border-top: 1px solid #d8d8dc;" class="row align-items-center">
+                            <div class="col-lg-8 col-6 mt-3">
+                                <!-- <a href="index-2.html" class="header-logo d-lg-none d-block">
+                              <img src="assets/media/logo.png" alt="">
+                              </a> -->
+                                <div
+                                    class="d-flex align-items-center justify-content-center justify-content-md-end gap-3 order-3 d-block d-md-none">
+                                    <button class="btn btn-warning text-white btn-sm fw-bold">REGISTER</button>
+                                    <button class="btn btn-outline-warning btn-sm fw-bold">LOGIN</button>
+                                </div>
+                <nav class="navigation d-md-flex d-none">
+                  <div class="menu-button-right">
+                    <div class="main-menu__nav">
+                      <ul class="main-menu__list">
+                        <li>
+                          <a href="index.html" class="active"> Home</a>
+                        </li>
+                        <li><a href="about.html"> About</a></li>
+                        <li class="dropdown">
+                          <a href="javascript:void(0);">Initiatives</a>
+                          <ul class="sub-menu">
+                             <li>
+                                <a href="programdigital.html">1. Digital Programs(For Design)</a>
+                             </li>
+                            <li>
+                                <a href="program.html">2. Digital Programs (For Design)</a>
+                             </li>
+                             <li>
+                                <a href="scheme.html">3. Scheme (For Design)</a>
+                             </li>
+                              <li>
+                                <a href="schemewomen.html">4. women Scheme (For Design)</a>
+                             </li>
+                            <li>
+                              <a href="course.html">1. Educational Programs</a>
+                              <ul class="sub-menu mt-5">
+                                <li><a href="course.html">• Schools Program</a></li>
+                                <li><a href="#">• Colleges Program</a></li>
+                                <li><a href="#">• Digital Learning Program</a></li>
+                              </ul>
+                            </li>
+                            <li>
+                              <a href="#">2. Skill Development Programs</a>
+                              <ul class="sub-menu mt-5">
+                                <li><a href="#">• Sector-Specific Training</a></li>
+                                <li><a href="#">• On-the-Job Training (OJT)</a></li>
+                                <li><a href="#">• Entrepreneurship Development</a></li>
+                                <li><a href="#">• Women’s Skill Development</a></li>
+                                <li><a href="#">• Skill Development for PWDs</a></li>
+                                <li><a href="#">• Youth Empowerment</a></li>
+                              </ul>
+                            </li>
+                            <li>
+                              <a href="#">3. CSR Initiatives</a>
+                              <ul class="sub-menu mt-5">
+                                <li><a href="#">• Community and Rural Development</a></li>
+                                <li><a href="#">• Transforming Rural Schools</a></li>
+                                <li><a href="#">• Women’s Self-Help Group Skill Development</a></li>
+                                <li><a href="#">• Farmer Producer Organizations (FPO) Awareness and
+                                    Development </a>
+                                </li>
+                              </ul>
+                            </li>
+                          </ul>
+                        </li>
+                        <li class="dropdown">
+                          <a href="course.html"> Sectors </a>
+                        </li>
+                        <li class="dropdown">
+                          <a href="javascript:void(0);">Collaborations</a>
+                          <ul>
+                            <li><a href="#">• Strategic Partnerships</a></li>
+                            <li><a href="#">• Academic collaborations</a></li>
+                            <li><a href="#">• Corporate Partnerships</a></li>
+                            <li><a href="#">• Government Collaborations</a></li>
+                            <li><a href="#">• International Partnerships</a></li>
+                          </ul>
+                        </li>
+                        <li class="dropdown">
+                          <a href="javascript:void(0);">Resources </a>
+                          <ul>
+                            <li><a href="blog.html">• Blogs</a></li>
+                            <li><a href="#">• Training Models</a></li>
+                            <li><a href="#">• Research & Publications</a></li>
+                            <li><a href="#">• Best Practices & Case Studies</a></li>
+                          </ul>
+                        </li>
+                        <li><a href="#">Global Pathways</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                        <!-- <li class="dropdown">
+                                       <a href="javascript:void(0);">Pages</a>
+                                       <ul>
+                                         <li><a href="cart.html">Cart</a></li>
+                                         <li><a href="checkout.html">Check Out</a></li>
+                                         <li><a href="login.html">Login</a></li>
+                                         <li><a href="signup.html">Sign Up</a></li>
+                                         <li><a href="contact.html">Contact Us</a></li>
+                                       </ul>
+                                       </li> -->
+                      </ul>
+                    </div>
+                  </div>
+                </nav>
+                            </div>
+                            <div class="col-lg-4 col-6 p-0 mt-3">
+                                <div class="header-buttons">
+                                    <div class="right-nav d-sm-flex gap-16 align-items-center d-none">
+                                        <a href="courses.html" class="cus-btn">
+                                            <span class="text"> Donate Now</span>
+                                        </a>
+                                        <a href="login.html" class="cus-btn-2">
+                                            <span class="text">NTI Competetions/Events</span>
+                                        </a>
+                                    </div>
+                                    <a href="#" class="main-menu__toggler mobile-nav__toggler">
+                                        <img src="assets/media/icons/menu-2.png" alt="">
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+        </div>
+        <!-- Header Menu End -->
+        <div class="stricky-header stricked-menu">
+            <div class="sticky-header__content"></div>
+        </div>
+        <!-- Main Sections -->
+        <main class="main-wrapper">
+            <!-- Yout Content Here -->
+            <!-- Couse Section Start -->
+            <section class="title-banner mb-80">
+                <div class="container-fluid">
+                    <h1>Blogs</h1>
+                </div>
+            </section>
+            <div class="blog-sec mb-120">
+                <div class="container-fluid">
+                    <div
+                        class="d-flex align-items-center justify-content-sm-between justify-content-center row-gap-4 flex-wrap mb-24">
+                        <p>We found 07 courses available for you</p>
+                        <div class="d-flex align-items-center gap-8">
+                            <p class="flex-shrink-0">Sort By:</p>
+                            <div class="w-100 drop-container">
+                                <div class="wrapper-dropdown form-control" id="dropdown-l2">
+                                    <div class=" d-flex align-items-center justify-content-between gap-64">
+                                        <span class="selected-display black" id="desation112">Newest First</span>
+                                        <svg id="drop-down2" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                            viewBox="0 0 20 20" fill="none">
+                                            <path
+                                                d="M19.7337 4.81165C19.3788 4.45668 18.8031 4.45662 18.4481 4.81171L10.0002 13.2598L1.55191 4.81165C1.19694 4.45668 0.621303 4.45662 0.266273 4.81171C-0.0887576 5.16674 -0.0887576 5.74232 0.266273 6.09735L9.35742 15.1883C9.52791 15.3587 9.75912 15.4545 10.0002 15.4545C10.2413 15.4545 10.4726 15.3587 10.643 15.1882L19.7337 6.09729C20.0888 5.74232 20.0888 5.16668 19.7337 4.81165Z"
+                                                fill="#92949F" />
+                                        </svg>
+                                    </div>
+                                    <ul class="topbar-dropdown">
+                                        <li class="item">Newest First</li>
+                                        <li class="item">Newest Last</li>
+                                        <li class="item">End</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row row-gap-4 align-items-center mb-48">
+                        <div class="col-lg-3 col-md-6">
+                            <div class="blog-card">
+                                <a href="blog-detail.html" class="card-img">
+                                    <img src="assets/media/blogs/img-1.jpg" alt="">
+                                    <span class="date-block">
+                                        <span class="h6 fw-400 light-black">08</span>
+                                        <span class="h6 fw-400 light-black">May</span>
+                                    </span>
+                                </a>
+                                <div class="card-content">
+                                    <div class="d-flex align-items-center gap-8 mb-20">
+                                        <img src="assets/media/user/user-2.png" class="card-user"
+                                            alt="clamp(18px, 1.25vw, 96px)">
+                                        <p>Laverne</p>
+                                    </div>
+                                    <a href="blog-detail.html" class="h6 fw-500 mb-8">Time Management Hacks for Busy
+                                        Online Learners</a>
+                                    <p class="light-gray mb-24">Lorem ipsum dolor sit amet consectetur. Vitae vel sit
+                                        convallis aliquet
+                                        amet</p>
+                                    <a href="blog-detail.html" class="card-btn">Read More
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                            viewBox="0 0 20 20" fill="none">
+                                            <path
+                                                d="M18.9217 9.41101L13.0884 3.57768C12.9312 3.42588 12.7207 3.34188 12.5022 3.34378C12.2837 3.34568 12.0747 3.43332 11.9202 3.58783C11.7657 3.74233 11.678 3.95134 11.6761 4.16984C11.6742 4.38834 11.7582 4.59884 11.91 4.75601L16.3209 9.16684H1.66585C1.44484 9.16684 1.23288 9.25464 1.0766 9.41092C0.920317 9.5672 0.83252 9.77916 0.83252 10.0002C0.83252 10.2212 0.920317 10.4332 1.0766 10.5894C1.23288 10.7457 1.44484 10.8335 1.66585 10.8335H16.3209L11.91 15.2443C11.8304 15.3212 11.7669 15.4132 11.7233 15.5148C11.6796 15.6165 11.6566 15.7259 11.6556 15.8365C11.6547 15.9472 11.6758 16.0569 11.7177 16.1593C11.7596 16.2617 11.8214 16.3548 11.8997 16.433C11.9779 16.5112 12.071 16.5731 12.1734 16.615C12.2758 16.6569 12.3855 16.678 12.4962 16.6771C12.6068 16.6761 12.7162 16.6531 12.8179 16.6094C12.9195 16.5658 13.0115 16.5023 13.0884 16.4227L18.9217 10.5893C19.0779 10.4331 19.1657 10.2211 19.1657 10.0002C19.1657 9.77921 19.0779 9.56728 18.9217 9.41101Z"
+                                                fill="#F59300" />
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6">
+                            <div class="blog-card">
+                                <a href="blog-detail.html" class="card-img">
+                                    <img src="assets/media/blogs/img-2.jpg" alt="">
+                                    <span class="date-block">
+                                        <span class="h6 fw-400 light-black">09</span>
+                                        <span class="h6 fw-400 light-black">May</span>
+                                    </span>
+                                </a>
+                                <div class="card-content">
+                                    <div class="d-flex align-items-center gap-8 mb-20">
+                                        <img src="assets/media/user/user-2.png" class="card-user"
+                                            alt="clamp(18px, 1.25vw, 96px)">
+                                        <p>Ursula</p>
+                                    </div>
+                                    <a href="blog-detail.html" class="h6 fw-500 mb-8">Time Management Hacks for Busy
+                                        Online Learners</a>
+                                    <p class="light-gray mb-24">Lorem ipsum dolor sit amet consectetur. Vitae vel sit
+                                        convallis aliquet
+                                        amet</p>
+                                    <a href="blog-detail.html" class="card-btn">Read More
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                            viewBox="0 0 20 20" fill="none">
+                                            <path
+                                                d="M18.9217 9.41101L13.0884 3.57768C12.9312 3.42588 12.7207 3.34188 12.5022 3.34378C12.2837 3.34568 12.0747 3.43332 11.9202 3.58783C11.7657 3.74233 11.678 3.95134 11.6761 4.16984C11.6742 4.38834 11.7582 4.59884 11.91 4.75601L16.3209 9.16684H1.66585C1.44484 9.16684 1.23288 9.25464 1.0766 9.41092C0.920317 9.5672 0.83252 9.77916 0.83252 10.0002C0.83252 10.2212 0.920317 10.4332 1.0766 10.5894C1.23288 10.7457 1.44484 10.8335 1.66585 10.8335H16.3209L11.91 15.2443C11.8304 15.3212 11.7669 15.4132 11.7233 15.5148C11.6796 15.6165 11.6566 15.7259 11.6556 15.8365C11.6547 15.9472 11.6758 16.0569 11.7177 16.1593C11.7596 16.2617 11.8214 16.3548 11.8997 16.433C11.9779 16.5112 12.071 16.5731 12.1734 16.615C12.2758 16.6569 12.3855 16.678 12.4962 16.6771C12.6068 16.6761 12.7162 16.6531 12.8179 16.6094C12.9195 16.5658 13.0115 16.5023 13.0884 16.4227L18.9217 10.5893C19.0779 10.4331 19.1657 10.2211 19.1657 10.0002C19.1657 9.77921 19.0779 9.56728 18.9217 9.41101Z"
+                                                fill="#F59300" />
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6">
+                            <div class="blog-card">
+                                <a href="blog-detail.html" class="card-img">
+                                    <img src="assets/media/blogs/img-3.jpg" alt="">
+                                    <span class="date-block">
+                                        <span class="h6 fw-400 light-black">10</span>
+                                        <span class="h6 fw-400 light-black">May</span>
+                                    </span>
+                                </a>
+                                <div class="card-content">
+                                    <div class="d-flex align-items-center gap-8 mb-20">
+                                        <img src="assets/media/user/user-2.png" class="card-user"
+                                            alt="clamp(18px, 1.25vw, 96px)">
+                                        <p>Johnathon</p>
+                                    </div>
+                                    <a href="blog-detail.html" class="h6 fw-500 mb-8">Why Soft Skills Matter in a
+                                        Tech-Driven World</a>
+                                    <p class="light-gray mb-24">Lorem ipsum dolor sit amet consectetur. Vitae vel sit
+                                        convallis aliquet
+                                        amet</p>
+                                    <a href="blog-detail.html" class="card-btn">Read More
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                            viewBox="0 0 20 20" fill="none">
+                                            <path
+                                                d="M18.9217 9.41101L13.0884 3.57768C12.9312 3.42588 12.7207 3.34188 12.5022 3.34378C12.2837 3.34568 12.0747 3.43332 11.9202 3.58783C11.7657 3.74233 11.678 3.95134 11.6761 4.16984C11.6742 4.38834 11.7582 4.59884 11.91 4.75601L16.3209 9.16684H1.66585C1.44484 9.16684 1.23288 9.25464 1.0766 9.41092C0.920317 9.5672 0.83252 9.77916 0.83252 10.0002C0.83252 10.2212 0.920317 10.4332 1.0766 10.5894C1.23288 10.7457 1.44484 10.8335 1.66585 10.8335H16.3209L11.91 15.2443C11.8304 15.3212 11.7669 15.4132 11.7233 15.5148C11.6796 15.6165 11.6566 15.7259 11.6556 15.8365C11.6547 15.9472 11.6758 16.0569 11.7177 16.1593C11.7596 16.2617 11.8214 16.3548 11.8997 16.433C11.9779 16.5112 12.071 16.5731 12.1734 16.615C12.2758 16.6569 12.3855 16.678 12.4962 16.6771C12.6068 16.6761 12.7162 16.6531 12.8179 16.6094C12.9195 16.5658 13.0115 16.5023 13.0884 16.4227L18.9217 10.5893C19.0779 10.4331 19.1657 10.2211 19.1657 10.0002C19.1657 9.77921 19.0779 9.56728 18.9217 9.41101Z"
+                                                fill="#F59300" />
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6">
+                            <div class="blog-card">
+                                <a href="blog-detail.html" class="card-img">
+                                    <img src="assets/media/blogs/img-4.jpg" alt="">
+                                    <span class="date-block">
+                                        <span class="h6 fw-400 light-black">10</span>
+                                        <span class="h6 fw-400 light-black">May</span>
+                                    </span>
+                                </a>
+                                <div class="card-content">
+                                    <div class="d-flex align-items-center gap-8 mb-20">
+                                        <img src="assets/media/user/user-2.png" class="card-user"
+                                            alt="clamp(18px, 1.25vw, 96px)">
+                                        <p>Johnathon</p>
+                                    </div>
+                                    <a href="blog-detail.html" class="h6 fw-500 mb-8">Figma 101: A Beginner’s Guide to
+                                        UI/UX Design</a>
+                                    <p class="light-gray mb-24">Lorem ipsum dolor sit amet consectetur. Vitae vel sit
+                                        convallis aliquet
+                                        amet</p>
+                                    <a href="blog-detail.html" class="card-btn">Read More
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                            viewBox="0 0 20 20" fill="none">
+                                            <path
+                                                d="M18.9217 9.41101L13.0884 3.57768C12.9312 3.42588 12.7207 3.34188 12.5022 3.34378C12.2837 3.34568 12.0747 3.43332 11.9202 3.58783C11.7657 3.74233 11.678 3.95134 11.6761 4.16984C11.6742 4.38834 11.7582 4.59884 11.91 4.75601L16.3209 9.16684H1.66585C1.44484 9.16684 1.23288 9.25464 1.0766 9.41092C0.920317 9.5672 0.83252 9.77916 0.83252 10.0002C0.83252 10.2212 0.920317 10.4332 1.0766 10.5894C1.23288 10.7457 1.44484 10.8335 1.66585 10.8335H16.3209L11.91 15.2443C11.8304 15.3212 11.7669 15.4132 11.7233 15.5148C11.6796 15.6165 11.6566 15.7259 11.6556 15.8365C11.6547 15.9472 11.6758 16.0569 11.7177 16.1593C11.7596 16.2617 11.8214 16.3548 11.8997 16.433C11.9779 16.5112 12.071 16.5731 12.1734 16.615C12.2758 16.6569 12.3855 16.678 12.4962 16.6771C12.6068 16.6761 12.7162 16.6531 12.8179 16.6094C12.9195 16.5658 13.0115 16.5023 13.0884 16.4227L18.9217 10.5893C19.0779 10.4331 19.1657 10.2211 19.1657 10.0002C19.1657 9.77921 19.0779 9.56728 18.9217 9.41101Z"
+                                                fill="#F59300" />
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6">
+                            <div class="blog-card">
+                                <a href="blog-detail.html" class="card-img">
+                                    <img src="assets/media/blogs/img-4.jpg" alt="">
+                                    <span class="date-block">
+                                        <span class="h6 fw-400 light-black">10</span>
+                                        <span class="h6 fw-400 light-black">May</span>
+                                    </span>
+                                </a>
+                                <div class="card-content">
+                                    <div class="d-flex align-items-center gap-8 mb-20">
+                                        <img src="assets/media/user/user-2.png" class="card-user"
+                                            alt="clamp(18px, 1.25vw, 96px)">
+                                        <p>Johnathon</p>
+                                    </div>
+                                    <a href="blog-detail.html" class="h6 fw-500 mb-8">Figma 101: A Beginner’s Guide to
+                                        UI/UX Design</a>
+                                    <p class="light-gray mb-24">Lorem ipsum dolor sit amet consectetur. Vitae vel sit
+                                        convallis aliquet
+                                        amet</p>
+                                    <a href="blog-detail.html" class="card-btn">Read More
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                            viewBox="0 0 20 20" fill="none">
+                                            <path
+                                                d="M18.9217 9.41101L13.0884 3.57768C12.9312 3.42588 12.7207 3.34188 12.5022 3.34378C12.2837 3.34568 12.0747 3.43332 11.9202 3.58783C11.7657 3.74233 11.678 3.95134 11.6761 4.16984C11.6742 4.38834 11.7582 4.59884 11.91 4.75601L16.3209 9.16684H1.66585C1.44484 9.16684 1.23288 9.25464 1.0766 9.41092C0.920317 9.5672 0.83252 9.77916 0.83252 10.0002C0.83252 10.2212 0.920317 10.4332 1.0766 10.5894C1.23288 10.7457 1.44484 10.8335 1.66585 10.8335H16.3209L11.91 15.2443C11.8304 15.3212 11.7669 15.4132 11.7233 15.5148C11.6796 15.6165 11.6566 15.7259 11.6556 15.8365C11.6547 15.9472 11.6758 16.0569 11.7177 16.1593C11.7596 16.2617 11.8214 16.3548 11.8997 16.433C11.9779 16.5112 12.071 16.5731 12.1734 16.615C12.2758 16.6569 12.3855 16.678 12.4962 16.6771C12.6068 16.6761 12.7162 16.6531 12.8179 16.6094C12.9195 16.5658 13.0115 16.5023 13.0884 16.4227L18.9217 10.5893C19.0779 10.4331 19.1657 10.2211 19.1657 10.0002C19.1657 9.77921 19.0779 9.56728 18.9217 9.41101Z"
+                                                fill="#F59300" />
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6">
+                            <div class="blog-card">
+                                <a href="blog-detail.html" class="card-img">
+                                    <img src="assets/media/blogs/img-3.jpg" alt="">
+                                    <span class="date-block">
+                                        <span class="h6 fw-400 light-black">10</span>
+                                        <span class="h6 fw-400 light-black">May</span>
+                                    </span>
+                                </a>
+                                <div class="card-content">
+                                    <div class="d-flex align-items-center gap-8 mb-20">
+                                        <img src="assets/media/user/user-2.png" class="card-user"
+                                            alt="clamp(18px, 1.25vw, 96px)">
+                                        <p>Johnathon</p>
+                                    </div>
+                                    <a href="blog-detail.html" class="h6 fw-500 mb-8">Why Soft Skills Matter in a
+                                        Tech-Driven World</a>
+                                    <p class="light-gray mb-24">Lorem ipsum dolor sit amet consectetur. Vitae vel sit
+                                        convallis aliquet
+                                        amet</p>
+                                    <a href="blog-detail.html" class="card-btn">Read More
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                            viewBox="0 0 20 20" fill="none">
+                                            <path
+                                                d="M18.9217 9.41101L13.0884 3.57768C12.9312 3.42588 12.7207 3.34188 12.5022 3.34378C12.2837 3.34568 12.0747 3.43332 11.9202 3.58783C11.7657 3.74233 11.678 3.95134 11.6761 4.16984C11.6742 4.38834 11.7582 4.59884 11.91 4.75601L16.3209 9.16684H1.66585C1.44484 9.16684 1.23288 9.25464 1.0766 9.41092C0.920317 9.5672 0.83252 9.77916 0.83252 10.0002C0.83252 10.2212 0.920317 10.4332 1.0766 10.5894C1.23288 10.7457 1.44484 10.8335 1.66585 10.8335H16.3209L11.91 15.2443C11.8304 15.3212 11.7669 15.4132 11.7233 15.5148C11.6796 15.6165 11.6566 15.7259 11.6556 15.8365C11.6547 15.9472 11.6758 16.0569 11.7177 16.1593C11.7596 16.2617 11.8214 16.3548 11.8997 16.433C11.9779 16.5112 12.071 16.5731 12.1734 16.615C12.2758 16.6569 12.3855 16.678 12.4962 16.6771C12.6068 16.6761 12.7162 16.6531 12.8179 16.6094C12.9195 16.5658 13.0115 16.5023 13.0884 16.4227L18.9217 10.5893C19.0779 10.4331 19.1657 10.2211 19.1657 10.0002C19.1657 9.77921 19.0779 9.56728 18.9217 9.41101Z"
+                                                fill="#F59300" />
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6">
+                            <div class="blog-card">
+                                <a href="blog-detail.html" class="card-img">
+                                    <img src="assets/media/blogs/img-2.jpg" alt="">
+                                    <span class="date-block">
+                                        <span class="h6 fw-400 light-black">09</span>
+                                        <span class="h6 fw-400 light-black">May</span>
+                                    </span>
+                                </a>
+                                <div class="card-content">
+                                    <div class="d-flex align-items-center gap-8 mb-20">
+                                        <img src="assets/media/user/user-2.png" class="card-user"
+                                            alt="clamp(18px, 1.25vw, 96px)">
+                                        <p>Ursula</p>
+                                    </div>
+                                    <a href="blog-detail.html" class="h6 fw-500 mb-8">Time Management Hacks for Busy
+                                        Online Learners</a>
+                                    <p class="light-gray mb-24">Lorem ipsum dolor sit amet consectetur. Vitae vel sit
+                                        convallis aliquet
+                                        amet</p>
+                                    <a href="blog-detail.html" class="card-btn">Read More
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                            viewBox="0 0 20 20" fill="none">
+                                            <path
+                                                d="M18.9217 9.41101L13.0884 3.57768C12.9312 3.42588 12.7207 3.34188 12.5022 3.34378C12.2837 3.34568 12.0747 3.43332 11.9202 3.58783C11.7657 3.74233 11.678 3.95134 11.6761 4.16984C11.6742 4.38834 11.7582 4.59884 11.91 4.75601L16.3209 9.16684H1.66585C1.44484 9.16684 1.23288 9.25464 1.0766 9.41092C0.920317 9.5672 0.83252 9.77916 0.83252 10.0002C0.83252 10.2212 0.920317 10.4332 1.0766 10.5894C1.23288 10.7457 1.44484 10.8335 1.66585 10.8335H16.3209L11.91 15.2443C11.8304 15.3212 11.7669 15.4132 11.7233 15.5148C11.6796 15.6165 11.6566 15.7259 11.6556 15.8365C11.6547 15.9472 11.6758 16.0569 11.7177 16.1593C11.7596 16.2617 11.8214 16.3548 11.8997 16.433C11.9779 16.5112 12.071 16.5731 12.1734 16.615C12.2758 16.6569 12.3855 16.678 12.4962 16.6771C12.6068 16.6761 12.7162 16.6531 12.8179 16.6094C12.9195 16.5658 13.0115 16.5023 13.0884 16.4227L18.9217 10.5893C19.0779 10.4331 19.1657 10.2211 19.1657 10.0002C19.1657 9.77921 19.0779 9.56728 18.9217 9.41101Z"
+                                                fill="#F59300" />
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6">
+                            <div class="blog-card">
+                                <a href="blog-detail.html" class="card-img">
+                                    <img src="assets/media/blogs/img-1.jpg" alt="">
+                                    <span class="date-block">
+                                        <span class="h6 fw-400 light-black">08</span>
+                                        <span class="h6 fw-400 light-black">May</span>
+                                    </span>
+                                </a>
+                                <div class="card-content">
+                                    <div class="d-flex align-items-center gap-8 mb-20">
+                                        <img src="assets/media/user/user-2.png" class="card-user"
+                                            alt="clamp(18px, 1.25vw, 96px)">
+                                        <p>Laverne</p>
+                                    </div>
+                                    <a href="blog-detail.html" class="h6 fw-500 mb-8">Time Management Hacks for Busy
+                                        Online Learners</a>
+                                    <p class="light-gray mb-24">Lorem ipsum dolor sit amet consectetur. Vitae vel sit
+                                        convallis aliquet
+                                        amet</p>
+                                    <a href="blog-detail.html" class="card-btn">Read More
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                            viewBox="0 0 20 20" fill="none">
+                                            <path
+                                                d="M18.9217 9.41101L13.0884 3.57768C12.9312 3.42588 12.7207 3.34188 12.5022 3.34378C12.2837 3.34568 12.0747 3.43332 11.9202 3.58783C11.7657 3.74233 11.678 3.95134 11.6761 4.16984C11.6742 4.38834 11.7582 4.59884 11.91 4.75601L16.3209 9.16684H1.66585C1.44484 9.16684 1.23288 9.25464 1.0766 9.41092C0.920317 9.5672 0.83252 9.77916 0.83252 10.0002C0.83252 10.2212 0.920317 10.4332 1.0766 10.5894C1.23288 10.7457 1.44484 10.8335 1.66585 10.8335H16.3209L11.91 15.2443C11.8304 15.3212 11.7669 15.4132 11.7233 15.5148C11.6796 15.6165 11.6566 15.7259 11.6556 15.8365C11.6547 15.9472 11.6758 16.0569 11.7177 16.1593C11.7596 16.2617 11.8214 16.3548 11.8997 16.433C11.9779 16.5112 12.071 16.5731 12.1734 16.615C12.2758 16.6569 12.3855 16.678 12.4962 16.6771C12.6068 16.6761 12.7162 16.6531 12.8179 16.6094C12.9195 16.5658 13.0115 16.5023 13.0884 16.4227L18.9217 10.5893C19.0779 10.4331 19.1657 10.2211 19.1657 10.0002C19.1657 9.77921 19.0779 9.56728 18.9217 9.41101Z"
+                                                fill="#F59300" />
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6">
+                            <div class="blog-card">
+                                <a href="blog-detail.html" class="card-img">
+                                    <img src="assets/media/blogs/img-1.jpg" alt="">
+                                    <span class="date-block">
+                                        <span class="h6 fw-400 light-black">08</span>
+                                        <span class="h6 fw-400 light-black">May</span>
+                                    </span>
+                                </a>
+                                <div class="card-content">
+                                    <div class="d-flex align-items-center gap-8 mb-20">
+                                        <img src="assets/media/user/user-2.png" class="card-user"
+                                            alt="clamp(18px, 1.25vw, 96px)">
+                                        <p>Laverne</p>
+                                    </div>
+                                    <a href="blog-detail.html" class="h6 fw-500 mb-8">Time Management Hacks for Busy
+                                        Online Learners</a>
+                                    <p class="light-gray mb-24">Lorem ipsum dolor sit amet consectetur. Vitae vel sit
+                                        convallis aliquet
+                                        amet</p>
+                                    <a href="blog-detail.html" class="card-btn">Read More
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                            viewBox="0 0 20 20" fill="none">
+                                            <path
+                                                d="M18.9217 9.41101L13.0884 3.57768C12.9312 3.42588 12.7207 3.34188 12.5022 3.34378C12.2837 3.34568 12.0747 3.43332 11.9202 3.58783C11.7657 3.74233 11.678 3.95134 11.6761 4.16984C11.6742 4.38834 11.7582 4.59884 11.91 4.75601L16.3209 9.16684H1.66585C1.44484 9.16684 1.23288 9.25464 1.0766 9.41092C0.920317 9.5672 0.83252 9.77916 0.83252 10.0002C0.83252 10.2212 0.920317 10.4332 1.0766 10.5894C1.23288 10.7457 1.44484 10.8335 1.66585 10.8335H16.3209L11.91 15.2443C11.8304 15.3212 11.7669 15.4132 11.7233 15.5148C11.6796 15.6165 11.6566 15.7259 11.6556 15.8365C11.6547 15.9472 11.6758 16.0569 11.7177 16.1593C11.7596 16.2617 11.8214 16.3548 11.8997 16.433C11.9779 16.5112 12.071 16.5731 12.1734 16.615C12.2758 16.6569 12.3855 16.678 12.4962 16.6771C12.6068 16.6761 12.7162 16.6531 12.8179 16.6094C12.9195 16.5658 13.0115 16.5023 13.0884 16.4227L18.9217 10.5893C19.0779 10.4331 19.1657 10.2211 19.1657 10.0002C19.1657 9.77921 19.0779 9.56728 18.9217 9.41101Z"
+                                                fill="#F59300" />
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6">
+                            <div class="blog-card">
+                                <a href="blog-detail.html" class="card-img">
+                                    <img src="assets/media/blogs/img-2.jpg" alt="">
+                                    <span class="date-block">
+                                        <span class="h6 fw-400 light-black">09</span>
+                                        <span class="h6 fw-400 light-black">May</span>
+                                    </span>
+                                </a>
+                                <div class="card-content">
+                                    <div class="d-flex align-items-center gap-8 mb-20">
+                                        <img src="assets/media/user/user-2.png" class="card-user"
+                                            alt="clamp(18px, 1.25vw, 96px)">
+                                        <p>Ursula</p>
+                                    </div>
+                                    <a href="blog-detail.html" class="h6 fw-500 mb-8">Time Management Hacks for Busy
+                                        Online Learners</a>
+                                    <p class="light-gray mb-24">Lorem ipsum dolor sit amet consectetur. Vitae vel sit
+                                        convallis aliquet
+                                        amet</p>
+                                    <a href="blog-detail.html" class="card-btn">Read More
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                            viewBox="0 0 20 20" fill="none">
+                                            <path
+                                                d="M18.9217 9.41101L13.0884 3.57768C12.9312 3.42588 12.7207 3.34188 12.5022 3.34378C12.2837 3.34568 12.0747 3.43332 11.9202 3.58783C11.7657 3.74233 11.678 3.95134 11.6761 4.16984C11.6742 4.38834 11.7582 4.59884 11.91 4.75601L16.3209 9.16684H1.66585C1.44484 9.16684 1.23288 9.25464 1.0766 9.41092C0.920317 9.5672 0.83252 9.77916 0.83252 10.0002C0.83252 10.2212 0.920317 10.4332 1.0766 10.5894C1.23288 10.7457 1.44484 10.8335 1.66585 10.8335H16.3209L11.91 15.2443C11.8304 15.3212 11.7669 15.4132 11.7233 15.5148C11.6796 15.6165 11.6566 15.7259 11.6556 15.8365C11.6547 15.9472 11.6758 16.0569 11.7177 16.1593C11.7596 16.2617 11.8214 16.3548 11.8997 16.433C11.9779 16.5112 12.071 16.5731 12.1734 16.615C12.2758 16.6569 12.3855 16.678 12.4962 16.6771C12.6068 16.6761 12.7162 16.6531 12.8179 16.6094C12.9195 16.5658 13.0115 16.5023 13.0884 16.4227L18.9217 10.5893C19.0779 10.4331 19.1657 10.2211 19.1657 10.0002C19.1657 9.77921 19.0779 9.56728 18.9217 9.41101Z"
+                                                fill="#F59300" />
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6">
+                            <div class="blog-card">
+                                <a href="blog-detail.html" class="card-img">
+                                    <img src="assets/media/blogs/img-3.jpg" alt="">
+                                    <span class="date-block">
+                                        <span class="h6 fw-400 light-black">10</span>
+                                        <span class="h6 fw-400 light-black">May</span>
+                                    </span>
+                                </a>
+                                <div class="card-content">
+                                    <div class="d-flex align-items-center gap-8 mb-20">
+                                        <img src="assets/media/user/user-2.png" class="card-user"
+                                            alt="clamp(18px, 1.25vw, 96px)">
+                                        <p>Johnathon</p>
+                                    </div>
+                                    <a href="blog-detail.html" class="h6 fw-500 mb-8">Why Soft Skills Matter in a
+                                        Tech-Driven World</a>
+                                    <p class="light-gray mb-24">Lorem ipsum dolor sit amet consectetur. Vitae vel sit
+                                        convallis aliquet
+                                        amet</p>
+                                    <a href="blog-detail.html" class="card-btn">Read More
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                            viewBox="0 0 20 20" fill="none">
+                                            <path
+                                                d="M18.9217 9.41101L13.0884 3.57768C12.9312 3.42588 12.7207 3.34188 12.5022 3.34378C12.2837 3.34568 12.0747 3.43332 11.9202 3.58783C11.7657 3.74233 11.678 3.95134 11.6761 4.16984C11.6742 4.38834 11.7582 4.59884 11.91 4.75601L16.3209 9.16684H1.66585C1.44484 9.16684 1.23288 9.25464 1.0766 9.41092C0.920317 9.5672 0.83252 9.77916 0.83252 10.0002C0.83252 10.2212 0.920317 10.4332 1.0766 10.5894C1.23288 10.7457 1.44484 10.8335 1.66585 10.8335H16.3209L11.91 15.2443C11.8304 15.3212 11.7669 15.4132 11.7233 15.5148C11.6796 15.6165 11.6566 15.7259 11.6556 15.8365C11.6547 15.9472 11.6758 16.0569 11.7177 16.1593C11.7596 16.2617 11.8214 16.3548 11.8997 16.433C11.9779 16.5112 12.071 16.5731 12.1734 16.615C12.2758 16.6569 12.3855 16.678 12.4962 16.6771C12.6068 16.6761 12.7162 16.6531 12.8179 16.6094C12.9195 16.5658 13.0115 16.5023 13.0884 16.4227L18.9217 10.5893C19.0779 10.4331 19.1657 10.2211 19.1657 10.0002C19.1657 9.77921 19.0779 9.56728 18.9217 9.41101Z"
+                                                fill="#F59300" />
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6">
+                            <div class="blog-card">
+                                <a href="blog-detail.html" class="card-img">
+                                    <img src="assets/media/blogs/img-4.jpg" alt="">
+                                    <span class="date-block">
+                                        <span class="h6 fw-400 light-black">10</span>
+                                        <span class="h6 fw-400 light-black">May</span>
+                                    </span>
+                                </a>
+                                <div class="card-content">
+                                    <div class="d-flex align-items-center gap-8 mb-20">
+                                        <img src="assets/media/user/user-2.png" class="card-user"
+                                            alt="clamp(18px, 1.25vw, 96px)">
+                                        <p>Johnathon</p>
+                                    </div>
+                                    <a href="blog-detail.html" class="h6 fw-500 mb-8">Figma 101: A Beginner’s Guide to
+                                        UI/UX Design</a>
+                                    <p class="light-gray mb-24">Lorem ipsum dolor sit amet consectetur. Vitae vel sit
+                                        convallis aliquet
+                                        amet</p>
+                                    <a href="blog-detail.html" class="card-btn">Read More
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                            viewBox="0 0 20 20" fill="none">
+                                            <path
+                                                d="M18.9217 9.41101L13.0884 3.57768C12.9312 3.42588 12.7207 3.34188 12.5022 3.34378C12.2837 3.34568 12.0747 3.43332 11.9202 3.58783C11.7657 3.74233 11.678 3.95134 11.6761 4.16984C11.6742 4.38834 11.7582 4.59884 11.91 4.75601L16.3209 9.16684H1.66585C1.44484 9.16684 1.23288 9.25464 1.0766 9.41092C0.920317 9.5672 0.83252 9.77916 0.83252 10.0002C0.83252 10.2212 0.920317 10.4332 1.0766 10.5894C1.23288 10.7457 1.44484 10.8335 1.66585 10.8335H16.3209L11.91 15.2443C11.8304 15.3212 11.7669 15.4132 11.7233 15.5148C11.6796 15.6165 11.6566 15.7259 11.6556 15.8365C11.6547 15.9472 11.6758 16.0569 11.7177 16.1593C11.7596 16.2617 11.8214 16.3548 11.8997 16.433C11.9779 16.5112 12.071 16.5731 12.1734 16.615C12.2758 16.6569 12.3855 16.678 12.4962 16.6771C12.6068 16.6761 12.7162 16.6531 12.8179 16.6094C12.9195 16.5658 13.0115 16.5023 13.0884 16.4227L18.9217 10.5893C19.0779 10.4331 19.1657 10.2211 19.1657 10.0002C19.1657 9.77921 19.0779 9.56728 18.9217 9.41101Z"
+                                                fill="#F59300" />
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pagination">
+                        <ul id="border-pagination" class="mb-0">
+                            <li>
+                                <a href="#">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="19" height="14" viewBox="0 0 19 14"
+                                        fill="none">
+                                        <path
+                                            d="M0.876656 6.61218L6.70999 0.778849C6.86716 0.62705 7.07766 0.543055 7.29616 0.544953C7.51465 0.546852 7.72366 0.634493 7.87817 0.789C8.03268 0.943507 8.12032 1.15252 8.12222 1.37101C8.12412 1.58951 8.04012 1.80001 7.88832 1.95718L3.47749 6.36801H18.1325C18.3535 6.36801 18.5655 6.45581 18.7217 6.61209C18.878 6.76837 18.9658 6.98033 18.9658 7.20135C18.9658 7.42236 18.878 7.63432 18.7217 7.7906C18.5655 7.94688 18.3535 8.03468 18.1325 8.03468H3.47749L7.88832 12.4455C7.96791 12.5224 8.0314 12.6143 8.07507 12.716C8.11875 12.8177 8.14174 12.927 8.1427 13.0377C8.14366 13.1483 8.12257 13.2581 8.08067 13.3605C8.03877 13.4629 7.9769 13.5559 7.89865 13.6342C7.82041 13.7124 7.72736 13.7743 7.62495 13.8162C7.52254 13.8581 7.4128 13.8792 7.30215 13.8782C7.19151 13.8773 7.08216 13.8543 6.98048 13.8106C6.87882 13.7669 6.78686 13.7034 6.70999 13.6238L0.876656 7.79051C0.72043 7.63424 0.632668 7.42232 0.632668 7.20135C0.632668 6.98038 0.72043 6.76845 0.876656 6.61218Z"
+                                            fill="#F59300" />
+                                    </svg>
+                                </a>
+                            </li>
+                            <li><a href="#" class="active">1</a></li>
+                            <li><a href="#">2</a></li>
+                            <li><a href="#">3</a></li>
+                            <li>
+                                <a href="#" class="">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 21 21"
+                                        fill="none">
+                                        <path
+                                            d="M19.1233 9.61218L13.29 3.77885C13.1328 3.62705 12.9223 3.54305 12.7038 3.54495C12.4853 3.54685 12.2763 3.63449 12.1218 3.789C11.9673 3.94351 11.8797 4.15252 11.8778 4.37101C11.8759 4.58951 11.9599 4.80001 12.1117 4.95718L16.5225 9.36801H1.86751C1.6465 9.36801 1.43454 9.45581 1.27826 9.61209C1.12198 9.76837 1.03418 9.98033 1.03418 10.2013C1.03418 10.4224 1.12198 10.6343 1.27826 10.7906C1.43454 10.9469 1.6465 11.0347 1.86751 11.0347H16.5225L12.1117 15.4455C12.0321 15.5224 11.9686 15.6143 11.9249 15.716C11.8813 15.8177 11.8583 15.927 11.8573 16.0377C11.8563 16.1483 11.8774 16.2581 11.9193 16.3605C11.9612 16.4629 12.0231 16.5559 12.1013 16.6342C12.1796 16.7124 12.2726 16.7743 12.375 16.8162C12.4775 16.8581 12.5872 16.8792 12.6978 16.8782C12.8085 16.8773 12.9178 16.8543 13.0195 16.8106C13.1212 16.7669 13.2131 16.7034 13.29 16.6238L19.1233 10.7905C19.2796 10.6342 19.3673 10.4223 19.3673 10.2013C19.3673 9.98038 19.2796 9.76845 19.1233 9.61218Z"
+                                            fill="#F59300" />
+                                    </svg>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- Couse Section End -->
+
+            <!-- End Yout Content here -->
+            <footer>
+                <div class="container-fluid">
+                    <div class="row row-gap-5 mb-64">
+                        <div class="col-lg-4">
+                            <img src="assets/media/footer-logo.png" class="footer-logo mb-16" alt="">
+                            <p class="dark-gray mb-32">Founded in 2020, the **Indian Skill Institute Co-operation
+                                (ISICO)** is
+                                dedicated to advancing India’s socio-economic development. We achieve this by providing
+                                quality
+                                education, enhancing skills, and fostering entrepreneurship, especially in rural and
+                                underprivileged
+                                areas. Our commitment empowers individuals to secure sustainable livelihoods and
+                                contribute to national
+                                growth.
+                            </p>
+                        </div>
+                        <div class="col-lg-8">
+                            <div class="link-wrapper">
+                                <div>
+                                    <h5 class="fw-500 mb-24">USEFUL LINKS</h5>
+                                    <ul class="unstyled">
+                                        <li class="link mb-12"><a href="#"><i class="fa fa-arrow-alt-circle-right"></i>
+                                                Home</a></li>
+                                        <li class="link mb-12"><a href="#"><i class="fa fa-arrow-alt-circle-right"></i>
+                                                About Us</a></li>
+                                        <li class="link mb-12"><a href="#"><i class="fa fa-arrow-alt-circle-right"></i>
+                                                Contact Us</a></li>
+                                        <li class="link mb-12"><a href="#"><i class="fa fa-arrow-alt-circle-right"></i>
+                                                Donate Now</a></li>
+                                        <li class="link mb-12"><a href="#"><i class="fa fa-arrow-alt-circle-right"></i>
+                                                NTI
+                                                Competetions/Events</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h5 class="fw-500 mb-24">USEFUL LINKS</h5>
+                                    <ul class="unstyled">
+                                        <li class="link mb-12"><a href="#"><i class="fa fa-arrow-alt-circle-right"></i>
+                                                Initiatives</a></li>
+                                        <li class="link mb-12"><a href="#"><i class="fa fa-arrow-alt-circle-right"></i>
+                                                Sectors</a></li>
+                                        <li class="link mb-12"><a href="#"><i class="fa fa-arrow-alt-circle-right"></i>
+                                                Collaborations</a>
+                                        </li>
+                                        <li class="link mb-12"><a href="#"><i class="fa fa-arrow-alt-circle-right"></i>
+                                                Resources</a></li>
+                                        <li class="link mb-12"><a href="#"><i class="fa fa-arrow-alt-circle-right"></i>
+                                                Global Pathways</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="">
+                                    <h5 class="fw-600 mb-24">CONTACT DETALIS</h5>
+                                    <div class="d-flex align-items-center gap-8 mb-12">
+                                        <a href="tel:+919988776655" class="h6 fw-400 black hover-content"> <i
+                                                class="fa fa-phone text-primary"></i> +(91) 9988776655</a>
+                                    </div>
+                                    <div class="d-flex align-items-center gap-8">
+                                        <a href="mailto:info@gmail.com" class="h6 fw-400 black  hover-content"><i
+                                                class="fa fa-envelope text-primary"></i> info@gmail.com</a>
+                                    </div>
+                                    <div class="d-flex align-items-center gap-8 mt-2">
+                                        <a href="#" class="h6 fw-400 black  hover-content"><i
+                                                class="fa fa-map-location text-primary"></i>
+                                            Chennai - 600 002.</a>
+                                    </div>
+                                    <!-- Social Media Icons -->
+                                    <div class="d-flex align-items-center gap-3 ms-3 mt-3">
+                                        <a href="https://facebook.com" target="_blank" class="text-primary fs-5"
+                                            aria-label="Facebook">
+                                            <i class="fab fa-facebook-f"></i>
+                                        </a>
+                                        <a href="https://twitter.com" target="_blank" class="text-primary fs-5"
+                                            aria-label="Twitter">
+                                            <i class="fab fa-twitter"></i>
+                                        </a>
+                                        <a href="https://instagram.com" target="_blank" class="text-primary fs-5"
+                                            aria-label="Instagram">
+                                            <i class="fab fa-instagram"></i>
+                                        </a>
+                                        <a href="https://linkedin.com" target="_blank" class="text-primary fs-5"
+                                            aria-label="LinkedIn">
+                                            <i class="fab fa-linkedin-in"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hr-line mb-36"></div>
+                    <div class="privacy-text">
+                        <p>Copyright © 2025.ISICO - INDIAN SKILL INSTUTUTE CO-OPERATION. All rights reserved.</p>
+                    </div>
+                </div>
+            </footer>
+            <!-- FOOTER End -->
+        </main>
+        <!-- Main Sections -->
+    </div>
+    <!-- Main Wrapper End -->
+    <!-- Back To Top Start -->
+    <a href="#main-wrapper" id="backto-top" class="back-to-top"><i class="fas fa-angle-up"></i></a>
+    <!-- Mobile Menu Start -->
+    <div class="mobile-nav__wrapper">
+        <div class="mobile-nav__overlay mobile-nav__toggler"></div>
+        <div class="mobile-nav__content">
+            <span class="mobile-nav__close mobile-nav__toggler"><i class="fa fa-times"></i></span>
+            <div class="logo-box">
+                <a href="index-2.html" aria-label="logo image"><img src="assets/media/logo.png" alt=""></a>
+            </div>
+            <div class="mobile-nav__container"></div>
+            <ul class="mobile-nav__contact list-unstyled">
+                <li>
+                    <i class="fas fa-envelope"></i>
+                    <a href="mailto:example@company.com">example@company.com</a>
+                </li>
+                <li>
+                    <i class="fa fa-phone-alt"></i>
+                    <a href="tel:+12345678">+123 (4567) -890</a>
+                </li>
+            </ul>
+            <div class="mobile-nav__social">
+                <a href="#"><i class="fa-brands fa-x-twitter"></i></a>
+                <a href="#"><i class="fab fa-facebook"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+            </div>
+        </div>
+    </div>
+    <!-- Mobile Menu End -->
+    <!-- Jquery Js -->
+    <script src="assets/js/vendor/bootstrap.min.js"></script>
+    <script src="assets/js/vendor/jquery-3.6.3.min.js"></script>
+    <script src="assets/js/vendor/slick.min.js"></script>
+    <script src="assets/js/vendor/wow.js"></script>
+    <script src="assets/js/vendor/jquery-validator.js"></script>
+    <script src="assets/js/app.js"></script>
+    <!-- Swiper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <!-- Initialize Swiper -->
+</body>
+
+</html>

@@ -1,0 +1,1428 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <title>ISICO - INDIAN SKILL INSTUTUTE CO-OPERATION</title>
+  <!-- Favicon -->
+  <link rel="shortcut icon" type="image/x-icon" href="assets/media/favicon.png">
+  <!-- All CSS files -->
+  <link rel="stylesheet" href="assets/css/vendor/font-awesome.css">
+  <link rel="stylesheet" href="assets/css/vendor/slick-theme.css">
+  <link rel="stylesheet" href="assets/css/vendor/slick-slider.css">
+  <link rel="stylesheet" href="assets/css/vendor/bootstrap.min.css">
+  <link rel="stylesheet" href="assets/css/vendor/wow.min.css">
+  <link rel="stylesheet" href="assets/css/app.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+</head>
+
+<body>
+  <!-- Cursor Style -->
+  <div id="cursor"></div>
+  <div id="cursor-border"></div>
+  <!-- Cursor Style -->
+  <!-- PRELOADER START -->
+  <!-- <div id="preloader">
+         <div class="book">
+           <div class="inner">
+             <div class="left"></div>
+             <div class="middle"></div>
+             <div class="right"></div>
+           </div>
+           <ul>
+             <li></li>
+             <li></li>
+             <li></li>
+             <li></li>
+             <li></li>
+             <li></li>
+             <li></li>
+             <li></li>
+             <li></li>
+             <li></li>
+             <li></li>
+             <li></li>
+             <li></li>
+             <li></li>
+             <li></li>
+             <li></li>
+             <li></li>
+             <li></li>
+           </ul>
+         </div>
+         </div> -->
+  <!-- PRELOADER END -->
+  <!-- PRELOADER START -->
+  <div id="preloader">
+    <div class="zip-loader">
+      <img src="assets/media/zip-loader.gif" alt="Loading..." />
+    </div>
+  </div>
+  <!-- PRELOADER END -->
+  <style>
+    #preloader {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 9999;
+      background-color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .zip-loader img {
+      width: 100px;
+      /* adjust size as needed */
+      height: auto;
+    }
+
+    @media (max-width: 767.98px) {
+      .col-md-4.d-flex.align-items-center.gap-3.order-2.order-md-1.justify-content-center.justify-content-md-start {
+        display: flex !important;
+        margin-top: 10px;
+      }
+
+      .justify-content-between-sm {
+        justify-content: space-between !important;
+      }
+
+      .text-center-sm {
+        text-align: center;
+      }
+
+      .d-none-tblet {
+        display: none;
+      }
+    }
+
+    @media only screen and (min-width: 768px) {
+      .d-lg-block-one {
+        display: none;
+      }
+
+      @media only screen and (min-width: 992px) {
+        .d-lg-block-one {
+          display: inline-block;
+        }
+      }
+    }
+
+    .swiper {
+      width: 100%;
+      padding-top: 50px;
+      padding-bottom: 50px;
+    }
+
+    .swiper-slide {
+      background-position: center;
+      background-size: cover;
+      width: 300px;
+      height: auto;
+    }
+
+    .swiper-slide img {
+      display: block;
+      width: 100%;
+    }
+  </style>
+  <!-- Main Wrapper Start -->
+  <div id="scroll-container" class="main-wrapper">
+    <!-- Header Menu Start -->
+    <div class="header-wrapper">
+      <div class="header-top">
+        <div class="container-fluid">
+          <p class="white"> Indian Skill Institute Co-operation (ISICO)</p>
+        </div>
+      </div>
+      <div class="main-header" style="background-color: #fafafa;border-bottom: 1px solid rgb(202, 202, 202);">
+        <div class="container-fluid">
+          <div class="row p-2 bg-white text-dark justify-content-between align-items-center">
+            <div class="col-md-6 text-center-sm">
+              <img src="https://www.skillindiadigital.gov.in/assets/new-ux-img/india-flag.svg" alt="" srcset=""> |
+              Indian Skill Institute
+            </div>
+            <div class="col-md-6 d-flex justify-content-between-sm" style="align-items: center;">
+              <p class="p-2 d-none d-lg-block">Skip To Main Content</p>
+              <div class="item p-2">
+                <i class="bi bi-badge-ad p-2"></i>
+              </div>
+              <div class="item p-2">
+                <i class="bi bi-geo-alt-fill"></i> Chennai
+              </div>
+              <div class="item p-2 text-light-gray">
+                <i class="bi bi-house-fill"></i> Home
+              </div>
+              <div class="item p-2 text-light-gray">
+                <i class="bi bi-three-dots-vertical"></i> More
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <header class="main-menu">
+        <div class="header-section">
+          <div class="container-fluid" style="background-color: #fafafa;border-bottom: 0px solid rgb(202, 202, 202);">
+            <div class="hero-topbar-block py-2 bg-white"
+              style="background-color: #fafafa;border-bottom: 0px solid rgb(202, 202, 202);">
+              <div class="row align-items-center justify-content-between gy-2">
+                <!-- Search Bar (Always First on Mobile) -->
+                <div class="col-12 d-block d-md-none order-1">
+                  <div class="input-group">
+                    <span class="input-group-text bg-white border-end-0">
+                      <i class="fa fa-search"></i>
+                    </span>
+                    <input type="text" class="form-control border-start-0" placeholder="Search Skill Courses">
+                  </div>
+                </div>
+                <!-- Logos -->
+                <div
+                  class="col-md-4 d-flex align-items-center gap-3 order-2 order-md-1 justify-content-center justify-content-md-start">
+                  <img src="https://www.skillindiadigital.gov.in/assets/new-ux-img/minstry-bigsize-logo.svg"
+                    alt="Govt Logo" style="height: 44px;">
+                  <img src="https://www.skillindiadigital.gov.in/assets/new-ux-img/skill-india-big-logo.svg"
+                    alt="Skill India Logo" style="height: 44px;">
+                </div>
+                <!-- Search Bar (Visible on md+ screens only) -->
+                <div class="col-md-4 my-2 d-none d-md-block order-md-2 mt-2">
+                  <div class="input-group mt-2 rounded-1">
+                    <span class="input-group-text bg-white border-end-0"><i class="fa fa-search"></i></span>
+                    <input type="text" class="form-control border-start-0 p-2" placeholder="Search Skill Courses">
+                  </div>
+                </div>
+                <!-- Right Buttons -->
+                <div class="col-md-4 text-end gap-3 order-3 d-none d-md-block">
+                  <a href="#" class="btn btn-outline-success btn-sm d-none-tblet d-lg-block-one">
+                    <i class="fa fa-tachometer-alt me-1 p-2"></i> Dashboards
+                  </a>
+                  <button class="btn btn-warning text-white btn-sm fw-bold p-2">REGISTER</button>
+                  <button class="btn btn-outline-warning btn-sm fw-bold p-2">LOGIN</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="container-fluid">
+            <!-- <div class="hero-topbar-block">
+                     <div class="row align-items-center">
+                       <div class="col-xl-5 col-lg-3 col-1">
+                         <a href="index-2.html" class="header-logo d-lg-flex d-none">
+                           <img src="assets/media/logo.png" alt="">
+                         </a>
+                       </div>
+                       <div class="col-xl-7 col-lg-9 col-md-11">
+                         <div class="d-flex align-items-center gap-24">
+                           <div class="dropdown flex-shrink-0">
+                             <a href="javascript:void(0);" class="fw-600 black"><svg xmlns="http://www.w3.org/2000/svg" width="33" height="32" viewBox="0 0 33 32" fill="none">
+                               <g clip-path="url(#clip0_9539_215)">
+                                 <path d="M31.25 5H1.75C1.05963 5 0.5 5.4477 0.5 6C0.5 6.5523 1.05963 7 1.75 7H31.25C31.9404 7 32.5 6.5523 32.5 6C32.5 5.4477 31.9404 5 31.25 5Z" fill="#141516"/>
+                                 <path d="M31.25 15H1.75C1.05963 15 0.5 15.4477 0.5 16C0.5 16.5523 1.05963 17 1.75 17H31.25C31.9404 17 32.5 16.5523 32.5 16C32.5 15.4477 31.9404 15 31.25 15Z" fill="#141516"/>
+                                 <path d="M31.25 25H1.75C1.05963 25 0.5 25.4477 0.5 26C0.5 26.5523 1.05963 27 1.75 27H31.25C31.9404 27 32.5 26.5523 32.5 26C32.5 25.4477 31.9404 25 31.25 25Z" fill="#141516"/>
+                               </g>
+                               <defs>
+                                 <clipPath>
+                                   <rect width="32" height="32" fill="white" transform="translate(0.5)"/>
+                                 </clipPath>
+                               </defs>
+                             </svg>&nbsp;&nbsp;&nbsp;Categories&nbsp;<i
+                                 class="fa-solid fa-chevron-down"></i></a>
+                             <ul class="sub-menu unstyled">
+                               <li><a href="#">Programming & IT</a></li>
+                               <li><a href="#">Business & Marketing</a></li>
+                               <li><a href="#">Design & Creativity</a></li>
+                               <li><a href="#">Copy Writing</a></li>
+                               <li><a href="#">Business Studies</a></li>
+                             </ul>
+                           </div>
+                           <form class="searchbar">
+                             <svg class="searchbar-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                               viewBox="0 0 20 20" fill="none">
+                               <path
+                                 d="M17.5 17.5L14.5834 14.5833M16.6667 9.58333C16.6667 13.4954 13.4954 16.6667 9.58333 16.6667C5.67132 16.6667 2.5 13.4954 2.5 9.58333C2.5 5.67132 5.67132 2.5 9.58333 2.5C13.4954 2.5 16.6667 5.67132 16.6667 9.58333Z"
+                                 stroke="#92949F" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round" />
+                             </svg>
+                             <input type="text" name="search" id="searchbar" placeholder="Search for a course">
+                           </form>
+                         </div>
+                       </div>
+                     </div>
+                     </div> -->
+            <div style="border-top: 1px solid #d8d8dc;" class="row align-items-center">
+              <div class="col-lg-8 col-6 mt-3">
+                <!-- <a href="index-2.html" class="header-logo d-lg-none d-block">
+                           <img src="assets/media/logo.png" alt="">
+                           </a> -->
+                <div
+                  class="d-flex align-items-center justify-content-center justify-content-md-end gap-3 order-3 d-block d-md-none">
+                  <button class="btn btn-warning text-white btn-sm fw-bold">REGISTER</button>
+                  <button class="btn btn-outline-warning btn-sm fw-bold">LOGIN</button>
+                </div>
+                <nav class="navigation d-md-flex d-none">
+                  <div class="menu-button-right">
+                    <div class="main-menu__nav">
+                      <ul class="main-menu__list">
+                        <li>
+                          <a href="index.html" class="active"> Home</a>
+                        </li>
+                        <li><a href="about.html"> About</a></li>
+                        <li class="dropdown">
+                          <a href="javascript:void(0);">Initiatives</a>
+                          <ul class="sub-menu">
+                             <li>
+                                <a href="programdigital.html">1. Digital Programs(For Design)</a>
+                             </li>
+                            <li>
+                                <a href="program.html">2. Digital Programs (For Design)</a>
+                             </li>
+                             <li>
+                                <a href="scheme.html">3. Scheme (For Design)</a>
+                             </li>
+                              <li>
+                                <a href="schemewomen.html">4. women Scheme (For Design)</a>
+                             </li>
+                            <li>
+                              <a href="course.html">1. Educational Programs</a>
+                              <ul class="sub-menu mt-5">
+                                <li><a href="course.html">• Schools Program</a></li>
+                                <li><a href="#">• Colleges Program</a></li>
+                                <li><a href="#">• Digital Learning Program</a></li>
+                              </ul>
+                            </li>
+                            <li>
+                              <a href="#">2. Skill Development Programs</a>
+                              <ul class="sub-menu mt-5">
+                                <li><a href="#">• Sector-Specific Training</a></li>
+                                <li><a href="#">• On-the-Job Training (OJT)</a></li>
+                                <li><a href="#">• Entrepreneurship Development</a></li>
+                                <li><a href="#">• Women’s Skill Development</a></li>
+                                <li><a href="#">• Skill Development for PWDs</a></li>
+                                <li><a href="#">• Youth Empowerment</a></li>
+                              </ul>
+                            </li>
+                            <li>
+                              <a href="#">3. CSR Initiatives</a>
+                              <ul class="sub-menu mt-5">
+                                <li><a href="#">• Community and Rural Development</a></li>
+                                <li><a href="#">• Transforming Rural Schools</a></li>
+                                <li><a href="#">• Women’s Self-Help Group Skill Development</a></li>
+                                <li><a href="#">• Farmer Producer Organizations (FPO) Awareness and
+                                    Development </a>
+                                </li>
+                              </ul>
+                            </li>
+                          </ul>
+                        </li>
+                        <li class="dropdown">
+                          <a href="course.html"> Sectors </a>
+                        </li>
+                        <li class="dropdown">
+                          <a href="javascript:void(0);">Collaborations</a>
+                          <ul>
+                            <li><a href="#">• Strategic Partnerships</a></li>
+                            <li><a href="#">• Academic collaborations</a></li>
+                            <li><a href="#">• Corporate Partnerships</a></li>
+                            <li><a href="#">• Government Collaborations</a></li>
+                            <li><a href="#">• International Partnerships</a></li>
+                          </ul>
+                        </li>
+                        <li class="dropdown">
+                          <a href="javascript:void(0);">Resources </a>
+                          <ul>
+                            <li><a href="blog.html">• Blogs</a></li>
+                            <li><a href="#">• Training Models</a></li>
+                            <li><a href="#">• Research & Publications</a></li>
+                            <li><a href="#">• Best Practices & Case Studies</a></li>
+                          </ul>
+                        </li>
+                        <li><a href="#">Global Pathways</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                        <!-- <li class="dropdown">
+                                       <a href="javascript:void(0);">Pages</a>
+                                       <ul>
+                                         <li><a href="cart.html">Cart</a></li>
+                                         <li><a href="checkout.html">Check Out</a></li>
+                                         <li><a href="login.html">Login</a></li>
+                                         <li><a href="signup.html">Sign Up</a></li>
+                                         <li><a href="contact.html">Contact Us</a></li>
+                                       </ul>
+                                       </li> -->
+                      </ul>
+                    </div>
+                  </div>
+                </nav>
+              </div>
+              <div class="col-lg-4 col-6 p-0 mt-3">
+                <div class="header-buttons">
+                  <div class="right-nav d-sm-flex gap-16 align-items-center d-none">
+                    <a href="courses.html" class="cus-btn">
+                      <span class="text"> Donate Now</span>
+                    </a>
+                    <a href="login.html" class="cus-btn-2">
+                      <span class="text">NTI Competetions/Events</span>
+                    </a>
+                  </div>
+                  <a href="#" class="main-menu__toggler mobile-nav__toggler">
+                    <img src="assets/media/icons/menu-2.png" alt="">
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+    </div>
+    <!-- Header Menu End -->
+    <div class="stricky-header stricked-menu">
+      <div class="sticky-header__content"></div>
+    </div>
+
+        <!-- Main Sections -->
+        <main class="main-wrapper">
+
+            <!-- Title Banner Section Start -->
+            <section class="title-banner mb-80">
+                <div class="container-fluid">
+                    <h1>About Us</h1>
+                </div>
+            </section>
+            <!-- Title Banner Section End -->
+
+            <!-- About Section Start -->
+            <section class="about-sec mb-120">
+                <div class="container-fluid">
+                    <div class="row row-gap-4 align-items-center">
+
+                        <div class="col-lg-12 order-1">
+                            <div class="ps-24">
+                              <div class="heading text-start">
+                                <div class="tagblock mb-16">
+                                  <img src="assets/media/hero/buld-vec.png" class="bulb-vec"
+                                    alt="Lightbulb icon representing ideas and insight">
+                                  <p class="black">About ISICO</p>
+                                </div>
+                              </div>
+                              <p class="mb-36">
+                                The Indian Skill Institute Co-operation (ISICO), founded in 2020, is committed to advancing India’s
+                                socio-economic development through education, skill enhancement, and entrepreneurship. Focused on
+                                bridging gaps in rural and underprivileged areas, ISICO empowers individuals to secure sustainable
+                                livelihoods and contribute to national growth.
+                              </p>
+                              <p class="mb-36">
+                                Aligned with the National Education Policy (NEP) 2020, ISICO works to enhance the quality of education
+                                while preparing future generations for evolving challenges. The organization adheres to core values of
+                                inclusivity, innovation, and collaboration, and actively contributes to Sustainable Development Goals
+                                (SDGs), particularly SDG 4 (Quality Education), SDG 5 (Gender Equality), and SDG 8 (Decent Work and
+                                Economic Growth).
+                              </p>
+                              <p class="mb-36">
+                                ISICO supports national initiatives like Skill India and Make in India, collaborating with various
+                                sectors to build a skilled, inclusive workforce for India’s future.
+                              </p>
+                              <div class="d-flex align-items-center gap-24 mb-36">
+                                <div class="d-flex align-items-center gap-16">
+                                  <img src="assets/media/vector/unique-course-vec.png" class="content-vector"
+                                    alt="Icon representing programs">
+                                  <div>
+                                    <h4 class="fw-600 color-primary mb-2">Impactful</h4>
+                                    <p>Skill Programs</p>
+                                  </div>
+                                </div>
+                                <div class="d-flex align-items-center gap-16">
+                                  <img src="assets/media/vector/student-vector.png" class="content-vector"
+                                    alt="Icon representing beneficiaries">
+                                  <div>
+                                    <h4 class="fw-600 color-primary mb-2">Nation-wide</h4>
+                                    <p>Reach & Empowerment</p>
+                                  </div>
+                                </div>
+                              </div>
+                              <!-- <div>
+                                <a href="about.html" class="cus-btn">
+                                  <span class="text">Learn More About ISICO</span>
+                                </a>
+                              </div> -->
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="w-100 mb-24">
+                                        <img src="https://d2twr397zv17p4.cloudfront.net/image/discovery-img/about/about1.jpg" class="" alt="">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="w-100 mb-24">
+                                                <img src="https://d2twr397zv17p4.cloudfront.net/image/discovery-img/about/about2.jpg" class="" alt="">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="w-100">
+                                                <img src="https://d2twr397zv17p4.cloudfront.net/image/discovery-img/about/about3.jpg" class="" alt="">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- About Section End -->
+
+            <!-- Trusted Experts Team Section Start -->
+            <section class="our-feature-sec mb-120">
+                <div class="container-fluid">
+                  <div class="heading mb-48">
+                    <!-- <div class="tagblock mb-16 d-flex align-items-center">
+                      <i class="bi bi-lightbulb-fill me-2 text-warning fs-4"></i>
+                      <p class="black mb-0">Our Features</p>
+                    </div> -->
+                    <h3 class="fw-500">
+                      ISICO is built on a <span class="color-primary">three-layered framework</span> to empower individuals through skills, education, and entrepreneurship
+                    </h3>
+                  </div>
+
+                  <div class="row row-gap-4">
+                    <!-- Feature 1 -->
+                    <div class="col-lg-4 col-md-6">
+                      <div class="feature-block rounded h-100">
+                        <div class="icon mb-3">
+                          <i class="bi bi-mortarboard-fill text-primary fs-1"></i>
+                        </div>
+                        <div class="feature-content">
+                          <h5 class="fw-500 mb-2">Skill-Based Education</h5>
+                          <p>Delivering industry-relevant, hands-on education to develop job-ready individuals and reduce the skill gap in rural and underserved regions.</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Feature 2 -->
+                    <div class="col-lg-4 col-md-6">
+                      <div class="feature-block rounded h-100">
+                        <div class="icon mb-3">
+                          <i class="bi bi-people-fill text-success fs-1"></i>
+                        </div>
+                        <div class="feature-content">
+                          <h5 class="fw-500 mb-2">Inclusive Development</h5>
+                          <p>Promoting gender equality and rural empowerment by making skill development accessible to all—especially women and marginalized communities.</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Feature 3 -->
+                    <div class="col-lg-4">
+                      <div class="feature-block rounded h-100">
+                        <div class="icon mb-3">
+                          <i class="bi bi-lightning-fill text-danger fs-1"></i>
+                        </div>
+                        <div class="feature-content">
+                          <h5 class="fw-500 mb-2">Entrepreneurial Support</h5>
+                          <p>Fostering innovation and self-reliance by mentoring young entrepreneurs and supporting start-ups through knowledge and skill initiatives.</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+            <!-- Trusted Experts Team Section End -->
+<!-- End Upcoming Projects -->
+      <style>
+        .background-bubbles {
+          position: fixed;
+          width: 100%;
+          height: 100%;
+          z-index: 0;
+          overflow: hidden;
+        }
+
+        .background-bubbles span {
+          position: absolute;
+          display: block;
+          width: 20px;
+          height: 20px;
+          background: rgba(255, 255, 255, 0.1);
+          border-radius: 50%;
+          animation: float 20s linear infinite;
+        }
+
+        @keyframes float {
+          0% {
+            transform: translateY(100vh) scale(0.5);
+            opacity: 0;
+          }
+
+          50% {
+            opacity: 0.3;
+          }
+
+          100% {
+            transform: translateY(-10vh) scale(1);
+            opacity: 0;
+          }
+        }
+
+        .circle-container {
+          position: relative;
+          width: 100%;
+          max-width: 700px;
+          height: 700px;
+          margin: auto;
+          top: 70%;
+          transform: translateY(-50%);
+          z-index: 2;
+          margin-top: 70%;
+        }
+
+        .orbit-ring {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          width: 100%;
+          height: 100%;
+          transform: translate(-50%, -50%);
+          border: 2px dashed rgba(255, 255, 255, 0.2);
+          border-radius: 50%;
+          z-index: 1;
+        }
+
+        .central-circle {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          width: 180px;
+          height: 180px;
+          transform: translate(-50%, -50%);
+          background-color: #fff;
+          border-radius: 50%;
+          text-align: center;
+          padding: 20px;
+          color: #1e5631;
+          font-weight: bold;
+          box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+          z-index: 3;
+        }
+
+        .orbit-wrapper {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          width: 100%;
+          height: 100%;
+          transform: translate(-50%, -50%);
+          transform-origin: center center;
+          z-index: 2;
+        }
+
+        .orbiting-box {
+          position: absolute;
+          width: 160px;
+          background-color: #fff;
+          color: #1e5631;
+          padding: 12px;
+          border-radius: 15px;
+          text-align: center;
+          box-shadow: 0 0 15px rgba(0, 0, 0, 0.15);
+          transition: background 0.3s;
+        }
+
+        .orbiting-box h6 {
+          font-weight: bold;
+          font-size: 15px;
+        }
+
+        .orbiting-box:hover {
+          background-color: #6e8b38;
+          cursor: pointer;
+        }
+
+        .orbiting-box button {
+          background: none;
+          border: none;
+          color: #1e5631;
+          font-weight: 600;
+          text-decoration: underline;
+          margin-top: 5px;
+        }
+
+        .box1 {
+          top: 0%;
+          left: 50%;
+          transform: translate(-50%, -50%) rotate(0deg);
+        }
+
+        .box2 {
+          top: 25%;
+          left: 92%;
+          transform: translate(-50%, -50%) rotate(0deg);
+        }
+
+        .box3 {
+          top: 75%;
+          left: 92%;
+          transform: translate(-50%, -50%) rotate(0deg);
+        }
+
+        .box4 {
+          top: 100%;
+          left: 50%;
+          transform: translate(-50%, -50%) rotate(0deg);
+        }
+
+        .box5 {
+          top: 75%;
+          left: 8%;
+          transform: translate(-50%, -50%) rotate(0deg);
+        }
+
+        .box6 {
+          top: 25%;
+          left: 8%;
+          transform: translate(-50%, -50%) rotate(0deg);
+        }
+
+        .block {
+    /* background: rgba(39, 48, 126, 0.897); */
+    color: #fff;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.flow {
+    position: relative;
+    width: 100%;
+}
+
+.flow .item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    position: relative;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    word-break: break-all;
+}
+
+.flow .item:first-child {
+    padding-top: 40px;
+}
+
+.flow .item:last-child {
+    padding-bottom: 40px;
+}
+
+.text h3 {
+    color: white;
+    font-size: 21px;
+}
+.flow .item::after {
+    content: "";
+    width: 6px;
+    height: 100%;
+    left: calc(50% - 8px);
+    top: 0;
+    border-right: 4px dashed rgb(240, 240, 240);
+    z-index: 1;
+    position: absolute;
+}
+
+.flow .item .circle {
+    width: 24px;
+    height: 24px;
+    border-radius: 24px;
+    background: #008c01;
+    position: relative;
+    z-index: 2;
+}
+
+.flow .item .text {
+    position: absolute;
+    padding: 20px;
+    background: #008c01;
+    border-radius: 8px;
+}
+
+.flow .item:nth-child(odd) .text {
+    left: calc(50% + 44px);
+}
+
+.flow .item:nth-child(even) .text {
+    right: calc(50% + 44px);
+    text-align: right;
+}
+
+@media screen and (max-width: 478px) {
+    .flow .item {
+        justify-content: flex-start;
+    }
+
+    .flow .item::after {
+        left: 20px;
+    }
+
+    .flow .item .circle {
+        margin-left: 16px;
+    }
+
+    .flow .item .text {
+        position: relative;
+        left: 30px;
+        padding: 20px;
+        background: #008c01;
+    }
+
+    .flow .item:nth-child(even) .text {
+        position: relative;
+        text-align: left;
+        left: 30px;
+    }
+
+    .flow .item:nth-child(odd) .text {
+        position: relative;
+        text-align: left;
+        left: 30px;
+    }
+}
+
+
+        @media (max-width: 768px) {
+          .circle-container {
+            width: 100%;
+            height: 100%;
+            max-height: none;
+            transform: none;
+            top: unset;
+            padding-top: 60px;
+          }
+
+          .orbiting-box {
+            width: 130px;
+            padding: 10px;
+            font-size: 14px;
+          }
+
+          .central-circle {
+            width: 140px;
+            height: 140px;
+            font-size: 14px;
+          }
+        }
+      </style>
+      <div class="container">
+        <!-- Core Values -->
+        <div class="text-center mb-5">
+          <div class="d-inline-flex align-items-center mb-3">
+            <img src="assets/media/hero/buld-vec.png" class="me-2" alt="" style="width: 30px;">
+            <p class="mb-0 fw-semibold text-dark">Our Core Values</p>
+          </div>
+          <h2 class="fw-bold">Smart Learning. Trusted Experts. <span class="text-primary">Everywhere</span></h2>
+        </div>
+        <div class="row ">
+          <div class="col-md-4">
+            <div class="row">
+              <div class="col-12">
+                <div class="card h-100 shadow-sm border-0">
+                  <div class="card-body pt-3 pb-3">
+                    <div class="row align-items-center">
+                      <div class="col-2 text-center">
+                        <img src="assets/media/images/equity.png" alt="" srcset="">
+                      </div>
+                      <div class="col-10">
+                        <h5 class="card-title mb-1 fw-semibold">Equity and Inclusion</h5>
+                        <p class="card-text small mb-0 p-2 text-light-gray">
+                          Ensuring access to quality education and training for all, with a focus on marginalized
+                          communities.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="card h-100 shadow-sm border-0">
+                  <div class="card-body">
+                    <div class="row align-items-center">
+                      <div class="col-2 text-center">
+                        <img src="assets/media/images/innovation.png" alt="" srcset="">
+                      </div>
+                      <div class="col-10">
+                        <h5 class="card-title mb-1 fw-semibold">Innovation and Sustainability</h5>
+                        <p class="card-text small mb-0 p-2 text-light-gray">Promoting green jobs, emerging technologies,
+                          and
+                          environmentally
+                          sustainable practices.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="card h-100 shadow-sm border-0">
+                  <div class="card-body">
+                    <div class="row align-items-center">
+                      <div class="col-2 text-center">
+                        <img src="assets/media/images/empowerment.png" alt="" srcset="">
+                      </div>
+                      <div class="col-10">
+                        <h5 class="card-title mb-1 fw-semibold">Empowerment</h5>
+                        <p class="card-text small mb-0 p-2 text-light-gray">
+                          Enhancing the capabilities of children, youth, women, and farmers to achieve economic
+                          independence and social impact.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="card h-100 shadow-sm border-0">
+                  <div class="card-body">
+                    <div class="row align-items-center">
+                      <div class="col-2 text-center">
+                        <img src="assets/media/images/collarabration.png" alt="" srcset="">
+                      </div>
+                      <div class="col-10">
+                        <h5 class="card-title mb-1 fw-semibold">Collaboration</h5>
+                        <p class="card-text small mb-0 p-2 text-light-gray">
+                          Partnering with government bodies, corporate entities, and international organizations to
+                          achieve shared goals.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-8">
+            <div class="d-block d-md-block d-lg-block">
+             <!-- <h1>CSS Flow</h1> -->
+              <div class="block container-fluid">
+                  <div class="flow">
+                      <div class="item">
+                          <div class="circle"></div>
+                          <div class="text">
+                              <h3>Step 1</h3>
+                              <div>Educational Institutions</div>
+                          </div>
+                      </div>
+                      <div class="item">
+                          <div class="circle" style="background: yellow"></div>
+                          <div class="text">
+                              <h3>Step 2</h3>
+                              <div>EdTech Platforms</div>
+                          </div>
+                      </div>
+                      <div class="item">
+                          <div class="circle" style="background: rgb(9, 156, 137)"></div>
+                          <div class="text">
+                              <h3>Step 3</h3>
+                              <div>Infrastructure Support</div>
+                          </div>
+                      </div>
+                      <div class="item">
+                          <div class="circle" style="background: rgb(255, 0, 170)"></div>
+                          <div class="text">
+                              <h3>Step 4</h3>
+                              <div>Community Building</div>
+                          </div>
+                      </div>
+                      <div class="item">
+                          <div class="circle" style="background: rgb(255, 60, 0)"></div>
+                          <div class="text">
+                              <h3>Step 5</h3>
+                              <div>Empowerment</div>
+                          </div>
+                      </div>
+                      <div class="item">
+                          <div class="circle" style="background: rgb(255, 0, 157)"></div>
+                          <div class="text">
+                              <h3>Step 6</h3>
+                              <div>Equity and Inclution</div>
+                          </div>
+                      </div>
+                      <div class="item">
+                          <div class="circle" style="background: rgb(0, 204, 255)"></div>
+                          <div class="text">
+                              <h3>Step 7</h3>
+                              <div>Collaboration</div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+            </div>
+        </div>
+    </div>
+</div>
+    <section class="py-5 bg-light mt-5 mb-5">
+        <div class="container-fluid">
+            <!-- Heading -->
+            <div class="text-center mb-5">
+            <h2 class="fw-bold">The User Base of <span class="text-primary">Skill India Digital Hub</span></h2>
+            <p class="text-muted">Empowering learners of all ages — from students to professionals — to build skills and grow careers.</p>
+            </div>
+
+            <!-- User Categories -->
+            <div class="row g-4">
+            <!-- Card Template -->
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm h-100 text-center p-4 rounded-4">
+                <div class="icon-circle bg-primary text-white mb-3 mx-auto">
+                    <i class="bi bi-book-fill fs-2"></i>
+                </div>
+                <h5 class="fw-semibold mb-2">Students</h5>
+                <p class="text-muted small mb-0">Currently enrolled learners exploring new skills alongside formal education.</p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm h-100 text-center p-4 rounded-4">
+                <div class="icon-circle bg-warning text-white mb-3 mx-auto">
+                    <i class="bi bi-door-open-fill fs-2"></i>
+                </div>
+                <h5 class="fw-semibold mb-2">Early Exit</h5>
+                <p class="text-muted small mb-0">Individuals who left education early and seek meaningful skill-building pathways.</p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm h-100 text-center p-4 rounded-4">
+                <div class="icon-circle bg-success text-white mb-3 mx-auto">
+                    <i class="bi bi-mortarboard-fill fs-2"></i>
+                </div>
+                <h5 class="fw-semibold mb-2">Finished Education</h5>
+                <p class="text-muted small mb-0">Graduates aiming to upskill, specialize, or enter the workforce with confidence.</p>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card border-0 shadow-sm h-100 text-center p-4 rounded-4">
+                <div class="icon-circle bg-info text-white mb-3 mx-auto">
+                    <i class="bi bi-briefcase-fill fs-2"></i>
+                </div>
+                <h5 class="fw-semibold mb-2">In-Service Professionals</h5>
+                <p class="text-muted small mb-0">Working individuals enhancing their career through flexible learning.</p>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card border-0 shadow-sm h-100 text-center p-4 rounded-4">
+                <div class="icon-circle bg-danger text-white mb-3 mx-auto">
+                    <i class="bi bi-person-x-fill fs-2"></i>
+                </div>
+                <h5 class="fw-semibold mb-2">Not in Employment, Education, or Training</h5>
+                <p class="text-muted small mb-0">Individuals ready to re-enter education or work through upskilling programs.</p>
+                </div>
+            </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Custom Styles -->
+    <style>
+    .icon-circle {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    </style>
+
+
+
+
+            <!-- Testimonial Section Start -->
+            <section class="testimonial-sec mb-120">
+                <div class="container-fluid">
+                      <!-- Heading -->
+                    <div class="text-center mb-5">
+                        <h2 class="fw-bold">Features of  <span class="text-primary">Skill India Digital Hub</span></h2>
+
+                        </div>
+                    <div class="row row-gap-4 align-items-center">
+                        <div class="col-lg-6">
+                            <h4 class="mb-4">Skill India Map<h4>
+                                <img src="https://d2twr397zv17p4.cloudfront.net/image/discovery-img/about/about-map.png" alt="img">
+                        </div>
+                        <div class="col-lg-6">
+                            <h4 class="mb-4">A. Engines of Skill India Digital Hub<h4>
+                            <div class="accordion" id="faqAccordion">
+
+                                <!-- Discovery -->
+                                <div class="accordion-item">
+                                  <h2 class="accordion-header" id="faq1">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faqContent1" aria-expanded="true">
+                                      What can users discover on the Skill India Digital Hub?
+                                    </button>
+                                  </h2>
+                                  <div id="faqContent1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                                    <div class="accordion-body">
+                                      Users can explore <strong>free content, services, courses, training centres, and employers</strong> based on their location and interests. The platform also showcases <strong>success stories</strong> to inspire learners, trainers, and more.
+                                    </div>
+                                  </div>
+                                </div>
+
+                                <!-- Skilling -->
+                                <div class="accordion-item">
+                                  <h2 class="accordion-header" id="faq2">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqContent2">
+                                      What is the focus of the Skilling section?
+                                    </button>
+                                  </h2>
+                                  <div id="faqContent2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                    <div class="accordion-body">
+                                      The Skilling section provides users with access to <strong>industry-aligned training programs</strong>, certifications, and courses designed to boost employability across sectors.
+                                    </div>
+                                  </div>
+                                </div>
+
+                                <!-- Lifelong Learning -->
+                                <div class="accordion-item">
+                                  <h2 class="accordion-header" id="faq3">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqContent3">
+                                      Does the platform support lifelong learning?
+                                    </button>
+                                  </h2>
+                                  <div id="faqContent3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                    <div class="accordion-body">
+                                      Yes, Skill India Digital Hub enables <strong>learning at every stage of life</strong> — from early school leavers to professionals looking to upskill or reskill.
+                                    </div>
+                                  </div>
+                                </div>
+
+                                <!-- Apprenticeship -->
+                                <div class="accordion-item">
+                                  <h2 class="accordion-header" id="faq4">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqContent4">
+                                      What apprenticeship opportunities are available?
+                                    </button>
+                                  </h2>
+                                  <div id="faqContent4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                    <div class="accordion-body">
+                                      Users can discover a wide range of <strong>apprenticeship opportunities</strong> that combine learning with hands-on industry experience to prepare them for the workforce.
+                                    </div>
+                                  </div>
+                                </div>
+
+                                <!-- Assessment -->
+                                <div class="accordion-item">
+                                  <h2 class="accordion-header" id="faq5">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqContent5">
+                                      Is there any assessment process involved?
+                                    </button>
+                                  </h2>
+                                  <div id="faqContent5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                    <div class="accordion-body">
+                                      Yes, after completing a course or training, users may undergo <strong>assessments or evaluations</strong> to test their learning and receive certifications.
+                                    </div>
+                                  </div>
+                                </div>
+
+                                <!-- LMS -->
+                                <div class="accordion-item">
+                                  <h2 class="accordion-header" id="faq6">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqContent6">
+                                      What is the Learning Management System (LMS) in Skill India Digital Hub?
+                                    </button>
+                                  </h2>
+                                  <div id="faqContent6" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                    <div class="accordion-body">
+                                      The LMS is an integrated platform that enables users to <strong>access courses, track progress, complete modules, and receive feedback</strong> in a structured online environment.
+                                    </div>
+                                  </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- <div class="col-lg-6 mt-4">
+                            <h4>B. Skill India Map<h4>
+                                <p>Skill India Digital Hub has a Digital Map, a blue dot concept, which can showcase the following:</p>
+                                <ul>
+                                    <li>Candidates will be able to locate training centres based on the courses offered, fee,location, course delivery</li>
+                                    <li>Candidates will be able to identify assessment agencies for on-demand assessment</li>
+                                    <li>Training partners will be able to locate candidates based on their aspiration, profile, experience, eligibility, and location Training partners will have access to the industry to help in collating demand and</li>
+                                    <li>preparing course content to the need of the industry.</li>
+                                </ul>
+                        </div> -->
+                        <!-- <div class="col-lg-6 mt-4">
+                            <img src="https://d2twr397zv17p4.cloudfront.net/image/discovery-img/about/about-map.png" alt="img">
+                        </div> -->
+                    </div>
+                </div>
+            </section>
+            <!-- Testimonial Section End -->
+
+
+
+            <!-- FOOTER Start -->
+            <div class="newlatter wow fadeInUp animated" data-wow-delay="690ms">
+                <div class="container-fluid">
+                   <div class="newslatter-wrapper">
+                      <!-- Join Us -->
+                      <div class="mb-5 text-center">
+                         <!-- <h3 class="text-primary mb-3"> </h3> -->
+                         <h3 class="fw-500 white mb-3 text-white text-capitalize">
+                            Empowering minds to unlock <span class="text-warning">Full Potential</span>
+                         </h3>
+                         <p class="mb-0 text-white w-100 text-center mx-auto">Join us on a journey of learning, growth, and
+                            limitless possibilities.
+                            Whether it's education, support, or opportunity — we're here to guide and empower.
+                         </p>
+                      </div>
+                      <div class="row row-gap-4">
+                         <div class="col-lg-6">
+                            <div class="d-flex gap-16 mt-2 mb-2">
+                               <h2 class="fw-bold mb-3 text-white text-center fs-1">Join <span class="text-primary">Us</span></h2>
+                               <a href="#"><button class="cus-btn bg-white"><span class="text light-black">Donate
+                               Now</span></button></a>
+                            </div>
+                            <p class="lead text-white">We invite partnerships with government bodies, corporate entities, and
+                               development
+                               organizations to expand our reach and deliver impactful programs across the nation.
+                            </p>
+                            <p class="fw-bold text-white">Together, let us create a skilled, empowered, and sustainable India.</p>
+                         </div>
+                         <div class="col-lg-6">
+                            <div class="news-form mt-1">
+                               <!-- Contact form content paragraph -->
+                               <p class="text-white mb-3">
+                                  We'd love to hear from you! Fill out the form below and we'll get in touch.
+                               </p>
+                               <!-- Contact form -->
+                               <form class="row g-3">
+                                  <div class="col-md-6">
+                                     <input type="text" class="form-control" placeholder="Your Name" required>
+                                  </div>
+                                  <div class="col-md-6">
+                                     <input type="email" class="form-control" placeholder="Your Email" required>
+                                  </div>
+                                  <div class="col-md-6">
+                                     <input type="tel" class="form-control" placeholder="Mobile Number" required>
+                                  </div>
+                                  <div class="col-md-6">
+                                     <input type="text" class="form-control" placeholder="Mobile Number" required>
+                                  </div>
+                                  <div class="col-md-6 form-check">
+                                     <input class="form-check-input" type="checkbox" id="philanthropistCheck">
+                                     <label class="form-check-label text-white" for="philanthropistCheck">
+                                     Register as a Philanthropist or Sponsor
+                                     </label>
+                                  </div>
+                                  <div class="col-12">
+                                     <button type="submit" class="btn cus-btn bg-white">Submit</button>
+                                  </div>
+                               </form>
+                            </div>
+                         </div>
+                      </div>
+                   </div>
+                </div>
+             </div>
+             <footer>
+                <div class="container-fluid">
+                   <div class="row row-gap-5 mb-64">
+                      <div class="col-lg-4">
+                         <img src="assets/media/footer-logo.png" class="footer-logo mb-16" alt="">
+                         <p class="dark-gray mb-32">Founded in 2020, the **Indian Skill Institute Co-operation (ISICO)** is
+                            dedicated to advancing India’s socio-economic development. We achieve this by providing quality
+                            education, enhancing skills, and fostering entrepreneurship, especially in rural and underprivileged
+                            areas. Our commitment empowers individuals to secure sustainable livelihoods and contribute to national
+                            growth.
+                         </p>
+                      </div>
+                      <div class="col-lg-8">
+                         <div class="link-wrapper">
+                            <div>
+                               <h5 class="fw-500 mb-24">USEFUL LINKS</h5>
+                               <ul class="unstyled">
+                                  <li class="link mb-12"><a href="#"><i class="fa fa-arrow-alt-circle-right"></i> Home</a></li>
+                                  <li class="link mb-12"><a href="#"><i class="fa fa-arrow-alt-circle-right"></i> About Us</a></li>
+                                  <li class="link mb-12"><a href="#"><i class="fa fa-arrow-alt-circle-right"></i> Contact Us</a></li>
+                                  <li class="link mb-12"><a href="#"><i class="fa fa-arrow-alt-circle-right"></i> Donate Now</a></li>
+                                  <li class="link mb-12"><a href="#"><i class="fa fa-arrow-alt-circle-right"></i> NTI
+                                     Competetions/Events</a>
+                                  </li>
+                               </ul>
+                            </div>
+                            <div>
+                               <h5 class="fw-500 mb-24">USEFUL LINKS</h5>
+                               <ul class="unstyled">
+                                  <li class="link mb-12"><a href="#"><i class="fa fa-arrow-alt-circle-right"></i> Initiatives</a></li>
+                                  <li class="link mb-12"><a href="#"><i class="fa fa-arrow-alt-circle-right"></i> Sectors</a></li>
+                                  <li class="link mb-12"><a href="#"><i class="fa fa-arrow-alt-circle-right"></i> Collaborations</a>
+                                  </li>
+                                  <li class="link mb-12"><a href="#"><i class="fa fa-arrow-alt-circle-right"></i> Resources</a></li>
+                                  <li class="link mb-12"><a href="#"><i class="fa fa-arrow-alt-circle-right"></i> Global Pathways</a>
+                                  </li>
+                               </ul>
+                            </div>
+                            <div class="">
+                               <h5 class="fw-600 mb-24">CONTACT DETALIS</h5>
+                               <div class="d-flex align-items-center gap-8 mb-12">
+                                  <a href="tel:+919988776655" class="h6 fw-400 black hover-content"> <i
+                                     class="fa fa-phone text-primary"></i> +(91) 9988776655</a>
+                               </div>
+                               <div class="d-flex align-items-center gap-8">
+                                  <a href="mailto:info@gmail.com" class="h6 fw-400 black  hover-content"><i
+                                     class="fa fa-envelope text-primary"></i> info@gmail.com</a>
+                               </div>
+                               <div class="d-flex align-items-center gap-8 mt-2">
+                                  <a href="#" class="h6 fw-400 black  hover-content"><i class="fa fa-map-location text-primary"></i>
+                                  Chennai - 600 002.</a>
+                               </div>
+                               <!-- Social Media Icons -->
+                               <div class="d-flex align-items-center gap-3 ms-3 mt-3">
+                                  <a href="https://facebook.com" target="_blank" class="text-primary fs-5" aria-label="Facebook">
+                                  <i class="fab fa-facebook-f"></i>
+                                  </a>
+                                  <a href="https://twitter.com" target="_blank" class="text-primary fs-5" aria-label="Twitter">
+                                  <i class="fab fa-twitter"></i>
+                                  </a>
+                                  <a href="https://instagram.com" target="_blank" class="text-primary fs-5" aria-label="Instagram">
+                                  <i class="fab fa-instagram"></i>
+                                  </a>
+                                  <a href="https://linkedin.com" target="_blank" class="text-primary fs-5" aria-label="LinkedIn">
+                                  <i class="fab fa-linkedin-in"></i>
+                                  </a>
+                               </div>
+                            </div>
+                         </div>
+                      </div>
+                   </div>
+                   <div class="hr-line mb-36"></div>
+                   <div class="privacy-text">
+                      <p>Copyright © 2025.ISICO - INDIAN SKILL INSTUTUTE CO-OPERATION. All rights reserved.</p>
+                   </div>
+                </div>
+             </footer>
+             <!-- FOOTER End -->
+          </main>
+          <!-- Main Sections -->
+       </div>
+       <!-- Main Wrapper End -->
+       <!-- Back To Top Start -->
+       <a href="#main-wrapper" id="backto-top" class="back-to-top"><i class="fas fa-angle-up"></i></a>
+       <!-- Mobile Menu Start -->
+       <div class="mobile-nav__wrapper">
+          <div class="mobile-nav__overlay mobile-nav__toggler"></div>
+          <div class="mobile-nav__content">
+             <span class="mobile-nav__close mobile-nav__toggler"><i class="fa fa-times"></i></span>
+             <div class="logo-box">
+                <a href="index-2.html" aria-label="logo image"><img src="assets/media/logo.png" alt=""></a>
+             </div>
+             <div class="mobile-nav__container"></div>
+             <ul class="mobile-nav__contact list-unstyled">
+                <li>
+                   <i class="fas fa-envelope"></i>
+                   <a href="mailto:example@company.com">example@company.com</a>
+                </li>
+                <li>
+                   <i class="fa fa-phone-alt"></i>
+                   <a href="tel:+12345678">+123 (4567) -890</a>
+                </li>
+             </ul>
+             <div class="mobile-nav__social">
+                <a href="#"><i class="fa-brands fa-x-twitter"></i></a>
+                <a href="#"><i class="fab fa-facebook"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+             </div>
+          </div>
+       </div>
+       <!-- Mobile Menu End -->
+       <!-- Jquery Js -->
+       <script src="assets/js/vendor/bootstrap.min.js"></script>
+       <script src="assets/js/vendor/jquery-3.6.3.min.js"></script>
+       <script src="assets/js/vendor/slick.min.js"></script>
+       <script src="assets/js/vendor/wow.js"></script>
+       <script src="assets/js/vendor/jquery-validator.js"></script>
+       <script src="assets/js/app.js"></script>
+       <!-- Swiper JS -->
+       <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+       <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+       <!-- Initialize Swiper -->
+       <!-- Bootstrap Modals for each box -->
+       <div class="modal fade" id="modal1" tabindex="-1">
+          <div class="modal-dialog">
+             <div class="modal-content">
+                <div class="modal-header">
+                   <h5 class="modal-title">Educational Institutions</h5>
+                   <button type="button" class="btn-close"
+                      data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">Provide infrastructure and host learners at physical centers.</div>
+             </div>
+          </div>
+       </div>
+       <div class="modal fade" id="modal2" tabindex="-1">
+          <div class="modal-dialog">
+             <div class="modal-content">
+                <div class="modal-header">
+                   <h5 class="modal-title">Industry Partners</h5>
+                   <button type="button" class="btn-close"
+                      data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">Support with internships, curriculum alignment, job pathways.</div>
+             </div>
+          </div>
+       </div>
+       <div class="modal fade" id="modal3" tabindex="-1">
+          <div class="modal-dialog">
+             <div class="modal-content">
+                <div class="modal-header">
+                   <h5 class="modal-title">International Collaboration</h5>
+                   <button type="button" class="btn-close"
+                      data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">Brings global learning models and certifications to learners.</div>
+             </div>
+          </div>
+       </div>
+       <div class="modal fade" id="modal4" tabindex="-1">
+          <div class="modal-dialog">
+             <div class="modal-content">
+                <div class="modal-header">
+                   <h5 class="modal-title">EdTech Platforms</h5>
+                   <button type="button" class="btn-close"
+                      data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">Facilitate hybrid learning with tracking, multilingual content.</div>
+             </div>
+          </div>
+       </div>
+       <div class="modal fade" id="modal5" tabindex="-1">
+          <div class="modal-dialog">
+             <div class="modal-content">
+                <div class="modal-header">
+                   <h5 class="modal-title">Infrastructure Support</h5>
+                   <button type="button" class="btn-close"
+                      data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">Support includes labs, internet, electricity, and smart devices.</div>
+             </div>
+          </div>
+       </div>
+       <div class="modal fade" id="modal6" tabindex="-1">
+          <div class="modal-dialog">
+             <div class="modal-content">
+                <div class="modal-header">
+                   <h5 class="modal-title">Community Building</h5>
+                   <button type="button" class="btn-close"
+                      data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">Encourages participation from all communities, especially women.</div>
+             </div>
+          </div>
+       </div>
+    </body>
+ </html>

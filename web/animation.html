@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ISICO Orbit System</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .background-bubbles {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .background-bubbles span {
+      position: absolute;
+      display: block;
+      width: 20px;
+      height: 20px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      animation: float 20s linear infinite;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(100vh) scale(0.5); opacity: 0; }
+      50% { opacity: 0.3; }
+      100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+    }
+
+    .circle-container {
+      position: relative;
+      width: 700px;
+      height: 700px;
+      margin: auto;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 2;
+    }
+
+    .orbit-ring {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 100%;
+      height: 100%;
+      transform: translate(-50%, -50%);
+      border: 2px dashed rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      z-index: 1;
+    }
+
+    .central-circle {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 180px;
+      height: 180px;
+      transform: translate(-50%, -50%);
+      background-color: #fff;
+      border-radius: 50%;
+      text-align: center;
+      padding: 20px;
+      color: #1e5631;
+      font-weight: bold;
+      box-shadow: 0 0 20px rgba(0,0,0,0.2);
+      z-index: 3;
+    }
+
+    .orbit-wrapper {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 100%;
+      height: 100%;
+      transform: translate(-50%, -50%);
+      transform-origin: center center;
+      z-index: 2;
+    }
+
+    .orbiting-box {
+      position: absolute;
+      width: 180px;
+      background-color: #fff;
+      color: #1e5631;
+      padding: 12px;
+      border-radius: 15px;
+      text-align: center;
+      box-shadow: 0 0 15px rgba(0,0,0,0.15);
+      transition: background 0.3s;
+    }
+
+    .orbiting-box h6 {
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    .orbiting-box:hover {
+      background-color: #d9f99d;
+      cursor: pointer;
+    }
+
+    .orbiting-box button {
+      background: none;
+      border: none;
+      color: #1e5631;
+      font-weight: 600;
+      text-decoration: underline;
+      margin-top: 5px;
+    }
+
+    /* Even spacing positions */
+    .box1 { top: 0%; left: 50%; transform: translate(-50%, -50%) rotate(0deg); }
+    .box2 { top: 25%; left: 92%; transform: translate(-50%, -50%) rotate(0deg); }
+    .box3 { top: 75%; left: 92%; transform: translate(-50%, -50%) rotate(0deg); }
+    .box4 { top: 100%; left: 50%; transform: translate(-50%, -50%) rotate(0deg); }
+    .box5 { top: 75%; left: 8%; transform: translate(-50%, -50%) rotate(0deg); }
+    .box6 { top: 25%; left: 8%; transform: translate(-50%, -50%) rotate(0deg); }
+  </style>
+</head>
+<body>
+<div class="row">
+    <div class="col-md-6"></div>
+    <div class="col-md-6">
+        <div class="background-bubbles">
+  <span style="left: 10%; animation-delay: 0s;"></span>
+  <span style="left: 30%; animation-delay: 2s;"></span>
+  <span style="left: 50%; animation-delay: 4s;"></span>
+  <span style="left: 70%; animation-delay: 1s;"></span>
+  <span style="left: 90%; animation-delay: 3s;"></span>
+</div>
+
+<div class="circle-container">
+  <div class="orbit-ring"></div>
+  <div class="central-circle">ISICO<br>Core Framework</div>
+  <div class="orbit-wrapper" id="orbit">
+    <div class="orbiting-box box1" data-bs-toggle="tooltip" title="Hosts learners & infra">
+      <h6>Educational Institutions</h6>
+      <p>Provide learners & centers</p>
+      <button data-bs-toggle="modal" data-bs-target="#modal1">Learn more</button>
+    </div>
+    <div class="orbiting-box box2" data-bs-toggle="tooltip" title="Job alignment & internships">
+      <h6>Industry Partners</h6>
+      <p>Internships & alignment</p>
+      <button data-bs-toggle="modal" data-bs-target="#modal2">Learn more</button>
+    </div>
+    <div class="orbiting-box box3" data-bs-toggle="tooltip" title="Global best practices">
+      <h6>International Collaboration</h6>
+      <p>Exchanges & Certs</p>
+      <button data-bs-toggle="modal" data-bs-target="#modal3">Learn more</button>
+    </div>
+    <div class="orbiting-box box4" data-bs-toggle="tooltip" title="Hybrid & digital content">
+      <h6>EdTech Platforms</h6>
+      <p>Track progress, access</p>
+      <button data-bs-toggle="modal" data-bs-target="#modal4">Learn more</button>
+    </div>
+    <div class="orbiting-box box5" data-bs-toggle="tooltip" title="Labs & infrastructure">
+      <h6>Infrastructure Support</h6>
+      <p>Labs, internet, tools</p>
+      <button data-bs-toggle="modal" data-bs-target="#modal5">Learn more</button>
+    </div>
+    <div class="orbiting-box box6" data-bs-toggle="tooltip" title="Mobilizing learners">
+      <h6>Community Building</h6>
+      <p>Entrepreneurship</p>
+      <button data-bs-toggle="modal" data-bs-target="#modal6">Learn more</button>
+    </div>
+  </div>
+</div>
+
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  const orbit = document.getElementById("orbit");
+  const boxes = orbit.querySelectorAll(".orbiting-box");
+  const tl = gsap.timeline({ repeat: -1, defaults: { ease: "none" } });
+  tl.to(orbit, { rotate: 360, duration: 30, transformOrigin: "center center" });
+  boxes.forEach(box => {
+    gsap.to(box, {
+      rotate: -360,
+      duration: 30,
+      repeat: -1,
+      ease: "none",
+      transformOrigin: "center center"
+    });
+  });
+  orbit.addEventListener("mouseenter", () => {
+    tl.pause();
+    boxes.forEach(box => gsap.getTweensOf(box)[0]?.pause());
+  });
+  orbit.addEventListener("mouseleave", () => {
+    tl.play();
+    boxes.forEach(box => gsap.getTweensOf(box)[0]?.play());
+  });
+
+  const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+  [...tooltipTriggerList].forEach(el => new bootstrap.Tooltip(el));
+</script>
+
+<!-- Bootstrap Modals for each box -->
+<div class="modal fade" id="modal1" tabindex="-1"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><h5 class="modal-title">Educational Institutions</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body">Provide infrastructure and host learners at physical centers.</div></div></div></div>
+<div class="modal fade" id="modal2" tabindex="-1"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><h5 class="modal-title">Industry Partners</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body">Support with internships, curriculum alignment, job pathways.</div></div></div></div>
+<div class="modal fade" id="modal3" tabindex="-1"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><h5 class="modal-title">International Collaboration</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body">Brings global learning models and certifications to learners.</div></div></div></div>
+<div class="modal fade" id="modal4" tabindex="-1"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><h5 class="modal-title">EdTech Platforms</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body">Facilitate hybrid learning with tracking, multilingual content.</div></div></div></div>
+<div class="modal fade" id="modal5" tabindex="-1"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><h5 class="modal-title">Infrastructure Support</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body">Support includes labs, internet, electricity, and smart devices.</div></div></div></div>
+<div class="modal fade" id="modal6" tabindex="-1"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><h5 class="modal-title">Community Building</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body">Encourages participation from all communities, especially women.</div></div></div></div>
+
+</body>
+</html>
