@@ -11,11 +11,12 @@ class LoginController extends Controller
 {
     public function showLoginForm()
     {
+        // dd('hi');
         return view('Authentication.admin.login');
     }
 
     public function login(Request $request)
-    {         
+    {
 
         $request->validate([
             'email'         => 'required|email',

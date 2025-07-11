@@ -1,11 +1,4 @@
- <!-- footer @s -->
- <div class="nk-footer">
-    <div class="container-fluid">
-        <div class="nk-footer-wrap">
-            <div class="nk-footer-copyright">Copyright &copy; 2025  Jamath. All Rights Reserved. <a href="#" target="_blank"></a>
-            </div>
-
-        </div>
-    </div>
+<div class="copyright-footer d-flex align-items-center justify-content-between border-top bg-white gap-3 flex-wrap">
+    <p class="fs-13 text-gray-9 mb-0">2014 - 2025 &copy; POS. All Right Reserved</p>
+    <p>Designed & Developed By <a href="javascript:void(0);" class="link-primary">POS</a></p>
 </div>
-<!-- footer @e -->

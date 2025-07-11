@@ -1,149 +1,181 @@
-<div class="nk-header nk-header-fixed is-light">
-    <div class="container-fluid">
-        <div class="nk-header-wrap">
-            <div class="nk-menu-trigger d-xl-none ms-n1">
-                <a href="#" class="nk-nav-toggle nk-quick-nav-icon" data-target="sidebarMenu"><em class="icon ni ni-menu"></em></a>
-            </div>
-            <div class="nk-header-brand d-xl-none">
+		<!-- Header -->
+		<div class="header">
+			<div class="main-header">
+				<!-- Logo -->
+				<div class="header-left active">
+					<a href="/" class="logo logo-normal">
+						<img src="{{ asset('resource/admin/assets/img/logo.svg')}}" alt="Img">
+					</a>
+					<a href="/" class="logo logo-white">
+						<img src="{{ asset('resource/admin/assets/img/logo-white.svg')}}" alt="Img">
+					</a>
+					<a href="/" class="logo-small">
+						<img src="{{ asset('resource/admin/assets/img/logo-small.png')}}" alt="Img">
+					</a>
+				</div>
+				<!-- /Logo -->
+				<a id="mobile_btn" class="mobile_btn" href="#sidebar">
+					<span class="bar-icon">
+						<span></span>
+						<span></span>
+						<span></span>
+					</span>
+				</a>
 
-                <h3><a href="index" class="logo-link text-dark">Jamath</a></h3>
-                {{-- <a href="#" class="logo-link text-white">Jamath --}}
-                    {{-- <img class="logo-light logo-img" src="{{ asset('assets/images/logo/logo.jpg') }}" srcset="{{ asset('assets/images/logo/logo.jpg')}}" alt="logo">
-                    <img class="logo-dark logo-img" src="{{ asset('assets/images/logo/logo.jpg')}}" srcset="{{ asset('assets/images/logo/logo.jpg')}}" alt="logo-dark"> --}}
-                {{-- </a> --}}
-            </div><!-- .nk-header-brand -->
-            <div class="nk-header-news d-none d-xl-block">
-                {{-- <div class="nk-news-list">
-                    <a class="nk-news-item" href="#">
-                        <div class="nk-news-icon">
-                            <em class="icon ni ni-card-view"></em>
-                        </div>
-                        <div class="nk-news-text">
-                            <p>Do you know the latest update of 2022? <span> A overview of our is now available on YouTube</span></p>
-                            <em class="icon ni ni-external"></em>
-                        </div>
-                    </a>
-                </div> --}}
-            </div><!-- .nk-header-news -->
-            <div class="nk-header-tools">
-                <ul class="nk-quick-nav">
+				<!-- Header Menu -->
+				<ul class="nav user-menu">
 
-                    <li class="dropdown user-dropdown">
-                        <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
-                            <div class="user-toggle">
-                                <div class="user-avatar sm">
-                                    <em class="icon ni ni-user-alt"></em>
-                                </div>
-                                <div class="user-info d-none d-md-block">
-                                    <div class="user-status">Admin</div>
-                                    <div class="user-name dropdown-indicator">admin@gmail.com</div>
-                                </div>
-                            </div>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-md dropdown-menu-end dropdown-menu-s1">
-                            <div class="dropdown-inner user-card-wrap bg-lighter d-none d-md-block">
-                                <div class="user-card">
-                                    <div class="user-avatar">
-                                        <span>AB</span>
-                                    </div>
-                                    <div class="user-info">
-                                        <span class="lead-text">admin</span>
-                                        <span class="sub-text">admin@gmail.com</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="dropdown-inner">
-                                <ul class="link-list">
-                                    {{-- {{ route('admin.password.change') }} --}}
-                                    <li><a href="{{ url('/admin/change-password') }}"><em class="icon ni ni-user-alt"></em><span>Change Password</span></a></li>
+					<!-- Search -->
+					<li class="nav-item nav-searchinputs">
+						<div class="top-nav-search">
+							<a href="javascript:void(0);" class="responsive-search">
+								<i class="fa fa-search"></i>
+							</a>
 
-                                    <!--<li><a class="dark-switch" href="#"><em class="icon ni ni-moon"></em><span>Dark Mode</span></a></li>-->
-                                </ul>
-                            </div>
-                            <div class="dropdown-inner">
-                                <form id="logout-form" action="{{ route('admin.logout') }}" method="POST" style="display: none;">
-                                    @csrf
-                                </form>
-                                <ul class="link-list">
-                                    <li><a href="/admin/logout" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><em class="icon ni ni-signout"></em><span>Sign out</span></a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </li><!-- .dropdown -->
-                    {{-- <li class="dropdown notification-dropdown me-n1">
-                        <a href="#" class="dropdown-toggle nk-quick-nav-icon" data-bs-toggle="dropdown">
-                            <div class="icon-status icon-status-info"><em class="icon ni ni-bell"></em></div>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-xl dropdown-menu-end dropdown-menu-s1">
-                            <div class="dropdown-head">
-                                <span class="sub-title nk-dropdown-title">Notifications</span>
-                                <a href="#">Mark All as Read</a>
-                            </div>
-                            <div class="dropdown-body">
-                                <div class="nk-notification">
-                                    <div class="nk-notification-item dropdown-inner">
-                                        <div class="nk-notification-icon">
-                                            <em class="icon icon-circle bg-warning-dim ni ni-curve-down-right"></em>
-                                        </div>
-                                        <div class="nk-notification-content">
-                                            <div class="nk-notification-text">You have requested to <span>Widthdrawl</span></div>
-                                            <div class="nk-notification-time">2 hrs ago</div>
-                                        </div>
-                                    </div>
-                                    <div class="nk-notification-item dropdown-inner">
-                                        <div class="nk-notification-icon">
-                                            <em class="icon icon-circle bg-success-dim ni ni-curve-down-left"></em>
-                                        </div>
-                                        <div class="nk-notification-content">
-                                            <div class="nk-notification-text">Your <span>Deposit Order</span> is placed</div>
-                                            <div class="nk-notification-time">2 hrs ago</div>
-                                        </div>
-                                    </div>
-                                    <div class="nk-notification-item dropdown-inner">
-                                        <div class="nk-notification-icon">
-                                            <em class="icon icon-circle bg-warning-dim ni ni-curve-down-right"></em>
-                                        </div>
-                                        <div class="nk-notification-content">
-                                            <div class="nk-notification-text">You have requested to <span>Widthdrawl</span></div>
-                                            <div class="nk-notification-time">2 hrs ago</div>
-                                        </div>
-                                    </div>
-                                    <div class="nk-notification-item dropdown-inner">
-                                        <div class="nk-notification-icon">
-                                            <em class="icon icon-circle bg-success-dim ni ni-curve-down-left"></em>
-                                        </div>
-                                        <div class="nk-notification-content">
-                                            <div class="nk-notification-text">Your <span>Deposit Order</span> is placed</div>
-                                            <div class="nk-notification-time">2 hrs ago</div>
-                                        </div>
-                                    </div>
-                                    <div class="nk-notification-item dropdown-inner">
-                                        <div class="nk-notification-icon">
-                                            <em class="icon icon-circle bg-warning-dim ni ni-curve-down-right"></em>
-                                        </div>
-                                        <div class="nk-notification-content">
-                                            <div class="nk-notification-text">You have requested to <span>Widthdrawl</span></div>
-                                            <div class="nk-notification-time">2 hrs ago</div>
-                                        </div>
-                                    </div>
-                                    <div class="nk-notification-item dropdown-inner">
-                                        <div class="nk-notification-icon">
-                                            <em class="icon icon-circle bg-success-dim ni ni-curve-down-left"></em>
-                                        </div>
-                                        <div class="nk-notification-content">
-                                            <div class="nk-notification-text">Your <span>Deposit Order</span> is placed</div>
-                                            <div class="nk-notification-time">2 hrs ago</div>
-                                        </div>
-                                    </div>
-                                </div><!-- .nk-notification -->
-                            </div><!-- .nk-dropdown-body -->
-                            <div class="dropdown-foot center">
-                                <a href="#">View All</a>
-                            </div>
-                        </div>
-                    </li><!-- .dropdown --> --}}
-                </ul><!-- .nk-quick-nav -->
-            </div><!-- .nk-header-tools -->
-        </div><!-- .nk-header-wrap -->
-    </div><!-- .container-fliud -->
-</div>
+						</div>
+					</li>
+					<!-- /Search -->
+
+
+
+					<li class="nav-item dropdown link-nav">
+						<a href="javascript:void(0);" class="btn btn-primary btn-md d-inline-flex align-items-center" data-bs-toggle="dropdown">
+							<i class="ti ti-circle-plus me-1"></i>Add New
+						</a>
+						<div class="dropdown-menu dropdown-xl dropdown-menu-center">
+							<div class="row g-2">
+								<div class="col-md-2">
+									<a href="{{ route('category.index') }}" class="link-item">
+										<span class="link-icon">
+											<i class="ti ti-brand-codepen"></i>
+										</span>
+										<p>Category</p>
+									</a>
+								</div>
+								<div class="col-md-2">
+									<a href="{{ route('pos.index') }}" class="link-item">
+										<span class="link-icon">
+											<i class="ti ti-shopping-cart"></i>
+										</span>
+										<p>POS</p>
+									</a>
+								</div>
+								<div class="col-md-2">
+									<a href="{{route('products.index')}}" class="link-item">
+										<span class="link-icon">
+											<i class="ti ti-square-plus"></i>
+										</span>
+										<p>Product</p>
+									</a>
+								</div>
+
+								<div class="col-md-2">
+									<a href="{{route('order.index')}}" class="link-item">
+										<span class="link-icon">
+											<i class="ti ti-square-plus"></i>
+										</span>
+										<p>Order</p>
+									</a>
+								</div>
+								<div class="col-md-2">
+									<a href="{{route('customers.index')}}" class="link-item">
+										<span class="link-icon">
+											<i class="ti ti-users"></i>
+										</span>
+										<p>Customer</p>
+									</a>
+								</div>
+								<div class="col-md-2">
+									<a href="{{route('stores.index')}}" class="link-item">
+										<span class="link-icon">
+											<i class="ti ti-user-check"></i>
+										</span>
+										<p>Store</p>
+									</a>
+								</div>
+
+							</div>
+						</div>
+					</li>
+
+					<li class="nav-item pos-nav">
+						<a href="{{ route('pos.index') }}" class="btn btn-dark btn-md d-inline-flex align-items-center">
+							<i class="ti ti-device-laptop me-1"></i>POS
+						</a>
+					</li>
+
+					<!-- Flag -->
+					<li class="nav-item dropdown has-arrow flag-nav nav-item-box">
+						<a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="javascript:void(0);"
+							role="button">
+							<img src="{{ asset('resource/admin/assets/img/flags/us-flag.svg')}}" alt="Language" class="img-fluid">
+						</a>
+						<!-- <div class="dropdown-menu dropdown-menu-right">
+							<a href="javascript:void(0);" class="dropdown-item">
+								<img src="assets/img/flags/english.svg" alt="Img" height="16">English
+							</a>
+							<a href="javascript:void(0);" class="dropdown-item">
+								<img src="assets/img/flags/arabic.svg" alt="Img" height="16">Arabic
+							</a>
+						</div> -->
+					</li>
+					<!-- /Flag -->
+
+					<li class="nav-item nav-item-box">
+						<a href="javascript:void(0);" id="btnFullscreen">
+							<i class="ti ti-maximize"></i>
+						</a>
+					</li>
+
+
+
+
+					<li class="nav-item dropdown has-arrow main-drop profile-nav">
+						<a href="javascript:void(0);" class="nav-link userset" data-bs-toggle="dropdown">
+							<span class="user-info p-0">
+								<span class="user-letter">
+									<img src="{{ asset('resource/admin/assets/img/profiles/avator1.jpg')}}" alt="Img" class="img-fluid">
+								</span>
+							</span>
+						</a>
+						<div class="dropdown-menu menu-drop-user">
+							<div class="profileset d-flex align-items-center">
+								<span class="user-img me-2">
+									<img src="{{ asset('resource/admin/assets/img/profiles/avator1.jpg')}}" alt="Img">
+								</span>
+								<div>
+									<h6 class="fw-medium">John Smilga</h6>
+									<p>Admin</p>
+								</div>
+							</div>
+							{{-- <a class="dropdown-item" href="profile.html"><i class="ti ti-user-circle me-2"></i>MyProfile</a>
+							<a class="dropdown-item" href="sales-report.html"><i class="ti ti-file-text me-2"></i>Reports</a>
+							<a class="dropdown-item" href="general-settings.html"><i class="ti ti-settings-2 me-2"></i>Settings</a>
+							<hr class="my-2"> --}}
+							
+							<form id="logout-form-second" action="{{ route('logout') }}" method="POST" style="display: none;">
+								@csrf
+							</form>
+							<a class="dropdown-item logout pb-0" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form-second').submit();"><i class="ti ti-logout me-2"></i>Logout</a>
+						</div>
+					</li>
+				</ul>
+				<!-- /Header Menu -->
+
+				<!-- Mobile Menu -->
+				<div class="dropdown mobile-user-menu">
+					<a href="javascript:void(0);" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"
+						aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
+					<div class="dropdown-menu dropdown-menu-right">
+						{{-- <a class="dropdown-item" href="profile.html">My Profile</a>
+						<a class="dropdown-item" href="general-settings.html">Settings</a> --}}
+						<form id="logout-form-second" action="{{ route('logout') }}" method="POST" style="display: none;">
+							@csrf
+						</form>
+						<a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form-second').submit();">Logout</a>
+					</div>
+				</div>
+				<!-- /Mobile Menu -->
+			</div>
+		</div>
+		<!-- /Header -->
