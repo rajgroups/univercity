@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Admin\AnnouncementController;
+use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\auth\LoginController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\admin\HomeController;
@@ -33,4 +35,10 @@ Route::prefix('admin')->as('admin.')->group(function() {
 
         // Project Routes
         Route::resource('project', ProjectController::class);
+
+        // Banner Routes
+        Route::resource('banner',BannerController::class);
+
+        // Announcement Routes
+        Route::resource('announcement',AnnouncementController::class);
 });

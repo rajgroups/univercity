@@ -55,7 +55,15 @@ return [
             'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
             'throw' => false,
         ],
-
+        'gcs' => [
+            'driver' => 'gcs',
+            'project_id' => env('GOOGLE_CLOUD_PROJECT_ID'),
+            'key_file' => storage_path('app/google-cloud.json'),
+            'bucket' => env('GOOGLE_CLOUD_STORAGE_BUCKET'),
+            'path_prefix' => null, // optional: folder inside the bucket
+            'storage_api_uri' => null,
+            'visibility' => 'public', // if you want public URLs
+        ],
     ],
 
     /*

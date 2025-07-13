@@ -1,4 +1,5 @@
 <?php
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -10,15 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('projects', function (Blueprint $table) {
+        Schema::create('banner', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('post_by')->constrained('admin')->comment('Posted by admin');
-            $table->string('title')->comment('Project title');
-            $table->string('type')->comment('Project type');
-            $table->string('banner')->nullable();
+            $table->string('title')->nullable();
             $table->string('image');
-            $table->longText('description');
-            $table->boolean('status');
+            $table->string('link')->nullable();
+            $table->boolean('status')->default(1);
             $table->timestamps();
         });
     }
@@ -28,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('projects');
+        Schema::dropIfExists('banner');
     }
 };
