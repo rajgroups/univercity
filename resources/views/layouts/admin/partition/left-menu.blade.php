@@ -74,6 +74,24 @@
 			<div class="sidebar-inner slimscroll">
 				<div id="sidebar-menu" class="sidebar-menu">
 					<ul>
+                        						<li class="submenu-open">
+							<h6 class="submenu-hdr">Inventory</h6>
+							<ul>
+                                <li><a href="{{ route('admin.sectors.index') }}"><i class="ti ti-list-details fs-16 me-2"></i><span>Sector</span></a></li>
+								<li><a href="{{ route('admin.project.index') }}"><i data-feather="box"></i><span>Project</span></a></li>
+								<li class="active"><a href="add-product.html"><i class="ti ti-table-plus fs-16 me-2"></i><span>Create Product</span></a></li>
+								<li><a href="expired-products.html"><i class="ti ti-progress-alert fs-16 me-2"></i><span>Expired Products</span></a></li>
+								<li><a href="low-stocks.html"><i class="ti ti-trending-up-2 fs-16 me-2"></i><span>Low Stocks</span></a></li>
+								<li><a href="category-list.html"><i class="ti ti-list-details fs-16 me-2"></i><span>Category</span></a></li>
+								<li><a href="sub-categories.html"><i class="ti ti-carousel-vertical fs-16 me-2"></i><span>Sub Category</span></a></li>
+								<li><a href="brand-list.html"><i class="ti ti-triangles fs-16 me-2"></i><span>Brands</span></a></li>
+								<li><a href="units.html"><i class="ti ti-brand-unity fs-16 me-2"></i><span>Units</span></a></li>
+								<li><a href="varriant-attributes.html"><i class="ti ti-checklist fs-16 me-2"></i><span>Variant Attributes</span></a></li>
+								<li><a href="warranty.html"><i class="ti ti-certificate fs-16 me-2"></i><span>Warranties</span></a></li>
+								<li><a href="barcode.html"><i class="ti ti-barcode fs-16 me-2"></i><span>Print Barcode</span></a></li>
+								<li><a href="qrcode.html"><i class="ti ti-qrcode fs-16 me-2"></i><span>Print QR Code</span></a></li>
+							</ul>
+						</li>
 						<li class="submenu-open">
 							<h6 class="submenu-hdr">Main</h6>
 							<ul>
@@ -82,22 +100,14 @@
 								</li>
 							</ul>
 						</li>
-						<li class="submenu-open">
-							<h6 class="submenu-hdr">Inventory</h6>
+                        <li class="submenu-open">
+							<h6 class="submenu-hdr">Sector</h6>
 							<ul>
-								<li><a href="{{ route('category.index') }}"><i class="ti ti-list-details fs-16 me-2"></i><span>Category</span></a></li>
-								<li><a href="{{route('subcategory.index')}}"><i class="ti ti-carousel-vertical fs-16 me-2"></i><span>Sub Category</span></a></li>
-								<li><a href="{{route('products.create')}}"><i class="ti ti-table-plus fs-16 me-2"></i><span>Create Product</span></a></li>
-								<li><a href="{{route('products.index')}}"><i data-feather="box"></i><span>Products</span></a></li>
-                                <li class="submenu">
-									<a href="{{route('order.index')}}"><i class="ti ti-user-edit fs-16 me-2"></i><span>Orders</span><span class="menu-arrow"></span></a>
-								</li>
-								<!-- <li><a href="expired-products.html"><i class="ti ti-progress-alert fs-16 me-2"></i><span>Expired Products</span></a></li> -->
-								{{-- <li><a href="low-s tocks.html"><i class="ti ti-trending-up-2 fs-16 me-2"></i><span>Low Stocks</span></a></li> --}}
-								<li><a href="{{route('units.index')}}"><i class="ti ti-brand-unity fs-16 me-2"></i><span>Units</span></a></li>
+
 							</ul>
 						</li>
-						<li class="submenu-open">
+
+						{{-- <li class="submenu-open">
 							<h6 class="submenu-hdr">Sales</h6>
 							<ul>
 								<li class="submenu">
@@ -115,7 +125,7 @@
 								<li><a href="{{route('stores.index')}}"><i class="ti ti-home-bolt fs-16 me-2"></i><span>Stores</span></a></li>
 								</li>
 							</ul>
-						</li>
+						</li> --}}
 
 
 						{{-- <li class="submenu-open">

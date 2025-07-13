@@ -45,7 +45,7 @@
 						<div class="dropdown-menu dropdown-xl dropdown-menu-center">
 							<div class="row g-2">
 								<div class="col-md-2">
-									<a href="{{ route('category.index') }}" class="link-item">
+									<a href="" class="link-item">
 										<span class="link-icon">
 											<i class="ti ti-brand-codepen"></i>
 										</span>
@@ -53,7 +53,7 @@
 									</a>
 								</div>
 								<div class="col-md-2">
-									<a href="{{ route('pos.index') }}" class="link-item">
+									<a href="" class="link-item">
 										<span class="link-icon">
 											<i class="ti ti-shopping-cart"></i>
 										</span>
@@ -61,7 +61,7 @@
 									</a>
 								</div>
 								<div class="col-md-2">
-									<a href="{{route('products.index')}}" class="link-item">
+									<a href="" class="link-item">
 										<span class="link-icon">
 											<i class="ti ti-square-plus"></i>
 										</span>
@@ -70,7 +70,7 @@
 								</div>
 
 								<div class="col-md-2">
-									<a href="{{route('order.index')}}" class="link-item">
+									<a href="" class="link-item">
 										<span class="link-icon">
 											<i class="ti ti-square-plus"></i>
 										</span>
@@ -78,7 +78,7 @@
 									</a>
 								</div>
 								<div class="col-md-2">
-									<a href="{{route('customers.index')}}" class="link-item">
+									<a href="" class="link-item">
 										<span class="link-icon">
 											<i class="ti ti-users"></i>
 										</span>
@@ -86,7 +86,7 @@
 									</a>
 								</div>
 								<div class="col-md-2">
-									<a href="{{route('stores.index')}}" class="link-item">
+									<a href="" class="link-item">
 										<span class="link-icon">
 											<i class="ti ti-user-check"></i>
 										</span>
@@ -99,7 +99,7 @@
 					</li>
 
 					<li class="nav-item pos-nav">
-						<a href="{{ route('pos.index') }}" class="btn btn-dark btn-md d-inline-flex align-items-center">
+						<a href="" class="btn btn-dark btn-md d-inline-flex align-items-center">
 							<i class="ti ti-device-laptop me-1"></i>POS
 						</a>
 					</li>
@@ -152,11 +152,11 @@
 							<a class="dropdown-item" href="sales-report.html"><i class="ti ti-file-text me-2"></i>Reports</a>
 							<a class="dropdown-item" href="general-settings.html"><i class="ti ti-settings-2 me-2"></i>Settings</a>
 							<hr class="my-2"> --}}
-							
-							<form id="logout-form-second" action="{{ route('logout') }}" method="POST" style="display: none;">
+
+							<form id="logout-form-second" action="{{ route('admin.logout') }}" method="POST" style="display: none;">
 								@csrf
 							</form>
-							<a class="dropdown-item logout pb-0" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form-second').submit();"><i class="ti ti-logout me-2"></i>Logout</a>
+							<a class="dropdown-item logout pb-0" href="{{ route('admin.logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form-second').submit();"><i class="ti ti-logout me-2"></i>Logout</a>
 						</div>
 					</li>
 				</ul>
@@ -169,10 +169,10 @@
 					<div class="dropdown-menu dropdown-menu-right">
 						{{-- <a class="dropdown-item" href="profile.html">My Profile</a>
 						<a class="dropdown-item" href="general-settings.html">Settings</a> --}}
-						<form id="logout-form-second" action="{{ route('logout') }}" method="POST" style="display: none;">
+						<form id="logout-form-second" action="{{ route('admin.logout') }}" method="POST" style="display: none;">
 							@csrf
 						</form>
-						<a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form-second').submit();">Logout</a>
+						<a class="dropdown-item" href="{{ route('admin.logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form-second').submit();">Logout</a>
 					</div>
 				</div>
 				<!-- /Mobile Menu -->

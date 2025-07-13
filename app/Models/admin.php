@@ -2,22 +2,36 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
 
-class admin extends Authenticatable
+class Admin extends Authenticatable
 {
-    protected $table='admin';
-    use HasFactory;
+    use Notifiable;
 
+    protected $table = 'admin'; // explicitly define table name since it's not the plural "admins"
+
+    /**
+     * The attributes that are mass assignable.
+     */
     protected $fillable = [
-        'logo',
-        'admin_sign',
-        'volunteer_sign',
-        'created_at',
-        'updated_at'
+        'name',
+        'email',
+        'password',
+    ];
+
+    /**
+     * The attributes that should be hidden for arrays.
+     */
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+
+    /**
+     * The attributes that should be cast to native types.
+     */
+    protected $casts = [
+        'email_verified_at' => 'datetime',
     ];
 }

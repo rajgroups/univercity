@@ -7,6 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>POS - Admin</title>
     @include('layouts.admin.dependency.css')
+    @stack('css')
 </head>
 
 <body>

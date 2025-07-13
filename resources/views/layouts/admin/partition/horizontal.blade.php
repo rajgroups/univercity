@@ -11,42 +11,42 @@
 							<a href="javascript:void(0);"><i class="ti ti-brand-unity fs-16 me-2"></i><span> Inventory
 								</span> <span class="menu-arrow"></span></a>
 							<ul>
-								<li><a href="{{ route('category.index') }}"><i class="ti ti-list-details fs-16 me-2"></i><span>Category</span></a></li>
+								{{-- <li><a href="{{ route('category.index') }}"><i class="ti ti-list-details fs-16 me-2"></i><span>Category</span></a></li>
 								<li><a href="{{route('subcategory.index')}}"><i class="ti ti-carousel-vertical fs-16 me-2"></i><span>Sub Category</span></a></li>
 								<li><a href="{{route('products.create')}}"><i class="ti ti-table-plus fs-16 me-2"></i><span>Create Product</span></a></li>
-								<li><a href="{{route('products.index')}}"><i data-feather="box"></i><span>Products</span></a></li>
-								
+								<li><a href="{{route('products.index')}}"><i data-feather="box"></i><span>Products</span></a></li> --}}
+
 								<!-- <li><a href="expired-products.html"><i class="ti ti-progress-alert fs-16 me-2"></i><span>Expired Products</span></a></li> -->
 								{{-- <li><a href="low-stocks.html"><i class="ti ti-trending-up-2 fs-16 me-2"></i><span>Low Stocks</span></a></li> --}}
-								<li><a href="{{route('units.index')}}"><i class="ti ti-brand-unity fs-16 me-2"></i><span>Units</span></a></li>
+								{{-- <li><a href="{{route('units.index')}}"><i class="ti ti-brand-unity fs-16 me-2"></i><span>Units</span></a></li> --}}
 							</ul>
 						</li>
 
 						<li class="submenu">
 							<a href="javascript:void(0);"><i class="ti ti-layout-grid fs-16 me-2"></i><span>Sales &amp; Purchase</span> <span class="menu-arrow"></span></a>
 							<ul>
-								<li class="submenu">
+								{{-- <li class="submenu">
 									<a href="{{ route('pos.index') }}"><i class="ti ti-device-laptop fs-16 me-2"></i><span>POS</span><span class="menu-arrow"></span></a>
 									<ul>
 										<li><a href="{{ route('pos.index') }}">POS 4</a></li>
 									</ul>
-								</li>
+								</li> --}}
 							</ul>
 						</li>
 
 						<li class="submenu">
-							<a href="{{route('order.index')}}"><i class="ti ti-user-edit fs-16 me-2"></i><span>Orders</span><span class="menu-arrow"></span></a>
+							{{-- <a href="{{route('order.index')}}"><i class="ti ti-user-edit fs-16 me-2"></i><span>Orders</span><span class="menu-arrow"></span></a> --}}
 						</li>
 						<li class="submenu">
 							<a href="javascript:void(0);"><i class="ti ti-circle-plus fs-16 me-2"></i><span>User Management</span><span class="menu-arrow"></span></a>
 							<ul>
 								<li class="submenu">
 									<a href="javascript:void(0);"><span>People</span><span class="menu-arrow"></span></a>
-									<ul>
+									{{-- <ul>
 										<li><a href="{{route('customers.index')}}"><span>Customers</span></a></li>
 										<li><a href="{{route('stores.index')}}"><span>Stores</span></a></li>
 										</li>
-									</ul>
+									</ul> --}}
 								</li>
 
 							</ul>
@@ -54,14 +54,14 @@
 
 						<li class="submenu">
 							<a href="javascript:void(0);"><i class="ti ti-settings fs-16 me-2"></i><span>Settings</span><span class="menu-arrow"></span></a>
-							<ul>
+							{{-- <ul>
 								<form id="logout-form-second" action="{{ route('logout') }}" method="POST" style="display: none;">
                                     @csrf
                                 </form>
 								<li>
 									<a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form-second').submit();"><i class="ti ti-logout fs-16 me-2"></i><span>Logout</span> </a>
 								</li>
-							</ul>
+							</ul> --}}
 						</li>
 					</ul>
 				</div>
@@ -152,34 +152,34 @@
 							</div>
 							<div class="tab-pane fade" id="inventory">
 								<ul>
-									<li><a href="{{ route('category.index') }}"><i class="ti ti-list-details fs-16 me-2"></i><span>Category</span></a></li>
+									{{-- <li><a href="{{ route('category.index') }}"><i class="ti ti-list-details fs-16 me-2"></i><span>Category</span></a></li>
 								<li><a href="{{route('subcategory.index')}}"><i class="ti ti-carousel-vertical fs-16 me-2"></i><span>Sub Category</span></a></li>
 								<li><a href="{{route('products.create')}}"><i class="ti ti-table-plus fs-16 me-2"></i><span>Create Product</span></a></li>
-								<li><a href="{{route('products.index')}}"><i data-feather="box"></i><span>Products</span></a></li>
+								<li><a href="{{route('products.index')}}"><i data-feather="box"></i><span>Products</span></a></li> --}}
 								<!-- <li><a href="expired-products.html"><i class="ti ti-progress-alert fs-16 me-2"></i><span>Expired Products</span></a></li> -->
 								{{-- <li><a href="low-stocks.html"><i class="ti ti-trending-up-2 fs-16 me-2"></i><span>Low Stocks</span></a></li> --}}
-								<li><a href="{{route('units.index')}}"><i class="ti ti-brand-unity fs-16 me-2"></i><span>Units</span></a></li>
+								{{-- <li><a href="{{route('units.index')}}"><i class="ti ti-brand-unity fs-16 me-2"></i><span>Units</span></a></li> --}}
 								</ul>
 							</div>
 							<div class="tab-pane fade" id="sales">
-								<ul>
+								{{-- <ul>
 									<li class="menu-title"><span>Sales</span></li>
 									<li><a href="{{ route('pos.index') }}"><span>POS</span></a></li>
-								</ul>
+								</ul> --}}
 							</div>
-							
+
 							<li class="submenu">
-								<a href="{{route('order.index')}}"><i class="ti ti-user-edit fs-16 me-2"></i><span>Orders</span><span class="menu-arrow"></span></a>
+								{{-- <a href="{{route('order.index')}}"><i class="ti ti-user-edit fs-16 me-2"></i><span>Orders</span><span class="menu-arrow"></span></a> --}}
 							</li>
 							<div class="tab-pane fade" id="finance">
-								<ul>
+								{{-- <ul>
 									<li><a href="{{route('customers.index')}}"><span>Customers</span></a></li>
 									<li><a href="{{route('stores.index')}}"><span>Stores</span></a></li>
-								</ul>
+								</ul> --}}
 							</div>
 
 							<div class="tab-pane fade" id="settings">
-								<ul>
+								{{-- <ul>
 									<li class="menu-title"><span>Settings</span></li>
 									<form id="logout-form-second" action="{{ route('logout') }}" method="POST" style="display: none;">
 										@csrf
@@ -187,7 +187,7 @@
 									<li>
 										<a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form-second').submit();"><i class="ti ti-logout fs-16 me-2"></i><span>Logout</span> </a>
 									</li>
-								</ul>
+								</ul> --}}
 							</div>
 						</div>
 					</div>

@@ -6,15 +6,53 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
-use App\Models\ContactMessage;
 use App\Models\admin;
+use App\Models\receipt;
+use App\Models\Unit;
+use App\Models\Order;
+use App\Models\Category;
+use App\Models\Subcategory;
+use App\Models\Product;
+use App\Models\Customers;
+use App\Models\Store;
 
 
 class HomeController extends Controller
 {
+    // public function index()
+    // {
+    //     return view('admin.home');
+    // }
 
+    public function index()
+    {
+            return view('admin.home', [
+            // 'totalOrders' => Order::count(),
+
+            'totalCategories' => Category::count(),
+            'activeCategories' => Category::where('status', 1)->count(),
+            'inactiveCategories' => Category::where('status', 0)->count(),
+
+            'totalSubCategories' => Subcategory::count(),
+            'activeSubCategories' => Subcategory::where('status', 1)->count(),
+            'inactiveSubCategories' => Subcategory::where('status', 0)->count(),
+
+            'totalProducts' => Product::count(),
+            'activeProducts' => Product::where('status', 1)->count(),
+            'inactiveProducts' => Product::where('status', 0)->count(),
+
+            'totalCustomers' => Customers::count(),
+            'activeCustomers' => Customers::where('status', 1)->count(),
+            'inactiveCustomers' => Customers::where('status', 0)->count(),
+
+            'totalStores' => Store::count(),
+            'activeStores' => Store::where('status', 1)->count(),
+            'inactiveStores' => Store::where('status', 0)->count(),
+        ]);
+    }
+    
     public function ChangePasswordForm(Request $request){
-        return view('admin.settings.password');
+        return view('admin.password');
     }
     public function ChangePassword(Request $request){
         // dd($request);
@@ -57,4 +95,5 @@ class HomeController extends Controller
 
         return back()->withsuccess('Updated Successfully');
     }
+
 }
