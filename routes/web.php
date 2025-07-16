@@ -3,6 +3,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\web\RegisterController;
+use App\Http\Controllers\Web\WebController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,7 +33,9 @@ Route::get('password-hash', function () {
     return Hash::make('admin');
 });
 
-Route::get('/', [RegisterController::class, 'showRegistrationForm'])->name('registerform');
+// Web Routes
+Route::get('/',[WebController::class,'home']);
+// Route::get('/', [RegisterController::class, 'showRegistrationForm'])->name('registerform');
 Route::post('/register', [RegisterController::class, 'register'])->name('register');
 
 Route::get('/about', function () {

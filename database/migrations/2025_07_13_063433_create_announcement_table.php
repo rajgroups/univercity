@@ -11,15 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('announcement', function (Blueprint $table) {
+            Schema::create('announcement', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('post_by')->constrained('admin')->comment('Posted by admin');
-            $table->string('title')->comment('announcement title');
-            $table->string('type')->comment('announcement type');
-            $table->string('banner')->nullable();
-            $table->string('image');
-            $table->longText('description');
-            $table->boolean('alert')->default(0);
+            $table->string('title');
+            $table->string('slug')->unique();
+            $table->string('image')->nullable();
+            $table->string('banner_image')->nullable();
+            $table->tinyInteger('type')->comment('1=>program,2=>Scheme')->default(1);
+            $table->text('description')->nullable();
             $table->boolean('status');
             $table->timestamps();
         });

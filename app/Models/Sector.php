@@ -9,5 +9,11 @@ class Sector extends Model
 {
     use HasFactory;
 
-    protected $table = "sector";
+    protected $fillable = [
+        'name',
+        'slug',
+        'image',
+        'status',
+        'description',
+    ];
 }

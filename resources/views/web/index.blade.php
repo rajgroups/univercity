@@ -10,11 +10,11 @@
       margin-bottom: 6px;
       border-bottom: 1px solid #e5e5e5;
     }
-    
+
     .sidebar-page-container .sidebar .sidebar-post .post-inner .post:last-child {
       border-bottom: none;
     }
-    
+
     .sidebar-page-container .sidebar .sidebar-post .post-inner .post .post-date {
       position: absolute;
       left: 0px;
@@ -24,7 +24,7 @@
       text-align: center;
       border-radius: 5px;
     }
-    
+
     .sidebar-page-container .sidebar .sidebar-post .post-inner .post .post-date {
       background: rgb(2, 0, 36);
       background: -moz-linear-gradient(rgb(0, 255, 119) 100%);
@@ -32,7 +32,7 @@
       background: linear-gradient(rgb(0, 153, 255) 100%);
       filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#020024", endColorstr="#007bff", GradientType=1);
     }
-    
+
     .sidebar-page-container .sidebar .sidebar-post .post-inner .post .post-date p {
       display: block;
       font-size: 18px;
@@ -41,7 +41,7 @@
       text-align: center;
       margin: 0px;
     }
-    
+
     .sidebar-page-container .sidebar .sidebar-post .post-inner .post .post-date span {
       position: relative;
       display: block;
@@ -52,12 +52,12 @@
       margin: 0px;
       padding: 0px;
     }
-    
+
     .sidebar-page-container .sidebar .sidebar-post .post-inner .post .file-box {
       position: relative;
       margin-bottom: 9px;
     }
-    
+
     .sidebar-page-container .sidebar .sidebar-post .post-inner .post .file-box i {
       position: relative;
       display: inline-block;
@@ -65,13 +65,13 @@
       color: #666666 !important;
       margin-right: 10px;
     }
-    
+
     .sidebar-page-container .sidebar .sidebar-post .post-inner .post .file-box p {
       position: relative;
       display: inline-block;
       margin-bottom: 0px;
     }
-    
+
     .sidebar-page-container .sidebar .sidebar-post .post-inner .post h5 {
       position: relative;
       display: block;
@@ -82,27 +82,27 @@
       color: #1d165c;
       margin: 0px;
     }
-    
+
     .sidebar-page-container .sidebar .sidebar-post .post-inner .post h5 a {
       display: inline-block;
       color: #1d165c;
     }
-    
+
     .sidebar-page-container .sidebar .sidebar-post .post-inner .post h5 a:hover {
       color: #e61819;
     }
-    
+
     .carousel-inner-data {
       margin: 0px auto;
       height: 400px;
       overflow: hidden;
     }
-    
+
     .carousel-inner-data ul {
       list-style: none;
       position: relative;
     }
-    
+
     .carousel-inner-data li {
       height: auto;
     }
@@ -285,68 +285,41 @@
         </div> <!-- Swiper -->
         <div class="swiper mySwipers">
             <div class="swiper-wrapper">
-                <!-- Slide 1 -->
-                <div class="swiper-slide" data-swiper-autoplay="2000">
-                    <div class="blog-card"> <a href="#" class="card-img"> <img src="{{ asset('resource/web/assets/media/blogs/img-1.jpg')}}" alt=""> <span class="date-block"> <span class="h6 fw-400 light-black">08</span> <span class="h6 fw-400 light-black">May</span> </span> </a>
-                        <div class="card-content">
-                            <div class="d-flex align-items-center gap-8 mb-20"> <img src="{{ asset('resource/web/assets/media/user/user-2.png')}}" class="card-user" alt="">
-                                <p>By Admin</p>
-                            </div> <a href="#" class="h6 fw-500 mb-8">Time Management Hacks for Busy Online Learners</a>
-                            <p class="light-gray mb-24">Lorem ipsum dolor sit amet consectetur. Vitae vel sit convallis aliquet amet</p> <a href="#" class="card-btn"> Read More
-                                <!-- your SVG here -->
-                            </a>
+                @if ($ongoingProjects->isEmpty())
+                    <div class="w-100">
+                        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                            <strong>No projects found.</strong> Please check back later.
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
                     </div>
-                </div> <!-- Slide 1 -->
-                <div class="swiper-slide" data-swiper-autoplay="2000">
-                    <div class="blog-card"> <a href="#" class="card-img"> <img src="{{ asset('resource/web/assets/media/blogs/img-1.jpg')}}" alt=""> <span class="date-block"> <span class="h6 fw-400 light-black">08</span> <span class="h6 fw-400 light-black">May</span> </span> </a>
-                        <div class="card-content">
-                            <div class="d-flex align-items-center gap-8 mb-20"> <img src="{{ asset('resource/web/assets/media/user/user-2.png')}}" class="card-user" alt="">
-                                <p>By Admin</p>
-                            </div> <a href="#" class="h6 fw-500 mb-8">Time Management Hacks for Busy Online Learners</a>
-                            <p class="light-gray mb-24">Lorem ipsum dolor sit amet consectetur. Vitae vel sit convallis aliquet amet</p> <a href="#" class="card-btn"> Read More
-                                <!-- your SVG here -->
-                            </a>
+                @else
+                    @foreach ($ongoingProjects as $project)
+                        <!-- Slide -->
+                        <div class="swiper-slide" data-swiper-autoplay="2000">
+                            <div class="blog-card">
+                                <a href="{{ route('project.details', $project->slug) }}" class="card-img">
+                                    <img src="{{ asset($project->image) }}" alt="{{ $project->title }}">
+                                    <span class="date-block">
+                                        <span class="h6 fw-400 light-black">{{ \Carbon\Carbon::parse($project->created_at)->format('d') }}</span>
+                                        <span class="h6 fw-400 light-black">{{ \Carbon\Carbon::parse($project->created_at)->format('M') }}</span>
+                                    </span>
+                                </a>
+                                <div class="card-content">
+                                    <div class="d-flex align-items-center gap-8 mb-20">
+                                        <img src="{{ asset('upload/project/'.$project->image) }}" class="card-user" alt="">
+                                        <p>By Admin</p>
+                                    </div>
+                                    <a href="{{ route('project.details', $project->slug) }}" class="h6 fw-500 mb-8">{{ $project->title }}</a>
+                                    <p class="light-gray mb-24">{{ \Illuminate\Support\Str::limit(strip_tags($project->description), 100) }}</p>
+                                    <a href="{{ route('project.details', $project->slug) }}" class="card-btn"> Read More</a>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div> <!-- Slide 1 -->
-                <div class="swiper-slide" data-swiper-autoplay="2000">
-                    <div class="blog-card"> <a href="#" class="card-img"> <img src="{{ asset('resource/web/assets/media/blogs/img-1.jpg')}}" alt=""> <span class="date-block"> <span class="h6 fw-400 light-black">08</span> <span class="h6 fw-400 light-black">May</span> </span> </a>
-                        <div class="card-content">
-                            <div class="d-flex align-items-center gap-8 mb-20"> <img src="{{ asset('resource/web/assets/media/user/user-2.png')}}" class="card-user" alt="">
-                                <p>By Admin</p>
-                            </div> <a href="#" class="h6 fw-500 mb-8">Time Management Hacks for Busy Online Learners</a>
-                            <p class="light-gray mb-24">Lorem ipsum dolor sit amet consectetur. Vitae vel sit convallis aliquet amet</p> <a href="#" class="card-btn"> Read More
-                                <!-- your SVG here -->
-                            </a>
-                        </div>
-                    </div>
-                </div> <!-- Slide 1 -->
-                <div class="swiper-slide" data-swiper-autoplay="2000">
-                    <div class="blog-card"> <a href="#" class="card-img"> <img src="{{ asset('resource/web/assets/media/blogs/img-1.jpg')}}" alt=""> <span class="date-block"> <span class="h6 fw-400 light-black">08</span> <span class="h6 fw-400 light-black">May</span> </span> </a>
-                        <div class="card-content">
-                            <div class="d-flex align-items-center gap-8 mb-20"> <img src="{{ asset('resource/web/assets/media/user/user-2.png')}}" class="card-user" alt="">
-                                <p>By Admin</p>
-                            </div> <a href="#" class="h6 fw-500 mb-8">Time Management Hacks for Busy Online Learners</a>
-                            <p class="light-gray mb-24">Lorem ipsum dolor sit amet consectetur. Vitae vel sit convallis aliquet amet</p> <a href="#" class="card-btn"> Read More
-                                <!-- your SVG here -->
-                            </a>
-                        </div>
-                    </div>
-                </div> <!-- Slide 1 -->
-                <div class="swiper-slide" data-swiper-autoplay="2000">
-                    <div class="blog-card"> <a href="#" class="card-img"> <img src="{{ asset('resource/web/assets/media/blogs/img-1.jpg')}}" alt=""> <span class="date-block"> <span class="h6 fw-400 light-black">08</span> <span class="h6 fw-400 light-black">May</span> </span> </a>
-                        <div class="card-content">
-                            <div class="d-flex align-items-center gap-8 mb-20"> <img src="{{ asset('resource/web/assets/media/user/user-2.png')}}" class="card-user" alt="">
-                                <p>By Admin</p>
-                            </div> <a href="#" class="h6 fw-500 mb-8">Time Management Hacks for Busy Online Learners</a>
-                            <p class="light-gray mb-24">Lorem ipsum dolor sit amet consectetur. Vitae vel sit convallis aliquet amet</p> <a href="#" class="card-btn"> Read More
-                                <!-- your SVG here -->
-                            </a>
-                        </div>
-                    </div>
-                </div> <!-- Repeat for other slides -->
-            </div> <!-- Pagination -->
+                    @endforeach
+                @endif
+            </div>
+
+            <!-- Pagination -->
             <div class="swiper-pagination"></div>
         </div>
     </div>
@@ -358,7 +331,7 @@
       padding: 50px 20px;
       overflow: hidden;
     }
-    
+
     /* Abstract SVG shapes */
     .ai-background-section::before {
       content: "";
@@ -373,7 +346,7 @@
       z-index: 0;
       animation: float 6s ease-in-out infinite;
     }
-    
+
     .ai-background-section::after {
       content: "";
       position: absolute;
@@ -387,27 +360,27 @@
       z-index: 0;
       animation: floatReverse 8s ease-in-out infinite;
     }
-    
+
     /* Optional animations */
     @keyframes float {
-    
+
       0%,
       100% {
         transform: translateY(0);
       }
-    
+
       50% {
         transform: translateY(-20px);
       }
     }
-    
+
     @keyframes floatReverse {
-    
+
       0%,
       100% {
         transform: translateY(0);
       }
-    
+
       50% {
         transform: translateY(20px);
       }
@@ -420,7 +393,7 @@
             <h3 class="fw-bold text-white mt-2 mb-2">Learn more with our curated Community Wisdom</h3>
             <p class="text-white">Explore our most popular programs, get job-ready for an in-demand career.</p>
         </div> <!-- Swiper -->
-        <div class="row">
+        <div class="row align-items-center">
             <div class="col-md-12 col-lg-4">
                 <div class="wow zoomIn animated mt-5 mb-5" data-wow-delay="590ms">
                     <div class="heading text-start justify-content-start mb-8">
@@ -433,72 +406,43 @@
                 </div>
             </div>
             <div class="col-md-12 col-lg-8">
-                <div class="swiper upcomingproject">
-                    <div class="swiper-wrapper">
-                        <!-- Slide 1 -->
-                        <div class="swiper-slide">
-                            <div class="blog-card"> <a href="#" class="card-img"> <img src="{{ asset('resource/web/assets/media/blogs/img-1.jpg')}}" alt=""> <span class="date-block"> <span class="h6 fw-400 light-black">08</span> <span class="h6 fw-400 light-black">May</span> </span> </a>
-                                <div class="card-content bg-white">
-                                    <div class="d-flex align-items-center gap-8 mb-20"> <img src="{{ asset('resource/web/assets/media/user/user-2.png')}}" class="card-user" alt="">
-                                        <p>By Admin</p>
-                                    </div> <a href="#" class="h6 fw-500 mb-8 ">Time Management Hacks for Busy Online Learners</a>
-                                    <p class="light-gray mb-24">Lorem ipsum dolor sit amet consectetur. Vitae vel sit convallis aliquet amet</p> <a href="#" class="card-btn"> Read More
-                                        <!-- your SVG here -->
-                                    </a>
+                @if ($upcomingProjects->isEmpty())
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                        <strong>No upcoming projects found.</strong> Please check back later.
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @else
+                    <div class="swiper upcomingproject">
+                        <div class="swiper-wrapper">
+                            @foreach ($upcomingProjects as $project)
+                                <div class="swiper-slide">
+                                    <div class="blog-card">
+                                        <a href="{{ route('project.details', $project->slug) }}" class="card-img">
+                                            <img src="{{ asset($project->image) }}" alt="{{ $project->title }}">
+                                            <span class="date-block">
+                                                <span class="h6 fw-400 light-black">{{ \Carbon\Carbon::parse($project->created_at)->format('d') }}</span>
+                                                <span class="h6 fw-400 light-black">{{ \Carbon\Carbon::parse($project->created_at)->format('M') }}</span>
+                                            </span>
+                                        </a>
+                                        <div class="card-content bg-white">
+                                            <div class="d-flex align-items-center gap-8 mb-20">
+                                                <img src="{{ asset('upload/project/'.$project->image) }}" class="card-user" alt="">
+                                                <p>By Admin</p>
+                                            </div>
+                                            <a href="{{ route('project.details', $project->slug) }}" class="h6 fw-500 mb-8">{{ $project->title }}</a>
+                                            <p class="light-gray mb-24">{{ \Illuminate\Support\Str::limit(strip_tags($project->description), 100) }}</p>
+                                            <a href="{{ route('project.details', $project->slug) }}" class="card-btn"> Read More</a>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div> <!-- Slide 1 -->
-                        <div class="swiper-slide">
-                            <div class="blog-card"> <a href="#" class="card-img"> <img src="{{ asset('resource/web/assets/media/blogs/img-1.jpg')}}" alt=""> <span class="date-block"> <span class="h6 fw-400 light-black">08</span> <span class="h6 fw-400 light-black">May</span> </span> </a>
-                                <div class="card-content bg-white">
-                                    <div class="d-flex align-items-center gap-8 mb-20"> <img src="{{ asset('resource/web/assets/media/user/user-2.png')}}" class="card-user" alt="">
-                                        <p>By Admin</p>
-                                    </div> <a href="#" class="h6 fw-500 mb-8">Time Management Hacks for Busy Online Learners</a>
-                                    <p class="light-gray mb-24">Lorem ipsum dolor sit amet consectetur. Vitae vel sit convallis aliquet amet</p> <a href="#" class="card-btn"> Read More
-                                        <!-- your SVG here -->
-                                    </a>
-                                </div>
-                            </div>
-                        </div> <!-- Slide 1 -->
-                        <div class="swiper-slide">
-                            <div class="blog-card"> <a href="#" class="card-img"> <img src="{{ asset('resource/web/assets/media/blogs/img-1.jpg')}}" alt=""> <span class="date-block"> <span class="h6 fw-400 light-black">08</span> <span class="h6 fw-400 light-black">May</span> </span> </a>
-                                <div class="card-content bg-white">
-                                    <div class="d-flex align-items-center gap-8 mb-20"> <img src="{{ asset('resource/web/assets/media/user/user-2.png')}}" class="card-user" alt="">
-                                        <p>By Admin</p>
-                                    </div> <a href="#" class="h6 fw-500 mb-8">Time Management Hacks for Busy Online Learners</a>
-                                    <p class="light-gray mb-24">Lorem ipsum dolor sit amet consectetur. Vitae vel sit convallis aliquet amet</p> <a href="#" class="card-btn"> Read More
-                                        <!-- your SVG here -->
-                                    </a>
-                                </div>
-                            </div>
-                        </div> <!-- Slide 1 -->
-                        <div class="swiper-slide">
-                            <div class="blog-card"> <a href="#" class="card-img"> <img src="{{ asset('resource/web/assets/media/blogs/img-1.jpg')}}" alt=""> <span class="date-block"> <span class="h6 fw-400 light-black">08</span> <span class="h6 fw-400 light-black">May</span> </span> </a>
-                                <div class="card-content">
-                                    <div class="d-flex align-items-center gap-8 mb-20"> <img src="{{ asset('resource/web/assets/media/user/user-2.png')}}" class="card-user" alt="">
-                                        <p>By Admin</p>
-                                    </div> <a href="#" class="h6 fw-500 mb-8">Time Management Hacks for Busy Online Learners</a>
-                                    <p class="light-gray mb-24">Lorem ipsum dolor sit amet consectetur. Vitae vel sit convallis aliquet amet</p> <a href="#" class="card-btn"> Read More
-                                        <!-- your SVG here -->
-                                    </a>
-                                </div>
-                            </div>
-                        </div> <!-- Slide 1 -->
-                        <div class="swiper-slide">
-                            <div class="blog-card"> <a href="#" class="card-img"> <img src="{{ asset('resource/web/assets/media/blogs/img-1.jpg')}}" alt=""> <span class="date-block"> <span class="h6 fw-400 light-black">08</span> <span class="h6 fw-400 light-black">May</span> </span> </a>
-                                <div class="card-content">
-                                    <div class="d-flex align-items-center gap-8 mb-20"> <img src="{{ asset('resource/web/assets/media/user/user-2.png')}}" class="card-user" alt="">
-                                        <p>By Admin</p>
-                                    </div> <a href="#" class="h6 fw-500 mb-8">Time Management Hacks for Busy Online Learners</a>
-                                    <p class="light-gray mb-24">Lorem ipsum dolor sit amet consectetur. Vitae vel sit convallis aliquet amet</p> <a href="#" class="card-btn"> Read More
-                                        <!-- your SVG here -->
-                                    </a>
-                                </div>
-                            </div>
-                        </div> <!-- Repeat for other slides -->
-                    </div> <!-- Pagination -->
-                    <div class="swiper-pagination"></div>
-                </div>
+                            @endforeach
+                        </div>
+
+                        <!-- Pagination -->
+                        <div class="swiper-pagination"></div>
+                    </div>
+                @endif
+
             </div>
         </div>
     </div>
@@ -514,77 +458,46 @@
             <p class="text-start">Explore free online courses from the world's top universities and companies.</p>
         </div>
         <div class="row align-items-stretch h-100">
-            <div class="swiper mySwiperstwo p-0 m-0">
-                <div class="swiper-wrapper">
-                    <!-- Slide 1 -->
-                    <div class="swiper-slide">
-                        <div class="col-md-*">
-                            <div class="team-block">
-                                <div class="img-block"> <img class=" w-100" src="https://d3njjcbhbojbot.cloudfront.net/api/utilities/v1/imageproxy/https://coursera-course-photos.s3.amazonaws.com/44/4f51448ef4484ca7aaf8ea2fe3b1eb/SCSP_Logo.png?auto=format%2C%20compress%2C%20enhance&dpr=2&w=320&h=180&fit=crop&q=50" alt=""> </div>
-                                <div class="team-content">
-                                    <div class=""> <a href="" class="h6 fw-500 mb-4p">Educational Programs &nbsp; &nbsp; &nbsp;</a>
-                                        <p class="subtitle"> </p>
+            @if ($programes->isNotEmpty())
+                <div class="swiper mySwiperstwo p-0 m-0">
+                    <div class="swiper-wrapper">
+                        @foreach ($programes as $program)
+                        <div class="swiper-slide">
+                            <div class="col-md-*">
+                                <div class="team-block">
+                                    <div class="img-block">
+                                        <img class="w-100"
+                                            src="{{ $program->image ? asset('uploads/announcements/' . $program->image) : asset('resource/web/assets/media/default/default-img.png') }}"
+                                            alt="{{ $program->title }}">
                                     </div>
-                                    <div class="d-flex gap-8 align-items-center"> <a href=""> <img class="links-icon" src="{{ asset('resource/web/assets/media/vector/message.png')}}" alt=""> </a> <a href=""> <img class="links-icon" src="{{ asset('resource/web/assets/media/vector/linkedin.png')}}" alt=""> </a> <a href=""> <img class="links-icon" src="{{ asset('resource/web/assets/media/vector/facebook.png')}}" alt=""> </a> </div>
+                                    <div class="team-content">
+                                        <div>
+                                            <a href="#" class="h6 fw-500 mb-4p">{{ $program->title }}</a>
+                                            <p class="subtitle">{{ \Illuminate\Support\Str::limit(strip_tags($program->description), 80) }}</p>
+                                        </div>
+                                        <div class="d-flex gap-8 align-items-center">
+                                            <a href="#"><img class="links-icon" src="{{ asset('resource/web/assets/media/vector/message.png') }}" alt=""></a>
+                                            <a href="#"><img class="links-icon" src="{{ asset('resource/web/assets/media/vector/linkedin.png') }}" alt=""></a>
+                                            <a href="#"><img class="links-icon" src="{{ asset('resource/web/assets/media/vector/facebook.png') }}" alt=""></a>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+                        @endforeach
                     </div>
-                    <div class="swiper-slide">
-                        <div class="col-md-*">
-                            <div class="team-block">
-                                <div class="img-block"> <img class=" w-100" src="https://d3njjcbhbojbot.cloudfront.net/api/utilities/v1/imageproxy/https://coursera-course-photos.s3.amazonaws.com/a5/29e1bc993e4e63897f1f1b233b7474/DeepLearning_Hugging_Face_AI_Banner_1000x1000.png?auto=format%2C%20compress%2C%20enhance&dpr=2&w=320&h=180&fit=crop&q=50" alt=""> </div>
-                                <div class="team-content">
-                                    <div class=""> <a href="" class="h6 fw-500 mb-4p">Skill Development Programs</a>
-                                        <p class="subtitle"> </p>
-                                    </div>
-                                    <div class="d-flex gap-8 align-items-center"> <a href=""> <img class="links-icon" src="{{ asset('resource/web/assets/media/vector/message.png')}}" alt=""> </a> <a href=""> <img class="links-icon" src="{{ asset('resource/web/assets/media/vector/linkedin.png')}}" alt=""> </a> <a href=""> <img class="links-icon" src="{{ asset('resource/web/assets/media/vector/facebook.png')}}" alt=""> </a> </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="swiper-slide">
-                        <div class="col-md-*">
-                            <div class="team-block">
-                                <div class="img-block"> <img class=" w-100" src="https://d3njjcbhbojbot.cloudfront.net/api/utilities/v1/imageproxy/https://coursera-course-photos.s3.amazonaws.com/d8/6a5782475148a69fe5ea690ea0867f/V5_DeepLearning_Meta_Multimodal_Llama_Banner_1000x1000.png?auto=format%2C%20compress%2C%20enhance&dpr=2&w=320&h=180&fit=crop&q=50" alt=""> </div>
-                                <div class="team-content">
-                                    <div class=""> <a href="" class="h6 fw-500 mb-4p">Youth Empowerment Program</a> <!-- <p class="subtitle">Web Instructor</p> -->
-                                    </div>
-                                    <div class="d-flex gap-8 align-items-center"> <a href=""> <img class="links-icon" src="{{ asset('resource/web/assets/media/vector/message.png')}}" alt=""> </a> <a href=""> <img class="links-icon" src="{{ asset('resource/web/assets/media/vector/linkedin.png')}}" alt=""> </a> <a href=""> <img class="links-icon" src="{{ asset('resource/web/assets/media/vector/facebook.png')}}" alt=""> </a> </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="swiper-slide">
-                        <div class="col-md-*">
-                            <div class="team-block">
-                                <div class="img-block"> <img class=" w-100" src="https://d3njjcbhbojbot.cloudfront.net/api/utilities/v1/imageproxy/https://d15cw65ipctsrr.cloudfront.net/16/27af50564b4e4db763eb057b45d8d2/Professional_Cert_1200x1200.jpg?auto=format%2C%20compress%2C%20enhance&dpr=2&w=320&h=180&fit=crop&q=50" alt=""> </div>
-                                <div class="team-content">
-                                    <div class=""> <a href="" class="h6 fw-500 mb-4p">On-the-Job Training (OJT)</a> <!-- <p class="subtitle">Python Instructor</p> -->
-                                    </div>
-                                    <div class="d-flex gap-8 align-items-center"> <a href=""> <img class="links-icon" src="{{ asset('resource/web/assets/media/vector/message.png')}}" alt=""> </a> <a href=""> <img class="links-icon" src="{{ asset('resource/web/assets/media/vector/linkedin.png')}}" alt=""> </a> <a href=""> <img class="links-icon" src="{{ asset('resource/web/assets/media/vector/facebook.png')}}" alt=""> </a> </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="swiper-slide">
-                        <div class="col-md-*">
-                            <div class="team-block">
-                                <div class="img-block"> <img class=" w-100" src="https://d3njjcbhbojbot.cloudfront.net/api/utilities/v1/imageproxy/https://d15cw65ipctsrr.cloudfront.net/16/27af50564b4e4db763eb057b45d8d2/Professional_Cert_1200x1200.jpg?auto=format%2C%20compress%2C%20enhance&dpr=2&w=320&h=180&fit=crop&q=50" alt=""> </div>
-                                <div class="team-content">
-                                    <div class=""> <a href="" class="h6 fw-500 mb-4p">Mr. Cory</a>
-                                        <p class="subtitle">Python Instructor</p>
-                                    </div>
-                                    <div class="d-flex gap-8 align-items-center"> <a href=""> <img class="links-icon" src="{{ asset('resource/web/assets/media/vector/message.png')}}" alt=""> </a> <a href=""> <img class="links-icon" src="{{ asset('resource/web/assets/media/vector/linkedin.png')}}" alt=""> </a> <a href=""> <img class="links-icon" src="{{ asset('resource/web/assets/media/vector/facebook.png')}}" alt=""> </a> </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <!-- Swiper Controls -->
+                    <div class="swiper-button-prev"></div>
+                    <div class="swiper-button-next"></div>
+                    <div class="swiper-pagination"></div>
                 </div>
-            </div> <!-- .swiper-wrapper -->
-            <div class="swiper-button-prev"></div>
-            <div class="swiper-button-next"></div> <!-- Pagination -->
-            <div class="swiper-pagination"></div>
+                @else
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    <strong>No educational</strong> Programs available at the moment.
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                @endif
+
         </div>
 </section> <!-- end of our Programmes -->
 <!-- End Upcoming Projects -->
@@ -596,7 +509,7 @@
       z-index: 0;
       overflow: hidden;
     }
-    
+
     .background-bubbles span {
       position: absolute;
       display: block;
@@ -606,23 +519,23 @@
       border-radius: 50%;
       animation: float 20s linear infinite;
     }
-    
+
     @keyframes float {
       0% {
         transform: translateY(100vh) scale(0.5);
         opacity: 0;
       }
-    
+
       50% {
         opacity: 0.3;
       }
-    
+
       100% {
         transform: translateY(-10vh) scale(1);
         opacity: 0;
       }
     }
-    
+
     .circle-container {
       position: relative;
       width: 100%;
@@ -634,7 +547,7 @@
       z-index: 2;
       margin-top: 70%;
     }
-    
+
     .orbit-ring {
       position: absolute;
       top: 50%;
@@ -646,7 +559,7 @@
       border-radius: 50%;
       z-index: 1;
     }
-    
+
     .central-circle {
       position: absolute;
       top: 50%;
@@ -663,7 +576,7 @@
       box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
       z-index: 3;
     }
-    
+
     .orbit-wrapper {
       position: absolute;
       top: 50%;
@@ -674,7 +587,7 @@
       transform-origin: center center;
       z-index: 2;
     }
-    
+
     .orbiting-box {
       position: absolute;
       width: 160px;
@@ -686,17 +599,17 @@
       box-shadow: 0 0 15px rgba(0, 0, 0, 0.15);
       transition: background 0.3s;
     }
-    
+
     .orbiting-box h6 {
       font-weight: bold;
       font-size: 15px;
     }
-    
+
     .orbiting-box:hover {
       background-color: #6e8b38;
       cursor: pointer;
     }
-    
+
     .orbiting-box button {
       background: none;
       border: none;
@@ -705,55 +618,55 @@
       text-decoration: underline;
       margin-top: 5px;
     }
-    
+
     .box1 {
       top: 0%;
       left: 50%;
       transform: translate(-50%, -50%) rotate(0deg);
     }
-    
+
     .box2 {
       top: 25%;
       left: 92%;
       transform: translate(-50%, -50%) rotate(0deg);
     }
-    
+
     .box3 {
       top: 75%;
       left: 92%;
       transform: translate(-50%, -50%) rotate(0deg);
     }
-    
+
     .box4 {
       top: 100%;
       left: 50%;
       transform: translate(-50%, -50%) rotate(0deg);
     }
-    
+
     .box5 {
       top: 75%;
       left: 8%;
       transform: translate(-50%, -50%) rotate(0deg);
     }
-    
+
     .box6 {
       top: 25%;
       left: 8%;
       transform: translate(-50%, -50%) rotate(0deg);
     }
-    
+
     .block {
         /* background: rgba(39, 48, 126, 0.897); */
         color: #fff;
         padding-top: 20px;
         padding-bottom: 20px;
     }
-    
+
     .flow {
         position: relative;
         width: 100%;
     }
-    
+
     .flow .item {
         display: flex;
         justify-content: center;
@@ -764,15 +677,15 @@
         padding-bottom: 20px;
         word-break: break-all;
     }
-    
+
     .flow .item:first-child {
         padding-top: 40px;
     }
-    
+
     .flow .item:last-child {
         padding-bottom: 40px;
     }
-    
+
     .text h3 {
         color: white;
         font-size: 21px;
@@ -787,7 +700,7 @@
         z-index: 1;
         position: absolute;
     }
-    
+
     .flow .item .circle {
         width: 24px;
         height: 24px;
@@ -796,57 +709,57 @@
         position: relative;
         z-index: 2;
     }
-    
+
     .flow .item .text {
         position: absolute;
         padding: 20px;
         background: #008c01;
         border-radius: 8px;
     }
-    
+
     .flow .item:nth-child(odd) .text {
         left: calc(50% + 44px);
     }
-    
+
     .flow .item:nth-child(even) .text {
         right: calc(50% + 44px);
         text-align: right;
     }
-    
+
     @media screen and (max-width: 478px) {
         .flow .item {
     justify-content: flex-start;
         }
-    
+
         .flow .item::after {
     left: 20px;
         }
-    
+
         .flow .item .circle {
     margin-left: 16px;
         }
-    
+
         .flow .item .text {
     position: relative;
     left: 30px;
     padding: 20px;
     background: #008c01;
         }
-    
+
         .flow .item:nth-child(even) .text {
     position: relative;
     text-align: left;
     left: 30px;
         }
-    
+
         .flow .item:nth-child(odd) .text {
     position: relative;
     text-align: left;
     left: 30px;
         }
     }
-    
-    
+
+
     @media (max-width: 768px) {
       .circle-container {
         width: 100%;
@@ -856,13 +769,13 @@
         top: unset;
         padding-top: 60px;
       }
-    
+
       .orbiting-box {
         width: 130px;
         padding: 10px;
         font-size: 14px;
       }
-    
+
       .central-circle {
         width: 140px;
         height: 140px;
@@ -1039,76 +952,55 @@
             <p class="text-start">Explore free online courses from the world's top universities and companies.</p>
         </div>
         <div class="row align-items-stretch h-100">
-            <div class="swiper mySwiperstwo p-0 m-0">
-                <div class="swiper-wrapper">
-                    <!-- Slide 1 -->
-                    <div class="swiper-slide">
-                        <div class="col-md-*">
-                            <div class="team-block">
-                                <div class="img-block"> <img class=" w-100" src="https://d3njjcbhbojbot.cloudfront.net/api/utilities/v1/imageproxy/https://s3.amazonaws.com/coursera_assets/ddp/branding/bachelor-of-science-data-science-ai-iitguwahati/d162fb2a-536e-40a7-8e3e-ce849e964736.jpg?auto=format%2C%20compress%2C%20enhance&dpr=2&w=320&h=180&fit=crop&q=50" alt=""> </div>
-                                <div class="team-content">
-                                    <div class=""> <a href="" class="h6 fw-500 mb-4p">Carole Beier</a>
-                                        <p class="subtitle">Design Instructor</p>
-                                    </div>
-                                    <div class="d-flex gap-8 align-items-center"> <a href=""> <img class="links-icon" src="{{ asset('resource/web/assets/media/vector/message.png')}}" alt=""> </a> <a href=""> <img class="links-icon" src="{{ asset('resource/web/assets/media/vector/linkedin.png')}}" alt=""> </a> <a href=""> <img class="links-icon" src="{{ asset('resource/web/assets/media/vector/facebook.png')}}" alt=""> </a> </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="swiper-slide">
-                        <div class="col-md-*">
-                            <div class="team-block">
-                                <div class="img-block"> <img class=" w-100" src="https://d3njjcbhbojbot.cloudfront.net/api/utilities/v1/imageproxy/https://s3.amazonaws.com/coursera_assets/ddp/branding/emba-iitr/8e84c46b-a993-49d9-80cf-0e77a78399b0.jpg?auto=format%2C%20compress%2C%20enhance&dpr=2&w=320&h=180&fit=crop&q=50" alt=""> </div>
-                                <div class="team-content">
-                                    <div class=""> <a href="" class="h6 fw-500 mb-4p">Jack Phill </a>
-                                        <p class="subtitle">Design Lead</p>
-                                    </div>
-                                    <div class="d-flex gap-8 align-items-center"> <a href=""> <img class="links-icon" src="{{ asset('resource/web/assets/media/vector/message.png')}}" alt=""> </a> <a href=""> <img class="links-icon" src="{{ asset('resource/web/assets/media/vector/linkedin.png')}}" alt=""> </a> <a href=""> <img class="links-icon" src="{{ asset('resource/web/assets/media/vector/facebook.png')}}" alt=""> </a> </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="swiper-slide">
-                        <div class="col-md-*">
-                            <div class="team-block">
-                                <div class="img-block"> <img class=" w-100" src="https://d3njjcbhbojbot.cloudfront.net/api/utilities/v1/imageproxy/https://s3.amazonaws.com/coursera_assets/ddp/branding/bachelor-of-science-computer-science-bits/2c1c9800-93b0-48df-b278-a5246da9e086.jpg?auto=format%2C%20compress%2C%20enhance&dpr=2&w=320&h=180&fit=crop&q=50" alt=""> </div>
-                                <div class="team-content">
-                                    <div class=""> <a href="" class="h6 fw-500 mb-4p">Ted Hirthe</a>
-                                        <p class="subtitle">Web Instructor</p>
-                                    </div>
-                                    <div class="d-flex gap-8 align-items-center"> <a href=""> <img class="links-icon" src="{{ asset('resource/web/assets/media/vector/message.png')}}" alt=""> </a> <a href=""> <img class="links-icon" src="{{ asset('resource/web/assets/media/vector/linkedin.png')}}" alt=""> </a> <a href=""> <img class="links-icon" src="{{ asset('resource/web/assets/media/vector/facebook.png')}}" alt=""> </a> </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="swiper-slide">
-                        <div class="col-md-*">
-                            <div class="team-block">
-                                <div class="img-block"> <img class=" w-100" src="https://d3njjcbhbojbot.cloudfront.net/api/utilities/v1/imageproxy/https://d15cw65ipctsrr.cloudfront.net/16/27af50564b4e4db763eb057b45d8d2/Professional_Cert_1200x1200.jpg?auto=format%2C%20compress%2C%20enhance&dpr=2&w=320&h=180&fit=crop&q=50" alt=""> </div>
-                                <div class="team-content">
-                                    <div class=""> <a href="" class="h6 fw-500 mb-4p">Mr. Cory</a>
-                                        <p class="subtitle">Python Instructor</p>
-                                    </div>
-                                    <div class="d-flex gap-8 align-items-center"> <a href=""> <img class="links-icon" src="{{ asset('resource/web/assets/media/vector/message.png')}}" alt=""> </a> <a href=""> <img class="links-icon" src="{{ asset('resource/web/assets/media/vector/linkedin.png')}}" alt=""> </a> <a href=""> <img class="links-icon" src="{{ asset('resource/web/assets/media/vector/facebook.png')}}" alt=""> </a> </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="swiper-slide">
-                        <div class="col-md-*">
-                            <div class="team-block">
-                                <div class="img-block"> <img class=" w-100" src="https://d3njjcbhbojbot.cloudfront.net/api/utilities/v1/imageproxy/https://d15cw65ipctsrr.cloudfront.net/16/27af50564b4e4db763eb057b45d8d2/Professional_Cert_1200x1200.jpg?auto=format%2C%20compress%2C%20enhance&dpr=2&w=320&h=180&fit=crop&q=50" alt=""> </div>
-                                <div class="team-content">
-                                    <div class=""> <a href="" class="h6 fw-500 mb-4p">Mr. Cory</a>
-                                        <p class="subtitle">Python Instructor</p>
-                                    </div>
-                                    <div class="d-flex gap-8 align-items-center"> <a href=""> <img class="links-icon" src="{{ asset('resource/web/assets/media/vector/message.png')}}" alt=""> </a> <a href=""> <img class="links-icon" src="{{ asset('resource/web/assets/media/vector/linkedin.png')}}" alt=""> </a> <a href=""> <img class="links-icon" src="{{ asset('resource/web/assets/media/vector/facebook.png')}}" alt=""> </a> </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+            @if ($schemes->isEmpty())
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    <strong>No schemes available at the moment.</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
-            </div>
+            @else
+                <div class="swiper mySwiperstwo p-0 m-0">
+                    <div class="swiper-wrapper">
+                        @foreach ($schemes as $scheme)
+                            <div class="swiper-slide">
+                                <div class="col-md-*">
+                                    <div class="team-block">
+                                        <div class="img-block">
+                                            <img class="w-100" src="{{ asset($scheme->image) }}" alt="{{ $scheme->title }}">
+                                        </div>
+                                        <div class="team-content">
+                                            <div>
+                                                <a href="{{ route('scheme.details', $scheme->slug) }}" class="h6 fw-500 mb-4p">{{ $scheme->title }}</a>
+                                                <p class="subtitle">{{ $scheme->subtitle }}</p>
+                                            </div>
+                                            <div class="d-flex gap-8 align-items-center">
+                                                @if ($scheme->email)
+                                                    <a href="mailto:{{ $scheme->email }}">
+                                                        <img class="links-icon" src="{{ asset('resource/web/assets/media/vector/message.png') }}" alt="Email">
+                                                    </a>
+                                                @endif
+                                                @if ($scheme->linkedin)
+                                                    <a href="{{ $scheme->linkedin }}" target="_blank">
+                                                        <img class="links-icon" src="{{ asset('resource/web/assets/media/vector/linkedin.png') }}" alt="LinkedIn">
+                                                    </a>
+                                                @endif
+                                                @if ($scheme->facebook)
+                                                    <a href="{{ $scheme->facebook }}" target="_blank">
+                                                        <img class="links-icon" src="{{ asset('resource/web/assets/media/vector/facebook.png') }}" alt="Facebook">
+                                                    </a>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+
+                    <!-- Pagination if needed -->
+                    <div class="swiper-pagination"></div>
+                </div>
+            @endif
+
 </section>
 <style>
     /* Base Container */
@@ -1121,23 +1013,23 @@
       padding: 10px 10px;
       text-align: center;
     }
-    
+
     /* Content Styling */
     .ai-background-v .content {
       position: relative;
       z-index: 10;
     }
-    
+
     .ai-background h2 {
       font-size: 2.5rem;
       color: #333;
     }
-    
+
     .ai-background-v p {
       font-size: 1.2rem;
       color: #555;
     }
-    
+
     /* Floating AI Shapes */
     .shape {
       position: absolute;
@@ -1147,7 +1039,7 @@
       filter: blur(30px);
       animation: float 12s ease-in-out infinite;
     }
-    
+
     .shape-1 {
       width: 200px;
       height: 200px;
@@ -1155,7 +1047,7 @@
       top: -50px;
       left: -50px;
     }
-    
+
     .shape-2 {
       width: 300px;
       height: 300px;
@@ -1164,7 +1056,7 @@
       right: -60px;
       animation-delay: 4s;
     }
-    
+
     .shape-3 {
       width: 150px;
       height: 150px;
@@ -1174,15 +1066,15 @@
       transform: translate(-50%, -50%);
       animation-delay: 7s;
     }
-    
+
     /* Animation */
     @keyframes float {
-    
+
       0%,
       100% {
         transform: translateY(0) scale(1);
       }
-    
+
       50% {
         transform: translateY(-30px) scale(1.05);
       }
@@ -1568,95 +1460,95 @@
       background: #f8f9fa;
       padding: 20px 0;
     }
-    
+
     .Marquee {
       display: flex;
       width: max-content;
       animation: scroll 20s linear infinite;
     }
-    
+
     .SecondRow {
       animation-direction: reverse;
       animation-duration: 25s;
     }
-    
+
     .marquee.Item {
       margin: 0 30px;
       font-size: 20px;
       padding: 40px;
       font-size: 30px;
     }
-    
+
     /* Brand Colors */
     .bi-amazon {
       color: #ff9900;
     }
-    
+
     .bi-microsoft {
       color: #f65314;
     }
-    
+
     .bi-apple {
       color: #333333;
     }
-    
+
     .bi-google {
       color: #4285F4;
     }
-    
+
     .bi-facebook {
       color: #3b5998;
     }
-    
+
     .bi-twitter-x {
       color: #000000;
     }
-    
+
     .bi-youtube {
       color: #FF0000;
     }
-    
+
     .bi-linkedin {
       color: #0077b5;
     }
-    
+
     .bi-instagram {
       color: #E1306C;
     }
-    
+
     .bi-discord {
       color: #7289da;
     }
-    
+
     .bi-github {
       color: #333;
     }
-    
+
     .bi-slack {
       color: #4A154B;
     }
-    
+
     .bi-dribbble {
       color: #ea4c89;
     }
-    
+
     .bi-behance {
       color: #1769ff;
     }
-    
+
     .bi-skype {
       color: #00aff0;
     }
-    
+
     .bi-telegram {
       color: #0088cc;
     }
-    
+
     @keyframes scroll {
       0% {
         transform: translateX(100%);
       }
-    
+
       100% {
         transform: translateX(-100%);
       }

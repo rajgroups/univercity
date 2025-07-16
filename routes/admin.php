@@ -8,6 +8,7 @@ use App\Http\Controllers\admin\HomeController;
 use App\Http\Controllers\admin\DashboardController;
 use App\Http\Controllers\Admin\ProjectController;
 use App\Http\Controllers\Admin\SectorController;
+use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\admin\UserController;
 use App\Http\Controllers\RegisterController;
 
@@ -41,4 +42,16 @@ Route::prefix('admin')->as('admin.')->group(function() {
 
         // Announcement Routes
         Route::resource('announcement',AnnouncementController::class);
+
+        // Setting Route
+        Route::get('settings/home/edit',[SettingController::class,'editHomePage']);
+
+        // For storing a new project
+        Route::post('/projects', [App\Http\Controllers\Admin\ProjectController::class, 'store'])->name('project.store');
+        // For updating an existing project (assuming you have a route model binding)
+        Route::put('/projects/{project}', [App\Http\Controllers\Admin\ProjectController::class, 'update'])->name('project.update');
+        // You'll also need routes for 'create' and 'edit' to display the form
+        Route::get('/projects/create', [App\Http\Controllers\Admin\ProjectController::class, 'create'])->name('project.create');
+        Route::get('/projects/{project}/edit', [App\Http\Controllers\Admin\ProjectController::class, 'edit'])->name('project.edit');
+
 });

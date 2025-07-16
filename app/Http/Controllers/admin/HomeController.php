@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\admin;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -50,7 +50,7 @@ class HomeController extends Controller
             'inactiveStores' => Store::where('status', 0)->count(),
         ]);
     }
-    
+
     public function ChangePasswordForm(Request $request){
         return view('admin.password');
     }

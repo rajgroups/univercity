@@ -79,8 +79,8 @@
 							<ul>
                                 <li><a href="{{ route('admin.sectors.index') }}"><i class="ti ti-list-details fs-16 me-2"></i><span>Sector</span></a></li>
 								<li><a href="{{ route('admin.project.index') }}"><i data-feather="box"></i><span>Project</span></a></li>
-								<li><a href="add-product.html"><i class="ti ti-table-plus fs-16 me-2"></i><span>Banner</span></a></li>
-								<li><a href="expired-products.html"><i class="ti ti-progress-alert fs-16 me-2"></i><span>Announcement </span></a></li>
+								<li><a href="{{route('admin.banner.index')}}"><i class="ti ti-table-plus fs-16 me-2"></i><span>Banner</span></a></li>
+								<li><a href="{{route('admin.announcement.index')}}"><i class="ti ti-progress-alert fs-16 me-2"></i><span>Announcement </span></a></li>
 								<li><a href="low-stocks.html"><i class="ti ti-trending-up-2 fs-16 me-2"></i><span>Low Stocks</span></a></li>
 								<li><a href="category-list.html"><i class="ti ti-list-details fs-16 me-2"></i><span>Category</span></a></li>
 								<li><a href="sub-categories.html"><i class="ti ti-carousel-vertical fs-16 me-2"></i><span>Sub Category</span></a></li>

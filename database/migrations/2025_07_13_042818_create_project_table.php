@@ -10,17 +10,20 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('projects', function (Blueprint $table) {
+       Schema::create('projects', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('post_by')->constrained('admin')->comment('Posted by admin');
-            $table->string('title')->comment('Project title');
-            $table->string('type')->comment('Project type');
-            $table->string('banner')->nullable();
+            $table->string('title');
+            $table->string('slug')->unique();
             $table->string('image');
-            $table->longText('description');
+            $table->string('banner_image');
+            $table->tinyInteger('type')->comment('1=>ongoing,2=>upcoming');
             $table->boolean('status');
+            $table->text('description')->nullable();
             $table->timestamps();
         });
+
+
+
     }
 
     /**

@@ -4,8 +4,8 @@
     <div class="page-header">
         <div class="add-item d-flex">
             <div class="page-title">
-                <h4 class="fw-bold">Project</h4>
-                <h6>Manage your Project</h6>
+                <h4 class="fw-bold">Banner</h4>
+                <h6>Manage your Banner</h6>
             </div>
         </div>
         <ul class="table-top-head">
@@ -26,11 +26,13 @@
             </li>
         </ul>
         <div class="page-btn">
-            <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-category"><i
-                    class="ti ti-circle-plus me-1"></i>Add Category</a>
+            <a href="{{ route('admin.banner.create') }}" class="btn btn-primary">
+                <i class="ti ti-circle-plus me-1"></i>Add Banner
+            </a>
         </div>
     </div>
-    <!-- /product list -->
+
+    <!-- /banner list -->
     <div class="card">
         <div class="card-header d-flex align-items-center justify-content-between flex-wrap row-gap-3">
             <div class="search-set">
@@ -45,7 +47,7 @@
                         data-bs-toggle="dropdown">
                         Status
                     </a>
-                    <ul class="dropdown-menu  dropdown-menu-end p-3">
+                    <ul class="dropdown-menu dropdown-menu-end p-3">
                         <li>
                             <a href="javascript:void(0);" class="dropdown-item rounded-1">Active</a>
                         </li>
@@ -56,6 +58,23 @@
                 </div>
             </div>
         </div>
+        @if (session('success'))
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+
+        @if ($errors->any())
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <ul class="mb-0">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
 
         <div class="card-body p-0">
             <div class="table-responsive">
@@ -69,260 +88,59 @@
                                 </label>
                             </th>
                             <th>Title</th>
-                            <th>Project slug</th>
+                            <th>Link</th>
                             <th>Created On</th>
                             <th>Status</th>
-                            <th class="no-sort"></th>
+                            <th class="no-sort">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>
-                                <label class="checkboxs">
-                                    <input type="checkbox">
-                                    <span class="checkmarks"></span>
-                                </label>
-                            </td>
-                            <td><span class="text-gray-9">Computers</span></td>
-                            <td>computers</td>
-                            <td>24 Dec 2024</td>
-                            <td><span class="badge bg-success fw-medium fs-10">Active</span></td>
-                            <td class="action-table-data">
-                                <div class="edit-delete-action">
-                                    <a class="me-2 p-2" href="#" data-bs-toggle="modal"
-                                        data-bs-target="#edit-category">
-                                        <i data-feather="edit" class="feather-edit"></i>
-                                    </a>
-                                    <a data-bs-toggle="modal" data-bs-target="#delete-modal" class="p-2"
-                                        href="javascript:void(0);">
-                                        <i data-feather="trash-2" class="feather-trash-2"></i>
-                                    </a>
-                                </div>
+                        @foreach($banners as $banner)
+                            <tr>
+                                <td>
+                                    <label class="checkboxs">
+                                        <input type="checkbox" name="banner_ids[]" value="{{ $banner->id }}">
+                                        <span class="checkmarks"></span>
+                                    </label>
+                                </td>
+                                <td>{{ $banner->title }}</td>
+                                <td>
+                                    @if($banner->link)
+                                        <a href="{{ $banner->link }}" target="_blank">{{ $banner->link }}</a>
+                                    @else
+                                        —
+                                    @endif
+                                </td>
+                                <td>{{ $banner->created_at->format('d M Y') }}</td>
+                                <td>
+                                    @if($banner->status)
+                                        <span class="badge bg-success fw-medium fs-10">Active</span>
+                                    @else
+                                        <span class="badge bg-danger fw-medium fs-10">Inactive</span>
+                                    @endif
+                                </td>
+                                <td class="action-table-data">
+                                    <div class="edit-delete-action">
+                                        <a class="me-2 p-2" href="{{ route('admin.banner.edit', $banner->id) }}">
+                                            <i data-feather="edit" class="feather-edit"></i>
+                                        </a>
+                                        <form action="{{ route('admin.banner.destroy', $banner->id) }}" method="POST" class="d-inline-block">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn p-2 btn-link text-danger" onclick="return confirm('Are you sure you want to delete this banner?')">
+                                                <i data-feather="trash-2" class="feather-trash-2"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforeach
 
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label class="checkboxs">
-                                    <input type="checkbox">
-                                    <span class="checkmarks"></span>
-                                </label>
-                            </td>
-                            <td><span class="text-gray-9">Electronics</span></td>
-                            <td>electronics</td>
-                            <td>10 Dec 2024</td>
-                            <td><span class="badge bg-success fw-medium fs-10">Active</span></td>
-                            <td class="action-table-data">
-                                <div class="edit-delete-action">
-                                    <a class="me-2 p-2" href="#" data-bs-toggle="modal"
-                                        data-bs-target="#edit-category">
-                                        <i data-feather="edit" class="feather-edit"></i>
-                                    </a>
-                                    <a data-bs-toggle="modal" data-bs-target="#delete-modal" class="p-2"
-                                        href="javascript:void(0);">
-                                        <i data-feather="trash-2" class="feather-trash-2"></i>
-                                    </a>
-                                </div>
-
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label class="checkboxs">
-                                    <input type="checkbox">
-                                    <span class="checkmarks"></span>
-                                </label>
-                            </td>
-                            <td><span class="text-gray-9">Shoe</span></td>
-                            <td>shoe</td>
-                            <td>27 Nov 2024</td>
-                            <td><span class="badge bg-success fw-medium fs-10">Active</span></td>
-                            <td class="action-table-data">
-                                <div class="edit-delete-action">
-                                    <a class="me-2 p-2" href="#" data-bs-toggle="modal"
-                                        data-bs-target="#edit-category">
-                                        <i data-feather="edit" class="feather-edit"></i>
-                                    </a>
-                                    <a data-bs-toggle="modal" data-bs-target="#delete-modal" class="p-2"
-                                        href="javascript:void(0);">
-                                        <i data-feather="trash-2" class="feather-trash-2"></i>
-                                    </a>
-                                </div>
-
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label class="checkboxs">
-                                    <input type="checkbox">
-                                    <span class="checkmarks"></span>
-                                </label>
-                            </td>
-                            <td><span class="text-gray-9">Cosmetics</span></td>
-                            <td>cosmetics</td>
-                            <td>18 Nov 2024</td>
-                            <td><span class="badge bg-success fw-medium fs-10">Active</span></td>
-                            <td class="action-table-data">
-                                <div class="edit-delete-action">
-                                    <a class="me-2 p-2" href="#" data-bs-toggle="modal"
-                                        data-bs-target="#edit-category">
-                                        <i data-feather="edit" class="feather-edit"></i>
-                                    </a>
-                                    <a data-bs-toggle="modal" data-bs-target="#delete-modal" class="p-2"
-                                        href="javascript:void(0);">
-                                        <i data-feather="trash-2" class="feather-trash-2"></i>
-                                    </a>
-                                </div>
-
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label class="checkboxs">
-                                    <input type="checkbox">
-                                    <span class="checkmarks"></span>
-                                </label>
-                            </td>
-                            <td><span class="text-gray-9">Groceries</span></td>
-                            <td>groceries</td>
-                            <td>06 Nov 2024</td>
-                            <td><span class="badge bg-success fw-medium fs-10">Active</span></td>
-                            <td class="action-table-data">
-                                <div class="edit-delete-action">
-                                    <a class="me-2 p-2" href="#" data-bs-toggle="modal"
-                                        data-bs-target="#edit-category">
-                                        <i data-feather="edit" class="feather-edit"></i>
-                                    </a>
-                                    <a data-bs-toggle="modal" data-bs-target="#delete-modal" class="p-2"
-                                        href="javascript:void(0);">
-                                        <i data-feather="trash-2" class="feather-trash-2"></i>
-                                    </a>
-                                </div>
-
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label class="checkboxs">
-                                    <input type="checkbox">
-                                    <span class="checkmarks"></span>
-                                </label>
-                            </td>
-                            <td><span class="text-gray-9">Furniture</span></td>
-                            <td>furniture</td>
-                            <td>25 Oct 2024</td>
-                            <td><span class="badge bg-success fw-medium fs-10">Active</span></td>
-                            <td class="action-table-data">
-                                <div class="edit-delete-action">
-                                    <a class="me-2 p-2" href="#" data-bs-toggle="modal"
-                                        data-bs-target="#edit-category">
-                                        <i data-feather="edit" class="feather-edit"></i>
-                                    </a>
-                                    <a data-bs-toggle="modal" data-bs-target="#delete-modal" class="p-2"
-                                        href="javascript:void(0);">
-                                        <i data-feather="trash-2" class="feather-trash-2"></i>
-                                    </a>
-                                </div>
-
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label class="checkboxs">
-                                    <input type="checkbox">
-                                    <span class="checkmarks"></span>
-                                </label>
-                            </td>
-                            <td><span class="text-gray-9">Bags</span></td>
-                            <td>bags</td>
-                            <td>14 Oct 2024</td>
-                            <td><span class="badge bg-success fw-medium fs-10">Active</span></td>
-                            <td class="action-table-data">
-                                <div class="edit-delete-action">
-                                    <a class="me-2 p-2" href="#" data-bs-toggle="modal"
-                                        data-bs-target="#edit-category">
-                                        <i data-feather="edit" class="feather-edit"></i>
-                                    </a>
-                                    <a data-bs-toggle="modal" data-bs-target="#delete-modal" class="p-2"
-                                        href="javascript:void(0);">
-                                        <i data-feather="trash-2" class="feather-trash-2"></i>
-                                    </a>
-                                </div>
-
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label class="checkboxs">
-                                    <input type="checkbox">
-                                    <span class="checkmarks"></span>
-                                </label>
-                            </td>
-                            <td><span class="text-gray-9">Phone</span></td>
-                            <td>phone</td>
-                            <td>03 Oct 2024</td>
-                            <td><span class="badge bg-success fw-medium fs-10">Active</span></td>
-                            <td class="action-table-data">
-                                <div class="edit-delete-action">
-                                    <a class="me-2 p-2" href="#" data-bs-toggle="modal"
-                                        data-bs-target="#edit-category">
-                                        <i data-feather="edit" class="feather-edit"></i>
-                                    </a>
-                                    <a data-bs-toggle="modal" data-bs-target="#delete-modal" class="p-2"
-                                        href="javascript:void(0);">
-                                        <i data-feather="trash-2" class="feather-trash-2"></i>
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label class="checkboxs">
-                                    <input type="checkbox">
-                                    <span class="checkmarks"></span>
-                                </label>
-                            </td>
-                            <td><span class="text-gray-9">Appliances</span></td>
-                            <td>appliances</td>
-                            <td>20 Sep 2024</td>
-                            <td><span class="badge bg-success fw-medium fs-10">Active</span></td>
-                            <td class="action-table-data">
-                                <div class="edit-delete-action">
-                                    <a class="me-2 p-2" href="#" data-bs-toggle="modal"
-                                        data-bs-target="#edit-category">
-                                        <i data-feather="edit" class="feather-edit"></i>
-                                    </a>
-                                    <a data-bs-toggle="modal" data-bs-target="#delete-modal" class="p-2"
-                                        href="javascript:void(0);">
-                                        <i data-feather="trash-2" class="feather-trash-2"></i>
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label class="checkboxs">
-                                    <input type="checkbox">
-                                    <span class="checkmarks"></span>
-                                </label>
-                            </td>
-                            <td><span class="text-gray-9">Clothing</span></td>
-                            <td>clothing</td>
-                            <td>10 Sep 20244</td>
-                            <td><span class="badge bg-success fw-medium fs-10">Active</span></td>
-                            <td class="action-table-data">
-                                <div class="edit-delete-action">
-                                    <a class="me-2 p-2" href="#" data-bs-toggle="modal"
-                                        data-bs-target="#edit-category">
-                                        <i data-feather="edit" class="feather-edit"></i>
-                                    </a>
-                                    <a data-bs-toggle="modal" data-bs-target="#delete-modal" class="p-2"
-                                        href="javascript:void(0);">
-                                        <i data-feather="trash-2" class="feather-trash-2"></i>
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
+                        @if($banners->isEmpty())
+                            <tr>
+                                <td colspan="6" class="text-center">No banners found.</td>
+                            </tr>
+                        @endif
                     </tbody>
                 </table>
             </div>

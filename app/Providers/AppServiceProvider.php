@@ -4,6 +4,9 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\Storage;
+use App\Helpers\GcsAdapterFactory;
+
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -20,5 +23,9 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Paginator::useBootstrap();
+        Storage::extend('custom', function ($app, $config) {
+        $factory = new GcsAdapterFactory();
+        return $factory($config);
+    });
     }
 }

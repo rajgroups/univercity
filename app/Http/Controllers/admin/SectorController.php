@@ -2,9 +2,14 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\FileHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Sector;
+use App\Helpers\GcsUploader;
+use App\Helpers\ImageKitHelper;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
+use App\Helpers\ImageKitUploader;
 
 class SectorController extends Controller
 {
@@ -13,10 +18,12 @@ class SectorController extends Controller
      */
     public function index()
     {
-        //
-        return view('admin.sector.list');
-    }
+        // Fetch all sectors from the database
+        $sectors = Sector::orderBy('created_at', 'desc')->get();
 
+        // Pass to view
+        return view('admin.sector.list', compact('sectors'));
+    }
     /**
      * Show the form for creating a new resource.
      */
@@ -29,10 +36,38 @@ class SectorController extends Controller
     /**
      * Store a newly created resource in storage.
      */
+
+
+
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name'        => 'required|string|max:255',
+            'slug'        => 'required|string|max:255|unique:sectors,slug',
+            'image'       => 'required|image',
+            'status'      => 'required|in:0,1',
+            'description' => 'nullable|string|max:1000',
+        ]);
+
+        if ($request->hasFile('image')) {
+            $imageName = time() . '.' . $request->image->extension();
+            $request->image->move(public_path('uploads/sectors'), $imageName);
+            $validated['image'] = $imageName;
+        }
+        // ✅ Store in DB
+        $sector = new Sector;
+
+        $sector->name           = $request->name;
+        $sector->slug           = $request->slug;
+        $sector->image          = $imageName;
+        $sector->status         = $request->status;
+        $sector->description    = $request->description;
+        $sector->save();
+
+        return redirect()->back()->with('success', 'Sector created successfully!');
     }
+
+
 
     /**
      * Display the specified resource.
@@ -47,7 +82,7 @@ class SectorController extends Controller
      */
     public function edit(Sector $sector)
     {
-        //
+        return view('admin.sector.edit', compact('sector'));
     }
 
     /**
@@ -55,7 +90,25 @@ class SectorController extends Controller
      */
     public function update(Request $request, Sector $sector)
     {
-        //
+        $validated = $request->validate([
+            'name'          => 'required|string|max:255',
+            'slug'          => 'required|string|max:255|unique:sectors,slug,' . $sector->id,
+            'status'        => 'required|in:1,0',
+            'description'   => 'nullable|string|max:600',
+            'image'         => 'nullable|image|max:2048',
+        ]);
+
+        if ($request->hasFile('image')) {
+            $imageName = time() . '.' . $request->image->extension();
+            $request->image->move(public_path('uploads/sectors'), $imageName);
+            $validated['image'] = $imageName;
+        }
+
+        $sector->update($validated);
+
+      return redirect()->route('admin.sectors.edit', $sector->id)
+                 ->with('success', 'Sector updated successfully.');
+
     }
 
     /**
@@ -63,6 +116,19 @@ class SectorController extends Controller
      */
     public function destroy(Sector $sector)
     {
-        //
+        try {
+            // If sector has an image and you want to delete it from storage:
+            if ($sector->image && file_exists(public_path('uploads/sectors/' . $sector->image))) {
+                unlink(public_path('uploads/sectors/' . $sector->image));
+            }
+
+            $sector->delete();
+
+            return redirect()->route('admin.sectors.index')->with('success', 'Sector deleted successfully.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Something went wrong while deleting the sector.');
+        }
     }
+
+
 }

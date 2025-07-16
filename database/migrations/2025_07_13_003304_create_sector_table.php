@@ -9,14 +9,16 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
+
     public function up(): void
     {
-        Schema::create('sector', function (Blueprint $table) {
+        Schema::create('sectors', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('image');
-            $table->longText('description');
+            $table->string('slug')->unique();
+            $table->string('image')->nullable();
             $table->boolean('status');
+            $table->text('description')->nullable();
             $table->timestamps();
         });
     }
