@@ -23,7 +23,7 @@ class LoginController extends Controller
             'password'      => 'required|min:6',
         ]);
 
-        if (Auth::guard('admin')->attempt($request->only('email','password'))) {
+        if (Auth::guard('admin')->attempt($request->only('email', 'password'))) {
             $request->session()->regenerate();
             return redirect()->route('admin.home');
         }
