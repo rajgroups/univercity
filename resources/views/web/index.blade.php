@@ -111,7 +111,7 @@
     @include('layouts.web.partition.slider')
 <section class="about-sec mt-5 mb-5">
     <div class="container-fluid">
-        <h3 class="fs-1 fw-500 mb-8 text-center pt-5 pb-5"> Empowering India for Socio-Economic Growth through <span class="color-primary fw-bold">Education & Skill Development</span> </h3>
+        <h3 class="fs-1 fw-500 mb-8 text-center pt-5 pb-5">{{ $settings->about_main_title ?? null}}<span class="color-primary fw-bold">{{ $settings->about_sub_title ?? null}}</span> </h3>
         <div class="row row-gap-4 align-items-center">
             <div class="col-lg-6 order-2">
                 <div class="row row-gap-4">
@@ -215,10 +215,9 @@
                         <div class="tagblock mb-16"> <img src="{{ asset('resource/web/assets/media/hero/buld-vec.png')}}" class="bulb-vec" alt="Lightbulb icon representing ideas and insight">
                             <p class="black">About ISICO</p>
                         </div>
+                        <h2 class="fw-bold mb-3">{{ $settings->about_title ?? null }}</h2>
                     </div>
-                    <p class="mb-36"> The Indian Skill Institute Co-operation (ISICO), founded in 2020, is committed to advancing India’s socio-economic development through education, skill enhancement, and entrepreneurship. Focused on bridging gaps in rural and underprivileged areas, ISICO empowers individuals to secure sustainable livelihoods and contribute to national growth. </p>
-                    <p class="mb-36"> Aligned with the National Education Policy (NEP) 2020, ISICO works to enhance the quality of education while preparing future generations for evolving challenges. The organization adheres to core values of inclusivity, innovation, and collaboration, and actively contributes to Sustainable Development Goals (SDGs), particularly SDG 4 (Quality Education), SDG 5 (Gender Equality), and SDG 8 (Decent Work and Economic Growth). </p>
-                    <p class="mb-36"> ISICO supports national initiatives like Skill India and Make in India, collaborating with various sectors to build a skilled, inclusive workforce for India’s future. </p>
+                    <p class="mb-36">{!! $settings->about_description ?? null !!}</p>
                     <div class="d-flex align-items-center gap-24 mb-36">
                         <div class="d-flex align-items-center gap-16"> <img src="{{ asset('resource/web/assets/media/vector/unique-course-vec.png')}}" class="content-vector" alt="Icon representing programs">
                             <div>
@@ -245,31 +244,31 @@
             <div class="d-inline-flex align-items-center mb-3"> <img src="{{ asset('resource/web/assets/media/hero/buld-vec.png')}}" class="me-2" alt="" style="width: 30px;">
                 <p class="mb-0 fw-semibold text-dark">How We Operate</p>
             </div>
-            <h2 class="fw-bold">Learn anytime, anywhere with <span class="text-primary">Trusted Experts</span></h2>
+            <h2 class="fw-bold">{{ $settings->operate_main_title ??  null}} <span class="text-primary">{{ $settings->operate_sub_title ??  null}}</span></h2>
         </div>
         <div class="row g-4">
-            <!-- Step 1 -->
-            <div class="col-lg-4 col-md-6">
-                <div class="card border-0 shadow-sm h-100 p-4 text-center">
-                    <div class="mb-3"> <img src="{{ asset('resource/web/assets/media/images/tem-1-icon.png')}}" alt="" style="height: 50px;"> </div>
-                    <h5 class="fw-semibold mb-3">1. Our Vision</h5>
-                    <p>To facilitate equitable access to quality education and skill development programs, fostering a self-reliant India where every individual is equipped to thrive in a competitive global economy. </p>
+        @php
+            // Decode JSON string to array (use true as second parameter)
+            $operateSections = is_string($settings->operate_sections) 
+                ? json_decode($settings->operate_sections, true) 
+                : $settings->operate_sections; // already array
+        @endphp
+
+        @if (!empty($operateSections) && is_array($operateSections))
+            @foreach ($operateSections as $index => $section)
+                <div class="col-lg-4 col-md-6">
+                    <div class="card border-0 shadow-sm h-100 p-4 text-center">
+                        <div class="mb-3">
+                            <img src="{{ asset($section['operate_icon'] ?? 'upload/icon/default-icon.png') }}" alt="icon" style="height: 50px;">
+                        </div>
+                        <h5 class="fw-semibold mb-3">{{ $index + 1 }}. {{ $section['operate_title'] ?? 'No Title' }}</h5>
+                        <p>{{ $section['operate_desc'] ?? 'No description available.' }}</p>
+                    </div>
                 </div>
-            </div> <!-- Step 2 -->
-            <div class="col-lg-4 col-md-6">
-                <div class="card border-0 shadow-sm h-100 p-4 text-center">
-                    <div class="mb-3"> <img src="{{ asset('resource/web/assets/media/images/eyeicon.png')}}" alt="" style="height: 50px;"> </div>
-                    <h5 class="fw-semibold mb-3">2. Our Mission</h5>
-                    <p>To become a leading institution in skill and education empowerment, bridging opportunities between rural and urban India, and nurturing talent to meet the aspirations of a dynamic and sustainable future. </p>
-                </div>
-            </div> <!-- Step 3 -->
-            <div class="col-lg-4">
-                <div class="card border-0 shadow-sm h-100 p-4 text-center">
-                    <div class="mb-3"> <img src="{{ asset('resource/web/assets/media/images/tem-3-icon.png')}}" alt="" style="height: 50px;"> </div>
-                    <h5 class="fw-semibold mb-3">3. Begin Your Journey</h5>
-                    <p>Gain real-world skills, certification, and mentorship. Whether it’s employment, entrepreneurship, or further study—your journey begins here. </p>
-                </div>
-            </div>
+            @endforeach
+        @else
+            <p class="text-muted">No operation sections available.</p>
+        @endif
         </div>
     </div>
 </section> <!-- How We Operate Section End -->
@@ -279,9 +278,9 @@
             <div class="tagblock mb-16"> <img src="{{ asset('resource/web/assets/media/hero/buld-vec.png')}}" class="bulb-vec" alt="">
                 <p class="black">Ongoing Projects</p>
             </div>
-            <div class="cds-119 css-1v1mgi3 cds-121 mt-2">Specializations and Professional Certificates</div>
-            <h3 class="fw-bold mt-2 mb-2">Learn more with our curated <span class="color-primary"> Community Wisdom</span></h3>
-            <p class="cds-119 css-lg65q1 cds-121">Explore our most popular programs, get job-ready for an in-demand career.</p>
+            <div class="cds-119 css-1v1mgi3 cds-121 mt-2">{{ $settings->on_going_project_title ?? null }}</div>
+            <h3 class="fw-bold mt-2 mb-2">{{ $settings->on_going_project_main_title ?? null }} <span class="color-primary"> {{ $settings->on_going_project_main_sub_title ?? null }}</span></h3>
+            <p class="cds-119 css-lg65q1 cds-121">{{ $settings->onging_final_titles ?? null }}</p>
         </div> <!-- Swiper -->
         <div class="swiper mySwipers">
             <div class="swiper-wrapper">
@@ -389,9 +388,9 @@
 <div class="blog-sec mt-10 ai-background-section">
     <div class="container-fluid">
         <div class="heading mb-10 text-start">
-            <div class="text-white">Specializations and Professional Certificates</div>
-            <h3 class="fw-bold text-white mt-2 mb-2">Learn more with our curated Community Wisdom</h3>
-            <p class="text-white">Explore our most popular programs, get job-ready for an in-demand career.</p>
+            <div class="text-white">{{ $settings->upcoming_project_title ?? null}}</div>
+            <h3 class="fw-bold text-white mt-2 mb-2">{!! $settings->upcoming_project_main_sub_title ?? null !!}</h3>
+            <p class="text-white">{{ $settings->upcoming_final_title ?? null }}</p>
         </div> <!-- Swiper -->
         <div class="row align-items-center">
             <div class="col-md-12 col-lg-4">
@@ -400,9 +399,9 @@
                         <div class="tagblock mb-16 mt-1 mb-4"> <img src="{{ asset('resource/web/assets/media/hero/buld-vec.png')}}" class="bulb-vec" alt="">
                             <p class="black">Upcoming Projects</p>
                         </div>
-                        <h3 class="fw-bold text-white">Join thousands who’ve<br> transformed their <span class="text-white">Careers with ISICO</span> </h3>
+                        <h3 class="fw-bold text-white">{!! $settings->upcoming_secondary_title ?? null !!}</h3>
                     </div>
-                    <p class="text-white">At ISICO, we empower individuals through skill-based training, real-world experience, and professional mentorship to build bright futures across India. </p>
+                    <p class="text-white">{{ $settings->upcoming_secondary_desc ?? null }}</p>
                 </div>
             </div>
             <div class="col-md-12 col-lg-8">
@@ -453,9 +452,9 @@
             <div class="tagblock mb-16"> <img src="{{ asset('resource/web/assets/media/hero/buld-vec.png')}}" class="bulb-vec" alt="">
                 <p class="black">Our Program</p>
             </div>
-            <div class="text-start mt-2">Courses and Professional Certificates</div>
-            <h3 class="fw-500 text-start mt-2 mb-2">Guided by passionate instructors, <span class="color-primary"> Leaders in their Fields</span> </h3>
-            <p class="text-start">Explore free online courses from the world's top universities and companies.</p>
+            <div class="text-start mt-2">{{ $settings->program_project_title }}</div>
+            <h3 class="fw-500 text-start mt-2 mb-2">{{ $settings->program_project_main_title }}<span class="color-primary"> {{ $settings->program_project_main_sub_title }}</span> </h3>
+            <p class="text-start">{{ $settings->program_final_title }}</p>
         </div>
         <div class="row align-items-stretch h-100">
             @if ($programes->isNotEmpty())
@@ -947,9 +946,9 @@
             <div class="tagblock mb-16"> <img src="{{ asset('resource/web/assets/media/hero/buld-vec.png')}}" class="bulb-vec" alt="">
                 <p class="black">Government Schemes We Support</p>
             </div>
-            <div class="text-start mt-2">Courses and Professional Certificates</div>
-            <h3 class="fw-500 text-start mt-2 mb-2">Guided by passionate instructors, <span class="color-primary"> Leaders in their Fields</span> </h3>
-            <p class="text-start">Explore free online courses from the world's top universities and companies.</p>
+            <div class="text-start mt-2">{{ $settings->gvt_scheme_title ?? null }}</div>
+            <h3 class="fw-500 text-start mt-2 mb-2">{{ $settings->gvt_scheme_main_title ?? null }} <span class="color-primary"> {{ $settings->gvt_scheme_main_sub_title ?? null }}</span> </h3>
+            <p class="text-start">{{ $settings->gvt_scheme_final_title }}</p>
         </div>
         <div class="row align-items-stretch h-100">
             @if ($schemes->isEmpty())
@@ -1089,42 +1088,52 @@
             <div class="d-inline-flex align-items-center mb-3"> <img src="{{ asset('resource/web/assets/media/hero/buld-vec.png')}}" class="me-2" alt="" style="width: 30px;">
                 <p class="mb-0 fw-semibold text-dark">Our Focus</p>
             </div>
-            <h2 class="fw-bold mb-3">Key Areas of <span class="text-primary">Focus</span></h2>
+            <h2 class="fw-bold mb-3"><span class="text-primary">{{ $settings->focus_main_title }}</span></h2>
         </div>
         <div class="row">
             <div class="col-md-12 col-lg-6">
+            @php
+                $focusAreas = [];
+
+                if (!empty($settings->focus_areas)) {
+                    if (is_string($settings->focus_areas)) {
+                        $decoded = json_decode($settings->focus_areas, true);
+                        if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+                            $focusAreas = $decoded;
+                        }
+                    } elseif (is_array($settings->focus_areas)) {
+                        $focusAreas = $settings->focus_areas;
+                    }
+                }
+            @endphp
+
+
+            @if (!empty($focusAreas))
                 <div class="accordion" id="focusAccordion">
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="headingOne"> <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne"> 1. Foundational Skills Development </button> </h2>
-                        <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#focusAccordion">
-                            <div class="accordion-body"> Tailored programs for children and young learners to enhance cognitive skills and foster holistic development. </div>
+                    @foreach($focusAreas as $index => $item)
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="heading{{ $index }}">
+                                <button class="accordion-button {{ $index !== 0 ? 'collapsed' : '' }}" type="button"
+                                        data-bs-toggle="collapse"
+                                        data-bs-target="#collapse{{ $index }}"
+                                        aria-expanded="{{ $index === 0 ? 'true' : 'false' }}"
+                                        aria-controls="collapse{{ $index }}">
+                                    {{ $index + 1 }}. {{ $item['focus_title'] ?? 'No Title' }}
+                                </button>
+                            </h2>
+                            <div id="collapse{{ $index }}" class="accordion-collapse collapse {{ $index === 0 ? 'show' : '' }}"
+                                aria-labelledby="heading{{ $index }}"
+                                data-bs-parent="#focusAccordion">
+                                <div class="accordion-body">
+                                    {{ $item['focus_description'] ?? 'No Description available.' }}
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="headingTwo"> <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo"> 2. Skill Development for Emerging Needs </button> </h2>
-                        <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#focusAccordion">
-                            <div class="accordion-body"> Sector-specific training in future-ready domains, including green technology and digital industries. </div>
-                        </div>
-                    </div>
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="headingThree"> <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree"> 3. Rural Empowerment </button> </h2>
-                        <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#focusAccordion">
-                            <div class="accordion-body"> Comprehensive programs for small-scale industries, agricultural productivity, and FPO awareness. </div>
-                        </div>
-                    </div>
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="headingFour"> <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour"> 4. Entrepreneurship Development </button> </h2>
-                        <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#focusAccordion">
-                            <div class="accordion-body"> Empowering women and youth through targeted initiatives for self-employment and small business growth. </div>
-                        </div>
-                    </div>
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="headingFive"> <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive"> 5. Hybrid Education Models </button> </h2>
-                        <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive" data-bs-parent="#focusAccordion">
-                            <div class="accordion-body"> Bridging the digital divide with a blend of traditional and technology-driven learning approaches. </div>
-                        </div>
-                    </div>
+                    @endforeach
                 </div>
+            @endif
+
+
             </div>
             <div class="col-md-12 col-lg-6">
                 <!-- Our Collaborative Approach -->
@@ -1164,7 +1173,7 @@
                     <h2 class="fw-bold mb-3">A Message from the <span class="text-primary">Founder</span></h2>
                 </div>
                 <div class="mt-5 p-4 bg-white border-start border-5 shadow-sm">
-                    <div class="alert alert-primary"> "The cornerstone of any nation’s progress is its people. At ISICO, we believe in the transformative power of education and skill development to create an equitable society. Together, through collaboration and collective action, we can lay the foundation for a self-reliant India where opportunities know no boundaries."<br> <strong class="text-end" style="text-indent: 40px;    display: block;">R. Surendhren, <cite title="Source Title">Founder, ISICO</cite></strong> </div>
+                    <div class="alert alert-primary"> "{{ $settings->founder_message ?? null }}"<br> <strong class="text-end" style="text-indent: 40px;    display: block;">{{ $settings->founder_name }}, <cite title="Source Title">Founder, ISICO</cite></strong> </div>
                 </div>
                 <style>
                     .alert-primary {
@@ -1184,148 +1193,41 @@
                     <h2 class="fw-bold mb-3">Future <span class="text-primary">Goals</span></h2>
                 </div>
                 <p>ISICO is steadfast in its commitment to:</p>
+                @if(!empty($settings->future_goals) && is_array($settings->future_goals))
                 <div class="accordion" id="futureGoalsAccordion">
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="goalHeadingOne"> <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#goalCollapseOne" aria-expanded="true" aria-controls="goalCollapseOne"> 1. Expanding Green Job Access </button> </h2>
-                        <div id="goalCollapseOne" class="accordion-collapse collapse show" aria-labelledby="goalHeadingOne" data-bs-parent="#futureGoalsAccordion">
-                            <div class="accordion-body text-start"> Expanding access to green jobs for Indian youth to support sustainable development. </div>
+                    @foreach($settings->future_goals as $index => $goal)
+                        @php
+                            $goalId = 'goal' . $index;
+                        @endphp
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="heading{{ $goalId }}">
+                                <button class="accordion-button {{ $index !== 0 ? 'collapsed' : '' }}" type="button"
+                                        data-bs-toggle="collapse"
+                                        data-bs-target="#collapse{{ $goalId }}"
+                                        aria-expanded="{{ $index === 0 ? 'true' : 'false' }}"
+                                        aria-controls="collapse{{ $goalId }}">
+                                    {{ $index + 1 }}. {{ $goal['goal_title'] ?? 'No Title' }}
+                                </button>
+                            </h2>
+                            <div id="collapse{{ $goalId }}"
+                                class="accordion-collapse collapse {{ $index === 0 ? 'show' : '' }}"
+                                aria-labelledby="heading{{ $goalId }}"
+                                data-bs-parent="#futureGoalsAccordion">
+                                <div class="accordion-body text-start">
+                                    {{ $goal['goal_description'] ?? 'No Description' }}
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="goalHeadingTwo"> <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#goalCollapseTwo" aria-expanded="false" aria-controls="goalCollapseTwo"> 2. Talent Identification Mission </button> </h2>
-                        <div id="goalCollapseTwo" class="accordion-collapse collapse" aria-labelledby="goalHeadingTwo" data-bs-parent="#futureGoalsAccordion">
-                            <div class="accordion-body text-start"> Building a robust Natural Talent Identification Mission to unlock the potential of children across India. </div>
-                        </div>
-                    </div>
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="goalHeadingThree"> <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#goalCollapseThree" aria-expanded="false" aria-controls="goalCollapseThree"> 3. Rural Entrepreneurship & SHGs </button> </h2>
-                        <div id="goalCollapseThree" class="accordion-collapse collapse" aria-labelledby="goalHeadingThree" data-bs-parent="#futureGoalsAccordion">
-                            <div class="accordion-body"> Promoting women’s self-help groups (SHGs) and rural entrepreneurship as engines of local economic growth. </div>
-                        </div>
-                    </div>
+                    @endforeach
                 </div>
+            @else
+                <p>No future goals found.</p>
+            @endif
+
             </div>
         </div>
     </div>
-</div> <!-- Categories Section Start -->
-<!-- <section class="categories-sec mb-120 wow fadeInUp animated mt-5" data-wow-delay="290ms">
-            <div class="container-fluid">
-              <div class="heading mb-48">
-                <div class="tagblock mb-16">
-                  <img src="{{ asset('resource/web/assets/media/hero/buld-vec.png')}}" class="bulb-vec/)}}" alt="">
-                  <p class="black">Our Course Categories</p>
-                </div>
-                <h3 class="fw-500">Chose from <span class="color-primary"> many industries</span> what to Learn</h3>
-              </div>
-              <div class="categories-wrapper">
-                <a href="courses.html" class="c-block">
-                  <img src="{{ asset('resource/web/assets/media/vector/c-1.png')}}" alt="">
-                  <span class="h6 fw-500 text-hover">School Programs</span>
-                </a>
-                <a href="courses.html" class="c-block">
-                  <img src="{{ asset('resource/web/assets/media/vector/c-2.png')}}" alt="">
-                  <span class="h6 fw-500 text-hover">Collage Programs</span>
-                </a>
-                <a href="courses.html" class="c-block">
-                  <img src="{{ asset('resource/web/assets/media/vector/c-3.png')}}" alt="">
-                  <span class="h6 fw-500 text-hover">Digital Learning Programs</span>
-                </a>
-                <a href="courses.html" class="c-block">
-                  <img src="{{ asset('resource/web/assets/media/vector/c-4.png')}}" alt="">
-                  <span class="h6 fw-500 text-hover">Sector Specific Training Program</span>
-                </a>
-                <a href="courses.html" class="c-block">
-                  <img src="{{ asset('resource/web/assets/media/vector/c-4.png')}}" alt="">
-                  <span class="h6 fw-500 text-hover">On-the-Job Training (OJT)</span>
-                </a>
-                <a href="courses.html" class="c-block">
-                  <img src="{{ asset('resource/web/assets/media/vector/c-5.png')}}" alt="">
-                  <span class="h6 fw-500 text-hover">Entrepreneurship Development Program</span>
-                </a>
-                <a href="courses.html" class="c-block">
-                  <img src="{{ asset('resource/web/assets/media/vector/c-6.png')}}" alt="">
-                  <span class="h6 fw-500 text-hover">Women's Skill Development Program</span>
-                </a>
-                <a href="courses.html" class="c-block">
-                  <img src="{{ asset('resource/web/assets/media/vector/c-7.png')}}" alt="">
-                  <span class="h6 fw-500 text-hover">Skill Development for Persons with Disabilities (PWDs)</span>
-                </a>
-                <a href="courses.html" class="c-block">
-                  <img src="{{ asset('resource/web/assets/media/vector/c-8.png')}}" alt="">
-                  <span class="h6 fw-500 text-hover">Youth Empowerment Program</span>
-                </a>
-                <a href="courses.html" class="c-block">
-                  <img src="{{ asset('resource/web/assets/media/vector/c-9.png')}}" alt="">
-                  <span class="h6 fw-500 text-hover">Community and Rural Development Initiatives</span>
-                </a>
-                <a href="courses.html" class="c-block">
-                  <img src="{{ asset('resource/web/assets/media/vector/c-10.png')}}" alt="">
-                  <span class="h6 fw-500 text-hover">Transforming Rural Schools</span>
-                </a>
-                <a href="courses.html" class="c-block">
-                  <img src="{{ asset('resource/web/assets/media/vector/c-11.png')}}" alt="">
-                  <span class="h6 fw-500 text-hover">Women’s Self-Help Group Skill Development</span>
-                </a>
-                <a href="courses.html" class="c-block">
-                  <img src="{{ asset('resource/web/assets/media/vector/c-12.png')}}" alt="">
-                  <span class="h6 fw-500 text-hover">Farmer Producer Organizations (FPO) Awareness and Development</span>
-                </a>
-              </div>
-            </div>
-            </section> -->
-<!-- Categories Section End -->
-<!-- How We Operate Section Start -->
-<!-- <section class="trusted-expert-sec py-5 bg-light wow fadeInUp animated" data-wow-delay="340ms">
-            <div class="container">
-              <div class="text-center mb-5">
-                <div class="d-inline-flex align-items-center mb-3">
-                  <img src="{{ asset('resource/web/assets/media/hero/buld-vec.png')}}" class="me-2" alt="" style="width: 30px;">
-                  <p class="mb-0 fw-semibold text-dark">How We Operate</p>
-                </div>
-                <h2 class="fw-bold">Learn anytime, anywhere with <span class="text-primary">Trusted Experts</span></h2>
-              </div>
-
-              <div class="row g-4">
-
-                <div class="col-lg-4 col-md-6">
-                  <div class="card border-0 shadow-sm h-100 p-4 text-center">
-                    <div class="mb-3">
-                      <img src="{{ asset('resource/web/assets/media/images/tem-1-icon.png')}}" alt="" style="height: 50px;">
-                    </div>
-                    <h5 class="fw-semibold mb-3">1. Choose Your Program</h5>
-                    <p>Explore a variety of skill and educational programs tailored to youth, women, rural communities, and
-                      more—based on your needs and goals.</p>
-                  </div>
-                </div>
-
-
-                <div class="col-lg-4 col-md-6">
-                  <div class="card border-0 shadow-sm h-100 p-4 text-center">
-                    <div class="mb-3">
-                      <img src="{{ asset('resource/web/assets/media/images/tem-2-icon.png')}}" alt="" style="height: 50px;">
-                    </div>
-                    <h5 class="fw-semibold mb-3">2. Enroll and Learn</h5>
-                    <p>Register for online or offline sessions with ease. Our hybrid model blends expert instruction with
-                      practical exposure for maximum learning.</p>
-                  </div>
-                </div>
-
-
-                <div class="col-lg-4">
-                  <div class="card border-0 shadow-sm h-100 p-4 text-center">
-                    <div class="mb-3">
-                      <img src="{{ asset('resource/web/assets/media/images/tem-3-icon.png')}}" alt="" style="height: 50px;">
-                    </div>
-                    <h5 class="fw-semibold mb-3">3. Begin Your Journey</h5>
-                    <p>Gain real-world skills, certification, and mentorship. Whether it’s employment, entrepreneurship, or
-                      further study—your journey begins here.</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            </section> -->
-<!-- How We Operate Section End -->
-<!-- Content Block Section Start -->
+</div>
 <div class="scontent-block mb-120 wow fadeInUp animated d-none d-md-none d-lg-block" data-wow-delay="440ms">
     <div class="container-fluid">
         <div class="block-content">
@@ -1371,37 +1273,38 @@
                     <div class="tagblock mb-16"> <img src="{{ asset('resource/web/assets/media/hero/buld-vec.png')}}" class="bulb-vec" alt="">
                         <p class="black"> International Collaboration</p>
                     </div>
-                    <h3 class="fw-500">Expert Answers for Your<br class="d-lg-block d-none"> <span class="color-primary d-inline">Learning Journey at ISICO</span> </h3>
+                    <h3 class="fw-500">{{ $settings->collaboration_main_title ?? null }}<br class="d-lg-block d-none"> <span class="color-primary d-inline">{{ $settings->collaboration_sub_title ?? null }}</span> </h3>
                 </div>
+                @if(!empty($settings->international_collaborations) && is_array($settings->international_collaborations))
                 <div id="learningjourney">
                     <div class="faq">
-                        <div class="faq-block mb-24"> <a href="#" class="accordion-button" data-bs-toggle="collapse" data-bs-target="#bc-faq1-left" aria-expanded="false" aria-controls="bc-faq1-left"> <span class="fw-500">01.</span> &nbsp; What types of courses does ISICO offer? </a>
-                            <div id="bc-faq1-left" class="accordion-collapse collapse show" aria-labelledby="bc-faq1-left" data-bs-parent="#learningjourney">
-                                <p>ISICO offers a wide range of skill-based courses including Electrical Technician, Tailoring, Fashion Design, IT Support, Beautician Training, and more. All programs are designed to meet industry standards and improve employability. </p>
+                        @foreach($settings->international_collaborations as $index => $faq)
+                            @php
+                                $faqId = 'bc-faq' . ($index + 1) . '-left';
+                            @endphp
+                            <div class="faq-block mb-24">
+                                <a href="#" class="accordion-button {{ $index !== 0 ? 'collapsed' : '' }}"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#{{ $faqId }}"
+                                aria-expanded="{{ $index === 0 ? 'true' : 'false' }}"
+                                aria-controls="{{ $faqId }}">
+                                    <span class="fw-500">{{ str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}.</span>
+                                    &nbsp; {{ $faq['question'] ?? 'Untitled Question' }}
+                                </a>
+                                <div id="{{ $faqId }}"
+                                    class="accordion-collapse collapse {{ $index === 0 ? 'show' : '' }}"
+                                    aria-labelledby="{{ $faqId }}"
+                                    data-bs-parent="#learningjourney">
+                                    <p>{{ $faq['answer'] ?? 'No answer provided.' }}</p>
+                                </div>
                             </div>
-                        </div>
-                        <div class="faq-block mb-24"> <a href="#" class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#bc-faq2-left" aria-expanded="false" aria-controls="bc-faq2-left"> <span class="fw-500">02.</span> &nbsp; How do I enroll in a course at ISICO? </a>
-                            <div id="bc-faq2-left" class="accordion-collapse collapse" aria-labelledby="bc-faq2-left" data-bs-parent="#learningjourney">
-                                <p>You can enroll by visiting your nearest ISICO center or through our official website. Our counselors will guide you through the admission process, required documents, and available training batches. </p>
-                            </div>
-                        </div>
-                        <div class="faq-block mb-24"> <a href="#" class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#bc-faq3-left" aria-expanded="false" aria-controls="bc-faq3-left"> <span class="fw-500">03.</span> &nbsp; Are there any prerequisites to join the programs? </a>
-                            <div id="bc-faq3-left" class="accordion-collapse collapse" aria-labelledby="bc-faq3-left" data-bs-parent="#learningjourney">
-                                <p>Most of our courses are beginner-friendly and do not require prior experience. However, for advanced programs, a minimum educational qualification or basic knowledge may be needed. </p>
-                            </div>
-                        </div>
-                        <div class="faq-block mb-24"> <a href="#" class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#bc-faq5-left" aria-expanded="false" aria-controls="bc-faq5-left"> <span class="fw-500">04.</span> &nbsp; Can I access courses from my mobile phone? </a>
-                            <div id="bc-faq5-left" class="accordion-collapse collapse" aria-labelledby="bc-faq5-left" data-bs-parent="#learningjourney">
-                                <p>Yes, our learning platform is mobile-friendly. You can access learning materials, assignments, and even live sessions from any smartphone or tablet. </p>
-                            </div>
-                        </div>
-                        <div class="faq-block"> <a href="#" class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#bc-faq6-left" aria-expanded="false" aria-controls="bc-faq6-left"> <span class="fw-500">05.</span> &nbsp; Are the courses self-paced or instructor-led? </a>
-                            <div id="bc-faq6-left" class="accordion-collapse collapse" aria-labelledby="bc-faq6-left" data-bs-parent="#learningjourney">
-                                <p>We offer both self-paced and instructor-led formats depending on the course. Live training sessions with expert mentors are also available for select programs. </p>
-                            </div>
-                        </div>
+                        @endforeach
                     </div>
                 </div>
+            @else
+                <p>No international collaborations listed.</p>
+            @endif
+
             </div>
         </div>
     </div>

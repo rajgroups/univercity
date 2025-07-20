@@ -44,7 +44,8 @@ Route::prefix('admin')->as('admin.')->group(function() {
         Route::resource('announcement',AnnouncementController::class);
 
         // Setting Route
-        Route::get('settings/home/edit',[SettingController::class,'editHomePage']);
+        Route::get('settings/home/edit',[SettingController::class,'editHomePage'])->name('setting.home.edit');
+        Route::post('settings/home/update/{id}', [SettingController::class, 'update'])->name('setting.home.update');
 
         // For storing a new project
         Route::post('/projects', [App\Http\Controllers\Admin\ProjectController::class, 'store'])->name('project.store');

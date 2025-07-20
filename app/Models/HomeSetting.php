@@ -18,7 +18,7 @@ class HomeSetting extends Model
         'about_description',
         'operate_main_title',
         'operate_sub_title',
-        'operate_sections', // This needs to be fillable
+        'operate_sections',
         'on_going_project_title',
         'on_going_project_main_title',
         'on_going_project_main_sub_title',
@@ -37,14 +37,21 @@ class HomeSetting extends Model
         'core_title_two',
         'core_image',
         'focus_main_title',
-        'focus_areas', // This needs to be fillable
+        'focus_areas',
         'founder_message',
         'founder_name',
-        'future_goals', // This needs to be fillable
+        'future_goals',
         'collaboration_main_title',
         'collaboration_sub_title',
-        'international_collaborations', // This needs to be fillable
+        'international_collaborations',
+
+        // Newly added government scheme fields
+        'gvt_scheme_title',
+        'gvt_scheme_main_title',
+        'gvt_scheme_main_sub_title',
+        'gvt_scheme_final_title',
     ];
+
 
     protected $casts = [
         'operate_sections'             => 'array',

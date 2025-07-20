@@ -51,6 +51,12 @@ return new class extends Migration
             $table->string('core_title_two')->nullable();
             $table->string('core_image')->nullable(); // Stores the path to the image
 
+            // Ongoing Section
+            $table->string('gvt_scheme_title')->nullable();
+            $table->string('gvt_scheme_main_title')->nullable();
+            $table->string('gvt_scheme_main_sub_title')->nullable();
+            $table->string('gvt_scheme_final_title')->nullable();
+
             // Key Areas of Focus (Dynamic - will store as JSON)
             // This will store an array of objects, each with focus_title and focus_description
             $table->string('focus_main_title')->nullable();
@@ -69,6 +75,8 @@ return new class extends Migration
             $table->string('collaboration_main_title')->nullable();
             $table->string('collaboration_sub_title')->nullable();
             $table->json('international_collaborations')->nullable();
+
+            $table->boolean('status');
 
             $table->timestamps();
         });
