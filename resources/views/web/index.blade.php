@@ -466,7 +466,7 @@
                                 <div class="team-block">
                                     <div class="img-block">
                                         <img class="w-100"
-                                            src="{{ $program->image ? asset('uploads/announcements/' . $program->image) : asset('resource/web/assets/media/default/default-img.png') }}"
+                                            src="{{ $program->image ? asset($program->image) : asset('resource/web/assets/media/default/default-img.png') }}"
                                             alt="{{ $program->title }}">
                                     </div>
                                     <div class="team-content">
@@ -1275,36 +1275,41 @@
                     </div>
                     <h3 class="fw-500">{{ $settings->collaboration_main_title ?? null }}<br class="d-lg-block d-none"> <span class="color-primary d-inline">{{ $settings->collaboration_sub_title ?? null }}</span> </h3>
                 </div>
-                @if(!empty($settings->international_collaborations) && is_array($settings->international_collaborations))
-                <div id="learningjourney">
-                    <div class="faq">
-                        @foreach($settings->international_collaborations as $index => $faq)
-                            @php
-                                $faqId = 'bc-faq' . ($index + 1) . '-left';
-                            @endphp
-                            <div class="faq-block mb-24">
-                                <a href="#" class="accordion-button {{ $index !== 0 ? 'collapsed' : '' }}"
-                                data-bs-toggle="collapse"
-                                data-bs-target="#{{ $faqId }}"
-                                aria-expanded="{{ $index === 0 ? 'true' : 'false' }}"
-                                aria-controls="{{ $faqId }}">
-                                    <span class="fw-500">{{ str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}.</span>
-                                    &nbsp; {{ $faq['question'] ?? 'Untitled Question' }}
-                                </a>
-                                <div id="{{ $faqId }}"
-                                    class="accordion-collapse collapse {{ $index === 0 ? 'show' : '' }}"
-                                    aria-labelledby="{{ $faqId }}"
-                                    data-bs-parent="#learningjourney">
-                                    <p>{{ $faq['answer'] ?? 'No answer provided.' }}</p>
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
-                </div>
-            @else
-                <p>No international collaborations listed.</p>
-            @endif
+                @php
+                    $collaborations = is_string($settings->international_collaborations)
+                        ? json_decode($settings->international_collaborations, true)
+                        : $settings->international_collaborations;
+                @endphp
 
+                @if(!empty($collaborations) && is_array($collaborations))
+                    <div id="learningjourney">
+                        <div class="faq">
+                            @foreach($collaborations as $index => $faq)
+                                @php
+                                    $faqId = 'bc-faq' . ($index + 1) . '-left';
+                                @endphp
+                                <div class="faq-block mb-24">
+                                    <a href="#" class="accordion-button {{ $index !== 0 ? 'collapsed' : '' }}"
+                                    data-bs-toggle="collapse"
+                                    data-bs-target="#{{ $faqId }}"
+                                    aria-expanded="{{ $index === 0 ? 'true' : 'false' }}"
+                                    aria-controls="{{ $faqId }}">
+                                        <span class="fw-500">{{ str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}.</span>
+                                        &nbsp; {{ $faq['question'] ?? 'Untitled Question' }}
+                                    </a>
+                                    <div id="{{ $faqId }}"
+                                        class="accordion-collapse collapse {{ $index === 0 ? 'show' : '' }}"
+                                        aria-labelledby="{{ $faqId }}"
+                                        data-bs-parent="#learningjourney">
+                                        <p>{{ $faq['answer'] ?? 'No answer provided.' }}</p>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                @else
+                    <p>No international collaborations listed.</p>
+                @endif
             </div>
         </div>
     </div>

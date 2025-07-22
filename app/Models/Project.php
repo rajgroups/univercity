@@ -11,12 +11,15 @@ class Project extends Model
 
     protected $fillable = [
         'title',
+        'subtitle',
         'slug',
+        'description',
+        'points',
+        'short_description',
         'image',
         'banner_image',
         'type',
         'status',
-        'description',
     ];
 
 }

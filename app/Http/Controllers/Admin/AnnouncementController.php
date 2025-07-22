@@ -34,39 +34,47 @@ class AnnouncementController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'title'         => 'required|string|max:255',
-            'slug'          => 'nullable|string|max:255|unique:announcement,slug',
-            'description'   => 'nullable|string',
-            'image'         => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
-            'banner_image'  => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
-            'type'          => 'required|in:Program,Scheme',
-            'status'        => 'required|in:Active,Inactive',
+        $validated = $request->validate([
+            'title'             => 'required|string|max:255',
+            'slug'              => 'required|string|max:255|unique:announcement,slug',
+            'short_description' => 'required|string|max:255',
+            'subtitle'          => 'nullable|string|max:255',
+            'image'             => 'required|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'banner_image'      => 'required|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'type'              => 'required|in:1,0',
+            'status'            => 'required|in:0,1',
+            'description'       => 'nullable|string|max:3000',
+            'points'            => 'nullable|array',
+            'points.*'          => 'nullable|string|max:255',
         ]);
 
-        $announcement = new Announcement();
-        $announcement->title = $request->title;
-        $announcement->slug = $request->slug ?: Str::slug($request->title);
-        $announcement->description = $request->description;
-        $announcement->type = $request->type;
-        $announcement->status = $request->status;
+        // Convert type/status to int
+        $validated['type'] = $validated['type'];
+        $validated['status'] = $validated['status'];
 
+        // Handle file upload to public folder
         if ($request->hasFile('image')) {
-            $imageName = time() . '_image.' . $request->image->extension();
-            $request->image->move(public_path('uploads/announcements'), $imageName);
-            $announcement->image = $imageName;
+            $image      = $request->file('image');
+            $imageName  = time() . '_img.' . $image->getClientOriginalExtension();
+            $image->move(public_path('uploads/announcements'), $imageName);
+            $validated['image'] = 'uploads/announcements/' . $imageName;
         }
 
         if ($request->hasFile('banner_image')) {
-            $bannerImageName = time() . '_banner.' . $request->banner_image->extension();
-            $request->banner_image->move(public_path('uploads/announcements'), $bannerImageName);
-            $announcement->banner_image = $bannerImageName;
+            $banner      = $request->file('banner_image');
+            $bannerName  = time() . '_banner.' . $banner->getClientOriginalExtension();
+            $banner->move(public_path('uploads/announcements'), $bannerName);
+            $validated['banner_image'] = 'uploads/announcements/' . $bannerName;
         }
 
-        $announcement->save();
+        // Save points JSON
+        $validated['points'] = $request->filled('points') ? json_encode(array_filter($request->input('points'))) : null;
 
-        return redirect()->route('admin.announcement.create')->with('success', 'Announcement created successfully.');
+        Announcement::create($validated);
+
+        return redirect()->route('admin.announcement.index')->with('success', 'Announcement created successfully.');
     }
+
 
 
 

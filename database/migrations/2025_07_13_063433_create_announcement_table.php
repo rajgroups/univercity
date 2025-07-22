@@ -11,15 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-            Schema::create('announcement', function (Blueprint $table) {
+        Schema::create('announcement', function (Blueprint $table) {
             $table->id();
             $table->string('title');
+            $table->string('subtitle')->nullable();
+            $table->string('short_description');
             $table->string('slug')->unique();
             $table->string('image')->nullable();
             $table->string('banner_image')->nullable();
             $table->tinyInteger('type')->comment('1=>program,2=>Scheme')->default(1);
             $table->text('description')->nullable();
-            $table->boolean('status');
+            $table->json('points')->nullable();
+            $table->boolean('status')->default(1);
             $table->timestamps();
         });
     }

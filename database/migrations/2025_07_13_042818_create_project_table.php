@@ -13,17 +13,17 @@ return new class extends Migration
        Schema::create('projects', function (Blueprint $table) {
             $table->id();
             $table->string('title');
+            $table->string('subtitle')->nullable();
+            $table->string('short_description');
             $table->string('slug')->unique();
-            $table->string('image');
-            $table->string('banner_image');
+            $table->string('image')->nullable();
+            $table->string('banner_image')->nullable();
             $table->tinyInteger('type')->comment('1=>ongoing,2=>upcoming');
-            $table->boolean('status');
             $table->text('description')->nullable();
+            $table->json('points')->nullable();
+            $table->boolean('status')->default(1);
             $table->timestamps();
         });
-
-
-
     }
 
     /**

@@ -31,44 +31,45 @@ class ProjectController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'title'         => 'required|string|max:255',
-            'slug'          => 'required|string|max:255|unique:projects,slug',
-            'image'         => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'banner_image'  => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'type'          => 'required|in:On Going,Up Coming',
-            'status'        => 'required|in:Active,Inactive',
-            'description'   => 'nullable|string|max:1000',
+        $validated = $request->validate([
+            'title'             => 'required|string|max:255',
+            'slug'              => 'required|string|max:255|unique:projects,slug',
+            'short_description' => 'required|string|max:255',
+            'subtitle'          => 'nullable|string|max:255',
+            'image'             => 'required|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'banner_image'      => 'required|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'type'              => 'required|in:1,2',
+            'status'            => 'required|in:0,1',
+            'description'       => 'nullable|string|max:3000',
+            'points'            => 'nullable|array',
+            'points.*'          => 'nullable|string|max:255',
         ]);
 
-        // Create unique filenames
-        $imageName = time() . '_' . uniqid() . '.' . $request->file('image')->getClientOriginalExtension();
-        $bannerName = time() . '_' . uniqid() . '_banner.' . $request->file('banner_image')->getClientOriginalExtension();
+        // Convert type/status to int
+        $validated['type'] = $validated['type'];
+        $validated['status'] = $validated['status'];
 
-        // Set destination path
-        $uploadPath = public_path('upload/project');
-
-        // Create folder if not exists
-        if (!file_exists($uploadPath)) {
-            mkdir($uploadPath, 0777, true);
+        // Handle file upload to public folder
+        if ($request->hasFile('image')) {
+            $image      = $request->file('image');
+            $imageName  = time() . '_img.' . $image->getClientOriginalExtension();
+            $image->move(public_path('uploads/projects'), $imageName);
+            $validated['image'] = 'uploads/projects/' . $imageName;
         }
 
-        // Move files to public/upload/project
-        $request->file('image')->move($uploadPath, $imageName);
-        $request->file('banner_image')->move($uploadPath, $bannerName);
+        if ($request->hasFile('banner_image')) {
+            $banner      = $request->file('banner_image');
+            $bannerName  = time() . '_banner.' . $banner->getClientOriginalExtension();
+            $banner->move(public_path('uploads/projects'), $bannerName);
+            $validated['banner_image'] = 'uploads/projects/' . $bannerName;
+        }
 
-        // Save data to DB
-        $project = new Project;
-        $project->title = $request->title;
-        $project->slug = $request->slug;
-        $project->image = 'upload/project/' . $imageName;
-        $project->banner_image = 'upload/project/' . $bannerName;
-        $project->type = $request->type;
-        $project->status = $request->status;
-        $project->description = $request->description;
-        $project->save();
+        // Save points JSON
+        $validated['points'] = $request->filled('points') ? json_encode(array_filter($request->input('points'))) : null;
 
-        return redirect()->route('admin.project.create')->with('success', 'Project created successfully.');
+        Project::create($validated);
+
+        return redirect()->route('admin.project.index')->with('success', 'Announcement created successfully.');
     }
 
     /**

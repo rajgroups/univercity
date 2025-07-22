@@ -310,23 +310,34 @@
 
                             <img src="assets/media/blogs/blog-detail-img-2.jpg" class="br-24 w-100 mb-4" alt="">
                             <div class="container my-5">
+                                @php
+                                    $programs = [
+                                        "Holistic Education - ISICO’s Holistic School Education program aims to develop students academically, emotionally, socially, physically, and ethically from primary to secondary education.",
+                                        "Digital Learning - ISICO’s Digital Learning Program integrates technology to enhance student learning in classrooms and beyond.",
+                                        "Specialized Skills - The program provides school students with essential life skills, vocational training, and future-ready capabilities.",
+                                        "Natural Talent - Natural Talent Identification (NTI) recognizes and nurtures individual student talents through personalized assessments.",
+                                        "Special Needs - Inclusive Learning promotes accessible education for students with special needs by providing support and adaptive learning methods.",
+                                        "Teacher Training - Our teacher development program equips educators with modern pedagogy and continuous professional development.",
+                                        "Community Involvement - We actively involve parents and communities in school activities and decision-making processes.",
+                                        "Green Careers - Preparing students for future careers in sustainability and green industries through targeted education pathways.",
+                                        "Student Initiatives - Supporting student-led innovation, entrepreneurship, and community engagement projects.",
+                                        "Career Guidance - Career counseling and mentorship programs help students explore and plan their future academic and career paths."
+                                    ];
+                                @endphp
+
                                 <div class="row">
                                     <!-- Sidebar -->
                                     <div class="col-lg-4 mb-4">
-                                        <nav id="navbar-example"
-                                            class="navbar sticky-top flex-column align-items-stretch p-3 bg-light rounded">
+                                        <nav id="navbar-example" class="navbar sticky-top flex-column align-items-stretch p-3 bg-light rounded">
                                             <h5 class="fw-bold mb-3">Programs</h5>
                                             <nav class="nav nav-pills flex-column">
-                                                <a class="nav-link" href="#section1">1. Holistic Education</a>
-                                                <a class="nav-link" href="#section2">2. Digital Learning</a>
-                                                <a class="nav-link" href="#section3">3. Specialized Skills</a>
-                                                <a class="nav-link" href="#section4">4. Natural Talent</a>
-                                                <a class="nav-link" href="#section5">5. Special Needs</a>
-                                                <a class="nav-link" href="#section6">6. Teacher Training</a>
-                                                <a class="nav-link" href="#section7">7. Community Involvement</a>
-                                                <a class="nav-link" href="#section8">8. Green Careers</a>
-                                                <a class="nav-link" href="#section9">9. Student Initiatives</a>
-                                                <a class="nav-link" href="#section10">10. Career Guidance</a>
+                                                @foreach($programs as $index => $item)
+                                                    @php
+                                                        [$shortTitle, $content] = explode(' - ', $item, 2);
+                                                        $sectionId = 'section' . ($index + 1);
+                                                    @endphp
+                                                    <a class="nav-link" href="#{{ $sectionId }}">{{ $index + 1 }}. {{ $shortTitle }}</a>
+                                                @endforeach
                                             </nav>
                                         </nav>
                                     </div>
@@ -335,254 +346,39 @@
                                     <div class="col-lg-8">
                                         <h3 class="fw-bold mb-4">ISICO School Programs</h3>
                                         <p class="mb-4">
-                                            The Indian Skill Institute Cooperation (ISICO) has designed a
-                                            forward-thinking and inclusive school program to empower students,
-                                            particularly in rural and underserved communities, with the knowledge,
+                                            The Indian Skill Institute Cooperation (ISICO) has designed a forward-thinking and inclusive school
+                                            program to empower students, particularly in rural and underserved communities, with the knowledge,
                                             skills, and awareness necessary for a sustainable and prosperous future.
                                         </p>
 
                                         <div class="accordion" id="accordionExample">
-                                            <!-- Section 1 -->
-                                            <div class="accordion-item" id="section1">
-                                                <h2 class="accordion-header">
-                                                    <button class="accordion-button" type="button"
-                                                        data-bs-toggle="collapse" data-bs-target="#collapseOne">
-                                                        1. Holistic School Education (Primary to Secondary Education)
-                                                    </button>
-                                                </h2>
-                                                <div id="collapseOne" class="accordion-collapse collapse show"
-                                                    data-bs-parent="#accordionExample">
-                                                    <div class="accordion-body">
-                                                        <ul>
-                                                            <li><strong>Curriculum Integration:</strong> Blending
-                                                                vocational skills and practical knowledge with
-                                                                traditional academics.</li>
-                                                            <li><strong>Mental and Cognitive Health:</strong> Promoting
-                                                                emotional intelligence, mindfulness, and problem-solving
-                                                                through activities.</li>
-                                                            <li><strong>Green Jobs Awareness:</strong> Introducing
-                                                                students to sustainable practices and green job
-                                                                opportunities.</li>
-                                                        </ul>
+                                            @foreach($programs as $index => $item)
+                                                @php
+                                                    [$shortTitle, $content] = explode(' - ', $item, 2);
+                                                    $sectionId = 'section' . ($index + 1);
+                                                    $collapseId = 'collapse' . ($index + 1);
+                                                @endphp
+                                                <div class="accordion-item" id="{{ $sectionId }}">
+                                                    <h2 class="accordion-header">
+                                                        <button class="accordion-button {{ $index !== 0 ? 'collapsed' : '' }}" type="button"
+                                                                data-bs-toggle="collapse" data-bs-target="#{{ $collapseId }}">
+                                                            {{ $index + 1 }}. {{ $shortTitle }}
+                                                        </button>
+                                                    </h2>
+                                                    <div id="{{ $collapseId }}"
+                                                        class="accordion-collapse collapse {{ $index === 0 ? 'show' : '' }}"
+                                                        data-bs-parent="#accordionExample">
+                                                        <div class="accordion-body">
+                                                            {{ $content }}
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-
-                                            <!-- Section 2 -->
-                                            <div class="accordion-item" id="section2">
-                                                <h2 class="accordion-header">
-                                                    <button class="accordion-button collapsed" type="button"
-                                                        data-bs-toggle="collapse" data-bs-target="#collapseTwo">
-                                                        2. Digital Learning Program
-                                                    </button>
-                                                </h2>
-                                                <div id="collapseTwo" class="accordion-collapse collapse"
-                                                    data-bs-parent="#accordionExample">
-                                                    <div class="accordion-body">
-                                                        <ul>
-                                                            <li><strong>Digital Literacy:</strong> Training students in
-                                                                essential digital skills.</li>
-                                                            <li><strong>Interactive Platforms:</strong> Engaging
-                                                                learners through gamified and interactive content.</li>
-                                                            <li><strong>Global Virtual Webinars:</strong> Bringing
-                                                                expert insights and global perspectives to rural
-                                                                classrooms.</li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <!-- Section 3 -->
-                                            <div class="accordion-item" id="section3">
-                                                <h2 class="accordion-header">
-                                                    <button class="accordion-button collapsed" type="button"
-                                                        data-bs-toggle="collapse" data-bs-target="#collapseThree">
-                                                        3. Specialized Skills for School Students
-                                                    </button>
-                                                </h2>
-                                                <div id="collapseThree" class="accordion-collapse collapse"
-                                                    data-bs-parent="#accordionExample">
-                                                    <div class="accordion-body">
-                                                        <ul>
-                                                            <li><strong>STEM Focus:</strong> Hands-on projects in
-                                                                Science, Technology, Engineering, and Mathematics.</li>
-                                                            <li><strong>Entrepreneurship Training:</strong> Fostering
-                                                                entrepreneurial thinking from an early age.</li>
-                                                            <li><strong>Workplace Essentials:</strong> Building
-                                                                communication, teamwork, and leadership skills.</li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <!-- Section 4 -->
-                                            <div class="accordion-item" id="section4">
-                                                <h2 class="accordion-header">
-                                                    <button class="accordion-button collapsed" type="button"
-                                                        data-bs-toggle="collapse" data-bs-target="#collapseFour">
-                                                        4. Natural Talent Identification (NTI)
-                                                    </button>
-                                                </h2>
-                                                <div id="collapseFour" class="accordion-collapse collapse"
-                                                    data-bs-parent="#accordionExample">
-                                                    <div class="accordion-body">
-                                                        <ul>
-                                                            <li><strong>Competitions and Exhibitions:</strong>
-                                                                Encouraging creativity and innovation.</li>
-                                                            <li><strong>Eco-Friendly Innovation:</strong> Promoting
-                                                                ideas in sustainability and green technologies.</li>
-                                                            <li><strong>Opportunities for Growth:</strong> Providing
-                                                                platforms for recognition and future career paths.</li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <!-- Section 5 -->
-                                            <div class="accordion-item" id="section5">
-                                                <h2 class="accordion-header">
-                                                    <button class="accordion-button collapsed" type="button"
-                                                        data-bs-toggle="collapse" data-bs-target="#collapseFive">
-                                                        5. Inclusive Learning for Special Needs
-                                                    </button>
-                                                </h2>
-                                                <div id="collapseFive" class="accordion-collapse collapse"
-                                                    data-bs-parent="#accordionExample">
-                                                    <div class="accordion-body">
-                                                        <ul>
-                                                            <li><strong>Personalized Teaching:</strong> Adaptive and
-                                                                accessible methods tailored to individual learners.</li>
-                                                            <li><strong>Assistive Technologies:</strong> Leveraging
-                                                                tools for children with special needs.</li>
-                                                            <li><strong>Empowerment:</strong> Building confidence and
-                                                                independence in students.</li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <!-- Section 6 -->
-                                            <div class="accordion-item" id="section6">
-                                                <h2 class="accordion-header">
-                                                    <button class="accordion-button collapsed" type="button"
-                                                        data-bs-toggle="collapse" data-bs-target="#collapseSix">
-                                                        6. Teacher Training & Development
-                                                    </button>
-                                                </h2>
-                                                <div id="collapseSix" class="accordion-collapse collapse"
-                                                    data-bs-parent="#accordionExample">
-                                                    <div class="accordion-body">
-                                                        <ul>
-                                                            <li><strong>Modern Pedagogy:</strong> Introducing
-                                                                innovative, student-centered methodologies.</li>
-                                                            <li><strong>Skill-Based Training:</strong> Equipping
-                                                                teachers to integrate vocational education seamlessly.
-                                                            </li>
-                                                            <li><strong>Ongoing Support:</strong> Continuous development
-                                                                programs and peer-learning opportunities.</li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <!-- Section 7 -->
-                                            <div class="accordion-item" id="section7">
-                                                <h2 class="accordion-header">
-                                                    <button class="accordion-button collapsed" type="button"
-                                                        data-bs-toggle="collapse" data-bs-target="#collapseSeven">
-                                                        7. Community & Parental Involvement
-                                                    </button>
-                                                </h2>
-                                                <div id="collapseSeven" class="accordion-collapse collapse"
-                                                    data-bs-parent="#accordionExample">
-                                                    <div class="accordion-body">
-                                                        <ul>
-                                                            <li><strong>Parental Workshops:</strong> Encouraging active
-                                                                participation in children’s skill education journeys.
-                                                            </li>
-                                                            <li><strong>Local Partnerships:</strong> Aligning programs
-                                                                with community needs for relevance and impact.</li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <!-- Section 8 -->
-                                            <div class="accordion-item" id="section8">
-                                                <h2 class="accordion-header">
-                                                    <button class="accordion-button collapsed" type="button"
-                                                        data-bs-toggle="collapse" data-bs-target="#collapseEight">
-                                                        8. Future Green Careers Program
-                                                    </button>
-                                                </h2>
-                                                <div id="collapseEight" class="accordion-collapse collapse"
-                                                    data-bs-parent="#accordionExample">
-                                                    <div class="accordion-body">
-                                                        <ul>
-                                                            <li><strong>Awareness Campaigns:</strong> Educating students
-                                                                about eco-conscious careers and sustainability goals.
-                                                            </li>
-                                                            <li><strong>Skill Building:</strong> Training in renewable
-                                                                energy, organic farming, and green business practices.
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <!-- Section 9 -->
-                                            <div class="accordion-item" id="section9">
-                                                <h2 class="accordion-header">
-                                                    <button class="accordion-button collapsed" type="button"
-                                                        data-bs-toggle="collapse" data-bs-target="#collapseNine">
-                                                        9. Student-Led Initiatives
-                                                    </button>
-                                                </h2>
-                                                <div id="collapseNine" class="accordion-collapse collapse"
-                                                    data-bs-parent="#accordionExample">
-                                                    <div class="accordion-body">
-                                                        <ul>
-                                                            <li><strong>Innovation Clubs:</strong> Encouraging
-                                                                student-driven projects in technology and social change.
-                                                            </li>
-                                                            <li><strong>Leadership Opportunities:</strong> Fostering
-                                                                confidence and initiative in taking community projects
-                                                                forward.</li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <!-- Section 10 -->
-                                            <div class="accordion-item" id="section10">
-                                                <h2 class="accordion-header">
-                                                    <button class="accordion-button collapsed" type="button"
-                                                        data-bs-toggle="collapse" data-bs-target="#collapseTen">
-                                                        10. Career Guidance & Counseling
-                                                    </button>
-                                                </h2>
-                                                <div id="collapseTen" class="accordion-collapse collapse"
-                                                    data-bs-parent="#accordionExample">
-                                                    <div class="accordion-body">
-                                                        <ul>
-                                                            <li><strong>Exploration Workshops:</strong> Sessions to
-                                                                introduce students to diverse career paths.</li>
-                                                            <li><strong>Skill-Career Mapping:</strong> Helping students
-                                                                align their strengths with potential professions.</li>
-                                                            <li><strong>Mentorship Programs:</strong> Connecting
-                                                                students with professionals and alumni.</li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-
+                                            @endforeach
                                         </div>
                                     </div>
                                 </div>
                             </div>
-
                         </div>
-
                         <div class="col-lg-4">
                             <div class="siderbar">
                                 <div class="sidebar-block mb-48">
