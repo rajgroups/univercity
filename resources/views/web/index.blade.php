@@ -1,5 +1,4 @@
 @extends('layouts.web.app')
-
 @section('content')
 
 <style>
@@ -293,10 +292,12 @@
                     </div>
                 @else
                     @foreach ($ongoingProjects as $project)
+
                         <!-- Slide -->
                         <div class="swiper-slide" data-swiper-autoplay="2000">
                             <div class="blog-card">
-                                <a href="{{ route('project.details', $project->slug) }}" class="card-img">
+                                
+                                <a href="{{ route('web.ongoging.project', [$project->category->slug, $project->slug]) }}" class="card-img">
                                     <img src="{{ asset($project->image) }}" alt="{{ $project->title }}">
                                     <span class="date-block">
                                         <span class="h6 fw-400 light-black">{{ \Carbon\Carbon::parse($project->created_at)->format('d') }}</span>
@@ -308,9 +309,9 @@
                                         <img src="{{ asset('upload/project/'.$project->image) }}" class="card-user" alt="">
                                         <p>By Admin</p>
                                     </div>
-                                    <a href="{{ route('project.details', $project->slug) }}" class="h6 fw-500 mb-8">{{ $project->title }}</a>
+                                    <a href="{{ route('web.ongoging.project', [$project->category->slug, $project->slug]) }}" class="h6 fw-500 mb-8">{{ $project->title }}</a>
                                     <p class="light-gray mb-24">{{ \Illuminate\Support\Str::limit(strip_tags($project->description), 100) }}</p>
-                                    <a href="{{ route('project.details', $project->slug) }}" class="card-btn"> Read More</a>
+                                    <a href="{{ route('web.ongoging.project', [$project->category->slug, $project->slug]) }}" class="card-btn"> Read More</a>
                                 </div>
                             </div>
                         </div>
@@ -416,7 +417,8 @@
                             @foreach ($upcomingProjects as $project)
                                 <div class="swiper-slide">
                                     <div class="blog-card">
-                                        <a href="{{ route('project.details', $project->slug) }}" class="card-img">
+                                        {{-- {{ route('project.details', $project->slug) }} --}}
+                                        <a href="{{ route('web.upcoming.project', [$project->category->slug, $project->slug]) }}" class="card-img">
                                             <img src="{{ asset($project->image) }}" alt="{{ $project->title }}">
                                             <span class="date-block">
                                                 <span class="h6 fw-400 light-black">{{ \Carbon\Carbon::parse($project->created_at)->format('d') }}</span>
@@ -428,9 +430,9 @@
                                                 <img src="{{ asset('upload/project/'.$project->image) }}" class="card-user" alt="">
                                                 <p>By Admin</p>
                                             </div>
-                                            <a href="{{ route('project.details', $project->slug) }}" class="h6 fw-500 mb-8">{{ $project->title }}</a>
+                                            <a href="{{ route('web.upcoming.project', [$project->category->slug, $project->slug]) }}" class="h6 fw-500 mb-8">{{ $project->title }}</a>
                                             <p class="light-gray mb-24">{{ \Illuminate\Support\Str::limit(strip_tags($project->description), 100) }}</p>
-                                            <a href="{{ route('project.details', $project->slug) }}" class="card-btn"> Read More</a>
+                                            <a href="{{ route('web.upcoming.project', [$project->category->slug, $project->slug]) }}" class="card-btn"> Read More</a>
                                         </div>
                                     </div>
                                 </div>
@@ -471,14 +473,35 @@
                                     </div>
                                     <div class="team-content">
                                         <div>
-                                            <a href="#" class="h6 fw-500 mb-4p">{{ $program->title }}</a>
+                                            <a href="{{ route('web.announcement.program', [$program->category->slug, $program->slug]) }}" class="h6 fw-500 mb-4p">{{ $program->title }}</a>
                                             <p class="subtitle">{{ \Illuminate\Support\Str::limit(strip_tags($program->description), 80) }}</p>
                                         </div>
-                                        <div class="d-flex gap-8 align-items-center">
-                                            <a href="#"><img class="links-icon" src="{{ asset('resource/web/assets/media/vector/message.png') }}" alt=""></a>
-                                            <a href="#"><img class="links-icon" src="{{ asset('resource/web/assets/media/vector/linkedin.png') }}" alt=""></a>
-                                            <a href="#"><img class="links-icon" src="{{ asset('resource/web/assets/media/vector/facebook.png') }}" alt=""></a>
-                                        </div>
+                                       @php
+                                                    $currentUrl = urlencode(request()->fullUrl()); // Dynamically get current page URL
+                                                    $shareText = urlencode($scheme->title ?? 'Check this out!');
+                                                @endphp
+
+                                            <div class="d-flex gap-8 align-items-center">
+                                                {{-- LinkedIn Share --}}
+                                                <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ $currentUrl }}" target="_blank">
+                                                    <img class="links-icon" src="{{ asset('resource/web/assets/media/vector/linkedin.png') }}" alt="LinkedIn">
+                                                </a>
+
+                                                {{-- Facebook Share --}}
+                                                <a href="https://www.facebook.com/sharer/sharer.php?u={{ $currentUrl }}" target="_blank">
+                                                    <img class="links-icon" src="{{ asset('resource/web/assets/media/vector/facebook.png') }}" alt="Facebook">
+                                                </a>
+
+                                                {{-- Twitter (X) Share --}}
+                                                <a href="https://twitter.com/intent/tweet?url={{ $currentUrl }}&text={{ $shareText }}" target="_blank">
+                                                    <img class="links-icon" src="{{ asset('resource/web/assets/media/vector/twitter.png') }}" alt="Twitter">
+                                                </a>
+
+                                                {{-- Instagram: Not directly shareable via URL --}}
+                                                <a href="https://www.instagram.com/" target="_blank">
+                                                    <img class="links-icon" src="{{ asset('resource/web/assets/media/vector/instagram.png') }}" alt="Instagram">
+                                                </a>
+                                            </div>
                                     </div>
                                 </div>
                             </div>
@@ -968,26 +991,37 @@
                                         </div>
                                         <div class="team-content">
                                             <div>
-                                                <a href="{{ route('scheme.details', $scheme->slug) }}" class="h6 fw-500 mb-4p">{{ $scheme->title }}</a>
+                                                {{-- {{ route('scheme.details', $scheme->slug) }} --}}
+                                                <a href="{{ route('web.announcement.scheme', [$scheme->category->slug, $scheme->slug]) }}" class="h6 fw-500 mb-4p">{{ $scheme->title }}</a>
                                                 <p class="subtitle">{{ $scheme->subtitle }}</p>
                                             </div>
-                                            <div class="d-flex gap-8 align-items-center">
-                                                @if ($scheme->email)
-                                                    <a href="mailto:{{ $scheme->email }}">
-                                                        <img class="links-icon" src="{{ asset('resource/web/assets/media/vector/message.png') }}" alt="Email">
-                                                    </a>
-                                                @endif
-                                                @if ($scheme->linkedin)
-                                                    <a href="{{ $scheme->linkedin }}" target="_blank">
+                                                @php
+                                                    $currentUrl = urlencode(request()->fullUrl()); // Dynamically get current page URL
+                                                    $shareText = urlencode($scheme->title ?? 'Check this out!');
+                                                @endphp
+
+                                                <div class="d-flex gap-8 align-items-center">
+                                                    {{-- LinkedIn Share --}}
+                                                    <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ $currentUrl }}" target="_blank">
                                                         <img class="links-icon" src="{{ asset('resource/web/assets/media/vector/linkedin.png') }}" alt="LinkedIn">
                                                     </a>
-                                                @endif
-                                                @if ($scheme->facebook)
-                                                    <a href="{{ $scheme->facebook }}" target="_blank">
+
+                                                    {{-- Facebook Share --}}
+                                                    <a href="https://www.facebook.com/sharer/sharer.php?u={{ $currentUrl }}" target="_blank">
                                                         <img class="links-icon" src="{{ asset('resource/web/assets/media/vector/facebook.png') }}" alt="Facebook">
                                                     </a>
-                                                @endif
-                                            </div>
+
+                                                    {{-- Twitter (X) Share --}}
+                                                    <a href="https://twitter.com/intent/tweet?url={{ $currentUrl }}&text={{ $shareText }}" target="_blank">
+                                                        <img class="links-icon" src="{{ asset('resource/web/assets/media/vector/twitter.png') }}" alt="Twitter">
+                                                    </a>
+
+                                                    {{-- Instagram: Not directly shareable via URL --}}
+                                                    <a href="https://www.instagram.com/" target="_blank">
+                                                        <img class="links-icon" src="{{ asset('resource/web/assets/media/vector/instagram.png') }}" alt="Instagram">
+                                                    </a>
+                                                </div>
+
                                         </div>
                                     </div>
                                 </div>

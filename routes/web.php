@@ -46,9 +46,9 @@ Route::get('/course', function () {
     return view('web.course');
 })->name('course');
 
-Route::get('/coursemode', function () {
-    return view('web.coursemode');
-})->name('coursemode');
+// Route::get('/coursemode', function () {
+//     return view('web.coursemode');
+// })->name('coursemode');
 
 Route::get('/coursedetail', function () {
     return view('web.coursedetail');
@@ -69,3 +69,22 @@ Route::get('/scheme', function () {
 Route::get('/event', function () {
     return view('web.event');
 })->name('event');
+
+    // Program Route
+    Route::get('/program/{category}/{slug}',[WebController::class,'program'])->name('web.announcement.program');
+    
+    // scheme Route
+    Route::get('/scheme/{category}/{slug}',[WebController::class,'scheme'])->name('web.announcement.scheme');
+
+    // ongoing-project  Route
+    Route::get('/upcoming-project/{category}/{slug}',[WebController::class,'upcoming'])->name('web.upcoming.project');
+    
+    // ongoing-project  Route
+    Route::get('/ongoing-project/{category}/{slug}',[WebController::class,'ongoing'])->name('web.ongoging.project');
+
+    // Sector Routes
+    Route::get('/sector',[WebController::class,'sectors'])->name('web.sector');
+
+    // Course Routes
+    Route::get('/course',[WebController::class,'course'])->name('web.course.index');
+    Route::get('/course/{id}/show',[WebController::class,'course'])->name('web.course.show');

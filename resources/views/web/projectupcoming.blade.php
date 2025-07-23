@@ -249,7 +249,7 @@
                   </div>
                   <!-- Content -->
                   <div class="col-lg-8">
-                     <h3 class="fw-bold mb-4">ISICO School Programs</h3>
+                     <h3 class="fw-bold mb-4">{{ $program->title }} - Key Points</h3>
                      <p class="mb-4">
                         {!! $program->short_description !!}
                      </p>

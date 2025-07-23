@@ -27,46 +27,54 @@ class BannerController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-   public function store(Request $request)
+    public function store(Request $request)
     {
         $request->validate([
-            'title.*' => 'required|string|max:255',
-            'image.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'description.*' => 'nullable|string|max:600',
-            'link.*' => 'nullable|url',
-            'status.*' => 'nullable|boolean'
+            'title.*'        => 'required|string|max:255',
+            'image.*'        => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'description.*'  => 'nullable|string|max:600',
+            'link.*'         => 'nullable|url',
+            'status.*'       => 'nullable|boolean'
         ]);
 
-    if ($request->hasFile('image')) {
-        foreach ($request->file('image') as $index => $imageFile) {
+        if ($request->hasFile('image')) {
+            foreach ($request->file('image') as $index => $imageFile) {
 
-            // Generate unique filename
-            $imageName = time() . '_' . uniqid() . '.' . $imageFile->getClientOriginalExtension();
+                // Skip if corresponding title is missing
+                if (!isset($request->title[$index])) {
+                    continue;
+                }
 
-            // Define upload path
-            $destinationPath = public_path('upload/banner');
+                // Generate filename
+                $imageName = time() . '_' . uniqid() . '.' . $imageFile->getClientOriginalExtension();
 
-            // Create folder if it doesn't exist
-            if (!file_exists($destinationPath)) {
-                mkdir($destinationPath, 0777, true);
+                // Upload path
+                $destinationPath = public_path('uploads/announcements');
+
+                // Create directory if not exists
+                if (!file_exists($destinationPath)) {
+                    mkdir($destinationPath, 0777, true);
+                }
+
+                // Move image
+                $imageFile->move($destinationPath, $imageName);
+
+                // Store full image path in DB
+                $imagePath = 'uploads/announcements/' . $imageName;
+
+                // Save banner
+                $banner = new Banner();
+                $banner->title       = $request->title[$index];
+                $banner->image       = $imagePath; // ✅ full path stored
+                $banner->link        = $request->link[$index] ?? null;
+                $banner->description = $request->description[$index] ?? null;
+                $banner->status      = $request->status[$index] ?? 1;
+                $banner->save();
             }
-
-            // Move the file
-            $imageFile->move($destinationPath, $imageName);
-
-            // Use object to save
-            $banner = new Banner();
-            $banner->title = $request->title[$index];
-            $banner->image = $imageName; // only file name
-            $banner->link = $request->link[$index] ?? null;
-            $banner->description = $request->description[$index] ?? null;
-            $banner->status = 1;
-            $banner->save(); // 👈 This is the object method
         }
-    }
+
         return redirect()->route('admin.banner.create')->with('success', 'Banners created successfully!');
     }
-
 
 
     /**

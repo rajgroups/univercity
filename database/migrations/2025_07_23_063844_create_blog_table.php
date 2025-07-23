@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('announcement', function (Blueprint $table) {
+        Schema::create('blog', function (Blueprint $table) {
             $table->id();
             $table->string('title');
             $table->foreignId('category_id')
@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('slug')->unique();
             $table->string('image')->nullable();
             $table->string('banner_image')->nullable();
-            $table->tinyInteger('type')->comment('1=>program,2=>Scheme')->default(1);
+            $table->tinyInteger('type')->comment('1=>blog,2=>news')->default(1);
             $table->text('description')->nullable();
             $table->json('points')->nullable();
             $table->boolean('status')->default(1);
@@ -36,6 +36,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('announcement');
+        Schema::dropIfExists('blog');
     }
 };

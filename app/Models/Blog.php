@@ -5,10 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Project extends Model
+class Blog extends Model
 {
     use HasFactory;
-
+    
     protected $fillable = [
         'title',
         'subtitle',
@@ -28,5 +28,4 @@ class Project extends Model
     {
         return $this->belongsTo(Category::class, 'category_id');
     }
-
 }

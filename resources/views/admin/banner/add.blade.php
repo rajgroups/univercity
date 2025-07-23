@@ -101,8 +101,8 @@
                                         <label class="form-label">Status <span class="text-danger">*</span></label>
                                         <select name="status" class="form-select">
                                             <option value="">Select</option>
-                                            <option value="Active" {{ old('status') == 'Active' ? 'selected' : '' }}>Active</option>
-                                            <option value="Inactive" {{ old('status') == 'Inactive' ? 'selected' : '' }}>Inactive</option>
+                                            <option value="1" {{ old('status') == '1' ? 'selected' : '' }}>Active</option>
+                                            <option value="0" {{ old('status') == '0' ? 'selected' : '' }}>Inactive</option>
                                         </select>
                                     </div>
                                 </div>

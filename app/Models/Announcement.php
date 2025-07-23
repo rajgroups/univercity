@@ -12,6 +12,7 @@ class Announcement extends Model
 
     protected $fillable = [
         'title',
+        'category_id',
         'subtitle',
         'slug',
         'description',
@@ -33,5 +34,11 @@ class Announcement extends Model
                 $announcement->slug = Str::slug($announcement->title);
             }
         });
+    }
+
+        // Announcement belongs to a category
+    public function category()
+    {
+        return $this->belongsTo(Category::class, 'category_id');
     }
 }

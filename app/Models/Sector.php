@@ -16,4 +16,9 @@ class Sector extends Model
         'status',
         'description',
     ];
+
+    public function courses()
+    {
+        return $this->hasMany(Course::class);
+    }
 }

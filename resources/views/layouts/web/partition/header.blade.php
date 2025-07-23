@@ -2,6 +2,13 @@
   <div id="cursor"></div>
   <div id="cursor-border"></div>
   <!-- PRELOADER END -->
+@php
+    use App\Models\Category;
+
+    $educationPrograms = Category::where('type', '1')->where('status', 1)->get();
+    $skillPrograms = Category::where('type', '2')->where('status', 1)->get();
+    $csrPrograms = Category::where('type', '3')->where('status', 1)->get();
+@endphp
   <style>
     #preloader {
       position: fixed;
@@ -209,51 +216,44 @@
                           <a href="/" class="active"> Home</a>
                         </li>
                         <li><a href="{{ route('about') }}"> About</a></li>
-                        <li class="dropdown">
-                          <a href="javascript:void(0);">Initiatives</a>
-                          <ul class="sub-menu">
-                             <li>
-                                <a href="{{ route('programe') }}">1. Digital Programs(For Design)</a>
-                             </li>
+                          <li class="dropdown">
+                            <a href="javascript:void(0);">Initiatives</a>
+                            <ul class="sub-menu">
 
-                             <li>
-                                <a href="{{ route('scheme') }}">3. Scheme (For Design)</a>
-                             </li>
+                              {{-- Educational Programs --}}
                               <li>
-                                <a href="{{ route('event') }}">4. women Scheme (For Design)</a>
-                             </li>
-                            <li>
-                              <a href="{{ route('programe') }}">1. Educational Programs</a>
-                              <ul class="sub-menu mt-5">
-                                <li><a href="{{ route('programe') }}">• Schools Program</a></li>
-                                <li><a href="#">• Colleges Program</a></li>
-                                <li><a href="#">• Digital Learning Program</a></li>
-                              </ul>
-                            </li>
-                            <li>
-                              <a href="#">2. Skill Development Programs</a>
-                              <ul class="sub-menu mt-5">
-                                <li><a href="#">• Sector-Specific Training</a></li>
-                                <li><a href="#">• On-the-Job Training (OJT)</a></li>
-                                <li><a href="#">• Entrepreneurship Development</a></li>
-                                <li><a href="#">• Women’s Skill Development</a></li>
-                                <li><a href="#">• Skill Development for PWDs</a></li>
-                                <li><a href="#">• Youth Empowerment</a></li>
-                              </ul>
-                            </li>
-                            <li>
-                              <a href="#">3. CSR Initiatives</a>
-                              <ul class="sub-menu mt-5">
-                                <li><a href="#">• Community and Rural Development</a></li>
-                                <li><a href="#">• Transforming Rural Schools</a></li>
-                                <li><a href="#">• Women’s Self-Help Group Skill Development</a></li>
-                                <li><a href="#">• Farmer Producer Organizations (FPO) Awareness and
-                                    Development </a>
-                                </li>
-                              </ul>
-                            </li>
-                          </ul>
-                        </li>
+                                {{-- {{ route('programe') }} --}}
+                                <a href="">1. Educational Programs</a>
+                                <ul class="sub-menu mt-5">
+                                  {{-- {{ route('programe.details', $program->slug) }}" --}}
+                                  @foreach ($educationPrograms as $program)
+                                    <li><a href="">• {{ $program->name }}</a></li>
+                                  @endforeach
+                                </ul>
+                              </li>
+
+                              {{-- Skill Development Programs --}}
+                              <li>
+                                <a href="#">2. Skill Development Programs</a>
+                                <ul class="sub-menu mt-5">
+                                  @foreach ($skillPrograms as $program)
+                                    <li><a href="{{ route('programe.details', $program->slug) }}">• {{ $program->name }}</a></li>
+                                  @endforeach
+                                </ul>
+                              </li>
+
+                              {{-- CSR Initiatives --}}
+                              <li>
+                                <a href="#">3. CSR Initiatives</a>
+                                <ul class="sub-menu mt-5">
+                                  @foreach ($csrPrograms as $program)
+                                    <li><a href="{{ route('programe.details', $program->slug) }}">• {{ $program->name }}</a></li>
+                                  @endforeach
+                                </ul>
+                              </li>
+
+                            </ul>
+                          </li>
                         <li class="dropdown">
                           <a href="/course"> Sectors </a>
                         </li>

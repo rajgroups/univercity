@@ -2,10 +2,10 @@
 <html lang="en">
 
 <head>
+    @stack('meta')
     <meta charset="utf-8" />
-    <title>ISICO - INDIAN SKILL INSTUTUTE CO-OPERATION</title>
-    <meta name="description" content="" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+
     @include('layouts.web.dependency.css')
 </head>
 

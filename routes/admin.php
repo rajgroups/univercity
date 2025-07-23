@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AnnouncementController;
 use App\Http\Controllers\Admin\BannerController;
+use App\Http\Controllers\Admin\CourseController;
 use App\Http\Controllers\auth\LoginController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\admin\HomeController;
@@ -10,6 +11,7 @@ use App\Http\Controllers\Admin\ProjectController;
 use App\Http\Controllers\Admin\SectorController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\admin\UserController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\RegisterController;
 
 
@@ -31,6 +33,9 @@ Route::prefix('admin')->as('admin.')->group(function() {
         })->name('home');
         // category Routes
     });
+        // Category Routes
+        Route::resource('category', CategoryController::class);
+        
         // Sectors Routes
         Route::resource('sectors', SectorController::class);
 
@@ -42,6 +47,9 @@ Route::prefix('admin')->as('admin.')->group(function() {
 
         // Announcement Routes
         Route::resource('announcement',AnnouncementController::class);
+
+        // Course Resource Routes
+        Route::resource('course',CourseController::class);
 
         // Setting Route
         Route::get('settings/home/edit',[SettingController::class,'editHomePage'])->name('setting.home.edit');

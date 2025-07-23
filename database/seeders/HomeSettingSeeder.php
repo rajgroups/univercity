@@ -111,7 +111,7 @@ class HomeSettingSeeder extends Seeder
                     'collaboration_icon' => 'icons/partner2.png'
                 ]
             ]),
-
+            'status'     => 1,
             'created_at' => now(),
             'updated_at' => now()
         ]);

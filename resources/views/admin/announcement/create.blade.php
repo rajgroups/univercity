@@ -155,13 +155,34 @@
                                     </div>
                                 </div>
                             </div>
-                           <!-- /Editor -->
-                            <div class="mb-3">
-                                <label for="subtitle" class="form-label">Sub Title</label>
-                                <input type="text" name="subtitle" id="subtitle" class="form-control @error('subtitle') is-invalid @enderror" value="{{ old('subtitle') }}" placeholder="Enter program sub title" test>
-                                @error('subtitle')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
+                                                       <div class="row">
+                                <div class="col-md-6">
+                                    <!-- /Editor -->
+                                    <div class="mb-3">
+                                        <label for="subtitle" class="form-label">Sub Title</label>
+                                        <input type="text" name="subtitle" id="subtitle" class="form-control @error('subtitle') is-invalid @enderror" value="{{ old('subtitle') }}" placeholder="Enter program sub title" test>
+                                        @error('subtitle')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                     <!-- Category Select Dropdown -->
+                                    <div class="mb-3">
+                                        <label class="form-label">Category <span class="text-danger">*</span></label>
+                                        <select name="category_id" class="form-select @error('category_id') is-invalid @enderror">
+                                            <option value="">Select Category</option>
+                                            @foreach ($categories as $category)
+                                                <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
+                                                    {{ $category->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        @error('category_id')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
                             </div>
 
                             <!-- Bullet Points -->
@@ -178,10 +199,10 @@
                                                     value="{{ $point }}">
                                                 <button type="button"
                                                     class="btn btn-outline-danger remove-bullet">−</button>
+                                            </div>
                                                 @error('points.' . $index)
                                                     <div class="invalid-feedback">{{ $message }}</div>
                                                 @enderror
-                                            </div>
                                         @endforeach
                                     @else
                                         {{-- Initial empty input for new announcement --}}

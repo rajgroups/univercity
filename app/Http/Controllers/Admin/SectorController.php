@@ -49,23 +49,25 @@ class SectorController extends Controller
             'description' => 'nullable|string|max:1000',
         ]);
 
+        $imagePath = null;
+
         if ($request->hasFile('image')) {
             $imageName = time() . '.' . $request->image->extension();
+            $imagePath = 'uploads/sectors/' . $imageName;
             $request->image->move(public_path('uploads/sectors'), $imageName);
-            $validated['image'] = $imageName;
         }
-        // ✅ Store in DB
-        $sector = new Sector;
 
-        $sector->name           = $request->name;
-        $sector->slug           = $request->slug;
-        $sector->image          = $imageName;
-        $sector->status         = $request->status;
-        $sector->description    = $request->description;
+        $sector = new Sector;
+        $sector->name        = $request->name;
+        $sector->slug        = $request->slug;
+        $sector->image       = $imagePath; // 👈 Save full path
+        $sector->status      = $request->status;
+        $sector->description = $request->description;
         $sector->save();
 
         return redirect()->back()->with('success', 'Sector created successfully!');
     }
+
 
 
 
@@ -99,16 +101,21 @@ class SectorController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
+            // Delete old image if exists
+            if ($sector->image && file_exists(public_path($sector->image))) {
+                unlink(public_path($sector->image));
+            }
+
+            // Save new image
             $imageName = time() . '.' . $request->image->extension();
             $request->image->move(public_path('uploads/sectors'), $imageName);
-            $validated['image'] = $imageName;
+            $validated['image'] = 'uploads/sectors/' . $imageName;
         }
 
         $sector->update($validated);
 
-      return redirect()->route('admin.sectors.edit', $sector->id)
-                 ->with('success', 'Sector updated successfully.');
-
+        return redirect()->route('admin.sectors.edit', $sector->id)
+                        ->with('success', 'Sector updated successfully.');
     }
 
     /**
@@ -117,9 +124,9 @@ class SectorController extends Controller
     public function destroy(Sector $sector)
     {
         try {
-            // If sector has an image and you want to delete it from storage:
-            if ($sector->image && file_exists(public_path('uploads/sectors/' . $sector->image))) {
-                unlink(public_path('uploads/sectors/' . $sector->image));
+            // If sector has an image and the file exists, delete it
+            if ($sector->image && file_exists(public_path($sector->image))) {
+                unlink(public_path($sector->image));
             }
 
             $sector->delete();
@@ -129,6 +136,7 @@ class SectorController extends Controller
             return redirect()->back()->with('error', 'Something went wrong while deleting the sector.');
         }
     }
+
 
 
 }

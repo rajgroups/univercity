@@ -12,6 +12,10 @@ return new class extends Migration
     {
        Schema::create('projects', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('category_id')
+                ->nullable()
+                ->constrained('category')  // refers to 'id' in 'category' table
+                ->onDelete('restrict');    // stop delete if child (project) exists
             $table->string('title');
             $table->string('subtitle')->nullable();
             $table->string('short_description');

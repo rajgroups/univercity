@@ -95,7 +95,7 @@
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
                                             @if($sector->image)
-                                                <img src="{{ asset('uploads/sectors/' . $sector->image) }}" class="mt-2 w-75" height="80" alt="Current Image">
+                                                <img src="{{ asset($sector->image) }}" class="mt-2 w-75" height="80" alt="Current Image">
                                             @endif
                                         </div>
                                     </div>
