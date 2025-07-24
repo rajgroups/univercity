@@ -87,4 +87,4 @@ Route::get('/event', function () {
 
     // Course Routes
     Route::get('/course',[WebController::class,'course'])->name('web.course.index');
-    Route::get('/course/{id}/show',[WebController::class,'course'])->name('web.course.show');
+    Route::get('/course/{slug}',[WebController::class,'courseDetails'])->name('web.course.show');

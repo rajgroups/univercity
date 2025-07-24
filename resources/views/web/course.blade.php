@@ -233,7 +233,7 @@
 
                                             <!-- Apply Button -->
                                             <div class="mt-2">
-                                                <a href="{{ route('web.course.show', $course->id) }}" class="apply-link">
+                                                <a href="{{ route('web.course.show', $course->slug) }}" class="apply-link">
                                                     Apply →
                                                 </a>
                                             </div>

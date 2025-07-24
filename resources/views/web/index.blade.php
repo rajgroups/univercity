@@ -447,7 +447,8 @@
             </div>
         </div>
     </div>
-</div> <!-- Our Programmes -->
+</div> 
+<!-- Our Programmes -->
 <section class="out-team-sec mt-80 mb-120 wow fadeInUp animated animated" data-wow-delay="540ms" style="visibility: visible; animation-delay: 540ms; animation-name: fadeInUp;">
     <div class="container-fluid">
         <div class="heading mb-48">
@@ -521,7 +522,8 @@
                 @endif
 
         </div>
-</section> <!-- end of our Programmes -->
+</section> 
+<!-- end of our Programmes -->
 <!-- End Upcoming Projects -->
 <style>
     .background-bubbles {

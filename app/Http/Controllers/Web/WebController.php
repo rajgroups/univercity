@@ -142,7 +142,7 @@ class WebController extends Controller
         if ($request->has('search') && !empty($request->search)) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
-                $q->where('title', 'like', "%$search%")
+                $q->where('name', 'like', "%$search%")
                 ->orWhere('short_description', 'like', "%$search%");
             });
         }
@@ -193,5 +193,43 @@ class WebController extends Controller
         $sectors = Sector::all(); // For sector filter options
         
         return view('web.course', compact('courses', 'sectors'));
+    }
+
+    public function courseDetails(Request $request,$slug){
+        // Find Course Record From Course table
+        $course = Course::where('slug',$slug)->first();
+
+        // get All Sectors
+        $sectors = Sector::where('status',1)->get();
+
+        
+        // Get other courses except current one
+        $otherCourses = Course::where('slug', '!=', $slug)->latest()->limit(6)->get();
+
+        // ✅ Fetch latest 2-3 blogs
+        // $blogs = Blog::where('status', 1)->latest()->limit(3)->get();
+
+        // 1=>ongoing,2=>upcoming
+        $ongoingProjects = Project::where('status',1)->where('type',1)->latest()->limit(10)->get();
+        $upcomingProjects = Project::where('status',1)->where('type',2)->latest()->limit(10)->get();
+
+        // 1=>program,2=>Scheme
+        $programes = Announcement::where('status',1)->where('type',1)->latest()->limit(10)->get();
+        $schemes = Announcement::where('status',1)->where('type',2)->latest()->limit(10)->get();
+
+        // Fetch only active banners with image field
+        $banners = Banner::where('status', 1)->select('image')->get();
+
+        return view('web.coursedetail',compact(
+            'ongoingProjects',
+            'upcomingProjects',
+            'programes',
+            'schemes',
+            'banners',
+            'course',
+            'sectors',
+            'otherCourses',
+            // 'blogs',
+        ));
     }
 }
