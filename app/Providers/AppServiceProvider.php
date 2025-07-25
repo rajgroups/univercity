@@ -7,6 +7,7 @@ use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Storage;
 use App\Helpers\GcsAdapterFactory;
 use App\Models\HomeSetting;
+use App\Models\Settings;
 use Illuminate\Support\Facades\View;
 
 class AppServiceProvider extends ServiceProvider
@@ -27,8 +28,8 @@ class AppServiceProvider extends ServiceProvider
         Paginator::useBootstrap();
         // Load the first HomeSetting record
         $settings = HomeSetting::first();
-
+        $defaultSettings = Settings::first();
         // Share it with all views
-        View::share('settings', $settings);
+        View::share(['settings' => $settings,'defaultSettings'=>$defaultSettings]);
     }
 }

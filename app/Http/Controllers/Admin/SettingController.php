@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\HomeSetting;
+use App\Models\Setting;
+use App\Models\Settings;
 use Illuminate\Support\Facades\File;
 use Illuminate\Http\Request;
 
@@ -16,8 +18,8 @@ class SettingController extends Controller
         return view('admin.settings.home',compact('data'));
     }
     /*
-         * Store a newly created resource in storage.
-     */
+        * Store a newly created resource in storage.
+    */
     public function store(Request $request)
     {
         $validatedData = $request->validate($this->rules());
@@ -118,7 +120,7 @@ class SettingController extends Controller
         return redirect()->route('admin.project.index')->with('success', 'Project created successfully!');
     }
 
-    public function update(Request $request, $id)
+    public function homeUpdate(Request $request, $id)
     {
         // Validate the request data
         $validated = $request->validate([
@@ -404,4 +406,109 @@ class SettingController extends Controller
             ],
         ];
     }
+
+    public function generalEdit(){
+        $settings = Settings::first();
+        // View General Settings Edit 
+        return view('admin.settings.general',compact('settings'));
+    }
+
+public function generalUpdate(Request $request)
+{
+    $rules = [
+        'site_title'        => 'required|string|max:255',
+        'contact_email'     => 'nullable|email',
+        'contact_phone'     => 'nullable|string|max:20',
+        'contact_address'   => 'nullable|string|max:255',
+        'about_title'       => 'nullable|string|max:255',
+        'currency_name'     => 'nullable|string|max:10',
+        'currency_symbol'   => 'nullable|string|max:5',
+        'currency_rate'     => 'nullable|numeric',
+        'smtp_port'         => 'nullable|numeric',
+        'smtp_from_email'   => 'nullable|email',
+        'site_logo'         => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+        'favicon'           => 'nullable|image|mimes:ico,png|max:512',
+        'loader_image'      => 'nullable|image|mimes:gif,jpg,jpeg,png|max:1024',
+        'about_image'       => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        'footer_gateway_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+        'footer_copyright'   => 'nullable|string',
+        'maintenance_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+    ];
+
+    $validated = $request->validate($rules);
+
+    // Retrieve existing settings row
+    $settings = Settings::first(); // assuming single row model
+
+    // Upload files
+    $fileFields = [
+        'site_logo', 'favicon', 'loader_image', 'about_image',
+        'footer_gateway_image', 'maintenance_image'
+    ];
+
+    foreach ($fileFields as $field) {
+        if ($request->hasFile($field)) {
+            // Delete old file if it exists
+            if ($settings && $settings->$field) {
+                $oldPath = public_path($settings->$field);
+                if (file_exists($oldPath)) {
+                    unlink($oldPath);
+                }
+            }
+
+            $file = $request->file($field);
+            $filename = $field . '-' . time() . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('uploads/settings'), $filename);
+            $validated[$field] = 'uploads/settings/' . $filename; // Store full public path
+        }
+    }
+
+
+    // Store other settings
+    $settings->fill([
+        'site_title'            => $request->site_title,
+        'contact_email'         => $request->contact_email,
+        'contact_phone'         => $request->contact_phone,
+        'contact_address'       => $request->contact_address,
+        'contact_map_embed'     => $request->contact_map_embed,
+        'about_title'           => $request->about_title,
+        'about_description'     => $request->about_description,
+        'currency_name'         => $request->currency_name,
+        'currency_symbol'       => $request->currency_symbol,
+        'currency_rate'         => $request->currency_rate,
+        'smtp_enabled'          => $request->smtp_enabled ?? 0,
+        'smtp_host'             => $request->smtp_host,
+        'smtp_port'             => $request->smtp_port,
+        'smtp_encryption'       => $request->smtp_encryption,
+        'smtp_username'         => $request->smtp_username,
+        'smtp_password'         => $request->smtp_password, // Optional: encrypt if needed
+        'smtp_from_email'       => $request->smtp_from_email,
+        'smtp_from_name'        => $request->smtp_from_name,
+        'meta_keywords'         => $request->meta_keywords,
+        'meta_description'      => $request->meta_description,
+        'google_analytics_id'   => $request->google_analytics_id,
+        'footer_text'           => $request->footer_text,
+        'maintenance_mode'      => $request->maintenance_mode ?? 0,
+        'announcement_enabled'  => $request->announcement_enabled ?? 0,
+        'announcement_text'     => $request->announcement_text,
+        'maintenance_text'      => $request->maintenance_text,
+        // Socials
+        'facebook'              => $request->facebook,
+        'twitter'               => $request->twitter,
+        'instagram'             => $request->instagram,
+        'linkedin'              => $request->linkedin,
+        'youtube'               => $request->youtube,
+    ]);
+
+    // Merge uploaded files
+    foreach ($fileFields as $field) {
+        if (!empty($validated[$field])) {
+            $settings->$field = $validated[$field];
+        }
+    }
+
+    $settings->save();
+
+    return back()->with('success', 'Settings updated successfully.');
+}
 }

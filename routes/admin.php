@@ -31,8 +31,6 @@ Route::prefix('admin')->as('admin.')->group(function() {
         Route::get('/dashboard', function(){
             return view('admin.home');
         })->name('home');
-        // category Routes
-    });
         // Category Routes
         Route::resource('category', CategoryController::class);
         
@@ -51,10 +49,14 @@ Route::prefix('admin')->as('admin.')->group(function() {
         // Course Resource Routes
         Route::resource('course',CourseController::class);
 
-        // Setting Route
+        // Setting Home Page Settings Route
         Route::get('settings/home/edit',[SettingController::class,'editHomePage'])->name('setting.home.edit');
-        Route::post('settings/home/update/{id}', [SettingController::class, 'update'])->name('setting.home.update');
+        Route::post('settings/home/update/{id}', [SettingController::class, 'homeUpdate'])->name('setting.home.update');
 
+        // Setting Genral Settings
+        Route::get('/settings/general/edit',[SettingController::class,'generalEdit'])->name('setting.general.edit');
+        Route::post('/settings/general/update',[SettingController::class,'generalUpdate'])->name('setting.general.update');
+        
         // For storing a new project
         Route::post('/projects', [App\Http\Controllers\Admin\ProjectController::class, 'store'])->name('project.store');
         // For updating an existing project (assuming you have a route model binding)
@@ -62,5 +64,5 @@ Route::prefix('admin')->as('admin.')->group(function() {
         // You'll also need routes for 'create' and 'edit' to display the form
         Route::get('/projects/create', [App\Http\Controllers\Admin\ProjectController::class, 'create'])->name('project.create');
         Route::get('/projects/{project}/edit', [App\Http\Controllers\Admin\ProjectController::class, 'edit'])->name('project.edit');
-
+    });
 });

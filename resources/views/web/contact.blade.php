@@ -104,27 +104,23 @@
                                     sit pellentesque.
                                 </p>
                                 <p class="fw-500 black mb-16">Our Location</p>
-                                <h4 class="fw-500 mb-48">76 Main Boulevard, Ramada Inn City </h4>
+                                <h4 class="fw-500 mb-48">{{ $defaultSettings->contact_address ?? null}}</h4>
                                 <div class="d-flex align-items-center justify-content-between flex-wrap">
                                     <div>
                                         <p class="fw-500 black mb-16">Support Center 24/7</p>
-                                        <a href="tel:+12858422194" class="h4 fw-500 hover-content light-black">+1 285
-                                            842 2194</a>
+                                        <a href="tel:+91{{ $defaultSettings->contact_phone ?? null}}" class="h4 fw-500 hover-content light-black">+91{{ $defaultSettings->contact_phone ?? null}}</a>
                                     </div>
                                     <div>
                                         <p class="fw-500 black mb-16">Write To Us</p>
                                         <a href="mailto:demo@mentoria.com"
-                                            class="h4 fw-500 light-black hover-content">demo@mentoria.com</a>
+                                            class="h4 fw-500 light-black hover-content">{{ $defaultSettings->contact_email ?? null}}</a>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="col-lg-6">
                             <div class="google-map-container mb-0">
-                                <iframe
-                                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d49095.00043896973!2d-75.5692983769037!3d39.729821729303424!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c70f185c46af6f%3A0x8516da5077308c00!2sWilmington%2C%20DE%2C%20USA!5e0!3m2!1sen!2s!4v1737227135771!5m2!1sen!2s"
-                                    allowfullscreen="" loading="lazy"
-                                    referrerpolicy="no-referrer-when-downgrade"></iframe>
+                                {!! $defaultSettings->contact_map_embed ?? null !!}
                             </div>
                         </div>
                     </div>
