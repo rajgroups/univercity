@@ -1,5 +1,5 @@
     <!-- Favicon -->
-  <link rel="shortcut icon" type="image/x-icon" href="{{ asset('resource/web/assets/media/favicon.png')}}">
+  <link rel="shortcut icon" type="image/x-icon" href="{{ asset($defaultSettings->favicon ?? null)}}">
   <!-- All CSS files -->
   <link rel="stylesheet" href="{{ asset('resource/web/assets/css/vendor/font-awesome.css')}}">
   <link rel="stylesheet" href="{{ asset('resource/web/assets/css/vendor/slick-theme.css')}}">

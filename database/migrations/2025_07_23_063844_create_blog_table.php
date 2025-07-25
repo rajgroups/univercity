@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('blog', function (Blueprint $table) {
             $table->id();
             $table->string('title');
+            $table->string('menu_title')->nullable();
             $table->foreignId('category_id')
                 ->nullable()
                 ->constrained('category')  // refers to 'id' in 'category' table
@@ -23,7 +24,7 @@ return new class extends Migration
             $table->string('slug')->unique();
             $table->string('image')->nullable();
             $table->string('banner_image')->nullable();
-            $table->tinyInteger('type')->comment('1=>blog,2=>news')->default(1);
+            $table->tinyInteger('type')->comment('1=>blog,2=>news,3=>collaboration')->default(1);
             $table->text('description')->nullable();
             $table->json('points')->nullable();
             $table->boolean('status')->default(1);

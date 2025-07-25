@@ -70,7 +70,7 @@
     <div class="container-fluid">
       <div class="row row-gap-5 mb-64">
         <div class="col-lg-4">
-          <img src="{{ asset($defaultSettings->site_logo)}}" class="footer-logo mb-16" alt="">
+          <img src="{{ asset($defaultSettings->site_logo ?? null)}}" class="footer-logo mb-16" alt="">
           <p class="dark-gray mb-32">{{ $defaultSettings->footer_text ?? null}}</p>
         </div>
         <div class="col-lg-8">
@@ -102,7 +102,7 @@
             <div class="">
               <h5 class="fw-600 mb-24">CONTACT DETALIS</h5>
               <div class="d-flex align-items-center gap-8 mb-12">
-                <a href="tel:+91{{ $defaultSettings->footer_phone ?? null}}" class="h6 fw-400 black hover-content"> <i
+                <a href="tel:+91{{ $defaultSettings->footer_phone ?? null }}" class="h6 fw-400 black hover-content"> <i
                     class="fa fa-phone text-primary"></i> +(91) {{ $defaultSettings->footer_phone ?? null }}</a>
               </div>
               <div class="d-flex align-items-center gap-8">

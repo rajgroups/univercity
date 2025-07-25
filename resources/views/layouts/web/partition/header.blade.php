@@ -1,7 +1,3 @@
-  <!-- Cursor Style -->
-  <div id="cursor"></div>
-  <div id="cursor-border"></div>
-  <!-- PRELOADER END -->
 @php
     use App\Models\Category;
 
