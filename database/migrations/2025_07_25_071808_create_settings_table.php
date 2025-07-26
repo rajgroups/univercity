@@ -68,8 +68,8 @@ return new class extends Migration
             $table->string('footer_email')->nullable();
             $table->string('footer_phone')->nullable();
             $table->string('footer_address')->nullable();
-            $table->string('footer_copywrite')->nullable();
             $table->string('footer_copyright')->nullable();
+            $table->string('footer_gateway_image')->nullable();
 
             // UI/Theme
             $table->string('primary_color')->nullable();
