@@ -17,6 +17,7 @@ use App\Http\Controllers\RegisterController;
 
 
 Route::prefix('admin')->as('admin.')->group(function() {
+
     Route::get('login',[LoginController::class,'showLoginForm'])->name('admin.login');
 
     // Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
@@ -33,7 +34,7 @@ Route::prefix('admin')->as('admin.')->group(function() {
         })->name('home');
         // Category Routes
         Route::resource('category', CategoryController::class);
-        
+
         // Sectors Routes
         Route::resource('sectors', SectorController::class);
 
@@ -56,7 +57,7 @@ Route::prefix('admin')->as('admin.')->group(function() {
         // Setting Genral Settings
         Route::get('/settings/general/edit',[SettingController::class,'generalEdit'])->name('setting.general.edit');
         Route::post('/settings/general/update',[SettingController::class,'generalUpdate'])->name('setting.general.update');
-        
+
         // For storing a new project
         Route::post('/projects', [App\Http\Controllers\Admin\ProjectController::class, 'store'])->name('project.store');
         // For updating an existing project (assuming you have a route model binding)
