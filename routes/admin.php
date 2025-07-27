@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AnnouncementController;
 use App\Http\Controllers\Admin\BannerController;
+use App\Http\Controllers\Admin\BlogController;
 use App\Http\Controllers\Admin\CourseController;
 use App\Http\Controllers\auth\LoginController;
 use Illuminate\Support\Facades\Route;
@@ -33,7 +34,7 @@ Route::prefix('admin')->as('admin.')->group(function() {
         })->name('home');
         // Category Routes
         Route::resource('category', CategoryController::class);
-        
+
         // Sectors Routes
         Route::resource('sectors', SectorController::class);
 
@@ -49,6 +50,9 @@ Route::prefix('admin')->as('admin.')->group(function() {
         // Course Resource Routes
         Route::resource('course',CourseController::class);
 
+        // Blog Routes
+        Route::resource('blog',BlogController::class);
+
         // Setting Home Page Settings Route
         Route::get('settings/home/edit',[SettingController::class,'editHomePage'])->name('setting.home.edit');
         Route::post('settings/home/update/{id}', [SettingController::class, 'homeUpdate'])->name('setting.home.update');
@@ -56,7 +60,7 @@ Route::prefix('admin')->as('admin.')->group(function() {
         // Setting Genral Settings
         Route::get('/settings/general/edit',[SettingController::class,'generalEdit'])->name('setting.general.edit');
         Route::post('/settings/general/update',[SettingController::class,'generalUpdate'])->name('setting.general.update');
-        
+
         // For storing a new project
         Route::post('/projects', [App\Http\Controllers\Admin\ProjectController::class, 'store'])->name('project.store');
         // For updating an existing project (assuming you have a route model binding)
