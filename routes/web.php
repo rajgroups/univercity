@@ -72,13 +72,13 @@ Route::get('/event', function () {
 
     // Program Route
     Route::get('/program/{category}/{slug}',[WebController::class,'program'])->name('web.announcement.program');
-    
+
     // scheme Route
     Route::get('/scheme/{category}/{slug}',[WebController::class,'scheme'])->name('web.announcement.scheme');
 
     // ongoing-project  Route
     Route::get('/upcoming-project/{category}/{slug}',[WebController::class,'upcoming'])->name('web.upcoming.project');
-    
+
     // ongoing-project  Route
     Route::get('/ongoing-project/{category}/{slug}',[WebController::class,'ongoing'])->name('web.ongoging.project');
 

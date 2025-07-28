@@ -4,8 +4,8 @@
     <div class="page-header">
         <div class="add-item d-flex">
             <div class="page-title">
-                <h4 class="fw-bold">Category</h4>
-                <h6>Manage your Category</h6>
+                <h4 class="fw-bold">Blog News</h4>
+                <h6>Manage your Blog News</h6>
             </div>
         </div>
         <ul class="table-top-head">
@@ -26,8 +26,8 @@
             </li>
         </ul>
         <div class="page-btn">
-            <a href="{{ route('admin.category.create') }}" class="btn btn-primary"><i
-                    class="ti ti-circle-plus me-1"></i>Add Category</a>
+            <a href="{{ route('admin.project.create') }}" class="btn btn-primary"><i
+                    class="ti ti-circle-plus me-1"></i>Add Project</a>
         </div>
     </div>
  {{-- Success Message --}}
@@ -49,15 +49,6 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     @endif
-    @php
-    $typeLabels = [
-        1 => 'Education Program',
-        2 => 'Skill Development Program',
-        3 => 'Women Scheme',
-        4 => 'General Scheme',
-        5 => 'Course',
-    ];
-@endphp
     <div class="card">
         <div class="card-header d-flex align-items-center justify-content-between flex-wrap row-gap-3">
             <div class="search-set">
@@ -91,16 +82,15 @@
                                     <span class="checkmarks"></span>
                                 </label>
                             </th>
-                            <th>Name</th>
-                            <th>Type</th>
-                            <th>Slug</th>
+                            <th>Title</th>
+                            <th>Project Slug</th>
                             <th>Created On</th>
                             <th>Status</th>
                             <th class="no-sort">Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($categorys as $category)
+                        @foreach($blogs as $blog)
                             <tr>
                                 <td>
                                     <label class="checkboxs">
@@ -108,13 +98,12 @@
                                         <span class="checkmarks"></span>
                                     </label>
                                 </td>
-                                <td><span class="text-gray-9">{{ $category->name }}</span></td>
-                                 <td>{{ $typeLabels[$category->type] ?? 'N/A' }}</td>
-                                <td>{{ $category->slug }}</td>
-                                <td>{{ $category->created_at->format('d M Y') }}</td>
+                                <td><span class="text-gray-9">{{ $blog->title }}</span></td>
+                                <td>{{ $blog->slug }}</td>
+                                <td>{{ $blog->created_at->format('d M Y') }}</td>
 
                                 <td>
-                                    @if ($category->status == '1')
+                                    @if ($blog->status === 'Active')
                                         <span class="badge bg-success fw-medium fs-10">Active</span>
                                     @else
                                         <span class="badge bg-danger fw-medium fs-10">Inactive</span>
@@ -122,10 +111,10 @@
                                 </td>
                                 <td class="action-table-data">
                                     <div class="edit-delete-action">
-                                        <a class="me-2 p-2" href="{{ route('admin.category.edit', $category->id) }}">
+                                        <a class="me-2 p-2" href="{{ route('admin.blog.edit', $blog->id) }}">
                                             <i data-feather="edit" class="feather-edit"></i>
                                         </a>
-                                        <form action="{{ route('admin.category.destroy', $category->id) }}" method="POST" style="display:inline;">
+                                        <form action="{{ route('admin.blog.destroy', $blog->id) }}" method="POST" style="display:inline;">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn p-2" onclick="return confirm('Are you sure?')">
@@ -137,7 +126,7 @@
                             </tr>
                         @endforeach
 
-                        @if($categorys->isEmpty())
+                        @if($blogs->isEmpty())
                             <tr>
                                 <td colspan="6" class="text-center text-muted">No projects found.</td>
                             </tr>

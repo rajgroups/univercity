@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AnnouncementController;
 use App\Http\Controllers\Admin\BannerController;
+use App\Http\Controllers\Admin\BlogController;
 use App\Http\Controllers\Admin\CourseController;
 use App\Http\Controllers\auth\LoginController;
 use Illuminate\Support\Facades\Route;
@@ -49,6 +50,9 @@ Route::prefix('admin')->as('admin.')->group(function() {
 
         // Course Resource Routes
         Route::resource('course',CourseController::class);
+
+        // Blog Routes
+        Route::resource('blog',BlogController::class);
 
         // Setting Home Page Settings Route
         Route::get('settings/home/edit',[SettingController::class,'editHomePage'])->name('setting.home.edit');
