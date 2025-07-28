@@ -10,7 +10,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="https://preadmin.dreamstechnologies.com/html/pos/index.html">
+            <form action="">
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-lg-12">

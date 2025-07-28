@@ -3,13 +3,13 @@
 			<!-- Logo -->
 			<div class="sidebar-logo active">
 				<a href="/" class="logo logo-normal">
-					<img src="{{ asset('resource/admin/assets/img/logo.svg') }}" alt="Img">
+					<img src="{{ asset($defaultSettings->site_logo ?? null)}}" alt="Img">
 				</a>
 				<a href="/" class="logo logo-white">
-					<img src="{{ asset('resource/admin/assets/img/logo-white.svg') }}" alt="Img">
+					<img src="{{ asset($defaultSettings->site_logo ?? null)}}" alt="Img">
 				</a>
 				<a href="/" class="logo-small">
-					<img src="{{ asset('resource/admin/assets/img/logo-small.png')}}" alt="Img">
+					<img src="{{ asset($defaultSettings->site_logo ?? null)}}" alt="Img">
 				</a>
 				<a id="toggle_btn" href="javascript:void(0);">
 					<i data-feather="chevrons-left" class="feather-16"></i>
@@ -74,45 +74,99 @@
 			<div class="sidebar-inner slimscroll">
 				<div id="sidebar-menu" class="sidebar-menu">
 					<ul>
-                        						<li class="submenu-open">
-							<h6 class="submenu-hdr">Inventory</h6>
-							<ul>
-								<li><a href="{{ route('admin.category.index') }}"><i class="ti ti-eraser fs-16 me-2"></i><span>Category</span></a></li>
-                                <li><a href="{{ route('admin.sectors.index') }}"><i class="ti ti-list-details fs-16 me-2"></i><span>Sector</span></a></li>
-								<li><a href="{{ route('admin.project.index') }}"><i data-feather="box"></i><span>Project</span></a></li>
-								<li><a href="{{ route('admin.course.index') }}"><i class="ti ti-list-details fs-16 me-2"></i><span>Course</span></a></li>
-								<li><a href="{{ route('admin.banner.index') }}"><i class="ti ti-table-plus fs-16 me-2"></i><span>Banner</span></a></li>
-								<li><a href="{{ route('admin.announcement.index') }}"><i class="ti ti-progress-alert fs-16 me-2"></i><span>Announcement </span></a></li>
-								<li><a href="{{ route('admin.setting.home.edit') }}"><i class="ti ti-settings fs-16 me-2"></i><span>Setting </span></a></li>
-
-								<li><a href="{{ route('admin.setting.general.edit') }}"><i class="ti ti-table-plus fs-16 me-2"></i><span>General</span></a></li>
-								{{--
-								<li><a href="category-list.html"><i class="ti ti-list-details fs-16 me-2"></i><span>Category</span></a></li>
-								<li><a href="sub-categories.html"><i class="ti ti-carousel-vertical fs-16 me-2"></i><span>Sub Category</span></a></li>
-								<li><a href="brand-list.html"><i class="ti ti-triangles fs-16 me-2"></i><span>Brands</span></a></li>
-								<li><a href="units.html"><i class="ti ti-brand-unity fs-16 me-2"></i><span>Units</span></a></li>
-								<li><a href="varriant-attributes.html"><i class="ti ti-checklist fs-16 me-2"></i><span>Variant Attributes</span></a></li>
-								<li><a href="warranty.html"><i class="ti ti-certificate fs-16 me-2"></i><span>Warranties</span></a></li>
-								<li><a href="barcode.html"><i class="ti ti-barcode fs-16 me-2"></i><span>Print Barcode</span></a></li>
-								<li><a href="qrcode.html"><i class="ti ti-qrcode fs-16 me-2"></i><span>Print QR Code</span></a></li> --}}
-							</ul>
-						</li>
+                        
 						<li class="submenu-open">
 							<h6 class="submenu-hdr">Main</h6>
 							<ul>
 								<li class="submenu">
-									<a href="javascript:void(0);" class="subdrop active"><i class="ti ti-layout-grid fs-16 me-2"></i><span>Dashboard</span></a>
+									<a href="{{route('admin.home')}}" class="subdrop active"><i class="ti ti-layout-grid fs-16 me-2"></i><span>Dashboard</span></a>
+								</li>
+							</ul>
+						</li>
+                        
+                       <li class="submenu-open">
+							<h6 class="submenu-hdr">Inventory</h6>
+							<ul>
+								<li class="submenu">
+									<a href="javascript:void(0);" class=""><i class="ti ti-eraser fs-16 me-2"></i><span>Category</span><span class="menu-arrow"></span></a>
+									<ul style="display: none;">
+										<li><a href="{{ route('admin.category.index') }}">Category List</a></li>
+										<li><a href="{{ route('admin.category.create') }}">Add Category</a></li>
+									</ul>
+								</li>
+								<li class="submenu">
+									<a href="javascript:void(0);" class=""><i class="ti ti-world fs-16 me-2"></i><span>Sector</span><span class="menu-arrow"></span></a>
+									<ul style="display: none;">
+										<li><a href="{{ route('admin.sectors.index') }}">Sector List</a></li>
+										<li><a href="{{ route('admin.sectors.create') }}">Add Sector</a></li>
+									</ul>
+								</li>
+								<li class="submenu">
+									<a href="javascript:void(0);" class=""><i class="ti ti-list-details fs-16 me-2"></i><span>Course</span><span class="menu-arrow"></span></a>
+									<ul style="display: none;">
+										<li><a href="{{ route('admin.course.index') }}">Course List</a></li>
+										<li><a href="{{ route('admin.course.create') }}">Add Course</a></li>
+									</ul>
+								</li>
+								<li class="submenu">
+									<a href="javascript:void(0);" class=""><i data-feather="box"></i><span>Project</span><span class="menu-arrow"></span></a>
+									<ul style="display: none;">
+										<li><a href="{{ route('admin.project.index') }}">Project List</a></li>
+										<li><a href="{{ route('admin.project.create') }}">Add Project</a></li>
+									</ul>
 								</li>
 							</ul>
 						</li>
                         <li class="submenu-open">
-							<h6 class="submenu-hdr">Blog</h6>
-							<ul>
-								<li><a href="{{ route('admin.blog.index') }}"><i class="ti ti-table-plus fs-16 me-2"></i><span>Blog</span></a></li>
-							</ul>
+                            <li class="submenu">
+                                <a href="javascript:void(0);" class=""><i class="ti ti-table-plus fs-16 me-2"></i><span>Blog</span><span class="menu-arrow"></span></a>
+                                <ul style="display: none;">
+                                    <li><a href="{{ route('admin.blog.index') }}">Blog List</a></li>
+                                    <li><a href="{{ route('admin.blog.create') }}">Add Blog</a></li>
+                                </ul>
+                            </li>
 						</li>
 
-
+                       <li class="submenu-open">
+							<h6 class="submenu-hdr">Settings</h6>
+							<ul>
+								<li class="submenu">
+									<a href="javascript:void(0);" class=""><i class="ti ti-settings fs-16 me-2"></i><span>General Settings</span><span class="menu-arrow"></span></a>
+									<ul style="display: none;">
+										<li><a href="{{ route('admin.setting.general.edit') }}">General Settings</a></li>
+									</ul>
+								</li>
+								<li class="submenu">
+									<a href="javascript:void(0);" class=""><i class="ti ti-world fs-16 me-2"></i><span>Website Settings</span><span class="menu-arrow"></span></a>
+									<ul style="display: none;">
+										<li><a href="{{ route('admin.setting.home.edit') }}">Website Settings</a></li>
+									</ul>
+								</li>
+                                {{-- <li><a href="{{ route('admin.banner.index') }}"><i class="ti ti-table-plus fs-16 me-2"></i><span>Banner</span></a></li>
+								<li><a href="{{ route('admin.announcement.index') }}"><i class="ti ti-progress-alert fs-16 me-2"></i><span>Announcement </span></a></li> --}}
+								<li class="submenu">
+									<a href="{{ route('admin.banner.index') }}"><i class="ti ti-device-mobile fs-16 me-2"></i>
+										<span>Banner</span><span class="menu-arrow"></span>
+									</a>
+								</li>
+								<li class="submenu">
+									<a href="{{ route('admin.announcement.index') }}"><i class="ti ti-device-desktop fs-16 me-2"></i>
+										<span>Announcement</span><span class="menu-arrow"></span>
+									</a>
+								</li>
+								{{-- <li class="submenu">
+									<a href="javascript:void(0);" class=""><i class="ti ti-settings-2 fs-16 me-2"></i>
+										<span>Other Settings</span><span class="menu-arrow"></span>
+									</a>
+									<ul style="display: none;">
+										<li><a href="storage-settings.html">Storage</a></li>
+									</ul>
+								</li> --}}
+								<li>
+									<a href="#"><i class="ti ti-logout fs-16 me-2"></i><span>Logout</span> </a>
+								</li>
+							</ul>
+						</li>
 						{{-- <li class="submenu-open">
 							<h6 class="submenu-hdr">Peoples</h6>
 							<ul>

@@ -4,13 +4,13 @@
 				<!-- Logo -->
 				<div class="header-left active">
 					<a href="/" class="logo logo-normal">
-						<img src="{{ asset('resource/admin/assets/img/logo.svg')}}" alt="Img">
+						<img src="{{ asset($defaultSettings->site_logo ?? null)}}" alt="Img">
 					</a>
 					<a href="/" class="logo logo-white">
-						<img src="{{ asset('resource/admin/assets/img/logo-white.svg')}}" alt="Img">
+						<img src="{{ asset($defaultSettings->site_logo ?? null)}}" alt="Img">
 					</a>
 					<a href="/" class="logo-small">
-						<img src="{{ asset('resource/admin/assets/img/logo-small.png')}}" alt="Img">
+						<img src="{{ asset($defaultSettings->site_logo ?? null)}}" alt="Img">
 					</a>
 				</div>
 				<!-- /Logo -->
@@ -38,7 +38,7 @@
 
 
 
-					<li class="nav-item dropdown link-nav">
+					{{-- <li class="nav-item dropdown link-nav">
 						<a href="javascript:void(0);" class="btn btn-primary btn-md d-inline-flex align-items-center" data-bs-toggle="dropdown">
 							<i class="ti ti-circle-plus me-1"></i>Add New
 						</a>
@@ -96,20 +96,20 @@
 
 							</div>
 						</div>
-					</li>
+					</li> --}}
 
 					<li class="nav-item pos-nav">
-						<a href="" class="btn btn-dark btn-md d-inline-flex align-items-center">
-							<i class="ti ti-device-laptop me-1"></i>POS
+						<a href="{{ route('admin.blog.index') }}" class="btn btn-dark btn-md d-inline-flex align-items-center">
+							<i class="ti ti-device-laptop me-1"></i>Blog
 						</a>
 					</li>
 
 					<!-- Flag -->
-					<li class="nav-item dropdown has-arrow flag-nav nav-item-box">
+					{{-- <li class="nav-item dropdown has-arrow flag-nav nav-item-box">
 						<a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="javascript:void(0);"
 							role="button">
 							<img src="{{ asset('resource/admin/assets/img/flags/us-flag.svg')}}" alt="Language" class="img-fluid">
-						</a>
+						</a> --}}
 						<!-- <div class="dropdown-menu dropdown-menu-right">
 							<a href="javascript:void(0);" class="dropdown-item">
 								<img src="assets/img/flags/english.svg" alt="Img" height="16">English
@@ -118,7 +118,7 @@
 								<img src="assets/img/flags/arabic.svg" alt="Img" height="16">Arabic
 							</a>
 						</div> -->
-					</li>
+					{{-- </li> --}}
 					<!-- /Flag -->
 
 					<li class="nav-item nav-item-box">

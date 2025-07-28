@@ -42,6 +42,7 @@ class ProjectController extends Controller
             'type'              => 'required|in:1,2',
             'status'            => 'required|in:0,1',
             'description'       => 'nullable|string|max:3000',
+            // 'description'       => 'nullable|string|max:3000',
             'points'            => 'nullable|array',
             'points.*'          => 'nullable|string|max:255',
             'category_id'       => 'nullable|exists:category,id',

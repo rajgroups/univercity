@@ -72,7 +72,7 @@
 		<!-- Two Col Sidebar -->
 		<div class="two-col-sidebar" id="two-col-sidebar">
 			<div class="sidebar sidebar-twocol">
-				<div class="twocol-mini">
+				{{-- <div class="twocol-mini">
 					<div class="sidebar-left slimscroll">
 						<div class="nav flex-column align-items-center nav-pills" id="sidebar-tabs" role="tablist"
 							aria-orientation="vertical">
@@ -120,18 +120,19 @@
 							</a>
 						</div>
 					</div>
-				</div>
+				</div> --}}
 				<div class="sidebar-right">
 					<!-- Logo -->
 					<div class="sidebar-logo">
 						<a href="/" class="logo logo-normal">
-							<img src="{{ asset('resource/admin/assets/img/logo.svg')}}" alt="Img">
+							<img src="{{ asset($defaultSettings->site_logo ?? null)}}" alt="Img">
 						</a>
 						<a href="/" class="logo logo-white">
-							<img src="{{ asset('resource/admin/assets/img/logo-white.svg')}}" alt="Img">
+							<img src="{{ asset($defaultSettings->site_logo ?? null)}}" alt="Img">
+							{{-- <img src="{{ asset('resource/admin/assets/img/logo-white.svg')}}" alt="Img"> --}}
 						</a>
 						<a href="/" class="logo-small">
-							<img src="{{ asset('resource/admin/assets/img/logo-small.png')}}" alt="Img">
+							<img src="{{ asset($defaultSettings->site_logo ?? null)}}" alt="Img">
 						</a>
 					</div>
 					<!-- /Logo -->

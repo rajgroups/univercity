@@ -155,7 +155,7 @@
                                         <label class="form-label">Description</label>
                                         <textarea name="description" id="summernote" cols="30" rows="10"
                                             class="form-control @error('description') is-invalid @enderror">{{ old('description') }}</textarea>
-                                        <p class="fs-14 mt-1">Maximum 60 Words</p>
+                                        <p class="fs-14 mt-1">Maximum 300 Words</p>
                                         @error('description')
                                             <div class="invalid-feedback d-block">{{ $message }}</div>
                                         @enderror
@@ -226,7 +226,7 @@
                     ['insert', ['link', 'picture']],
                     ['view', ['fullscreen', 'codeview']]
                 ],
-                placeholder: 'Write your project description here (max 60 words)...'
+                placeholder: 'Write your project description here (max 300 words)...'
             });
         });
     </script>
