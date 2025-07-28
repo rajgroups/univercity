@@ -78,12 +78,6 @@
                 <table class="table datatable">
                     <thead class="thead-light">
                         <tr>
-                            {{-- <th>
-                                <label class="checkboxs">
-                                    <input type="checkbox" id="select-all" onchange="toggleAll(this)">
-                                    <span class="checkmarks"></span>
-                                </label>
-                            </th> --}}
                             <th>S.No</th>
                             <th>Name</th>
                             <th>Type</th>
@@ -96,13 +90,6 @@
                     <tbody>
                         @foreach ($categorys as $category)
                             <tr>
-
-                                {{-- <td>
-                                     <label class="checkboxs">
-                                     <input type="checkbox" class="unit-checkbox" name="ids[]" value="{{ $category->id }}">
-                                      <span class="checkmarks"></span>
-                                     </label>
-                                </td> --}}
                                 <td>{{ $loop->index + 1 }}</td>
                                 <td><span class="text-gray-9">{{ $category->name }}</span></td>
                                 <td>{{ $typeLabels[$category->type] ?? 'N/A' }}</td>
@@ -134,12 +121,6 @@
                                 </td>
                             </tr>
                         @endforeach
-
-                        @if ($categorys->isEmpty())
-                            <tr>
-                                <td colspan="6" class="text-center text-muted">No projects found.</td>
-                            </tr>
-                        @endif
                     </tbody>
                 </table>
             </div>
