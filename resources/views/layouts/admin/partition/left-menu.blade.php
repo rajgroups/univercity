@@ -131,13 +131,13 @@
 							<h6 class="submenu-hdr">Settings</h6>
 							<ul>
 								<li class="submenu">
-									<a href="javascript:void(0);" class=""><i class="ti ti-settings fs-16 me-2"></i><span>General Settings</span><span class="menu-arrow"></span></a>
+									<a href="javascript:void(0);" class=""><i class="ti ti-settings fs-16 me-2"></i><span>General Settings</span></a>
 									<ul style="display: none;">
 										<li><a href="{{ route('admin.setting.general.edit') }}">General Settings</a></li>
 									</ul>
 								</li>
 								<li class="submenu">
-									<a href="javascript:void(0);" class=""><i class="ti ti-world fs-16 me-2"></i><span>Website Settings</span><span class="menu-arrow"></span></a>
+									<a href="javascript:void(0);" class=""><i class="ti ti-world fs-16 me-2"></i><span>Website Settings</span></a>
 									<ul style="display: none;">
 										<li><a href="{{ route('admin.setting.home.edit') }}">Website Settings</a></li>
 									</ul>
@@ -146,12 +146,12 @@
 								<li><a href="{{ route('admin.announcement.index') }}"><i class="ti ti-progress-alert fs-16 me-2"></i><span>Announcement </span></a></li> --}}
 								<li class="submenu">
 									<a href="{{ route('admin.banner.index') }}"><i class="ti ti-device-mobile fs-16 me-2"></i>
-										<span>Banner</span><span class="menu-arrow"></span>
+										<span>Banner</span>
 									</a>
 								</li>
 								<li class="submenu">
 									<a href="{{ route('admin.announcement.index') }}"><i class="ti ti-device-desktop fs-16 me-2"></i>
-										<span>Announcement</span><span class="menu-arrow"></span>
+										<span>Announcement</span>
 									</a>
 								</li>
 								{{-- <li class="submenu">
