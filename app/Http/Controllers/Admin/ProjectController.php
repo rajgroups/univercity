@@ -110,7 +110,7 @@ class ProjectController extends Controller
             'image'                 => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'banner_image'          => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'points'                => 'nullable|array',
-            'points.*'              => 'nullable|string|max:255',
+            'points.*'              => 'nullable|string',
         ]);
 
         // Handle image upload
