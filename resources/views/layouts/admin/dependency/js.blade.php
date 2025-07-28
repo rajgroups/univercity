@@ -5,7 +5,7 @@
 <!-- Slimscroll JS -->
 <script src="{{asset('resource/admin/assets/js/jquery.slimscroll.min.js')}}" type="text/javascript"></script>
 <!-- Datatable JS -->
-<script src="{{asset('resource/admin/assests/js/jquery.dataTables.min.js')}}" type="text/javascript"></script>
+<script src="{{asset('resource/admin/assets/js/jquery.dataTables.min.js')}}" type="text/javascript"></script>
 <script src="{{asset('resource/admin/assets/js/dataTables.bootstrap5.min.js')}}" type="text/javascript"></script>
 <!-- Bootstrap Core JS -->
 <script src="{{asset('resource/admin/assets/js/bootstrap.bundle.min.js')}}" type="text/javascript"></script>
