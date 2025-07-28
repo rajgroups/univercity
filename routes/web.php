@@ -76,7 +76,7 @@ Route::get('/event', function () {
     // scheme Route
     Route::get('/scheme/{category}/{slug}',[WebController::class,'scheme'])->name('web.announcement.scheme');
 
-    // ongoing-project  Route
+    // upcoming-project  Route
     Route::get('/upcoming-project/{category}/{slug}',[WebController::class,'upcoming'])->name('web.upcoming.project');
 
     // ongoing-project  Route
@@ -88,3 +88,10 @@ Route::get('/event', function () {
     // Course Routes
     Route::get('/course',[WebController::class,'course'])->name('web.course.index');
     Route::get('/course/{slug}',[WebController::class,'courseDetails'])->name('web.course.show');
+
+    // For catelog (Program,scheme,upcoming-project,ongoing-project)
+    Route::get('/catalog', [WebController::class, 'catalog'])->name('web.catalog');
+
+    // For Blog Catelog
+    Route::get('/blogs', [WebController::class, 'blog'])->name('web.blog.filter');
+    Route::get('/blogs/{slug}', [WebController::class, 'show'])->name('web.blog.show');

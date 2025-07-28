@@ -46,7 +46,7 @@ class BlogController extends Controller
             'slug'              => 'required|string|max:255|unique:blog,slug',
             'image'             => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'banner_image'      => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'type'              => 'required|in:1,2,3',
+            'type'              => 'required|in:1,2,3,4,5,6',
             'description'       => 'required|string',
             'points'            => 'nullable|array',
             'points.*'          => 'nullable|string|max:255',
