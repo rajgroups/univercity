@@ -140,8 +140,10 @@
                                         class="form-select @error('type') is-invalid @enderror">
                                         <option value="1" {{ old('type') == '1' ? 'selected' : '' }}>Blog</option>
                                         <option value="2" {{ old('type') == '2' ? 'selected' : '' }}>News</option>
-                                        <option value="3" {{ old('type') == '3' ? 'selected' : '' }}>Collaboration
-                                        </option>
+                                        <option value="3" {{ old('type') == '3' ? 'selected' : '' }}>Collaboration</option>
+                                        <option value="4" {{ old('type') == '4' ? 'selected' : '' }}>Training Model</option>
+                                        <option value="3" {{ old('type') == '3' ? 'selected' : '' }}>Research and Publication</option>
+                                        <option value="3" {{ old('type') == '3' ? 'selected' : '' }}>Case Studies</option>
                                     </select>
                                     @error('type')
                                         <div class="invalid-feedback">{{ $message }}</div>

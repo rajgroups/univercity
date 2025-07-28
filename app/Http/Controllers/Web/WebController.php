@@ -119,7 +119,7 @@ class WebController extends Controller
         // Return view with data
         return view('web.projectongoing', compact('announcement','similars'));
     }
-    
+
     public function sectors(Request $request)
     {
         $query = Sector::where('status', 1);
@@ -137,7 +137,7 @@ class WebController extends Controller
     public function course(Request $request)
     {
         $query = Course::query();
-        
+
         // 🔍 Search filter (by title or description)
         if ($request->has('search') && !empty($request->search)) {
             $search = $request->search;
@@ -146,12 +146,12 @@ class WebController extends Controller
                 ->orWhere('short_description', 'like', "%$search%");
             });
         }
-        
+
         // Language filter
         if ($request->has('languages')) {
             $query->whereIn('language', $request->input('languages'));
         }
-        
+
         // Duration filter
         if ($request->has('durations')) {
             $durationConditions = [];
@@ -168,12 +168,12 @@ class WebController extends Controller
                 }
             });
         }
-        
+
         // Learning Product Type filter
         if ($request->has('product_types')) {
             $query->whereIn('learning_product_type', $request->input('product_types'));
         }
-        
+
         // Price filter
         if ($request->has('prices')) {
             if (in_array('Free', $request->input('prices'))) {
@@ -183,15 +183,15 @@ class WebController extends Controller
                 $query->orWhere('paid_type', 'Paid');
             }
         }
-        
+
         // Sector filter
         if ($request->has('sectors')) {
             $query->whereIn('sector_id', $request->input('sectors'));
         }
-        
+
         $courses = $query->paginate(10);
         $sectors = Sector::all(); // For sector filter options
-        
+
         return view('web.course', compact('courses', 'sectors'));
     }
 
@@ -202,7 +202,7 @@ class WebController extends Controller
         // get All Sectors
         $sectors = Sector::where('status',1)->get();
 
-        
+
         // Get other courses except current one
         $otherCourses = Course::where('slug', '!=', $slug)->latest()->limit(6)->get();
 
@@ -232,4 +232,108 @@ class WebController extends Controller
             // 'blogs',
         ));
     }
+
+    public function catalog(Request $request)
+    {
+        $projects = Project::query();
+        $announcements = Announcement::query();
+
+        // Filter: Category
+        if ($request->filled('category_id')) {
+            $projects->where('category_id', $request->category_id);
+            $announcements->where('category_id', $request->category_id);
+        }
+
+        // Filter: Type
+        if ($request->type === 'project_1') {
+            $projects->where('type', 1);
+            $announcements->whereRaw('1=0'); // skip
+        } elseif ($request->type === 'project_2') {
+            $projects->where('type', 2);
+            $announcements->whereRaw('1=0');
+        } elseif ($request->type === 'announcement_1') {
+            $announcements->where('type', 1);
+            $projects->whereRaw('1=0');
+        } elseif ($request->type === 'announcement_2') {
+            $announcements->where('type', 2);
+            $projects->whereRaw('1=0');
+        }
+
+        // Filter: Search
+        if ($request->filled('search')) {
+            $projects->where('title', 'like', '%' . $request->search . '%');
+            $announcements->where('title', 'like', '%' . $request->search . '%');
+        }
+
+        // Fetch and tag type for frontend
+        $projectResults = $projects->get()->map(function ($item) {
+            $item->type_label = $item->type == 1 ? 'Ongoing' : 'Upcoming';
+            $item->item_type = 'project';
+            return $item;
+        });
+
+        $announcementResults = $announcements->get()->map(function ($item) {
+            $item->type_label = $item->type == 1 ? 'Program' : 'Scheme';
+            $item->item_type = 'announcement';
+            return $item;
+        });
+
+        // Merge, sort and paginate
+        $merged = $projectResults->merge($announcementResults)->sortByDesc('created_at');
+
+        $perPage = 9;
+        $currentPage = $request->get('page', 1);
+        $results = new \Illuminate\Pagination\LengthAwarePaginator(
+            $merged->forPage($currentPage, $perPage),
+            $merged->count(),
+            $perPage,
+            $currentPage,
+            ['path' => $request->url(), 'query' => $request->query()]
+        );
+
+        return view('web.catalog', [
+            'results' => $results,
+            'categories' => Category::all()
+        ]);
+    }
+
+    public function blog(Request $request)
+    {
+        $query = Blog::query()->with('category');
+
+        // Filter by category
+        if ($request->filled('category_id')) {
+            $query->where('category_id', $request->category_id);
+        }
+
+        // Filter by type
+        if ($request->filled('type')) {
+            $query->where('type', $request->type);
+        }
+
+        // Search by title or description
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                  ->orWhere('description', 'like', "%{$search}%")
+                  ->orWhere('short_description', 'like', "%{$search}%");
+            });
+        }
+
+        $blogs = $query->latest()->paginate(12);
+        $categories = Category::whereHas('blogs')->get();
+
+        return view('web.blog.filter', compact('blogs', 'categories'));
+    }
+
+    public function blogShow($categorySlug, $slug)
+    {
+        $blog = Blog::where('slug', $slug)
+            ->with('category')
+            ->firstOrFail();
+
+        return view('web.blog.show', compact('blog'));
+    }
+
 }
