@@ -48,7 +48,6 @@
             <div class="col-md-4 mb-4">
                 <div class="card h-100">
                     <div class="card-body">
-                        <h5 class="card-title">{{ $blog->title }}</h5>
 
                         @php
                             $imagePath = $blog->image
@@ -58,7 +57,9 @@
 
                         <img src="{{ $imagePath }}" class="card-img-top" alt="{{ $blog->title }}" style="height: 200px; object-fit: cover;">
 
-                        <p class="mb-2"><strong>Type:</strong>
+                        <h5 class="card-title mt-3">{{ $blog->title }}</h5>
+                        <div class="d-flex justify-content-between">
+                            <p class="mb-2"><strong class="text-danger">Type :</strong>
                             @switch($blog->type)
                                 @case(1) Blog @break
                                 @case(2) News @break
@@ -68,10 +69,11 @@
                                 @case(6) Case Studies @break
                                 @default Unknown
                             @endswitch
-                        </p>
+                         </p>
 
-                        <p class="mb-2"><strong>Category:</strong> {{ $blog->category->name ?? '-' }}</p>
-                        <p class="mb-2"><strong>Short Description:</strong> {{ $blog->short_description }}</p>
+                            <p class="mb-2"><strong class="text-danger">Category :</strong> {{ $blog->category->name ?? '-' }}</p>
+                        </div>
+                        <p class="mb-2"><strong>Short Description :</strong> {{ $blog->short_description }}</p>
                         <p>{{ \Illuminate\Support\Str::limit(strip_tags($blog->description), 100) }}</p>
                     </div>
                     <div class="card-footer bg-white border-top-0">

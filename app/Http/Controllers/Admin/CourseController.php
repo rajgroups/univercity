@@ -65,7 +65,7 @@ class CourseController extends Controller
             'start_date'                => 'nullable|date',
             'end_date'                  => 'nullable|date|after_or_equal:start_date',
             'is_featured'               => 'required|boolean',
-            'status'                    => 'required|in:active,inactive',
+            'status'                    => 'required|in:0,1',
             'enrollment_count'          => 'nullable|integer|min:0',
             'topics'                    => 'nullable|array',
             'topics.*.title'            => 'required_with:topics|string|max:255',
@@ -156,7 +156,7 @@ class CourseController extends Controller
             'start_date'                => 'nullable|date',
             'end_date'                  => 'nullable|date|after_or_equal:start_date',
             'is_featured'               => 'required|boolean',
-            'status'                    => 'required|in:active,inactive',
+            'status'                    => 'required|in:0,1',
             'enrollment_count'          => 'nullable|integer|min:0',
             'topics'                    => 'nullable|array',
             'topics.*.title'            => 'required_with:topics|string|max:255',
@@ -220,7 +220,7 @@ class CourseController extends Controller
         if ($course->image) {
             // For Storage facade approach:
             // Storage::delete('public/'.$course->image);
-            
+
             // For direct filesystem approach (matches your update method):
             if (file_exists(public_path($course->image))) {
                 unlink(public_path($course->image));

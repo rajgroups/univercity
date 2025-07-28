@@ -118,29 +118,26 @@
 							</ul>
 						</li>
                         <li class="submenu-open">
-                            <li class="submenu">
-                                <a href="javascript:void(0);" class=""><i class="ti ti-table-plus fs-16 me-2"></i><span>Blog</span><span class="menu-arrow"></span></a>
-                                <ul style="display: none;">
-                                    <li><a href="{{ route('admin.blog.index') }}">Blog List</a></li>
-                                    <li><a href="{{ route('admin.blog.create') }}">Add Blog</a></li>
-                                </ul>
-                            </li>
+							<h6 class="submenu-hdr">Blog</h6>
+							<ul>
+                            	<li class="submenu">
+									<a href="javascript:void(0);" class=""><i class="ti ti-table-plus fs-16 me-2"></i><span>Blog</span><span class="menu-arrow"></span></a>
+									<ul style="display: none;">
+										<li><a href="{{ route('admin.blog.index') }}">Blog List</a></li>
+										<li><a href="{{ route('admin.blog.create') }}">Add Blog</a></li>
+									</ul>
+								</li>
+							</ul>
 						</li>
 
                        <li class="submenu-open">
 							<h6 class="submenu-hdr">Settings</h6>
 							<ul>
 								<li class="submenu">
-									<a href="javascript:void(0);" class=""><i class="ti ti-settings fs-16 me-2"></i><span>General Settings</span></a>
-									<ul style="display: none;">
-										<li><a href="{{ route('admin.setting.general.edit') }}">General Settings</a></li>
-									</ul>
+									<a href="{{ route('admin.setting.general.edit') }}" class=""><i class="ti ti-settings fs-16 me-2"></i><span>General Settings</span></a>
 								</li>
 								<li class="submenu">
-									<a href="javascript:void(0);" class=""><i class="ti ti-world fs-16 me-2"></i><span>Website Settings</span></a>
-									<ul style="display: none;">
-										<li><a href="{{ route('admin.setting.home.edit') }}">Website Settings</a></li>
-									</ul>
+									<a href="{{ route('admin.setting.home.edit') }}" class=""><i class="ti ti-world fs-16 me-2"></i><span>Website Settings</span></a>
 								</li>
                                 {{-- <li><a href="{{ route('admin.banner.index') }}"><i class="ti ti-table-plus fs-16 me-2"></i><span>Banner</span></a></li>
 								<li><a href="{{ route('admin.announcement.index') }}"><i class="ti ti-progress-alert fs-16 me-2"></i><span>Announcement </span></a></li> --}}

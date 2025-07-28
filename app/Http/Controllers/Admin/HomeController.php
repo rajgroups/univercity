@@ -29,25 +29,12 @@ class HomeController extends Controller
             return view('admin.home', [
             // 'totalOrders' => Order::count(),
 
-            'totalCategories' => Category::count(),
-            'activeCategories' => Category::where('status', 1)->count(),
-            'inactiveCategories' => Category::where('status', 0)->count(),
+                'totalCategories', 'activeCategories', 'inactiveCategories',
+                'totalSectors', 'activeSectors', 'inactiveSectors',
+                'totalCourses', 'activeCourses', 'inactiveCourses',
+                'totalProjects', 'activeProjects', 'inactiveProjects',
+                'totalBlogs', 'activeBlogs', 'inactiveBlogs',
 
-            'totalSubCategories' => Subcategory::count(),
-            'activeSubCategories' => Subcategory::where('status', 1)->count(),
-            'inactiveSubCategories' => Subcategory::where('status', 0)->count(),
-
-            'totalProducts' => Product::count(),
-            'activeProducts' => Product::where('status', 1)->count(),
-            'inactiveProducts' => Product::where('status', 0)->count(),
-
-            'totalCustomers' => Customers::count(),
-            'activeCustomers' => Customers::where('status', 1)->count(),
-            'inactiveCustomers' => Customers::where('status', 0)->count(),
-
-            'totalStores' => Store::count(),
-            'activeStores' => Store::where('status', 1)->count(),
-            'inactiveStores' => Store::where('status', 0)->count(),
         ]);
     }
 

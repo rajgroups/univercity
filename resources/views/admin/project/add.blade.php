@@ -21,7 +21,7 @@
             </li>
         </ul>
         <div class="page-btn mt-0">
-            <a href="{{ route('admin.announcement.index') }}" class="btn btn-secondary">
+            <a href="{{ route('admin.project.index') }}" class="btn btn-secondary">
                 <i class="feather feather-arrow-left me-2"></i>Back to List
             </a>
         </div>
@@ -141,13 +141,10 @@
                                 <div class="col-sm-6 col-12">
                                     <div class="mb-3">
                                         <label class="form-label">Status <span class="text-danger">*</span></label>
-                                        <select name="status" class="form-select @error('status') is-invalid @enderror"
-                                            test>
-                                            <option value="">Select Status</option>
-                                            <option value="1" {{ old('status') == '1' ? 'selected' : '' }}>Active
-                                            </option>
-                                            <option value="0" {{ old('status') == '0' ? 'selected' : '' }}>Inactive
-                                            </option>
+                                        <select name="status" class="form-select @error('status') is-invalid @enderror">
+                                            <option value="">Select</option>
+                                            <option value="1" {{ old('status') == 1 ? 'selected' : '' }}>Active</option>
+                                            <option value="0" {{ old('status') == 0 ? 'selected' : '' }}>Inactive</option>
                                         </select>
                                         @error('status')
                                             <div class="invalid-feedback">{{ $message }}</div>
@@ -184,8 +181,8 @@
                                     </div>
                                 </div>
                             </div>
-                           
-                           
+
+
 
                             <!-- Bullet Points -->
                             <div class="mb-3">

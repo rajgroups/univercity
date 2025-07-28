@@ -45,21 +45,21 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     @endif
-    
+
     <div class="card shadow rounded-3">
         <div class="card-header text-white">
             <h4 class="mb-0">Edit Course: {{ $course->name }}</h4>
         </div>
-        
+
         <form action="{{ route('admin.course.update', $course->id) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
-            
+
             <div class="card-body row g-3">
                 <!-- Name & Short Name -->
                 <div class="col-md-6">
                     <label for="name" class="form-label">Course Name <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" 
+                    <input type="text" class="form-control @error('name') is-invalid @enderror" name="name"
                            value="{{ old('name', $course->name) }}" required>
                     @error('name')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -67,7 +67,7 @@
                 </div>
                 <div class="col-md-6">
                     <label for="short_name" class="form-label">Short Name (e.g., M.Sc)</label>
-                    <input type="text" class="form-control @error('short_name') is-invalid @enderror" 
+                    <input type="text" class="form-control @error('short_name') is-invalid @enderror"
                            name="short_name" value="{{ old('short_name', $course->short_name) }}">
                     @error('short_name')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -95,7 +95,7 @@
                 <!-- Duration & Paid Type -->
                 <div class="col-md-6">
                     <label class="form-label">Duration</label>
-                    <input type="text" class="form-control @error('duration') is-invalid @enderror" 
+                    <input type="text" class="form-control @error('duration') is-invalid @enderror"
                            name="duration" value="{{ old('duration', $course->duration) }}">
                     @error('duration')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -108,7 +108,7 @@
                     <select name="sector_id" class="form-select @error('sector_id') is-invalid @enderror">
                         <option value="">Select Sector</option>
                         @foreach($sectors as $sector)
-                            <option value="{{ $sector->id }}" 
+                            <option value="{{ $sector->id }}"
                                 {{ old('sector_id', $course->sector_id) == $sector->id ? 'selected' : '' }}>
                                 {{ $sector->name }}
                             </option>
@@ -133,7 +133,7 @@
                 <!-- Descriptions -->
                 <div class="col-md-12">
                     <label class="form-label">Short Description</label>
-                    <textarea class="form-control @error('short_description') is-invalid @enderror" 
+                    <textarea class="form-control @error('short_description') is-invalid @enderror"
                               name="short_description" rows="2">{{ old('short_description', $course->short_description) }}</textarea>
                     @error('short_description')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -142,7 +142,7 @@
 
                 <div class="col-md-12">
                     <label class="form-label">Detailed Description</label>
-                    <textarea class="form-control @error('long_description') is-invalid @enderror" 
+                    <textarea class="form-control @error('long_description') is-invalid @enderror"
                               name="long_description" rows="4" id="long_description">{{ old('long_description', $course->long_description) }}</textarea>
                     @error('long_description')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -152,7 +152,7 @@
                 <!-- Provider and Language -->
                 <div class="col-md-6">
                     <label class="form-label">Training Provider</label>
-                    <input type="text" class="form-control @error('provider') is-invalid @enderror" 
+                    <input type="text" class="form-control @error('provider') is-invalid @enderror"
                            name="provider" value="{{ old('provider', $course->provider) }}">
                     @error('provider')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -161,7 +161,7 @@
 
                 <div class="col-md-6">
                     <label class="form-label">Language</label>
-                    <input type="text" class="form-control @error('language') is-invalid @enderror" 
+                    <input type="text" class="form-control @error('language') is-invalid @enderror"
                            name="language" value="{{ old('language', $course->language ?? 'English') }}">
                     @error('language')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -171,7 +171,7 @@
                 <!-- Certification & Assessment -->
                 <div class="col-md-6">
                     <label class="form-label">Certification Type</label>
-                    <input type="text" class="form-control @error('certification_type') is-invalid @enderror" 
+                    <input type="text" class="form-control @error('certification_type') is-invalid @enderror"
                            name="certification_type" value="{{ old('certification_type', $course->certification_type) }}">
                     @error('certification_type')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -179,7 +179,7 @@
                 </div>
                 <div class="col-md-6">
                     <label class="form-label">Assessment Mode</label>
-                    <input type="text" class="form-control @error('assessment_mode') is-invalid @enderror" 
+                    <input type="text" class="form-control @error('assessment_mode') is-invalid @enderror"
                            name="assessment_mode" value="{{ old('assessment_mode', $course->assessment_mode) }}">
                     @error('assessment_mode')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -189,7 +189,7 @@
                 <!-- QP & NSQF & Credit -->
                 <div class="col-md-4">
                     <label class="form-label">QP Code</label>
-                    <input type="text" class="form-control @error('qp_code') is-invalid @enderror" 
+                    <input type="text" class="form-control @error('qp_code') is-invalid @enderror"
                            name="qp_code" value="{{ old('qp_code', $course->qp_code) }}">
                     @error('qp_code')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -197,7 +197,7 @@
                 </div>
                 <div class="col-md-4">
                     <label class="form-label">NSQF Level</label>
-                    <input type="text" class="form-control @error('nsqf_level') is-invalid @enderror" 
+                    <input type="text" class="form-control @error('nsqf_level') is-invalid @enderror"
                            name="nsqf_level" value="{{ old('nsqf_level', $course->nsqf_level) }}">
                     @error('nsqf_level')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -205,7 +205,7 @@
                 </div>
                 <div class="col-md-4">
                     <label class="form-label">Credits Assigned</label>
-                    <input type="text" class="form-control @error('credits_assigned') is-invalid @enderror" 
+                    <input type="text" class="form-control @error('credits_assigned') is-invalid @enderror"
                            name="credits_assigned" value="{{ old('credits_assigned', $course->credits_assigned) }}">
                     @error('credits_assigned')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -215,7 +215,7 @@
                 <!-- Learning Product, Program, Domain -->
                 <div class="col-md-4">
                     <label class="form-label">Learning Product Type</label>
-                    <input type="text" class="form-control @error('learning_product_type') is-invalid @enderror" 
+                    <input type="text" class="form-control @error('learning_product_type') is-invalid @enderror"
                            name="learning_product_type" value="{{ old('learning_product_type', $course->learning_product_type) }}">
                     @error('learning_product_type')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -223,7 +223,7 @@
                 </div>
                 <div class="col-md-4">
                     <label class="form-label">Program By</label>
-                    <input type="text" class="form-control @error('program_by') is-invalid @enderror" 
+                    <input type="text" class="form-control @error('program_by') is-invalid @enderror"
                            name="program_by" value="{{ old('program_by', $course->program_by) }}">
                     @error('program_by')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -231,7 +231,7 @@
                 </div>
                 <div class="col-md-4">
                     <label class="form-label">Initiative Of</label>
-                    <input type="text" class="form-control @error('initiative_of') is-invalid @enderror" 
+                    <input type="text" class="form-control @error('initiative_of') is-invalid @enderror"
                            name="initiative_of" value="{{ old('initiative_of', $course->initiative_of) }}">
                     @error('initiative_of')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -240,7 +240,7 @@
 
                 <div class="col-md-6">
                     <label class="form-label">Program</label>
-                    <input type="text" class="form-control @error('program') is-invalid @enderror" 
+                    <input type="text" class="form-control @error('program') is-invalid @enderror"
                            name="program" value="{{ old('program', $course->program) }}">
                     @error('program')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -248,7 +248,7 @@
                 </div>
                 <div class="col-md-6">
                     <label class="form-label">Domain</label>
-                    <input type="text" class="form-control @error('domain') is-invalid @enderror" 
+                    <input type="text" class="form-control @error('domain') is-invalid @enderror"
                            name="domain" value="{{ old('domain', $course->domain) }}">
                     @error('domain')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -256,7 +256,7 @@
                 </div>
                 <div class="col-md-6">
                     <label class="form-label">Occupations</label>
-                    <input type="text" class="form-control @error('occupations') is-invalid @enderror" 
+                    <input type="text" class="form-control @error('occupations') is-invalid @enderror"
                            name="occupations" value="{{ old('occupations', $course->occupations) }}">
                     @error('occupations')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -266,7 +266,7 @@
                 <!-- Age, Education, Experience -->
                 <div class="col-md-4">
                     <label class="form-label">Required Age</label>
-                    <input type="text" class="form-control @error('required_age') is-invalid @enderror" 
+                    <input type="text" class="form-control @error('required_age') is-invalid @enderror"
                            name="required_age" value="{{ old('required_age', $course->required_age) }}">
                     @error('required_age')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -274,7 +274,7 @@
                 </div>
                 <div class="col-md-4">
                     <label class="form-label">Minimum Education</label>
-                    <input type="text" class="form-control @error('minimum_education') is-invalid @enderror" 
+                    <input type="text" class="form-control @error('minimum_education') is-invalid @enderror"
                            name="minimum_education" value="{{ old('minimum_education', $course->minimum_education) }}">
                     @error('minimum_education')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -282,7 +282,7 @@
                 </div>
                 <div class="col-md-4">
                     <label class="form-label">Industry Experience</label>
-                    <input type="text" class="form-control @error('industry_experience') is-invalid @enderror" 
+                    <input type="text" class="form-control @error('industry_experience') is-invalid @enderror"
                            name="industry_experience" value="{{ old('industry_experience', $course->industry_experience) }}">
                     @error('industry_experience')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -292,7 +292,7 @@
                 <!-- Tools & Topics -->
                 <div class="col-md-12">
                     <label class="form-label">Learning Tools</label>
-                    <input type="text" class="form-control @error('learning_tools') is-invalid @enderror" 
+                    <input type="text" class="form-control @error('learning_tools') is-invalid @enderror"
                            name="learning_tools" value="{{ old('learning_tools', $course->learning_tools) }}">
                     @error('learning_tools')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -305,20 +305,20 @@
                         @php
                             $topics = old('topics', $course->topics ? json_decode($course->topics, true) : [['title' => '', 'description' => '']]);
                         @endphp
-                        
+
                         @foreach($topics as $index => $topic)
                             <div class="row g-2 topic-row mb-2">
                                 <div class="col-md-5">
-                                    <input type="text" name="topics[{{ $index }}][title]" 
-                                           class="form-control @error('topics.'.$index.'.title') is-invalid @enderror" 
+                                    <input type="text" name="topics[{{ $index }}][title]"
+                                           class="form-control @error('topics.'.$index.'.title') is-invalid @enderror"
                                            placeholder="Topic Title" value="{{ $topic['title'] ?? '' }}">
                                     @error('topics.'.$index.'.title')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
                                 <div class="col-md-5">
-                                    <input type="text" name="topics[{{ $index }}][description]" 
-                                           class="form-control @error('topics.'.$index.'.description') is-invalid @enderror" 
+                                    <input type="text" name="topics[{{ $index }}][description]"
+                                           class="form-control @error('topics.'.$index.'.description') is-invalid @enderror"
                                            placeholder="Topic Description" value="{{ $topic['description'] ?? '' }}">
                                     @error('topics.'.$index.'.description')
                                         <div class="invalid-feedback">{{ $message }}</div>
@@ -336,7 +336,7 @@
                 <!-- Dates -->
                 <div class="col-md-6">
                     <label class="form-label">Start Date</label>
-                    <input type="date" class="form-control @error('start_date') is-invalid @enderror" 
+                    <input type="date" class="form-control @error('start_date') is-invalid @enderror"
                            name="start_date" value="{{ old('start_date', $course->start_date ? $course->start_date->format('Y-m-d') : '') }}">
                     @error('start_date')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -344,7 +344,7 @@
                 </div>
                 <div class="col-md-6">
                     <label class="form-label">End Date</label>
-                    <input type="date" class="form-control @error('end_date') is-invalid @enderror" 
+                    <input type="date" class="form-control @error('end_date') is-invalid @enderror"
                            name="end_date" value="{{ old('end_date', $course->end_date ? $course->end_date->format('Y-m-d') : '') }}">
                     @error('end_date')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -364,19 +364,21 @@
                 </div>
 
                 <div class="col-md-4">
-                    <label class="form-label">Status <span class="text-danger">*</span></label>
-                    <select name="status" class="form-select @error('status') is-invalid @enderror">
-                        <option value="active" {{ old('status', $course->status) == 'active' ? 'selected' : '' }}>Active</option>
-                        <option value="inactive" {{ old('status', $course->status) == 'inactive' ? 'selected' : '' }}>Inactive</option>
-                    </select>
-                    @error('status')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
+                     <div class="mb-3">
+                                        <label class="form-label">Status <span class="text-danger">*</span></label>
+                                        <select name="status" class="form-select @error('status') is-invalid @enderror" required>
+                                            <option value="1" {{ old('status', $course->status) == 1 ? 'selected' : '' }}>Active</option>
+                                            <option value="0" {{ old('status', $course->status) == 0 ? 'selected' : '' }}>Inactive</option>
+                                        </select>
+                                        @error('status')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
                 </div>
 
                 <div class="col-md-4">
                     <label class="form-label">Enrollment Count</label>
-                    <input type="number" class="form-control @error('enrollment_count') is-invalid @enderror" 
+                    <input type="number" class="form-control @error('enrollment_count') is-invalid @enderror"
                            name="enrollment_count" value="{{ old('enrollment_count', $course->enrollment_count) }}">
                     @error('enrollment_count')
                         <div class="invalid-feedback">{{ $message }}</div>

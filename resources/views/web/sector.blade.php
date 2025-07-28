@@ -3,7 +3,7 @@
             <!-- Title Banner Section Start -->
             <section class="title-banner mb-80">
                 <div class="container-fluid">
-                    <h1>All Courses</h1>
+                    <h1>All Sectors</h1>
                 </div>
             </section>
             <!-- Title Banner Section End -->

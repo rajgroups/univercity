@@ -126,7 +126,7 @@
                 </div>
 
                 <div class="col-md-12">
-                    <label class="form-label">Detailed Description</label>
+                    <label class="form-label">Long Description</label>
                     <textarea class="form-control @error('long_description') is-invalid @enderror" name="long_description" rows="4" id="long_description">{{ old('long_description') }}</textarea>
                     @error('long_description')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -335,14 +335,17 @@
                 </div>
 
                 <div class="col-md-4">
-                    <label class="form-label">Status <span class="text-danger">*</span></label>
-                    <select name="status" class="form-select @error('status') is-invalid @enderror">
-                        <option value="active" {{ old('status', 'active') == 'active' ? 'selected' : '' }}>Active</option>
-                        <option value="inactive" {{ old('status') == 'inactive' ? 'selected' : '' }}>Inactive</option>
-                    </select>
-                    @error('status')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
+                     <div class="mb-3">
+                                        <label class="form-label">Status <span class="text-danger">*</span></label>
+                                        <select name="status" class="form-select @error('status') is-invalid @enderror">
+                                            <option value="">Select</option>
+                                            <option value="1" {{ old('status') == 1 ? 'selected' : '' }}>Active</option>
+                                            <option value="0" {{ old('status') == 0 ? 'selected' : '' }}>Inactive</option>
+                                        </select>
+                                        @error('status')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
                 </div>
 
                 <div class="col-md-4">

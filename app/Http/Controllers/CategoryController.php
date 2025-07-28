@@ -26,6 +26,7 @@ class CategoryController extends Controller
             'type'              => 'required|in:1,2,3,4,5',
             'image'             => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'meta_title'        => 'nullable|string|max:255',
+            'status'            => 'required|in:0,1',
             'meta_description'  => 'nullable|string|max:255',
             'meta_keywords'     => 'nullable|string|max:255',
         ]);

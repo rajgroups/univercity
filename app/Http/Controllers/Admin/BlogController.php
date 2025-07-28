@@ -110,6 +110,7 @@ class BlogController extends Controller
      */
     public function edit(Blog $blog)
     {
+        // $categories = Category::where('status', 1)->get();
         $categories = Category::all(); // Make sure to pass categories if not using a View Composer
         return view('admin.blog.edit', compact('blog', 'categories'));
     }
@@ -123,7 +124,7 @@ class BlogController extends Controller
         $validated = $request->validate([
             'title'             => 'required|string|max:255',
             'menu_title'        => 'nullable|string|max:255',
-            'category_id'       => 'nullable|exists:categories,id',
+            'category_id'       => 'nullable|exists:category,id',
             'subtitle'          => 'nullable|string|max:255',
             'short_description' => 'required|string|max:500',
             'slug'              => 'required|string|max:255|unique:blog,slug,'.$blog->id,

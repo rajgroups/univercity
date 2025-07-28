@@ -35,7 +35,8 @@ Route::prefix('admin')->as('admin.')->group(function() {
         })->name('home');
         // Category Routes
         Route::resource('category', CategoryController::class);
-
+       
+        
         // Sectors Routes
         Route::resource('sectors', SectorController::class);
 

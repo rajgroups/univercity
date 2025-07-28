@@ -18,7 +18,7 @@
             </li>
         </ul>
         <div class="page-btn mt-0">
-            <a href="{{ route('admin.announcement.index') }}" class="btn btn-secondary">
+            <a href="{{ route('admin.project.index') }}" class="btn btn-secondary">
                 <i class="feather feather-arrow-left me-2"></i>Back to List
             </a>
         </div>
@@ -242,7 +242,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-lg-12">
+                            <div class="col-lg-12 mt-3">
                                 <div class="d-flex align-items-center justify-content-end mb-4">
                                     <a href="{{ route('admin.announcement.index') }}"
                                         class="btn btn-secondary me-2">Cancel</a>

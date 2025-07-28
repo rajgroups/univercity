@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('courses', function (Blueprint $table) {
             $table->id();
-            
+
             // Sector relationship
             $table->unsignedBigInteger('sector_id')->nullable();
             $table->foreign('sector_id')
@@ -55,7 +55,7 @@ return new class extends Migration
 
             $table->json('topics')->nullable(); // Dynamic inputs as JSON
             $table->boolean('is_featured')->default(0); // For home page highlighting
-            $table->enum('status', ['active', 'inactive'])->default('active'); // Publishing status
+            $table->boolean('status')->default(1)->comment('1 => Active, 0 => Inactive');
             $table->date('start_date')->nullable(); // Optional
             $table->date('end_date')->nullable(); // Optional
             $table->unsignedInteger('enrollment_count')->default(0); // For analytics
@@ -72,7 +72,7 @@ return new class extends Migration
         Schema::table('courses', function (Blueprint $table) {
             $table->dropForeign(['sector_id']);
         });
-        
+
         Schema::dropIfExists('courses');
     }
 };

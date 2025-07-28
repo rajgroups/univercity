@@ -46,10 +46,10 @@
                     <div class="login-content authent-content">
                             <div class="login-userset">
                                 <div class="login-logo logo-normal">
-                                   <img src="{{asset('resource/admin/assets/img/logo.svg')}}" alt="img">
+                                   <img src="{{ asset($defaultSettings->site_logo ?? null)}}" alt="img">
                                </div>
-                               <a href="index.html" class="login-logo logo-white">
-                                   <img src="{{asset('resource/admin/assets/img/logo-white.svg')}}"  alt="Img">
+                               <a href="/" class="login-logo logo-white">
+                                   <img src="{{ asset($defaultSettings->site_logo ?? null)}}"  alt="Img">
                                </a>
                                <div class="login-userheading">
                                    <h3>Sign In</h3>

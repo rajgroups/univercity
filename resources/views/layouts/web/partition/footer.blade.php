@@ -71,7 +71,7 @@
       <div class="row row-gap-5 mb-64">
         <div class="col-lg-4">
           <img src="{{ asset($defaultSettings->site_logo ?? null)}}" class="footer-logo mb-16" alt="">
-          <p class="dark-gray mb-32">{{ $defaultSettings->footer_text ?? null}}</p>
+          <p class="dark-gray mb-32">{{ $defaultSettings->about_description ?? null}}</p>
         </div>
         <div class="col-lg-8">
           <div class="link-wrapper">
