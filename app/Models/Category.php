@@ -31,4 +31,9 @@ class Category extends Model
     {
         return $this->hasMany(Project::class, 'category_id');
     }
+
+    public function blogs()
+    {
+        return $this->hasMany(Blog::class, 'category_id');
+    }
 }

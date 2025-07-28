@@ -324,16 +324,29 @@ class WebController extends Controller
         $blogs = $query->latest()->paginate(12);
         $categories = Category::whereHas('blogs')->get();
 
-        return view('web.blog.filter', compact('blogs', 'categories'));
+        return view('web.blog', compact('blogs', 'categories'));
     }
 
     public function blogShow($categorySlug, $slug)
     {
+        // Get the category by slug
+        $category = Category::where('slug', $categorySlug)->firstOrFail();
+
+        // Get the blog by category ID and slug
         $blog = Blog::where('slug', $slug)
+            ->where('category_id', $category->id)
             ->with('category')
             ->firstOrFail();
 
-        return view('web.blog.show', compact('blog'));
+        // Get similar blogs from the same category
+        $similars = Blog::where('id', '!=', $blog->id)
+            ->where('category_id', $category->id)
+            ->latest()
+            ->limit(5)
+            ->get();
+
+        return view('web.blogview', compact('blog', 'similars'));
     }
+
 
 }
