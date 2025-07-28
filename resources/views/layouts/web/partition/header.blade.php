@@ -1,9 +1,12 @@
 @php
     use App\Models\Category;
-
+    use App\Models\Blog;
+    
     $educationPrograms = Category::where('type', '1')->where('status', 1)->get();
     $skillPrograms = Category::where('type', '2')->where('status', 1)->get();
     $csrPrograms = Category::where('type', '3')->where('status', 1)->get();
+
+    $collaborations = Blog::where('type','3')->where('status', 1)->get();
 @endphp
   <style>
     #preloader {
@@ -223,7 +226,7 @@
                                 <ul class="sub-menu mt-5">
                                   {{-- {{ route('programe.details', $program->slug) }}" --}}
                                   @foreach ($educationPrograms as $program)
-                                    <li><a href="">• {{ $program->name }}</a></li>
+                                    <li><a href="{{ route('web.catalog') }}">{{ $program->name }}</a></li>
                                   @endforeach
                                 </ul>
                               </li>
@@ -233,7 +236,7 @@
                                 <a href="#">2. Skill Development Programs</a>
                                 <ul class="sub-menu mt-5">
                                   @foreach ($skillPrograms as $program)
-                                    <li><a href="{{ route('programe.details', $program->slug) }}">• {{ $program->name }}</a></li>
+                                    <li><a href="{{ route('web.catalog') }}">{{ $program->name }}</a></li>
                                   @endforeach
                                 </ul>
                               </li>
@@ -243,7 +246,7 @@
                                 <a href="#">3. CSR Initiatives</a>
                                 <ul class="sub-menu mt-5">
                                   @foreach ($csrPrograms as $program)
-                                    <li><a href="{{ route('programe.details', $program->slug) }}">• {{ $program->name }}</a></li>
+                                    <li><a href="{{ route('web.catalog') }}">{{ $program->name }}</a></li>
                                   @endforeach
                                 </ul>
                               </li>
@@ -251,25 +254,23 @@
                             </ul>
                           </li>
                         <li class="dropdown">
-                          <a href="/course"> Sectors </a>
+                          <a href="{{ route('web.sector') }}"> Sectors </a>
                         </li>
                         <li class="dropdown">
                           <a href="javascript:void(0);">Collaborations</a>
                           <ul>
-                            <li><a href="#">• Strategic Partnerships</a></li>
-                            <li><a href="#">• Academic collaborations</a></li>
-                            <li><a href="#">• Corporate Partnerships</a></li>
-                            <li><a href="#">• Government Collaborations</a></li>
-                            <li><a href="#">• International Partnerships</a></li>
+                            @foreach ($collaborations as $collaboration)
+                              <li><a href="{{ route('web.blog.filter', ['category_id' => '', 'type' => 3]) }}">{{ $collaboration->menu_title }}</a></li>
+                            @endforeach
                           </ul>
                         </li>
                         <li class="dropdown">
                           <a href="javascript:void(0);">Resources </a>
                           <ul>
-                            <li><a href="#">• Blogs</a></li>
-                            <li><a href="#">• Training Models</a></li>
-                            <li><a href="#">• Research & Publications</a></li>
-                            <li><a href="#">• Best Practices & Case Studies</a></li>
+                            <li><a href="{{ route('web.blog.filter', ['category_id' => '', 'type' => 1]) }}">Blogs</a></li>
+                            <li><a href="{{ route('web.blog.filter', ['category_id' => '', 'type' => 7]) }}">Training Models</a></li>
+                            <li><a href="{{ route('web.blog.filter', ['category_id' => '', 'type' => 5]) }}">Research & Publications</a></li>
+                            <li><a href="{{ route('web.blog.filter', ['category_id' => '', 'type' => 6]) }}">Best Practices & Case Studies</a></li>
                           </ul>
                         </li>
                         <li><a href="#">Global Pathways</a></li>

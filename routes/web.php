@@ -94,4 +94,4 @@ Route::get('/event', function () {
 
     // For Blog Catelog
     Route::get('/blogs', [WebController::class, 'blog'])->name('web.blog.filter');
-    Route::get('/blogs/{slug}', [WebController::class, 'show'])->name('web.blog.show');
+    Route::get('/blogs/{categoryslug}/{slug}', [WebController::class, 'blogShow'])->name('web.blog.show');

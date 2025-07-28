@@ -122,7 +122,7 @@
                                             class="form-control @error('image') is-invalid @enderror" id="image">
                                         @if($blog->image)
                                             <div class="mt-2">
-                                                <img src="{{ asset('uploads/blogs/'.$blog->image) }}" width="100" class="img-thumbnail">
+                                                <img src="{{ asset($blog->image) }}" width="100" class="img-thumbnail">
                                                 <a href="#" class="btn btn-sm btn-danger ms-2 remove-image" data-field="image">Remove</a>
                                                 <input type="hidden" name="remove_image" id="remove_image" value="0">
                                             </div>
@@ -138,7 +138,7 @@
                                             id="banner_image">
                                         @if($blog->banner_image)
                                             <div class="mt-2">
-                                                <img src="{{ asset('uploads/blogs/'.$blog->banner_image) }}" width="100" class="img-thumbnail">
+                                                <img src="{{ asset($blog->banner_image) }}" width="100" class="img-thumbnail">
                                                 <a href="#" class="btn btn-sm btn-danger ms-2 remove-image" data-field="banner_image">Remove</a>
                                                 <input type="hidden" name="remove_banner_image" id="remove_banner_image" value="0">
                                             </div>
@@ -156,6 +156,10 @@
                                         <option value="1" {{ old('type', $blog->type) == '1' ? 'selected' : '' }}>Blog</option>
                                         <option value="2" {{ old('type', $blog->type) == '2' ? 'selected' : '' }}>News</option>
                                         <option value="3" {{ old('type', $blog->type) == '3' ? 'selected' : '' }}>Collaboration</option>
+                                        <option value="4" {{ old('type', $blog->type) == '4' ? 'selected' : '' }}>Training Model</option>
+                                        <option value="5" {{ old('type', $blog->type) == '5' ? 'selected' : '' }}>Research and Publication</option>
+                                        <option value="6" {{ old('type', $blog->type) == '6' ? 'selected' : '' }}>Case Studies</option>
+                                        <option value="7" {{ old('type', $blog->type) == '7' ? 'selected' : '' }}>Resource</option>
                                     </select>
                                     @error('type')
                                         <div class="invalid-feedback">{{ $message }}</div>

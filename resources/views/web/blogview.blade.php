@@ -1,8 +1,8 @@
    @extends('layouts.web.app')
    @push('meta')
-      <title>{{ $metaTitle ?? $program->title ?? 'Default Page Title' }}</title>
+      <title>{{ $metaTitle ?? $blog->title ?? 'Default Page Title' }}</title>
 
-      <meta name="description" content="{{ $metaDescription ?? Str::limit(strip_tags($program->description ?? ''), 150) }}">
+      <meta name="description" content="{{ $metaDescription ?? Str::limit(strip_tags($blog->description ?? ''), 150) }}">
       <meta name="keywords" content="{{ $metaKeywords ?? 'announcement, news, education' }}">
       <meta name="author" content="{{ $metaAuthor ?? 'YourSiteName' }}">
       <meta name="robots" content="{{ $metaRobots ?? 'index, follow' }}">
@@ -11,24 +11,24 @@
       <link rel="canonical" href="{{ $metaCanonical ?? url()->current() }}">
 
       <!-- Open Graph -->
-      <meta property="og:title" content="{{ $metaOgTitle ?? $program->title ?? 'Default OG Title' }}">
-      <meta property="og:description" content="{{ $metaOgDescription ?? Str::limit(strip_tags($program->description ?? ''), 150) }}">
+      <meta property="og:title" content="{{ $metaOgTitle ?? $blog->title ?? 'Default OG Title' }}">
+      <meta property="og:description" content="{{ $metaOgDescription ?? Str::limit(strip_tags($blog->description ?? ''), 150) }}">
       <meta property="og:type" content="website">
       <meta property="og:url" content="{{ $metaOgUrl ?? url()->current() }}">
-      <meta property="og:image" content="{{ $metaOgImage ?? asset($program->image ?? 'default.jpg') }}">
+      <meta property="og:image" content="{{ $metaOgImage ?? asset($blog->image ?? 'default.jpg') }}">
 
       <!-- Twitter Card -->
       <meta name="twitter:card" content="summary_large_image">
-      <meta name="twitter:title" content="{{ $metaTwitterTitle ?? $program->title ?? 'Default Twitter Title' }}">
-      <meta name="twitter:description" content="{{ $metaTwitterDescription ?? Str::limit(strip_tags($program->description ?? ''), 150) }}">
-      <meta name="twitter:image" content="{{ $metaTwitterImage ?? asset($program->image ?? 'default.jpg') }}">
+      <meta name="twitter:title" content="{{ $metaTwitterTitle ?? $blog->title ?? 'Default Twitter Title' }}">
+      <meta name="twitter:description" content="{{ $metaTwitterDescription ?? Str::limit(strip_tags($blog->description ?? ''), 150) }}">
+      <meta name="twitter:image" content="{{ $metaTwitterImage ?? asset($blog->image ?? 'default.jpg') }}">
    @endpush
    @section('content')
    <!-- Yout Content Here -->
-   <section class="title-banner mb-80" style="background-image: url({{ asset($program->banner_image) }})">
+   <section class="title-banner mb-80" style="background-image: url({{ asset($blog->banner_image) }})">
       <div class="container-fluid">
-         <h2 class="fw-500 mb-24">{{ $program->title ?? null }}<br class="d-sm-block d-none">
-            <span class="color-primary">{{ $program->subtitle ?? null }}</span>
+         <h2 class="fw-500 mb-24">{{ $blog->title ?? null }}<br class="d-sm-block d-none">
+            <span class="color-primary">{{ $blog->subtitle ?? null }}</span>
          </h2>
          <div class="d-flex align-items-center gap-16 flex-wrap row-gap-4">
             <div class="d-flex align-items-center gap-8">
@@ -173,7 +173,7 @@
                      </clipPath>
                   </defs>
                </svg>
-               <p class="light-gray">{{ \Carbon\Carbon::parse($program->created_at)->format('F jS, Y') }}</p>
+               <p class="light-gray">{{ \Carbon\Carbon::parse($blog->created_at)->format('F jS, Y') }}</p>
             </div>
             <div class="d-flex align-items-center gap-8">
                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -225,13 +225,13 @@
       <div class="container-fluid">
          <div class="row row-gap-4">
             <div class="col-lg-8">
-               <img src="{{ asset($program->image) }}" class="br-24 w-100 mb-4" alt="">
-               {!! $program->description !!}
+               <img src="{{ asset($blog->image) }}" class="br-24 w-100 mb-4" alt="">
+               {!! $blog->description !!}
                <div class="container my-5">
                   <div class="row">
                      <!-- Sidebar -->
                      @php
-                     $points = is_string($program->points) ? json_decode($program->points, true) : $program->points;
+                     $points = is_string($blog->points) ? json_decode($blog->points, true) : $blog->points;
                      @endphp
                      <div class="col-lg-4 mb-4">
                         <nav id="navbar-example" class="navbar sticky-top flex-column align-items-stretch p-3 bg-light rounded">
@@ -249,9 +249,9 @@
                      </div>
                      <!-- Content -->
                      <div class="col-lg-8">
-                        <h3 class="fw-bold mb-4">{{ $program->title }} - Key Points</h3>
+                        <h3 class="fw-bold mb-4">{{ $blog->title }} - Key Points</h3>
                         <p class="mb-4">
-                           {!! $program->short_description !!}
+                           {!! $blog->short_description !!}
                         </p>
                         <div class="accordion" id="accordionExample">
                            @foreach($points as $index => $item)
