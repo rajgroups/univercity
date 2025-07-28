@@ -9,17 +9,20 @@
             </div>
         </div>
         <ul class="table-top-head">
-            <li><a data-bs-toggle="tooltip" title="Pdf"><img src="{{ asset('resource/admin/assets/img/icons/pdf.svg') }}" alt="img"></a></li>
-            <li><a data-bs-toggle="tooltip" title="Excel"><img src="{{ asset('resource/admin/assets/img/icons/excel.svg') }}" alt="img"></a></li>
+            <li><a data-bs-toggle="tooltip" title="Pdf"><img src="{{ asset('resource/admin/assets/img/icons/pdf.svg') }}"
+                        alt="img"></a></li>
+            <li><a data-bs-toggle="tooltip" title="Excel"><img
+                        src="{{ asset('resource/admin/assets/img/icons/excel.svg') }}" alt="img"></a></li>
             <li><a data-bs-toggle="tooltip" title="Refresh"><i class="ti ti-refresh"></i></a></li>
             <li><a data-bs-toggle="tooltip" title="Collapse" id="collapse-header"><i class="ti ti-chevron-up"></i></a></li>
         </ul>
         <div class="page-btn">
-            <a href="{{ route('admin.sectors.create') }}" class="btn btn-primary"><i class="ti ti-circle-plus me-1"></i>Add Sector</a>
+            <a href="{{ route('admin.sectors.create') }}" class="btn btn-primary"><i class="ti ti-circle-plus me-1"></i>Add
+                Sector</a>
         </div>
     </div>
 
- {{-- Success Message --}}
+    {{-- Success Message --}}
     @if (session('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             {{ session('success') }}
@@ -43,28 +46,16 @@
     <div class="card">
         <div class="card-header d-flex align-items-center justify-content-between flex-wrap row-gap-3">
             <div class="search-set">
-								<div class="search-input">
-									<span class="btn-searchset"><i class="ti ti-search fs-14 feather-search"></i></span>
-								    <div  class="dataTables_filter">
-                                         <label>
-                                             <input type="search" class="form-control form-control-sm" placeholder="Search" aria-controls="DataTables_Table_0">
-                                        </label>
-                                    </div>
-                               </div>
-							</div>
-
-            {{-- <div class="d-flex table-dropdown my-xl-auto right-content align-items-center flex-wrap row-gap-3">
-                <div class="dropdown">
-                    <a href="javascript:void(0);" class="dropdown-toggle btn btn-white btn-md d-inline-flex align-items-center" data-bs-toggle="dropdown">
-                        Filter by Status
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-end p-3">
-                        <li><a href="#" class="dropdown-item rounded-1 filter-status" data-status="Active">Active</a></li>
-                        <li><a href="#" class="dropdown-item rounded-1 filter-status" data-status="Inactive">Inactive</a></li>
-                        <li><a href="#" class="dropdown-item rounded-1 filter-status" data-status="All">All</a></li>
-                    </ul>
+                <div class="search-input">
+                    <span class="btn-searchset"><i class="ti ti-search fs-14 feather-search"></i></span>
+                    <div class="dataTables_filter">
+                        <label>
+                            <input type="search" class="form-control form-control-sm" placeholder="Search"
+                                aria-controls="DataTables_Table_0">
+                        </label>
+                    </div>
                 </div>
-            </div> --}}
+            </div>
         </div>
 
         <div class="card-body p-0">
@@ -72,12 +63,6 @@
                 <table class="table datatable">
                     <thead class="thead-light">
                         <tr>
-                            {{-- <th class="no-sort">
-                                <label class="checkboxs">
-                                    <input type="checkbox" id="select-all">
-                                    <span class="checkmarks"></span>
-                                </label>
-                            </th> --}}
                             <th>S.No</th>
                             <th>Sector</th>
                             <th>Slug</th>
@@ -87,14 +72,8 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse ($sectors as $index => $sector)
+                        @foreach ($sectors as $index => $sector)
                             <tr>
-                                {{-- <td>
-                                    <label class="checkboxs">
-                                        <input type="checkbox" class="sector-checkbox" value="{{ $sector->id }}">
-                                        <span class="checkmarks"></span>
-                                    </label>
-                                </td> --}}
                                 <td>{{ $loop->index + 1 }}</td>
                                 <td>{{ $sector->name }}</td>
                                 <td>{{ $sector->slug }}</td>
@@ -111,7 +90,8 @@
                                         <a class="me-2 p-2" href="{{ route('admin.sectors.edit', $sector->id) }}">
                                             <i data-feather="edit" class="feather-edit"></i>
                                         </a>
-                                        <form action="{{ route('admin.sectors.destroy', $sector->id) }}" method="POST" style="display:inline-block;">
+                                        <form action="{{ route('admin.sectors.destroy', $sector->id) }}" method="POST"
+                                            style="display:inline-block;">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn p-2 text-danger btn-link"
@@ -122,11 +102,7 @@
                                     </div>
                                 </td>
                             </tr>
-                        @empty
-                            <tr>
-                                <td colspan="7" class="text-center">No sectors found.</td>
-                            </tr>
-                        @endforelse
+                        @endforeach
                     </tbody>
                 </table>
             </div>
@@ -135,15 +111,14 @@
 @endsection
 
 @push('scripts')
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const selectAll = document.getElementById('select-all');
-        const checkboxes = document.querySelectorAll('.sector-checkbox');
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const selectAll = document.getElementById('select-all');
+            const checkboxes = document.querySelectorAll('.sector-checkbox');
 
-        selectAll.addEventListener('change', function () {
-            checkboxes.forEach(checkbox => checkbox.checked = selectAll.checked);
+            selectAll.addEventListener('change', function() {
+                checkboxes.forEach(checkbox => checkbox.checked = selectAll.checked);
+            });
         });
-    });
-</script>
-
+    </script>
 @endpush

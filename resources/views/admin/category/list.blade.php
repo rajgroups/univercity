@@ -26,11 +26,11 @@
             </li>
         </ul>
         <div class="page-btn">
-            <a href="{{ route('admin.category.create') }}" class="btn btn-primary"><i
-                    class="ti ti-circle-plus me-1"></i>Add Category</a>
+            <a href="{{ route('admin.category.create') }}" class="btn btn-primary"><i class="ti ti-circle-plus me-1"></i>Add
+                Category</a>
         </div>
     </div>
- {{-- Success Message --}}
+    {{-- Success Message --}}
     @if (session('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             {{ session('success') }}
@@ -50,37 +50,27 @@
         </div>
     @endif
     @php
-    $typeLabels = [
-        1 => 'Education Program',
-        2 => 'Skill Development Program',
-        3 => 'Women Scheme',
-        4 => 'General Scheme',
-        5 => 'Course',
-    ];
-@endphp
-        <div class="card">
+        $typeLabels = [
+            1 => 'Education Program',
+            2 => 'Skill Development Program',
+            3 => 'Women Scheme',
+            4 => 'General Scheme',
+            5 => 'Course',
+        ];
+    @endphp
+    <div class="card">
         <div class="card-header d-flex align-items-center justify-content-between flex-wrap row-gap-3">
-                           <div class="search-set">
-								<div class="search-input">
-									<span class="btn-searchset"><i class="ti ti-search fs-14 feather-search"></i></span>
-								    <div  class="dataTables_filter">
-                                         <label>
-                                             <input type="search" class="form-control form-control-sm" placeholder="Search" aria-controls="DataTables_Table_0">
-                                        </label>
-                                    </div>
-                               </div>
-							</div>
-            {{-- <div class="table-dropdown my-xl-auto right-content">
-                <div class="dropdown">
-                    <a href="javascript:void(0);" class="dropdown-toggle btn btn-white btn-md d-inline-flex align-items-center" data-bs-toggle="dropdown">
-                        Status
-                    </a>
-                    <ul class="dropdown-menu  dropdown-menu-end p-3">
-                        <li><a href="javascript:void(0);" class="dropdown-item change-status" data-status="1">Active</a></li>
-                        <li><a href="javascript:void(0);" class="dropdown-item change-status" data-status="0">Inactive</a></li>
-                    </ul>
+            <div class="search-set">
+                <div class="search-input">
+                    <span class="btn-searchset"><i class="ti ti-search fs-14 feather-search"></i></span>
+                    <div class="dataTables_filter">
+                        <label>
+                            <input type="search" class="form-control form-control-sm" placeholder="Search"
+                                aria-controls="DataTables_Table_0">
+                        </label>
+                    </div>
                 </div>
-            </div> --}}
+            </div>
         </div>
 
         <div class="card-body p-0">
@@ -94,7 +84,7 @@
                                     <span class="checkmarks"></span>
                                 </label>
                             </th> --}}
-                           <th>S.No</th>
+                            <th>S.No</th>
                             <th>Name</th>
                             <th>Type</th>
                             <th>Slug</th>
@@ -104,7 +94,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($categorys as $category)
+                        @foreach ($categorys as $category)
                             <tr>
 
                                 {{-- <td>
@@ -115,7 +105,7 @@
                                 </td> --}}
                                 <td>{{ $loop->index + 1 }}</td>
                                 <td><span class="text-gray-9">{{ $category->name }}</span></td>
-                                 <td>{{ $typeLabels[$category->type] ?? 'N/A' }}</td>
+                                <td>{{ $typeLabels[$category->type] ?? 'N/A' }}</td>
                                 <td>{{ $category->slug }}</td>
                                 <td>{{ $category->created_at->format('d M Y') }}</td>
 
@@ -131,10 +121,12 @@
                                         <a class="me-2 p-2" href="{{ route('admin.category.edit', $category->id) }}">
                                             <i data-feather="edit" class="feather-edit"></i>
                                         </a>
-                                        <form action="{{ route('admin.category.destroy', $category->id) }}" method="POST" style="display:inline;">
+                                        <form action="{{ route('admin.category.destroy', $category->id) }}" method="POST"
+                                            style="display:inline;">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn p-2" onclick="return confirm('Are you sure?')">
+                                            <button type="submit" class="btn p-2"
+                                                onclick="return confirm('Are you sure?')">
                                                 <i data-feather="trash-2" class="feather-trash-2"></i>
                                             </button>
                                         </form>
@@ -143,7 +135,7 @@
                             </tr>
                         @endforeach
 
-                        @if($categorys->isEmpty())
+                        @if ($categorys->isEmpty())
                             <tr>
                                 <td colspan="6" class="text-center text-muted">No projects found.</td>
                             </tr>
@@ -152,8 +144,8 @@
                 </table>
             </div>
         </div>
+
     </div>
 @endsection
 @section('scripts')
-
 @endsection

@@ -11,7 +11,10 @@
 
 	<!-- Datetimepicker CSS -->
 	<link rel="stylesheet" href="{{ asset('resource/admin/assets/css/bootstrap-datetimepicker.min.css')}}">
-
+	
+	<!-- Datatable CSS -->
+	<link rel="stylesheet" href="{{ asset('resource/admin/assets/css/dataTables.bootstrap5.min.css')}}">
+	
 	<!-- animation CSS -->
 	<link rel="stylesheet" href="{{ asset('resource/admin/assets/css/animate.css')}}">
 

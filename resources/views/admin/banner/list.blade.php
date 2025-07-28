@@ -78,7 +78,7 @@
 
         <div class="card-body p-0">
             <div class="table-responsive">
-                <table class="table datatable">
+                <table class="table datatable dataTable no-footer">
                     <thead class="thead-light">
                         <tr>
                             <th class="no-sort">
@@ -135,15 +135,10 @@
                                 </td>
                             </tr>
                         @endforeach
-
-                        @if($banners->isEmpty())
-                            <tr>
-                                <td colspan="6" class="text-center">No banners found.</td>
-                            </tr>
-                        @endif
                     </tbody>
                 </table>
             </div>
         </div>
+        
     </div>
 @endsection

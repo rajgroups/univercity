@@ -9,16 +9,19 @@
             </div>
         </div>
         <ul class="table-top-head">
-            <li><a data-bs-toggle="tooltip" title="Pdf"><img src="{{ asset('resource/admin/assets/img/icons/pdf.svg') }}" alt="img"></a></li>
-            <li><a data-bs-toggle="tooltip" title="Excel"><img src="{{ asset('resource/admin/assets/img/icons/excel.svg') }}" alt="img"></a></li>
+            <li><a data-bs-toggle="tooltip" title="Pdf"><img src="{{ asset('resource/admin/assets/img/icons/pdf.svg') }}"
+                        alt="img"></a></li>
+            <li><a data-bs-toggle="tooltip" title="Excel"><img
+                        src="{{ asset('resource/admin/assets/img/icons/excel.svg') }}" alt="img"></a></li>
             <li><a data-bs-toggle="tooltip" title="Refresh"><i class="ti ti-refresh"></i></a></li>
             <li><a data-bs-toggle="tooltip" title="Collapse" id="collapse-header"><i class="ti ti-chevron-up"></i></a></li>
         </ul>
         <div class="page-btn">
-            <a href="{{ route('admin.course.create') }}" class="btn btn-primary"><i class="ti ti-circle-plus me-1"></i>Add Course</a>
+            <a href="{{ route('admin.course.create') }}" class="btn btn-primary"><i class="ti ti-circle-plus me-1"></i>Add
+                Course</a>
         </div>
     </div>
- {{-- Success Message --}}
+    {{-- Success Message --}}
     @if (session('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             {{ session('success') }}
@@ -39,29 +42,17 @@
     @endif
     <div class="card">
         <div class="card-header d-flex align-items-center justify-content-between flex-wrap row-gap-3">
-             <div class="search-set">
-								<div class="search-input">
-									<span class="btn-searchset"><i class="ti ti-search fs-14 feather-search"></i></span>
-								    <div  class="dataTables_filter">
-                                         <label>
-                                             <input type="search" class="form-control form-control-sm" placeholder="Search" aria-controls="DataTables_Table_0">
-                                        </label>
-                                    </div>
-                               </div>
-							</div>
-            {{-- <div class="d-flex table-dropdown my-xl-auto right-content align-items-center flex-wrap row-gap-3">
-                <div class="dropdown">
-                    <a href="javascript:void(0);"
-                        class="dropdown-toggle btn btn-white btn-md d-inline-flex align-items-center"
-                        data-bs-toggle="dropdown">
-                        Status
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-end p-3">
-                        <li><a href="javascript:void(0);" class="dropdown-item rounded-1">Active</a></li>
-                        <li><a href="javascript:void(0);" class="dropdown-item rounded-1">Inactive</a></li>
-                    </ul>
+            <div class="search-set">
+                <div class="search-input">
+                    <span class="btn-searchset"><i class="ti ti-search fs-14 feather-search"></i></span>
+                    <div class="dataTables_filter">
+                        <label>
+                            <input type="search" class="form-control form-control-sm" placeholder="Search"
+                                aria-controls="DataTables_Table_0">
+                        </label>
+                    </div>
                 </div>
-            </div> --}}
+            </div>
         </div>
 
         <div class="card-body p-0">
@@ -69,12 +60,6 @@
                 <table class="table datatable">
                     <thead class="thead-light">
                         <tr>
-                            {{-- <th class="no-sort">
-                                <label class="checkboxs">
-                                    <input type="checkbox" id="select-all">
-                                    <span class="checkmarks"></span>
-                                </label>
-                            </th> --}}
                             <th>S.No</th>
                             <th>Name</th>
                             <th>Slug</th>
@@ -84,15 +69,15 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($courses as $item)
+                        @foreach ($courses as $item)
                             <tr>
                                 {{-- <td><input type="checkbox" class="select-item" value="{{ $item->id }}"></td> --}}
-                              <td>{{ $loop->index + 1 }}</td>
+                                <td>{{ $loop->index + 1 }}</td>
                                 <td><span class="text-gray-9">{{ $item->name }}</span></td>
                                 <td>{{ $item->slug }}</td>
                                 <td>{{ $item->created_at->format('d M Y') }}</td>
 
-                               <td>
+                                <td>
                                     @if ($item->status == '1')
                                         <span class="badge bg-success fw-medium fs-10">Active</span>
                                     @else
@@ -104,10 +89,12 @@
                                         <a class="me-2 p-2" href="{{ route('admin.course.edit', $item->id) }}">
                                             <i data-feather="edit" class="feather-edit"></i>
                                         </a>
-                                        <form action="{{ route('admin.course.destroy', $item->id) }}" method="POST" style="display:inline;">
+                                        <form action="{{ route('admin.course.destroy', $item->id) }}" method="POST"
+                                            style="display:inline;">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn p-2" onclick="return confirm('Are you sure?')">
+                                            <button type="submit" class="btn p-2"
+                                                onclick="return confirm('Are you sure?')">
                                                 <i data-feather="trash-2" class="feather-trash-2"></i>
                                             </button>
                                         </form>
@@ -115,12 +102,6 @@
                                 </td>
                             </tr>
                         @endforeach
-
-                        @if($courses->isEmpty())
-                            <tr>
-                                <td colspan="6" class="text-center text-muted">No projects found.</td>
-                            </tr>
-                        @endif
                     </tbody>
                 </table>
             </div>
