@@ -18,6 +18,7 @@ use App\Http\Controllers\RegisterController;
 
 
 Route::prefix('admin')->as('admin.')->group(function() {
+
     Route::get('login',[LoginController::class,'showLoginForm'])->name('admin.login');
 
     // Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');

@@ -25,11 +25,11 @@
 					<p class="fs-12 mb-0">System Admin</p>
 				</div>
 				<div class="sidebar-nav mb-3">
-					<ul class="nav nav-tabs nav-tabs-solid nav-tabs-rounded nav-justified bg-transparent" role="tablist">
+					{{-- <ul class="nav nav-tabs nav-tabs-solid nav-tabs-rounded nav-justified bg-transparent" role="tablist">
 						<li class="nav-item"><a class="nav-link active border-0" href="#">Menu</a></li>
 						<li class="nav-item"><a class="nav-link border-0" href="chat.html">Chats</a></li>
 						<li class="nav-item"><a class="nav-link border-0" href="email.html">Inbox</a></li>
-					</ul>
+					</ul> --}}
 				</div>
 			</div>
 			<div class="sidebar-header p-3 pb-0 pt-2">
@@ -80,9 +80,12 @@
 								<li><a href="{{ route('admin.category.index') }}"><i class="ti ti-eraser fs-16 me-2"></i><span>Category</span></a></li>
                                 <li><a href="{{ route('admin.sectors.index') }}"><i class="ti ti-list-details fs-16 me-2"></i><span>Sector</span></a></li>
 								<li><a href="{{ route('admin.project.index') }}"><i data-feather="box"></i><span>Project</span></a></li>
+								<li><a href="{{ route('admin.course.index') }}"><i class="ti ti-list-details fs-16 me-2"></i><span>Course</span></a></li>
 								<li><a href="{{ route('admin.banner.index') }}"><i class="ti ti-table-plus fs-16 me-2"></i><span>Banner</span></a></li>
 								<li><a href="{{ route('admin.announcement.index') }}"><i class="ti ti-progress-alert fs-16 me-2"></i><span>Announcement </span></a></li>
 								<li><a href="{{ route('admin.setting.home.edit') }}"><i class="ti ti-settings fs-16 me-2"></i><span>Setting </span></a></li>
+
+								<li><a href="{{ route('admin.setting.general.edit') }}"><i class="ti ti-table-plus fs-16 me-2"></i><span>General</span></a></li>
 								{{--
 								<li><a href="category-list.html"><i class="ti ti-list-details fs-16 me-2"></i><span>Category</span></a></li>
 								<li><a href="sub-categories.html"><i class="ti ti-carousel-vertical fs-16 me-2"></i><span>Sub Category</span></a></li>
@@ -103,24 +106,14 @@
 							</ul>
 						</li>
                         <li class="submenu-open">
-							<h6 class="submenu-hdr">Sector</h6>
+							<h6 class="submenu-hdr">Blog</h6>
 							<ul>
-
+								<li><a href="{{ route('admin.blog.index') }}"><i class="ti ti-table-plus fs-16 me-2"></i><span>Blog</span></a></li>
 							</ul>
 						</li>
+
 
 						{{-- <li class="submenu-open">
-							<h6 class="submenu-hdr">Sales</h6>
-							<ul>
-								<li class="submenu">
-									<a href="{{ route('pos.index') }}"><i class="ti ti-device-laptop fs-16 me-2"></i><span>POS</span><span class="menu-arrow"></span></a>
-									<ul>
-										<li><a href="{{ route('pos.index') }}">POS 4</a></li>
-									</ul>
-								</li>
-							</ul>
-						</li>
-						<li class="submenu-open">
 							<h6 class="submenu-hdr">Peoples</h6>
 							<ul>
 								<li><a href="{{route('customers.index')}}"><i class="ti ti-users-group fs-16 me-2"></i><span>Customers</span></a></li>

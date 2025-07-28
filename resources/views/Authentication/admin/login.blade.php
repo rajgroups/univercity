@@ -11,7 +11,7 @@
 		<meta name="keywords" content="">
 		<meta name="author" content="pos Admin">
 		<meta name="robots" content="index, follow">
-		<title> POS - Login</title>
+		<title> ISICO - INDIAN SKILL INSTUTUTE CO-OPERATION POS - Login</title>
 
 		<!-- Favicon -->
         <link rel="shortcut icon" type="image/x-icon" href="{{asset('resource/admin/assets/img/favicon.png')}}">
@@ -53,7 +53,7 @@
                                </a>
                                <div class="login-userheading">
                                    <h3>Sign In</h3>
-                                   <h4 class="fs-16">Access the Dreamspos panel using your email and passcode.</h4>
+                                   <h4 class="fs-16">Access the ISICO panel using your email and passcode.</h4>
                                </div>
                                   {{-- Error Handling --}}
                                   @if (session('success'))
@@ -153,7 +153,7 @@
                                    </div>
                                </div>
                                <div class="my-4 d-flex justify-content-center align-items-center copyright-text">
-                                <p>Copyright &copy; 2025 DreamsPOS</p>
+                                <p>Copyright &copy; 2025 ISICO - INDIAN SKILL INSTUTUTE CO-OPERATION</p>
                             </div>
                            </div>
 

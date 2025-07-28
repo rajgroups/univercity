@@ -91,7 +91,7 @@
                                     <span class="checkmarks"></span>
                                 </label>
                             </th>
-                            <th>name</th>
+                            <th>Name</th>
                             <th>Type</th>
                             <th>Slug</th>
                             <th>Created On</th>
