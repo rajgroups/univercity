@@ -11,13 +11,13 @@
 		<meta name="keywords" content="">
 		<meta name="author" content="pos Admin">
 		<meta name="robots" content="index, follow">
-		<title> ISICO - INDIAN SKILL INSTUTUTE CO-OPERATION POS - Login</title>
+		<title> {{ asset($defaultSettings->site_title ?? null)}} - Login</title>
 
 		<!-- Favicon -->
-        <link rel="shortcut icon" type="image/x-icon" href="{{asset('resource/admin/assets/img/favicon.png')}}">
+        <link rel="shortcut icon" type="image/x-icon" href="{{ asset($defaultSettings->favicon ?? null)}}">
 
 		<!-- Apple Touch Icon -->
-		<link rel="apple-touch-icon" sizes="180x180" href="{{asset('resource/admin/assets/img/apple-touch-icon.png')}}">
+		<link rel="apple-touch-icon" sizes="180x180" href="{{ asset($defaultSettings->favicon ?? null)}}">
 
 		<!-- Bootstrap CSS -->
         <link rel="stylesheet" href="{{asset('resource/admin/assets/css/bootstrap.min.css')}}">
@@ -153,7 +153,7 @@
                                    </div>
                                </div>
                                <div class="my-4 d-flex justify-content-center align-items-center copyright-text">
-                                <p>Copyright &copy; 2025 ISICO - INDIAN SKILL INSTUTUTE CO-OPERATION</p>
+                                <p>{{ $defaultSettings->footer_copyright ?? null}}</p>
                             </div>
                            </div>
 

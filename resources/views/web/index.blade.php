@@ -216,7 +216,7 @@
                         </div>
                         <h2 class="fw-bold mb-3">{{ $settings->about_title ?? null }}</h2>
                     </div>
-                    <p class="mb-36">{!! $settings->about_description ?? null !!}</p>
+                    <p class="mb-36">{{ $defaultSettings->footer_text ?? null}}</p>
                     <div class="d-flex align-items-center gap-24 mb-36">
                         <div class="d-flex align-items-center gap-16"> <img src="{{ asset('resource/web/assets/media/vector/unique-course-vec.png')}}" class="content-vector" alt="Icon representing programs">
                             <div>
@@ -231,7 +231,7 @@
                             </div>
                         </div>
                     </div>
-                    <div> <a href="about.html" class="cus-btn"> <span class="text">Learn More About ISICO</span> </a> </div>
+                    <div> <a href="/about" class="cus-btn"> <span class="text">Learn More About ISICO</span> </a> </div>
                 </div>
             </div>
         </div>
@@ -243,13 +243,13 @@
             <div class="d-inline-flex align-items-center mb-3"> <img src="{{ asset('resource/web/assets/media/hero/buld-vec.png')}}" class="me-2" alt="" style="width: 30px;">
                 <p class="mb-0 fw-semibold text-dark">How We Operate</p>
             </div>
-            <h2 class="fw-bold">{{ $settings->operate_main_title ??  null}} <span class="text-primary">{{ $settings->operate_sub_title ??  null}}</span></h2>
+            <h2 class="fw-bold">{{ $settings->operate_main_title ??  null}} <span class="text-primary ms-3">{{ $settings->operate_sub_title ??  null}}</span></h2>
         </div>
         <div class="row g-4">
         @php
             // Decode JSON string to array (use true as second parameter)
-            $operateSections = is_string($settings->operate_sections) 
-                ? json_decode($settings->operate_sections, true) 
+            $operateSections = is_string($settings->operate_sections)
+                ? json_decode($settings->operate_sections, true)
                 : $settings->operate_sections; // already array
         @endphp
 
@@ -296,7 +296,7 @@
                         <!-- Slide -->
                         <div class="swiper-slide" data-swiper-autoplay="2000">
                             <div class="blog-card">
-                                
+
                                 <a href="{{ route('web.ongoging.project', [$project->category->slug, $project->slug]) }}" class="card-img">
                                     <img src="{{ asset($project->image) }}" alt="{{ $project->title }}">
                                     <span class="date-block">
@@ -447,7 +447,7 @@
             </div>
         </div>
     </div>
-</div> 
+</div>
 <!-- Our Programmes -->
 <section class="out-team-sec mt-80 mb-120 wow fadeInUp animated animated" data-wow-delay="540ms" style="visibility: visible; animation-delay: 540ms; animation-name: fadeInUp;">
     <div class="container-fluid">
@@ -522,7 +522,7 @@
                 @endif
 
         </div>
-</section> 
+</section>
 <!-- end of our Programmes -->
 <!-- End Upcoming Projects -->
 <style>

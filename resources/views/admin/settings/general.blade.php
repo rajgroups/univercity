@@ -165,6 +165,7 @@
                                     <input type="file" class="form-control" id="about_image" name="about_image"
                                         accept="image/*">
                                 </div>
+
                                 <div class="col-md-12">
                                     <label for="about_description" class="form-label">Description</label>
                                     <textarea class="form-control" name="about_description" id="about_description" rows="4">{{ old('about_description', $settings->about_description ?? '') }}</textarea>
@@ -291,7 +292,7 @@
                                         name="footer_gateway_image">
                                 </div>
                                 <div class="col-md-12">
-                                    <label for="footer_text" class="form-label">Footer Text</label>
+                                    <label for="footer_text" class="form-label">Footer About Text</label>
                                     <textarea class="form-control" name="footer_text" rows="2">{{ old('footer_text', $settings->footer_text ?? '') }}</textarea>
                                 </div>
                                 <div class="col-md-12">
