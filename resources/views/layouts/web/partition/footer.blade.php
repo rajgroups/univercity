@@ -9,7 +9,7 @@
             Empowering minds to unlock <span class="text-warning">Full Potential</span>
           </h3>
           <p class="mb-0 text-white w-100 text-center mx-auto">Join us on a journey of learning, growth, and
-            limitless possibilities.
+            limitless possibilities.</br>
             Whether it's education, support, or opportunity — we're here to guide and empower.
           </p>
         </div>

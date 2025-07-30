@@ -125,7 +125,7 @@
                                 </form>
 
                                {{-- <div class="signinform">
-                                   <h4>New on our platform?<a href="register.html" class="hover-a"> Create an account</a></h4>
+                                   <h4>New on our platform?<a href="#" class="hover-a"> Create an account</a></h4>
                                </div>
                                <div class="form-setlogin or-text">
                                    <h4>OR</h4>

@@ -32,7 +32,7 @@ class BannerController extends Controller
         $request->validate([
             'title.*'        => 'required|string|max:255',
             'image.*'        => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'description.*'  => 'nullable|string|max:600',
+            'description.*'  => 'nullable|string',
             'link.*'         => 'nullable|url',
             'status.*'       => 'nullable|boolean'
         ]);
@@ -104,7 +104,7 @@ class BannerController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'link' => 'nullable|url',
-            'description' => 'nullable|string|max:600',
+            'description' => 'nullable|string',
             'status' => 'required|in:1,0',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);

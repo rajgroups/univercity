@@ -305,10 +305,10 @@
                                     </span>
                                 </a>
                                 <div class="card-content">
-                                    <div class="d-flex align-items-center gap-8 mb-20">
+                                    {{-- <div class="d-flex align-items-center gap-8 mb-20">
                                         <img src="{{ asset('upload/project/'.$project->image) }}" class="card-user" alt="">
                                         <p>By Admin</p>
-                                    </div>
+                                    </div> --}}
                                     <a href="{{ route('web.ongoging.project', [$project->category->slug, $project->slug]) }}" class="h6 fw-500 mb-8">{{ $project->title }}</a>
                                     <p class="light-gray mb-24">{{ \Illuminate\Support\Str::limit(strip_tags($project->description), 100) }}</p>
                                     <a href="{{ route('web.ongoging.project', [$project->category->slug, $project->slug]) }}" class="card-btn"> Read More</a>
@@ -426,10 +426,10 @@
                                             </span>
                                         </a>
                                         <div class="card-content bg-white">
-                                            <div class="d-flex align-items-center gap-8 mb-20">
+                                            {{-- <div class="d-flex align-items-center gap-8 mb-20">
                                                 <img src="{{ asset('upload/project/'.$project->image) }}" class="card-user" alt="">
                                                 <p>By Admin</p>
-                                            </div>
+                                            </div> --}}
                                             <a href="{{ route('web.upcoming.project', [$project->category->slug, $project->slug]) }}" class="h6 fw-500 mb-8">{{ $project->title }}</a>
                                             <p class="light-gray mb-24">{{ \Illuminate\Support\Str::limit(strip_tags($project->description), 100) }}</p>
                                             <a href="{{ route('web.upcoming.project', [$project->category->slug, $project->slug]) }}" class="card-btn"> Read More</a>

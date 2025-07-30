@@ -56,7 +56,7 @@
                                 </div>
                               </div>
                               <!-- <div>
-                                <a href="about.html" class="cus-btn">
+                                <a href="#" class="cus-btn">
                                   <span class="text">Learn More About ISICO</span>
                                 </a>
                               </div> -->

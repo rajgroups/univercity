@@ -58,6 +58,10 @@
                         <img src="{{ $imagePath }}" class="card-img-top" alt="{{ $blog->title }}" style="height: 200px; object-fit: cover;">
 
                         <h5 class="card-title mt-3">{{ $blog->title }}</h5>
+                        <p style="text-indent: 35px;" class="mb-2">
+                            {{-- <strong>Short Description :</strong> --}}
+                             {{ $blog->short_description }}</p>
+                        {{-- <p>{{ \Illuminate\Support\Str::limit(strip_tags($blog->description), 100) }}</p> --}}
                         <div class="d-flex justify-content-between">
                             <p class="mb-2"><strong class="text-danger">Type :</strong>
                             @switch($blog->type)
@@ -71,12 +75,10 @@
                             @endswitch
                          </p>
 
-                            <p class="mb-2"><strong class="text-danger">Category :</strong> {{ $blog->category->name ?? '-' }}</p>
+                            <p class="mt-1"><strong class="text-danger">Category :</strong> {{ $blog->category->name ?? '-' }}</p>
                         </div>
-                        <p class="mb-2"><strong>Short Description :</strong> {{ $blog->short_description }}</p>
-                        <p>{{ \Illuminate\Support\Str::limit(strip_tags($blog->description), 100) }}</p>
                     </div>
-                    <div class="card-footer bg-white border-top-0">
+                    <div class="card-footer bg-white border-top-0 mt-0 mb-2">
                         @php
                             $categorySlug = $blog->category->slug ?? 'uncategorized';
                         @endphp
