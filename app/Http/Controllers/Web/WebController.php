@@ -6,10 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Models\Announcement;
 use App\Models\Banner;
 use App\Models\Blog;
+use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Course;
 use App\Models\Project;
 use App\Models\Sector;
+use App\Models\Testimonial;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 
@@ -35,12 +37,20 @@ class WebController extends Controller
         // Fetch only active banners with image field
         $banners = Banner::where('status', 1)->select('image')->get();
 
+        // User Testimonial
+        $testimonials = Testimonial::where('status',1)->latest()->limit(10)->get();
+
+        // Brands
+        $brands = Brand::where('status',1)->latest()->limit(10)->get();
+
         return view('web.index',compact(
             'ongoingProjects',
             'upcomingProjects',
             'programes',
             'schemes',
-            'banners'
+            'banners',
+            'testimonials',
+            'brands'
         ));
     }
 

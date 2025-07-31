@@ -507,11 +507,11 @@
                                         </span>
                                     </a>
                                     <div class="card-content">
-                                        <div class="d-flex align-items-center gap-8 mb-20">
+                                        {{-- <div class="d-flex align-items-center gap-8 mb-20">
                                             <img src="{{ asset('upload/project/' . $project->image) }}" class="card-user"
                                                 alt="">
                                             <p>By Admin</p>
-                                        </div>
+                                        </div> --}}
                                         <a href="{{ route('web.ongoging.project', [$project->category->slug, $project->slug]) }}"
                                             class="h6 fw-500 mb-8">{{ $project->title }}</a>
                                         <p class="light-gray mb-24">
@@ -537,9 +537,9 @@
         <div class="container-fluid">
             <div class="row row-gap-4">
                 <div class="col-lg-8">
+                    {!! $course->long_description !!}
                     <img src="{{ asset($course->image) }}" alt="Course Image" class="img-fluid mb-3"
                         style="width: 100%">
-                    {!! $course->long_description !!}
                 </div>
                 <div class="col-lg-4">
                     <div class="siderbar">

@@ -148,9 +148,9 @@
 									<p>Admin</p>
 								</div>
 							</div>
-							{{-- <a class="dropdown-item" href="profile.html"><i class="ti ti-user-circle me-2"></i>MyProfile</a>
-							<a class="dropdown-item" href="sales-report.html"><i class="ti ti-file-text me-2"></i>Reports</a>
-							<a class="dropdown-item" href="general-settings.html"><i class="ti ti-settings-2 me-2"></i>Settings</a>
+							{{-- <a class="dropdown-item" href="#"><i class="ti ti-user-circle me-2"></i>MyProfile</a>
+							<a class="dropdown-item" href="#"><i class="ti ti-file-text me-2"></i>Reports</a>
+							<a class="dropdown-item" href="#"><i class="ti ti-settings-2 me-2"></i>Settings</a>
 							<hr class="my-2"> --}}
 
 							<form id="logout-form-second" action="{{ route('admin.logout') }}" method="POST" style="display: none;">
@@ -167,8 +167,6 @@
 					<a href="javascript:void(0);" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"
 						aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
 					<div class="dropdown-menu dropdown-menu-right">
-						{{-- <a class="dropdown-item" href="profile.html">My Profile</a>
-						<a class="dropdown-item" href="general-settings.html">Settings</a> --}}
 						<form id="logout-form-second" action="{{ route('admin.logout') }}" method="POST" style="display: none;">
 							@csrf
 						</form>

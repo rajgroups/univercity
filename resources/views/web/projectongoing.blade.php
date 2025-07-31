@@ -178,7 +178,7 @@
                     <p class="light-gray">{{ \Carbon\Carbon::parse($announcement->created_at)->format('F jS, Y') }}</p>
                 </div>
                 <div class="d-flex align-items-center gap-8">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                    {{-- <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                         fill="none">
                         <g clip-path="url(#clip0_11629_7476)">
                             <path
@@ -205,8 +205,8 @@
                                 <rect width="24" height="24" fill="white"></rect>
                             </clipPath>
                         </defs>
-                    </svg>
-                    <p class="light-gray">By Admin</p>
+                    </svg> --}}
+                    {{-- <p class="light-gray">By Admin</p> --}}
                 </div>
             </div>
         </div>

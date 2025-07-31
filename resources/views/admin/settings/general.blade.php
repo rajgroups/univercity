@@ -20,25 +20,25 @@
     </div>
     <ul class="nav nav-tabs nav-tabs-solid bg-transparent border-bottom mb-3">
         <li class="nav-item">
-            <a class="nav-link active" href="profile-settings.html"><i class="ti ti-settings me-2"></i>General Settings</a>
+            <a class="nav-link active" href="#"><i class="ti ti-settings me-2"></i>General Settings</a>
         </li>
         {{-- <li class="nav-item">
-            <a class="nav-link" href="bussiness-settings.html"><i class="ti ti-world-cog me-2"></i>Website
+            <a class="nav-link" href="#"><i class="ti ti-world-cog me-2"></i>Website
                 Settings</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="salary-settings.html"><i class="ti ti-device-ipad-horizontal-cog me-2"></i>App
+            <a class="nav-link" href="#"><i class="ti ti-device-ipad-horizontal-cog me-2"></i>App
                 Settings</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="email-settings.html"><i class="ti ti-server-cog me-2"></i>System Settings</a>
+            <a class="nav-link" href="3"><i class="ti ti-server-cog me-2"></i>System Settings</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="payment-gateways.html"><i class="ti ti-settings-dollar me-2"></i>Financial
+            <a class="nav-link" href="#"><i class="ti ti-settings-dollar me-2"></i>Financial
                 Settings</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="custom-css.html"><i class="ti ti-settings-2 me-2"></i>Other Settings</a>
+            <a class="nav-link" href="#"><i class="ti ti-settings-2 me-2"></i>Other Settings</a>
         </li> --}}
     </ul>
     <div class="row" style="transform: none;">
@@ -50,7 +50,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="d-flex flex-column list-group settings-list">
-                            <a href="bussiness-settings.html"
+                            <a href="#"
                                 class="d-inline-flex align-items-center rounded active py-2 px-3"><i
                                     class="ti ti-arrow-badge-right me-2"></i>Basic Settings</a>
                         </div>

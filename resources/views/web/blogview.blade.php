@@ -176,7 +176,7 @@
                <p class="light-gray">{{ \Carbon\Carbon::parse($blog->created_at)->format('F jS, Y') }}</p>
             </div>
             <div class="d-flex align-items-center gap-8">
-               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+               {{-- <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                   fill="none">
                   <g clip-path="url(#clip0_11629_7476)">
                      <path
@@ -203,8 +203,8 @@
                         <rect width="24" height="24" fill="white"></rect>
                      </clipPath>
                   </defs>
-               </svg>
-               <p class="light-gray">By Admin</p>
+               </svg> --}}
+               {{-- <p class="light-gray">By Admin</p> --}}
             </div>
          </div>
       </div>
@@ -225,9 +225,10 @@
       <div class="container-fluid">
          <div class="row row-gap-4">
             <div class="col-lg-8">
-               <img src="{{ asset($blog->image) }}" class="br-24 w-100 mb-4" alt="">
                {!! $blog->description !!}
                <div class="container my-5">
+
+               <img src="{{ asset($blog->image) }}" class="br-24 w-100 mb-4" alt="">
                   <div class="row">
                      <!-- Sidebar -->
                      @php
@@ -247,6 +248,7 @@
                            </nav>
                         </nav>
                      </div>
+
                      <!-- Content -->
                      <div class="col-lg-8">
                         <h3 class="fw-bold mb-4">{{ $blog->title }} - Key Points</h3>
@@ -283,7 +285,7 @@
             </div>
             <div class="col-lg-4">
                <div class="siderbar">
-                  {{-- 
+                  {{--
                   <div class="sidebar-block mb-48">
                      <h5 class="fw-500 mb-24">Programes</h5>
                      <ul>
@@ -294,6 +296,7 @@
                   </div>
                   --}}
                   <div class="sidebar-block mb-48">
+
                      <h5 class="fw-500 mb-24">Similar Programs</h5>
                      @forelse($similars as $similar)
                      <div class="recent-article mb-12">

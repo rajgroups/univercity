@@ -6,8 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Models\HomeSetting;
 use App\Models\Setting;
 use App\Models\Settings;
+use App\Models\Project;
 use Illuminate\Support\Facades\File;
 use Illuminate\Http\Request;
+use Illuminate\Suppot/;
 
 class SettingController extends Controller
 {
@@ -185,7 +187,7 @@ class SettingController extends Controller
                     $fileName = 'operate_icon_'.time().'_'.$index.'.'.$file->getClientOriginalExtension();
                     $file->move($publicPath, $fileName);
                     $section['operate_icon'] = 'homepage/files/'.$fileName;
-                    
+
                     // Delete old image if it exists
                     if (!empty($request->existing_operate_icon[$index])) {
                         $oldImage = public_path($request->existing_operate_icon[$index]);
@@ -237,7 +239,7 @@ class SettingController extends Controller
                     $fileName = 'collab_icon_'.time().'_'.$index.'.'.$file->getClientOriginalExtension();
                     $file->move($publicPath, $fileName);
                     $collab['operate_icon'] = 'homepage/files/'.$fileName;
-                    
+
                     // Delete old image if it exists
                     if (!empty($request->existing_collaboration_icon[$index])) {
                         $oldImage = public_path($request->existing_collaboration_icon[$index]);
@@ -257,7 +259,7 @@ class SettingController extends Controller
             $fileName = 'core_image_'.time().'.'.$file->getClientOriginalExtension();
             $file->move($publicPath, $fileName);
             $validated['core_image'] = 'homepage/files/'.$fileName;
-            
+
             // Delete old image if it exists
             if ($homeSetting->core_image) {
                 $oldImage = public_path($homeSetting->core_image);
@@ -409,7 +411,7 @@ class SettingController extends Controller
 
     public function generalEdit(){
         $settings = Settings::first();
-        // View General Settings Edit 
+        // View General Settings Edit
         return view('admin.settings.general',compact('settings'));
     }
 

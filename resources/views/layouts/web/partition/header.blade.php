@@ -1,7 +1,7 @@
 @php
     use App\Models\Category;
     use App\Models\Blog;
-    
+
     $educationPrograms = Category::where('type', '1')->where('status', 1)->get();
     $skillPrograms = Category::where('type', '2')->where('status', 1)->get();
     $csrPrograms = Category::where('type', '3')->where('status', 1)->get();
@@ -156,7 +156,7 @@
             <!-- <div class="hero-topbar-block">
                      <div class="row align-items-center">
                        <div class="col-xl-5 col-lg-3 col-1">
-                         <a href="index-2.html" class="header-logo d-lg-flex d-none">
+                         <a href="#" class="header-logo d-lg-flex d-none">
                            <img src="assets/media/logo.png" alt="">
                          </a>
                        </div>
@@ -199,7 +199,7 @@
                      </div> -->
             <div style="border-top: 1px solid #d8d8dc;" class="row align-items-center">
               <div class="col-lg-8 col-6 mt-3">
-                <!-- <a href="index-2.html" class="header-logo d-lg-none d-block">
+                <!-- <a href="#" class="header-logo d-lg-none d-block">
                            <img src="assets/media/logo.png" alt="">
                            </a> -->
                 <div
@@ -222,7 +222,7 @@
                               {{-- Educational Programs --}}
                               <li>
                                 {{-- {{ route('programe') }} --}}
-                                <a href="">1. Educational Programs</a>
+                                <a href="{{ route('web.catalog') }}">1. Educational Programs</a>
                                 <ul class="sub-menu mt-5">
                                   {{-- {{ route('programe.details', $program->slug) }}" --}}
                                   @foreach ($educationPrograms as $program)
@@ -233,7 +233,7 @@
 
                               {{-- Skill Development Programs --}}
                               <li>
-                                <a href="#">2. Skill Development Programs</a>
+                                <a href="{{ route('web.catalog') }}">2. Skill Development Programs</a>
                                 <ul class="sub-menu mt-5">
                                   @foreach ($skillPrograms as $program)
                                     <li><a href="{{ route('web.catalog') }}">{{ $program->name }}</a></li>
@@ -243,7 +243,7 @@
 
                               {{-- CSR Initiatives --}}
                               <li>
-                                <a href="#">3. CSR Initiatives</a>
+                                <a href="{{ route('web.catalog') }}">3. CSR Initiatives</a>
                                 <ul class="sub-menu mt-5">
                                   @foreach ($csrPrograms as $program)
                                     <li><a href="{{ route('web.catalog') }}">{{ $program->name }}</a></li>
@@ -275,16 +275,6 @@
                         </li>
                         <li><a href="#">Global Pathways</a></li>
                         <li><a href="{{ route('contact') }}">Contact</a></li>
-                        <!-- <li class="dropdown">
-                                       <a href="javascript:void(0);">Pages</a>
-                                       <ul>
-                                         <li><a href="cart.html">Cart</a></li>
-                                         <li><a href="checkout.html">Check Out</a></li>
-                                         <li><a href="login.html">Login</a></li>
-                                         <li><a href="signup.html">Sign Up</a></li>
-                                         <li><a href="contact.html">Contact Us</a></li>
-                                       </ul>
-                                       </li> -->
                       </ul>
                     </div>
                   </div>
@@ -293,7 +283,7 @@
               <div class="col-lg-4 col-6 p-0 mt-3">
                 <div class="header-buttons">
                   <div class="right-nav d-sm-flex gap-16 align-items-center d-none">
-                    <a href="courses.html" class="cus-btn">
+                    <a href="#" class="cus-btn">
                       <span class="text"> Donate Now</span>
                     </a>
                     <a href="#" class="cus-btn-2">
