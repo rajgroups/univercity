@@ -126,7 +126,7 @@ class BlogController extends Controller
             'menu_title'        => 'nullable|string|max:255',
             'category_id'       => 'nullable|exists:category,id',
             'subtitle'          => 'nullable|string|max:255',
-            'short_description' => 'required|string|max:500',
+            'short_description' => 'required|string',
             'slug'              => 'required|string|max:255|unique:blog,slug,'.$blog->id,
             'image'             => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'banner_image'      => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',

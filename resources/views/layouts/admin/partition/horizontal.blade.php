@@ -16,8 +16,8 @@
 								<li><a href="{{route('products.create')}}"><i class="ti ti-table-plus fs-16 me-2"></i><span>Create Product</span></a></li>
 								<li><a href="{{route('products.index')}}"><i data-feather="box"></i><span>Products</span></a></li> --}}
 
-								<!-- <li><a href="expired-products.html"><i class="ti ti-progress-alert fs-16 me-2"></i><span>Expired Products</span></a></li> -->
-								{{-- <li><a href="low-stocks.html"><i class="ti ti-trending-up-2 fs-16 me-2"></i><span>Low Stocks</span></a></li> --}}
+								<!-- <li><a href="#"><i class="ti ti-progress-alert fs-16 me-2"></i><span>Expired Products</span></a></li> -->
+								{{-- <li><a href="#"><i class="ti ti-trending-up-2 fs-16 me-2"></i><span>Low Stocks</span></a></li> --}}
 								{{-- <li><a href="{{route('units.index')}}"><i class="ti ti-brand-unity fs-16 me-2"></i><span>Units</span></a></li> --}}
 							</ul>
 						</li>
@@ -157,8 +157,8 @@
 								<li><a href="{{route('subcategory.index')}}"><i class="ti ti-carousel-vertical fs-16 me-2"></i><span>Sub Category</span></a></li>
 								<li><a href="{{route('products.create')}}"><i class="ti ti-table-plus fs-16 me-2"></i><span>Create Product</span></a></li>
 								<li><a href="{{route('products.index')}}"><i data-feather="box"></i><span>Products</span></a></li> --}}
-								<!-- <li><a href="expired-products.html"><i class="ti ti-progress-alert fs-16 me-2"></i><span>Expired Products</span></a></li> -->
-								{{-- <li><a href="low-stocks.html"><i class="ti ti-trending-up-2 fs-16 me-2"></i><span>Low Stocks</span></a></li> --}}
+								<!-- <li><a href="#"><i class="ti ti-progress-alert fs-16 me-2"></i><span>Expired Products</span></a></li> -->
+								{{-- <li><a href="#"><i class="ti ti-trending-up-2 fs-16 me-2"></i><span>Low Stocks</span></a></li> --}}
 								{{-- <li><a href="{{route('units.index')}}"><i class="ti ti-brand-unity fs-16 me-2"></i><span>Units</span></a></li> --}}
 								</ul>
 							</div>

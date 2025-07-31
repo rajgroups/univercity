@@ -24,12 +24,9 @@
                                 </div>
                               </div>
                               <p class="mb-36">
-                                The Indian Skill Institute Co-operation (ISICO), founded in 2020, is committed to advancing India’s
-                                socio-economic development through education, skill enhancement, and entrepreneurship. Focused on
-                                bridging gaps in rural and underprivileged areas, ISICO empowers individuals to secure sustainable
-                                livelihoods and contribute to national growth.
+                                {{ $defaultSettings->about_description ?? null}}
                               </p>
-                              <p class="mb-36">
+                              {{-- <p class="mb-36">
                                 Aligned with the National Education Policy (NEP) 2020, ISICO works to enhance the quality of education
                                 while preparing future generations for evolving challenges. The organization adheres to core values of
                                 inclusivity, innovation, and collaboration, and actively contributes to Sustainable Development Goals
@@ -39,7 +36,7 @@
                               <p class="mb-36">
                                 ISICO supports national initiatives like Skill India and Make in India, collaborating with various
                                 sectors to build a skilled, inclusive workforce for India’s future.
-                              </p>
+                              </p> --}}
                               <div class="d-flex align-items-center gap-24 mb-36">
                                 <div class="d-flex align-items-center gap-16">
                                   <img src="{{ asset('resource/web/assets/media/vector/unique-course-vec.')}}png" class="content-vector"
@@ -59,7 +56,7 @@
                                 </div>
                               </div>
                               <!-- <div>
-                                <a href="about.html" class="cus-btn">
+                                <a href="#" class="cus-btn">
                                   <span class="text">Learn More About ISICO</span>
                                 </a>
                               </div> -->

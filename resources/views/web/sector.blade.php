@@ -86,7 +86,7 @@
                                 </div>
                             </div>
                         @endforeach
-                       
+
                     </div>
                     @if ($sectors->hasPages())
                         <div class="pagination">
@@ -130,6 +130,6 @@
                 </div>
             </section>
             <!-- Couse Section End -->
-            
+
     <!-- content @e -->
     @endsection

@@ -4,18 +4,30 @@
     <div class="page-header">
         <div class="add-item d-flex">
             <div class="page-title">
-                <h4 class="fw-bold">Announcement</h4>
-                <h6>Manage your Announcement</h6>
+                <h4 class="fw-bold">Brand</h4>
+                <h6>Manage your Brands</h6>
             </div>
         </div>
         <ul class="table-top-head">
-            <li><a data-bs-toggle="tooltip" data-bs-placement="top" title="Pdf"><img src="{{ asset('resource/admin/assets/img/icons/pdf.svg') }}" alt="img"></a></li>
-            <li><a data-bs-toggle="tooltip" data-bs-placement="top" title="Excel"><img src="{{ asset('resource/admin/assets/img/icons/excel.svg') }}" alt="img"></a></li>
-            <li><a data-bs-toggle="tooltip" data-bs-placement="top" title="Refresh"><i class="ti ti-refresh"></i></a></li>
-            <li><a data-bs-toggle="tooltip" data-bs-placement="top" title="Collapse" id="collapse-header"><i class="ti ti-chevron-up"></i></a></li>
+            <li>
+                <a data-bs-toggle="tooltip" data-bs-placement="top" title="Pdf"><img
+                        src="{{ asset('resource/admin/assets/img/icons/pdf.svg') }}" alt="img"></a>
+            </li>
+            <li>
+                <a data-bs-toggle="tooltip" data-bs-placement="top" title="Excel"><img
+                        src="{{ asset('resource/admin/assets/img/icons/excel.svg') }}" alt="img"></a>
+            </li>
+            <li>
+                <a data-bs-toggle="tooltip" data-bs-placement="top" title="Refresh"><i class="ti ti-refresh"></i></a>
+            </li>
+            <li>
+                <a data-bs-toggle="tooltip" data-bs-placement="top" title="Collapse" id="collapse-header"><i
+                        class="ti ti-chevron-up"></i></a>
+            </li>
         </ul>
         <div class="page-btn">
-            <a href="{{ route('admin.announcement.create') }}" class="btn btn-primary"><i class="ti ti-circle-plus me-1"></i>Add Announcement</a>
+            <a href="{{ route('admin.brand.create') }}" class="btn btn-primary"><i class="ti ti-circle-plus me-1"></i>Add
+                Brand</a>
         </div>
     </div>
 
@@ -39,7 +51,6 @@
         </div>
     @endif
 
-    <!-- List -->
     <div class="card">
         <div class="card-header d-flex align-items-center justify-content-between flex-wrap row-gap-3">
             <div class="search-set">
@@ -60,51 +71,45 @@
                 <table class="table datatable">
                     <thead class="thead-light">
                         <tr>
-                            <th class="no-sort">
-                                <label class="checkboxs">
-                                    <input type="checkbox" id="select-all">
-                                    <span class="checkmarks"></span>
-                                </label>
-                            </th>
                             <th>S.No</th>
-                            <th>Title</th>
-                            <th>Slug</th>
-                            <th>Type</th>
-                            <th>Status</th>
+                            <th>Name</th>
+                            <th>Image</th>
                             <th>Created On</th>
-                            <th class="no-sort">Actions</th>
+                            <th>Status</th>
+                            <th class="no-sort">Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($announcements as $announcement)
+                        @foreach ($brands as $brand)
                             <tr>
-                                 <td>
-                                    <label class="checkboxs">
-                                        <input type="checkbox" name="ids[]" value="{{ $announcement->id }}">
-                                        <span class="checkmarks"></span>
-                                    </label>
-                                </td>
-                                <td>{{ $loop->index + 1 }}</td>
-                                <td>{{ $announcement->title }}</td>
-                                <td>{{ $announcement->slug }}</td>
-                                <td>{{ $announcement->type }}</td>
+                                <td>{{ $loop->iteration }}</td>
+                                <td>{{ $brand->name }}</td>
                                 <td>
-                                    @if ($announcement->status == '1')
+                                    @if($brand->image)
+                                        <img src="{{ $brand->image }}" alt="Brand Image" width="50" height="50">
+                                    @else
+                                        N/A
+                                    @endif
+                                </td>
+                                <td>{{ $brand->created_at->format('d M Y') }}</td>
+                                <td>
+                                    @if ($brand->status)
                                         <span class="badge bg-success fw-medium fs-10">Active</span>
                                     @else
                                         <span class="badge bg-danger fw-medium fs-10">Inactive</span>
                                     @endif
                                 </td>
-                                <td>{{ $announcement->created_at->format('d M Y') }}</td>
                                 <td class="action-table-data">
-                                    <div class="edit-delete-action d-flex">
-                                        <a class="me-2 p-2" href="{{ route('admin.announcement.edit', $announcement->id) }}">
+                                    <div class="edit-delete-action">
+                                        <a class="me-2 p-2" href="{{ route('admin.brand.edit', $brand->id) }}">
                                             <i data-feather="edit" class="feather-edit"></i>
                                         </a>
-                                        <form action="{{ route('admin.announcement.destroy', $announcement->id) }}" method="POST" style="display: inline-block;">
+                                        <form action="{{ route('admin.brand.destroy', $brand->id) }}" method="POST"
+                                            style="display:inline;">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn p-2 text-danger" onclick="return confirm('Are you sure you want to delete this?')">
+                                            <button type="submit" class="btn p-2"
+                                                onclick="return confirm('Are you sure you want to delete this brand?')">
                                                 <i data-feather="trash-2" class="feather-trash-2"></i>
                                             </button>
                                         </form>
@@ -116,5 +121,9 @@
                 </table>
             </div>
         </div>
+
     </div>
+@endsection
+
+@section('scripts')
 @endsection

@@ -59,7 +59,7 @@
 						</li>
                         
                        <li class="submenu-open">
-							<h6 class="submenu-hdr">Inventory</h6>
+							<h6 class="submenu-hdr">Module</h6>
 							<ul>
 								<li class="submenu">
 									<a href="javascript:void(0);" class=""><i class="ti ti-eraser fs-16 me-2"></i><span>Category</span><span class="menu-arrow"></span></a>
@@ -87,6 +87,20 @@
 									<ul style="display: none;">
 										<li><a href="{{ route('admin.project.index') }}">Project List</a></li>
 										<li><a href="{{ route('admin.project.create') }}">Add Project</a></li>
+									</ul>
+								</li>
+								<li class="submenu">
+									<a href="javascript:void(0);" class=""><i data-feather="message-circle"></i><span>Testimonial</span><span class="menu-arrow"></span></a>
+									<ul style="display: none;">
+										<li><a href="{{ route('admin.testimonial.index') }}">Testimonial List</a></li>
+										<li><a href="{{ route('admin.testimonial.create') }}">Add Testimonial</a></li>
+									</ul>
+								</li>
+								<li class="submenu">
+									<a href="javascript:void(0);" class=""><i data-feather="life-buoy"></i><span>Brands</span><span class="menu-arrow"></span></a>
+									<ul style="display: none;">
+										<li><a href="{{ route('admin.brand.index') }}">Testimonial List</a></li>
+										<li><a href="{{ route('admin.brand.create') }}">Add Testimonial</a></li>
 									</ul>
 								</li>
 							</ul>

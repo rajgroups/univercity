@@ -216,7 +216,7 @@
                         </div>
                         <h2 class="fw-bold mb-3">{{ $settings->about_title ?? null }}</h2>
                     </div>
-                    <p class="mb-36">{!! $settings->about_description ?? null !!}</p>
+                    <p class="mb-36">{{ $defaultSettings->footer_text ?? null}}</p>
                     <div class="d-flex align-items-center gap-24 mb-36">
                         <div class="d-flex align-items-center gap-16"> <img src="{{ asset('resource/web/assets/media/vector/unique-course-vec.png')}}" class="content-vector" alt="Icon representing programs">
                             <div>
@@ -231,7 +231,7 @@
                             </div>
                         </div>
                     </div>
-                    <div> <a href="about.html" class="cus-btn"> <span class="text">Learn More About ISICO</span> </a> </div>
+                    <div> <a href="/about" class="cus-btn"> <span class="text">Learn More About ISICO</span> </a> </div>
                 </div>
             </div>
         </div>
@@ -243,13 +243,13 @@
             <div class="d-inline-flex align-items-center mb-3"> <img src="{{ asset('resource/web/assets/media/hero/buld-vec.png')}}" class="me-2" alt="" style="width: 30px;">
                 <p class="mb-0 fw-semibold text-dark">How We Operate</p>
             </div>
-            <h2 class="fw-bold">{{ $settings->operate_main_title ??  null}} <span class="text-primary">{{ $settings->operate_sub_title ??  null}}</span></h2>
+            <h2 class="fw-bold">{{ $settings->operate_main_title ??  null}} <span class="text-primary ms-3">{{ $settings->operate_sub_title ??  null}}</span></h2>
         </div>
         <div class="row g-4">
         @php
             // Decode JSON string to array (use true as second parameter)
-            $operateSections = is_string($settings->operate_sections) 
-                ? json_decode($settings->operate_sections, true) 
+            $operateSections = is_string($settings->operate_sections)
+                ? json_decode($settings->operate_sections, true)
                 : $settings->operate_sections; // already array
         @endphp
 
@@ -296,7 +296,7 @@
                         <!-- Slide -->
                         <div class="swiper-slide" data-swiper-autoplay="2000">
                             <div class="blog-card">
-                                
+
                                 <a href="{{ route('web.ongoging.project', [$project->category->slug, $project->slug]) }}" class="card-img">
                                     <img src="{{ asset($project->image) }}" alt="{{ $project->title }}">
                                     <span class="date-block">
@@ -305,10 +305,10 @@
                                     </span>
                                 </a>
                                 <div class="card-content">
-                                    <div class="d-flex align-items-center gap-8 mb-20">
+                                    {{-- <div class="d-flex align-items-center gap-8 mb-20">
                                         <img src="{{ asset('upload/project/'.$project->image) }}" class="card-user" alt="">
                                         <p>By Admin</p>
-                                    </div>
+                                    </div> --}}
                                     <a href="{{ route('web.ongoging.project', [$project->category->slug, $project->slug]) }}" class="h6 fw-500 mb-8">{{ $project->title }}</a>
                                     <p class="light-gray mb-24">{{ \Illuminate\Support\Str::limit(strip_tags($project->description), 100) }}</p>
                                     <a href="{{ route('web.ongoging.project', [$project->category->slug, $project->slug]) }}" class="card-btn"> Read More</a>
@@ -426,10 +426,10 @@
                                             </span>
                                         </a>
                                         <div class="card-content bg-white">
-                                            <div class="d-flex align-items-center gap-8 mb-20">
+                                            {{-- <div class="d-flex align-items-center gap-8 mb-20">
                                                 <img src="{{ asset('upload/project/'.$project->image) }}" class="card-user" alt="">
                                                 <p>By Admin</p>
-                                            </div>
+                                            </div> --}}
                                             <a href="{{ route('web.upcoming.project', [$project->category->slug, $project->slug]) }}" class="h6 fw-500 mb-8">{{ $project->title }}</a>
                                             <p class="light-gray mb-24">{{ \Illuminate\Support\Str::limit(strip_tags($project->description), 100) }}</p>
                                             <a href="{{ route('web.upcoming.project', [$project->category->slug, $project->slug]) }}" class="card-btn"> Read More</a>
@@ -447,7 +447,7 @@
             </div>
         </div>
     </div>
-</div> 
+</div>
 <!-- Our Programmes -->
 <section class="out-team-sec mt-80 mb-120 wow fadeInUp animated animated" data-wow-delay="540ms" style="visibility: visible; animation-delay: 540ms; animation-name: fadeInUp;">
     <div class="container-fluid">
@@ -522,7 +522,7 @@
                 @endif
 
         </div>
-</section> 
+</section>
 <!-- end of our Programmes -->
 <!-- End Upcoming Projects -->
 <style>
@@ -1351,6 +1351,7 @@
     </div>
 </section> <!-- Online Learning Section End -->
 <!-- Testimonial Section Start -->
+@if(!$testimonials->isEmpty())
 <section class="testimonial-sec bg-light">
     <div class="container-fluid">
         <div class="text-center mt-4">
@@ -1370,34 +1371,29 @@
                 <p>At ISICO, we empower individuals through skill-based training, real-world experience, and professional mentorship to build bright futures across India. </p>
             </div>
             <div class="col-lg-8 mt-5 mb-5">
-                <div class="slider-arrows"> <a href="javascript:;" class="arrow-btn btn-prev" data-slide="testimonial-slider"></a>
+                <div class="slider-arrows">
+                    <a href="javascript:;" class="arrow-btn btn-prev" data-slide="testimonial-slider"></a>
                     <div class="testimonial-slider row">
-                        <div class="testimonial-block col-12">
-                            <h6 class="fw-500 mb-16">From Zero Skills to Certified Technician!</h6>
-                            <p class="mb-24">"Joining ISICO was the turning point in my life. I enrolled in their Electrical Technician program without any background knowledge, but the hands-on training and industry exposure helped me land a job within two months of completing the course. Thank you ISICO for believing in me!" </p>
-                            <div class="d-flex align-items-center gap-12"> <img src="{{ asset('resource/web/assets/media/user/card-user-1.png')}}" class="block-user" alt="">
-                                <div>
-                                    <h6 class="fw-500 mb-4p">Rahul Kumar</h6>
-                                    <p class="subtitle dark-gray">Certified Technician</p>
+                        @foreach($testimonials as $testimonial)
+                            <div class="testimonial-block col-12">
+                                <h6 class="fw-500 mb-16">{{ $testimonial->title ?? 'User Feedback' }}</h6>
+                                <p class="mb-24">"{{ $testimonial->message }}"</p>
+                                <div class="d-flex align-items-center gap-12">
+                                    <img src="{{ asset($testimonial->image) }}" class="block-user" alt="{{ $testimonial->name }}">
+                                    <div>
+                                        <h6 class="fw-500 mb-4p">{{ $testimonial->name }}</h6>
+                                        <p class="subtitle dark-gray">{{ $testimonial->designation }}</p>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="testimonial-block col-12">
-                            <h6 class="fw-500 mb-16">ISICO Helped Me Build a Career in Fashion Design</h6>
-                            <p class="mb-24">"I always had a passion for design, but ISICO gave me the practical skills, portfolio, and industry insights I needed. Their faculty support and internship assistance helped me start my own small boutique. Highly recommend ISICO to anyone dreaming big!" </p>
-                            <div class="d-flex align-items-center gap-12"> <img src="{{ asset('resource/web/assets/media/user/card-user-2.png')}}" class="block-user" alt="">
-                                <div>
-                                    <h6 class="fw-500 mb-4p">Meera Sinha</h6>
-                                    <p class="subtitle dark-gray">Fashion Design Graduate</p>
-                                </div>
-                            </div>
-                        </div>
+                        @endforeach
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
+@endif
 <style>
     .Marquees {
       overflow: hidden;
@@ -1498,6 +1494,7 @@
       }
     }
 </style> <!-- Testimonial Section End -->
+@if($brands->isNotEmpty())
 <div class="text-center mt-5">
     <div class="d-inline-flex align-items-center mb-3"> <img src="{{ asset('resource/web/assets/media/hero/buld-vec.png')}}" class="me-2" alt="" style="width: 30px;">
         <p class="mb-0 fw-semibold text-dark">Our Partners</p>
@@ -1506,16 +1503,13 @@
 </div>
 <div class="Marquees">
     <div class="Marquee FirstRow">
-        <div class="marquee Item"><i class="bi bi-amazon"></i></div>
-        <div class="marquee Item"><i class="bi bi-microsoft"></i></div>
-        <div class="marquee Item"><i class="bi bi-apple"></i></div>
-        <div class="marquee Item"><i class="bi bi-google"></i></div>
-        <div class="marquee Item"><i class="bi bi-facebook"></i></div>
-        <div class="marquee Item"><i class="bi bi-twitter-x"></i></div>
-        <div class="marquee Item"><i class="bi bi-youtube"></i></div>
-        <div class="marquee Item"><i class="bi bi-linkedin"></i></div>
+        @foreach($brands as $brand)
+            <div class="marquee Item">
+                <img src="{{ asset($brand->image) }}" alt="{{ $brand->name }}" height="40">
+            </div>
+        @endforeach
     </div>
-    <div class="Marquee SecondRow">
+    {{-- <div class="Marquee SecondRow">
         <div class="marquee Item"><i class="bi bi-instagram"></i></div>
         <div class="marquee Item"><i class="bi bi-discord"></i></div>
         <div class="marquee Item"><i class="bi bi-github"></i></div>
@@ -1524,8 +1518,9 @@
         <div class="marquee Item"><i class="bi bi-behance"></i></div>
         <div class="marquee Item"><i class="bi bi-skype"></i></div>
         <div class="marquee Item"><i class="bi bi-telegram"></i></div>
-    </div>
+    </div> --}}
 </div> <!-- Main Sections -->
+@endif
 </div>
 
     <!-- content @e -->

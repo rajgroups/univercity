@@ -46,7 +46,6 @@
             <div class="col-md-4 mb-4">
                 <div class="card h-100">
                     <div class="card-body">
-                        <h5 class="card-title">{{ $item->title }}</h5>
                     @php
                         $imagePath = $item->item_type === 'project'
                             ? asset($item->image ?? 'uploads/projects/default.png')
@@ -55,11 +54,13 @@
 
                     <img src="{{ $imagePath }}" class="card-img-top" alt="{{ $item->title }}" style="height: 200px; object-fit: cover;">
 
+                        <h5 class="card-title mt-3">{{ $item->title }}</h5>
 
-
-                        <p class="mb-2"><strong>Type:</strong> {{ $item->type_label }}</p>
-                        <p class="mb-2"><strong>Category:</strong> {{ $item->category->name ?? '-' }}</p>
-                        <p>{{ \Illuminate\Support\Str::limit(strip_tags($item->description), 100) }}</p>
+                        <p style="text-indent: 35px;">{{ \Illuminate\Support\Str::limit(strip_tags($item->description), 100) }}</p>
+                        <div class="d-flex justify-content-between mt-2">
+                            <p class="mb-2"><strong>Type:</strong> {{ $item->type_label }}</p>
+                            <p class="mb-2"><strong>Category:</strong> {{ $item->category->name ?? '-' }}</p>
+                        </div>
                     </div>
                     <div class="card-footer bg-white border-top-0">
                         @php
