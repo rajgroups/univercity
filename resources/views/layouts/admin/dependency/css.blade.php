@@ -1,20 +1,20 @@
     <script src="{{ asset('resource/admin/assets/js/theme-script.js')}}" type="f02aaf728428538873e67490-text/javascript"></script>
 
 	<!-- Favicon -->
-	<link rel="shortcut icon" type="image/x-icon" href="{{ asset('resource/admin/assets/img/favicon.png')}}">
+	<link rel="shortcut icon" type="image/x-icon" href="{{ asset($defaultSettings->favicon ?? null)}}">
 
 	<!-- Apple Touch Icon -->
-	<link rel="apple-touch-icon" sizes="180x180" href="{{ asset('resource/admin/assets/img/apple-touch-icon.png')}}">
+	<link rel="apple-touch-icon" sizes="180x180" href="{{ asset($defaultSettings->favicon ?? null)}}">
 
 	<!-- Bootstrap CSS -->
 	<link rel="stylesheet" href="{{ asset('resource/admin/assets/css/bootstrap.min.css')}}">
 
 	<!-- Datetimepicker CSS -->
 	<link rel="stylesheet" href="{{ asset('resource/admin/assets/css/bootstrap-datetimepicker.min.css')}}">
-	
+
 	<!-- Datatable CSS -->
 	<link rel="stylesheet" href="{{ asset('resource/admin/assets/css/dataTables.bootstrap5.min.css')}}">
-	
+
 	<!-- animation CSS -->
 	<link rel="stylesheet" href="{{ asset('resource/admin/assets/css/animate.css')}}">
 

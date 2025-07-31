@@ -41,13 +41,13 @@ class AnnouncementController extends Controller
         $validated = $request->validate([
             'title'             => 'required|string|max:255',
             'slug'              => 'required|string|max:255|unique:announcement,slug',
-            'short_description' => 'required|string|max:255',
+            'short_description' => 'required|string|',
             'subtitle'          => 'nullable|string|max:255',
             'image'             => 'required|image|mimes:jpeg,png,jpg,webp|max:2048',
             'banner_image'      => 'required|image|mimes:jpeg,png,jpg,webp|max:2048',
             'type'              => 'required|in:1,2',
             'status'            => 'required|in:0,1',
-            'description'       => 'nullable|string|max:3000',
+            'description'       => 'nullable|string|',
             'points'            => 'nullable|array',
             'points.*'          => [
                 'nullable',
@@ -64,7 +64,7 @@ class AnnouncementController extends Controller
         $validated['status'] = $validated['status'];
 
         $validated['slug'] = Str::slug($validated['slug']);
-        
+
         // Handle file upload to public folder
         if ($request->hasFile('image')) {
             $image      = $request->file('image');

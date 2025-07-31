@@ -71,7 +71,7 @@
       <div class="row row-gap-5 mb-64">
         <div class="col-lg-4">
           <img src="{{ asset($defaultSettings->site_logo ?? null)}}" class="footer-logo mb-16" alt="">
-          <p class="dark-gray mb-32">{{ $defaultSettings->about_description ?? null}}</p>
+          <p class="dark-gray mb-32">{{ $defaultSettings->footer_text ?? null}}</p>
         </div>
         <div class="col-lg-8">
           <div class="link-wrapper">
@@ -106,12 +106,12 @@
                     class="fa fa-phone text-primary"></i> +(91) {{ $defaultSettings->footer_phone ?? null }}</a>
               </div>
               <div class="d-flex align-items-center gap-8">
-                <a href="mailto:{{ $defaultSettings->footer_email }}" class="h6 fw-400 black  hover-content"><i
-                    class="fa fa-envelope text-primary"></i> {{ $defaultSettings->footer_email ?? null }}</a>
+                <a href="mailto:{{ $defaultSettings->contact_email }}" class="h6 fw-400 black  hover-content"><i
+                    class="fa fa-envelope text-primary"></i> {{ $defaultSettings->contact_email ?? null }}</a>
               </div>
               <div class="d-flex align-items-center gap-8 mt-2">
                 <a href="#" class="h6 fw-400 black  hover-content"><i class="fa fa-map-location text-primary"></i>
-                  {{ $defaultSettings->footer_address ?? null }}</a>
+                  {{ $defaultSettings->contact_address ?? null }}</a>
               </div>
               <!-- Social Media Icons -->
               <div class="d-flex align-items-center gap-3 ms-3 mt-3">
