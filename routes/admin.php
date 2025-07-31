@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AnnouncementController;
 use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\BlogController;
+use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\CourseController;
 use App\Http\Controllers\auth\LoginController;
 use Illuminate\Support\Facades\Route;
@@ -11,11 +12,11 @@ use App\Http\Controllers\admin\DashboardController;
 use App\Http\Controllers\Admin\ProjectController;
 use App\Http\Controllers\Admin\SectorController;
 use App\Http\Controllers\Admin\SettingController;
+use App\Http\Controllers\Admin\TestimonialController;
 use App\Http\Controllers\admin\UserController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\RegisterController;
-
-
+use App\Models\Testimonial;
 
 Route::prefix('admin')->as('admin.')->group(function() {
 
@@ -55,6 +56,12 @@ Route::prefix('admin')->as('admin.')->group(function() {
         // Blog Routes
         Route::resource('blog',BlogController::class);
 
+        // Brand Routes
+        Route::resource('brand', BrandController::class);
+
+        // Testimonial Routes
+        Route::resource('testimonial', TestimonialController::class);
+        
         // Setting Home Page Settings Route
         Route::get('settings/home/edit',[SettingController::class,'editHomePage'])->name('setting.home.edit');
         Route::post('settings/home/update/{id}', [SettingController::class, 'homeUpdate'])->name('setting.home.update');

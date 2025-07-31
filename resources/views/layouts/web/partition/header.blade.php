@@ -222,7 +222,7 @@
                               {{-- Educational Programs --}}
                               <li>
                                 {{-- {{ route('programe') }} --}}
-                                <a href="">1. Educational Programs</a>
+                                <a href="{{ route('web.catalog') }}">1. Educational Programs</a>
                                 <ul class="sub-menu mt-5">
                                   {{-- {{ route('programe.details', $program->slug) }}" --}}
                                   @foreach ($educationPrograms as $program)
@@ -233,7 +233,7 @@
 
                               {{-- Skill Development Programs --}}
                               <li>
-                                <a href="#">2. Skill Development Programs</a>
+                                <a href="{{ route('web.catalog') }}">2. Skill Development Programs</a>
                                 <ul class="sub-menu mt-5">
                                   @foreach ($skillPrograms as $program)
                                     <li><a href="{{ route('web.catalog') }}">{{ $program->name }}</a></li>
@@ -243,7 +243,7 @@
 
                               {{-- CSR Initiatives --}}
                               <li>
-                                <a href="#">3. CSR Initiatives</a>
+                                <a href="{{ route('web.catalog') }}">3. CSR Initiatives</a>
                                 <ul class="sub-menu mt-5">
                                   @foreach ($csrPrograms as $program)
                                     <li><a href="{{ route('web.catalog') }}">{{ $program->name }}</a></li>
