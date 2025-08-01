@@ -1377,7 +1377,7 @@
                         @foreach($testimonials as $testimonial)
                             <div class="testimonial-block col-12">
                                 <h6 class="fw-500 mb-16">{{ $testimonial->title ?? 'User Feedback' }}</h6>
-                                <p class="mb-24">"{{ $testimonial->message }}"</p>
+                                <p class="mb-24">"{{ Str::limit($testimonial->comment, 400, '...') }}"</p>
                                 <div class="d-flex align-items-center gap-12">
                                     <img src="{{ asset($testimonial->image) }}" class="block-user" alt="{{ $testimonial->name }}">
                                     <div>
