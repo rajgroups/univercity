@@ -90,7 +90,8 @@
         <div class="container-fluid">
           <div class="row p-2 bg-white text-dark justify-content-between align-items-center">
             <div class="col-md-6 text-center-sm">
-              <img src="https://www.skillindiadigital.gov.in/assets/new-ux-img/india-flag.svg" alt="" srcset=""> |
+              {{-- <img src="https://www.skillindiadigital.gov.in/assets/new-ux-img/india-flag.svg" alt="" srcset=""> | --}}
+              <img src="{{ asset('resource/web/assets/media/vector/india-flag.svg') }}" alt="flag" srcset=""> |
               Indian Skill Institute
             </div>
             <div class="col-md-6 d-flex justify-content-between-sm" style="align-items: center;">
@@ -128,11 +129,12 @@
                 </div>
                 <!-- Logos -->
                 <div
-                  class="col-md-4 d-flex align-items-center gap-3 order-2 order-md-1 justify-content-center justify-content-md-start">
-                  <img src="https://www.skillindiadigital.gov.in/assets/new-ux-img/minstry-bigsize-logo.svg"
-                    alt="Govt Logo" style="height: 44px;">
-                  <img src="https://www.skillindiadigital.gov.in/assets/new-ux-img/skill-india-big-logo.svg"
-                    alt="Skill India Logo" style="height: 44px;">
+                  class="col-md-4">
+                  {{-- class="col-md-4 d-flex align-items-center gap-3 order-2 order-md-1 justify-content-center justify-content-md-start"> --}}
+                 <a href="/"> <img src="{{ asset($defaultSettings->site_logo ?? null) }}"
+                    alt="{{ $defaultSettings->site_title ?? null }}" style="height: 92px;"></a>
+                  {{-- <img src="https://www.skillindiadigital.gov.in/assets/new-ux-img/skill-india-big-logo.svg"
+                    alt="Skill India Logo" style="height: 44px;"> --}}
                 </div>
                 <!-- Search Bar (Visible on md+ screens only) -->
                 <div class="col-md-4 my-2 d-none d-md-block order-md-2 mt-2">

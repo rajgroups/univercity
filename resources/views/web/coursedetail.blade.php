@@ -434,14 +434,14 @@
                                                     <a href="https://twitter.com/intent/tweet?url={{ $currentUrl }}&text={{ $shareText }}"
                                                         target="_blank">
                                                         <img class="links-icon"
-                                                            src="{{ asset('resource/web/assets/media/vector/twitter.png') }}"
+                                                            src="{{ asset('resource/web/assets/media/vector/twitter.webp') }}"
                                                             alt="Twitter">
                                                     </a>
 
                                                     {{-- Instagram: Not directly shareable via URL --}}
                                                     <a href="https://www.instagram.com/" target="_blank">
                                                         <img class="links-icon"
-                                                            src="{{ asset('resource/web/assets/media/vector/instagram.png') }}"
+                                                            src="{{ asset('resource/web/assets/media/vector/instagram.webp') }}"
                                                             alt="Instagram">
                                                     </a>
                                                 </div>

@@ -43,12 +43,21 @@
                         <div id="SpacingOne" class="accordion-collapse collapse show">
                             <div class="accordion-body border-top">
                                 <div class="row mb-3">
-                                    <div class="col-md-6">
+                                    {{-- <div class="col-md-6">
                                         <label for="title" class="form-label">Blog Title <span
                                                 class="text-danger">*</span></label>
                                         <input type="text" name="title"
                                             class="form-control @error('title') is-invalid @enderror" id="title"
                                             value="{{ old('title') }}" required>
+                                        @error('title')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div> --}}
+                                    <div class="col-md-6">
+                                        <label for="title" class="form-label">Blog Title <span class="text-danger">*</span></label>
+                                        <input type="text" name="title"
+                                            class="form-control @error('title') is-invalid @enderror"
+                                            id="title" value="{{ old('title') }}" required>
                                         @error('title')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -104,7 +113,7 @@
                                     </div>
                                 </div>
 
-                                <div class="mb-3">
+                                {{-- <div class="mb-3">
                                     <label for="slug" class="form-label">Slug <span class="text-danger">*</span></label>
                                     <input type="text" name="slug"
                                         class="form-control @error('slug') is-invalid @enderror" id="slug"
@@ -112,8 +121,16 @@
                                     @error('slug')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
+                                </div> --}}
+                                <div class="mb-3">
+                                    <label for="slug" class="form-label">Slug <span class="text-danger">*</span></label>
+                                    <input type="text" name="slug"
+                                        class="form-control @error('slug') is-invalid @enderror"
+                                        id="slug" value="{{ old('slug') }}" required>
+                                    @error('slug')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
-
                                 <div class="row mb-3">
                                     <div class="col-md-6">
                                         <label for="image" class="form-label">Thumbnail Image</label>
@@ -248,4 +265,17 @@
             }
         });
     </script>
+    {{-- slug --}}
+    <script>
+    document.getElementById('title').addEventListener('input', function () {
+        const title = this.value;
+        const slug = title
+            .toLowerCase()
+            .replace(/[^a-z0-9\s-]/g, '')    // remove special chars
+            .trim()
+            .replace(/\s+/g, '-')            // replace spaces with hyphens
+            .replace(/-+/g, '-');            // collapse multiple hyphens
+        document.getElementById('slug').value = slug;
+    });
+</script>
 @endpush

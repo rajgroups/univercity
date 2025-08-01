@@ -42,6 +42,11 @@ class WebController extends Controller
 
         // Brands
         $brands = Brand::where('status',1)->latest()->limit(10)->get();
+        // blog
+        $blogs = Blog::with(['category'])->where('status', 1)
+            ->where('type', 2)
+            ->latest()
+            ->get();
 
         return view('web.index',compact(
             'ongoingProjects',
@@ -50,7 +55,8 @@ class WebController extends Controller
             'schemes',
             'banners',
             'testimonials',
-            'brands'
+            'brands',
+            'blogs'
         ));
     }
 

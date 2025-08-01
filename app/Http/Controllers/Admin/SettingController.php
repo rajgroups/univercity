@@ -9,7 +9,7 @@ use App\Models\Settings;
 use App\Models\Project;
 use Illuminate\Support\Facades\File;
 use Illuminate\Http\Request;
-use Illuminate\Suppot/;
+use Illuminate\Support;
 
 class SettingController extends Controller
 {

@@ -15,7 +15,7 @@
                 class="d-flex align-items-center justify-content-sm-between justify-content-center row-gap-4 flex-wrap mb-24">
                 <h4 class="text-center">Please select sectoy to expore skill courses</h4>
                 <div class="d-flex align-items-center gap-8">
-                    <p class="flex-shrink-0">Sort By:</p>
+                    <p class="flex-shrink-0 m-4">Sort By:</p>
                     <div class="w-100 drop-container">
                         <div class="wrapper-dropdown form-control" id="dropdown-l2">
                             <div class=" d-flex align-items-center justify-content-between gap-64">

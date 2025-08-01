@@ -66,6 +66,7 @@
                             <th>S.No</th>
                             <th>Title</th>
                             <th>Project Slug</th>
+                            <th>Type</th>
                             <th>Created On</th>
                             <th>Status</th>
                             <th class="no-sort">Action</th>
@@ -77,6 +78,7 @@
                                 <td>{{ $loop->index + 1 }}</td>
                                 <td><span class="text-gray-9">{{ $blog->title }}</span></td>
                                 <td>{{ $blog->slug }}</td>
+                                <td>{{ $blog->type }}</td>
                                 <td>{{ $blog->created_at->format('d M Y') }}</td>
 
                                 <td>

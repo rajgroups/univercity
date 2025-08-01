@@ -123,7 +123,30 @@
                                 <div class="post-inner">
                                     <div class="carousel-inner-data">
                                         <ul>
-                                            <li>
+                                           {{-- @dd($blogs) --}}
+                                            @foreach($blogs as $blog)
+                                                    <li>
+                                                        <div class="post">
+                                                            <div class="post-date">
+                                                                <p>{{ \Carbon\Carbon::parse($blog->created_at)->format('d') }}</p>
+                                                                <span>{{ \Carbon\Carbon::parse($blog->created_at)->format('F') }}</span>
+                                                            </div>
+                                                            <div class="file-box">
+                                                                <i class="far fa-folder-open"></i>
+                                                                <p>{{ $blog->title ?? null }}</p>
+                                                            </div>
+                                                            <h5 class="text-light-gray">
+                                                                <a href="{{ route('web.blog.show', [$blog->category->slug, $blog->slug]) }}">
+                                                                    {!! $blog->short_description !!}
+                                                                </a>
+                                                            </h5>
+                                                        </div>
+                                                    </li>
+                                            @endforeach
+
+
+
+                                            {{-- <li>
                                                 <div class="post">
                                                     <div class="post-date">
                                                         <p>06</p> <span>july</span>
@@ -133,8 +156,8 @@
                                                     </div>
                                                     <h5 class="text-light-gray"><a href="#">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</a> </h5>
                                                 </div>
-                                            </li>
-                                            <li>
+                                            </li> --}}
+                                            {{-- <li>
                                                 <div class="post">
                                                     <div class="post-date">
                                                         <p>25</p> <span>April</span>
@@ -199,7 +222,7 @@
                                                     </div>
                                                     <h5 class="text-light-gray"><a href="#">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</a> </h5>
                                                 </div>
-                                            </li>
+                                            </li> --}}
                                         </ul>
                                     </div>
                                 </div>
@@ -495,12 +518,12 @@
 
                                                 {{-- Twitter (X) Share --}}
                                                 <a href="https://twitter.com/intent/tweet?url={{ $currentUrl }}&text={{ $shareText }}" target="_blank">
-                                                    <img class="links-icon" src="{{ asset('resource/web/assets/media/vector/twitter.png') }}" alt="Twitter">
+                                                    <img class="links-icon" src="{{ asset('resource/web/assets/media/vector/twitter.webp') }}" alt="Twitter">
                                                 </a>
 
                                                 {{-- Instagram: Not directly shareable via URL --}}
                                                 <a href="https://www.instagram.com/" target="_blank">
-                                                    <img class="links-icon" src="{{ asset('resource/web/assets/media/vector/instagram.png') }}" alt="Instagram">
+                                                    <img class="links-icon" src="{{ asset('resource/web/assets/media/vector/instagram.webp') }}" alt="Instagram">
                                                 </a>
                                             </div>
                                     </div>
@@ -1015,12 +1038,12 @@
 
                                                     {{-- Twitter (X) Share --}}
                                                     <a href="https://twitter.com/intent/tweet?url={{ $currentUrl }}&text={{ $shareText }}" target="_blank">
-                                                        <img class="links-icon" src="{{ asset('resource/web/assets/media/vector/twitter.png') }}" alt="Twitter">
+                                                        <img class="links-icon" src="{{ asset('resource/web/assets/media/vector/twitter.webp') }}" alt="Twitter">
                                                     </a>
 
                                                     {{-- Instagram: Not directly shareable via URL --}}
                                                     <a href="https://www.instagram.com/" target="_blank">
-                                                        <img class="links-icon" src="{{ asset('resource/web/assets/media/vector/instagram.png') }}" alt="Instagram">
+                                                        <img class="links-icon" src="{{ asset('resource/web/assets/media/vector/instagram.webp') }}" alt="Instagram">
                                                     </a>
                                                 </div>
 

@@ -10,7 +10,7 @@
             <!-- Couse Section Start -->
             <section class="couses-sec mb-120">
                 <div class="container-fluid">
-                    <h4 class="text-center mb-2">Please select sectoy to expore skill courses</h4>
+                    <h4 class="text-center mb-5">Please select sectoy to expore skill courses</h4>
                     <form method="GET" action="{{ route('web.sector') }}">
                         @csrf
                         <div class="wrapper">
@@ -77,7 +77,7 @@
                              <div class="col-lg-3 col-md-6">
                                 <div class="course-card">
                                     <a href="{{ route('web.course.index', ['sectors[]' => $item->id]) }}" class="card-img">
-                                        <img src="{{ asset($item->image)}}" alt="">
+                                        <img src="{{ asset($item->image)}}" alt="img">
                                     </a>
                                     <div class="card-content">
                                         <a href="{{ route('web.course.index', ['sectors[]' => $item->id]) }}" class="h5 fw-500 mb-16">{{ $item->name }}</a>

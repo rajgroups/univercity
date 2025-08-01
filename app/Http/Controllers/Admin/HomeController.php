@@ -10,12 +10,15 @@ use App\Models\admin;
 use App\Models\receipt;
 use App\Models\Unit;
 use App\Models\Order;
-use App\Models\Category;
 use App\Models\Subcategory;
 use App\Models\Product;
 use App\Models\Customers;
 use App\Models\Store;
-
+use App\Models\Category;
+use App\Models\Sector;
+use App\Models\Course;
+use App\Models\Project;
+use App\Models\Blog;
 
 class HomeController extends Controller
 {
@@ -26,16 +29,27 @@ class HomeController extends Controller
 
     public function index()
     {
-            return view('admin.home', [
-            // 'totalOrders' => Order::count(),
+          return view('admin.home', [
+        'totalCategories' => Category::count(),
+        'activeCategories' => Category::where('status', 1)->count(),
+        'inactiveCategories' => Category::where('status', 0)->count(),
 
-                'totalCategories', 'activeCategories', 'inactiveCategories',
-                'totalSectors', 'activeSectors', 'inactiveSectors',
-                'totalCourses', 'activeCourses', 'inactiveCourses',
-                'totalProjects', 'activeProjects', 'inactiveProjects',
-                'totalBlogs', 'activeBlogs', 'inactiveBlogs',
+        'totalSectors' => Sector::count(),
+        'activeSectors' => Sector::where('status', 1)->count(),
+        'inactiveSectors' => Sector::where('status', 0)->count(),
 
-        ]);
+        'totalCourses' => Course::count(),
+        'activeCourses' => Course::where('status', 1)->count(),
+        'inactiveCourses' => Course::where('status', 0)->count(),
+
+        'totalProjects' => Project::count(),
+        'activeProjects' => Project::where('status', 1)->count(),
+        'inactiveProjects' => Project::where('status', 0)->count(),
+
+        'totalBlogs' => Blog::count(),
+        'activeBlogs' => Blog::where('status', 1)->count(),
+        'inactiveBlogs' => Blog::where('status', 0)->count(),
+    ]);
     }
 
     public function ChangePasswordForm(Request $request){
@@ -57,7 +71,7 @@ class HomeController extends Controller
         $company->password = Hash::make($request->new_password);
         $company->save();
 
-        return back()->with('success', 'Password successfully changed.');
+        return back()->with('success', 'Password successfully changed');
     }
 
     public function showSettingsForm(){

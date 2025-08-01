@@ -48,7 +48,7 @@
 			<div class="sidebar-inner slimscroll">
 				<div id="sidebar-menu" class="sidebar-menu">
 					<ul>
-                        
+
 						<li class="submenu-open">
 							<h6 class="submenu-hdr">Main</h6>
 							<ul>
@@ -57,7 +57,7 @@
 								</li>
 							</ul>
 						</li>
-                        
+
                        <li class="submenu-open">
 							<h6 class="submenu-hdr">Module</h6>
 							<ul>
@@ -99,8 +99,8 @@
 								<li class="submenu">
 									<a href="javascript:void(0);" class=""><i data-feather="life-buoy"></i><span>Brands</span><span class="menu-arrow"></span></a>
 									<ul style="display: none;">
-										<li><a href="{{ route('admin.brand.index') }}">Testimonial List</a></li>
-										<li><a href="{{ route('admin.brand.create') }}">Add Testimonial</a></li>
+										<li><a href="{{ route('admin.brand.index') }}">Brand List</a></li>
+										<li><a href="{{ route('admin.brand.create') }}">Add Brand</a></li>
 									</ul>
 								</li>
 							</ul>
