@@ -75,19 +75,22 @@
         </div>
         <div class="col-lg-8">
           <div class="link-wrapper">
-            <div>
-              <h5 class="fw-500 mb-24">USEFUL LINKS</h5>
-              <ul class="unstyled">
-                <li class="link mb-12"><a href="/"><i class="fa fa-arrow-alt-circle-right"></i> Home</a></li>
-                <li class="link mb-12"><a href="/about"><i class="fa fa-arrow-alt-circle-right"></i> About Us</a></li>
-                <li class="link mb-12"><a href="/contact"><i class="fa fa-arrow-alt-circle-right"></i> Contact Us</a></li>
-                <li class="link mb-12"><a href="#"><i class="fa fa-arrow-alt-circle-right"></i> Donate Now</a></li>
-                <li class="link mb-12"><a href="#"><i class="fa fa-arrow-alt-circle-right"></i> NTI
-                    Competetions/Events</a>
-                </li>
-              </ul>
-            </div>
-            <div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div>
+                        <h5 class="fw-500 mb-24">USEFUL LINKS</h5>
+                        <ul class="unstyled">
+                            <li class="link mb-12"><a href="/"><i class="fa fa-arrow-alt-circle-right"></i> Home</a></li>
+                            <li class="link mb-12"><a href="/about"><i class="fa fa-arrow-alt-circle-right"></i> About Us</a></li>
+                            <li class="link mb-12"><a href="/contact"><i class="fa fa-arrow-alt-circle-right"></i> Contact Us</a></li>
+                            <li class="link mb-12"><a href="#"><i class="fa fa-arrow-alt-circle-right"></i> Donate Now</a></li>
+                            <li class="link mb-12"><a href="#"><i class="fa fa-arrow-alt-circle-right"></i> NTI
+                                Competetions/Events</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            <div class="col-md-4">
               <h5 class="fw-500 mb-24">USEFUL LINKS</h5>
               <ul class="unstyled">
                 <li class="link mb-12"><a href="#"><i class="fa fa-arrow-alt-circle-right"></i> Initiatives</a></li>
@@ -99,7 +102,7 @@
                 </li>
               </ul>
             </div>
-            <div class="">
+            <div class="col-md-4">
               <h5 class="fw-600 mb-24">CONTACT DETALIS</h5>
               <div class="d-flex align-items-center gap-8 mb-12">
                 <a href="tel:+91{{ $defaultSettings->footer_phone ?? null }}" class="h6 fw-400 black hover-content"> <i
@@ -131,6 +134,7 @@
                   <i class="fab fa-youtube"></i>
                 </a>
               </div>
+            </div>
             </div>
           </div>
         </div>
