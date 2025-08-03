@@ -1,4 +1,6 @@
 <?php
+
+use App\Http\Controllers\web\EnquiryController;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
@@ -95,3 +97,6 @@ Route::get('/event', function () {
     // For Blog Catelog
     Route::get('/blogs', [WebController::class, 'blog'])->name('web.blog.filter');
     Route::get('/blogs/{categoryslug}/{slug}', [WebController::class, 'blogShow'])->name('web.blog.show');
+
+    // For Enquiry Mails
+    Route::post('/send-enquiry',[EnquiryController::class,'store'])->name('web.enquiry');

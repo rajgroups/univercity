@@ -6,156 +6,177 @@
     $skillPrograms = Category::where('type', '2')->where('status', 1)->get();
     $csrPrograms = Category::where('type', '3')->where('status', 1)->get();
 
-    $collaborations = Blog::where('type','3')->where('status', 1)->get();
+    $collaborations = Blog::where('type', '3')->where('status', 1)->get();
 @endphp
-  <style>
+<style>
     #preloader {
-      position: fixed;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 9999;
-      background-color: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 9999;
+        background-color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     .zip-loader img {
-      width: 100px;
-      /* adjust size as needed */
-      height: auto;
+        width: 100px;
+        /* adjust size as needed */
+        height: auto;
     }
 
     @media (max-width: 767.98px) {
-      .col-md-4.d-flex.align-items-center.gap-3.order-2.order-md-1.justify-content-center.justify-content-md-start {
-        display: flex !important;
-        margin-top: 10px;
-      }
+        .col-md-4.d-flex.align-items-center.gap-3.order-2.order-md-1.justify-content-center.justify-content-md-start {
+            display: flex !important;
+            margin-top: 10px;
+        }
 
-      .justify-content-between-sm {
-        justify-content: space-between !important;
-      }
+        .justify-content-between-sm {
+            justify-content: space-between !important;
+        }
 
-      .text-center-sm {
-        text-align: center;
-      }
+        .text-center-sm {
+            text-align: center;
+        }
 
-      .d-none-tblet {
-        display: none;
-      }
+        .d-none-tblet {
+            display: none;
+        }
     }
 
     @media only screen and (min-width: 768px) {
-      .d-lg-block-one {
-        display: none;
-      }
-
-      @media only screen and (min-width: 992px) {
         .d-lg-block-one {
-          display: inline-block;
+            display: none;
         }
-      }
+
+        @media only screen and (min-width: 992px) {
+            .d-lg-block-one {
+                display: inline-block;
+            }
+        }
     }
 
     .swiper {
-      width: 100%;
-      padding-top: 50px;
-      padding-bottom: 50px;
+        width: 100%;
+        padding-top: 50px;
+        padding-bottom: 50px;
     }
 
     .swiper-slide {
-      background-position: center;
-      background-size: cover;
-      width: 300px;
-      height: auto;
+        background-position: center;
+        background-size: cover;
+        width: 300px;
+        height: auto;
     }
 
     .swiper-slide img {
-      display: block;
-      width: 100%;
+        display: block;
+        width: 100%;
     }
-  </style>
-  <!-- Main Wrapper Start -->
-  <div id="scroll-container" class="main-wrapper">
+</style>
+<!-- Main Wrapper Start -->
+<div id="scroll-container" class="main-wrapper">
     <!-- Header Menu Start -->
     <div class="header-wrapper">
-      <div class="header-top">
-        <div class="container-fluid">
-          <p class="white"> Indian Skill Institute Co-operation (ISICO)</p>
-        </div>
-      </div>
-      <div class="main-header" style="background-color: #fafafa;border-bottom: 1px solid rgb(202, 202, 202);">
-        <div class="container-fluid">
-          <div class="row p-2 bg-white text-dark justify-content-between align-items-center">
-            <div class="col-md-6 text-center-sm">
-              {{-- <img src="https://www.skillindiadigital.gov.in/assets/new-ux-img/india-flag.svg" alt="" srcset=""> | --}}
-              <img src="{{ asset('resource/web/assets/media/vector/india-flag.svg') }}" alt="flag" srcset=""> |
-              Indian Skill Institute
+        <div class="header-top">
+            <div class="container-fluid">
+                <p class="white"> Indian Skill Institute Co-operation (ISICO)</p>
             </div>
-            <div class="col-md-6 d-flex justify-content-between-sm" style="align-items: center;">
-              <p class="p-2 d-none d-lg-block">Skip To Main Content</p>
-              <div class="item p-2">
-                <i class="bi bi-badge-ad p-2"></i>
-              </div>
-              <div class="item p-2">
-                <i class="bi bi-geo-alt-fill"></i> Chennai
-              </div>
-              <div class="item p-2 text-light-gray">
-                <i class="bi bi-house-fill"></i> Home
-              </div>
-              <div class="item p-2 text-light-gray">
-                <i class="bi bi-three-dots-vertical"></i> More
-              </div>
-            </div>
-          </div>
         </div>
-      </div>
-      <header class="main-menu">
-        <div class="header-section">
-          <div class="container-fluid" style="background-color: #fafafa;border-bottom: 0px solid rgb(202, 202, 202);">
-            <div class="hero-topbar-block py-2 bg-white"
-              style="background-color: #fafafa;border-bottom: 0px solid rgb(202, 202, 202);">
-              <div class="row align-items-center justify-content-between gy-2">
-                <!-- Search Bar (Always First on Mobile) -->
-                <div class="col-12 d-block d-md-none order-1">
-                  <div class="input-group">
-                    <span class="input-group-text bg-white border-end-0">
-                      <i class="fa fa-search"></i>
-                    </span>
-                    <input type="text" class="form-control border-start-0" placeholder="Search Skill Courses">
-                  </div>
+        <div class="main-header" style="background-color: #fafafa;border-bottom: 1px solid rgb(202, 202, 202);">
+            <div class="container-fluid">
+                <div class="row p-2 bg-white text-dark justify-content-between align-items-center">
+                    <div class="col-md-6 text-center-sm">
+                        {{-- <img src="https://www.skillindiadigital.gov.in/assets/new-ux-img/india-flag.svg" alt="" srcset=""> | --}}
+                        <img src="{{ asset('resource/web/assets/media/vector/india-flag.svg') }}" alt="flag"
+                            srcset=""> |
+                        Indian Skill Institute
+                    </div>
+                    <div class="col-md-6 d-flex justify-content-between-sm" style="align-items: center;">
+                        <p class="p-2 d-none d-lg-block">Skip To Main Content</p>
+                        <div class="item p-2">
+                            <i class="bi bi-badge-ad p-2"></i>
+                        </div>
+                        <div class="item p-2">
+                            <i class="bi bi-geo-alt-fill"></i> Chennai
+                        </div>
+                        <div class="item p-2 text-light-gray">
+                            <i class="bi bi-house-fill"></i> Home
+                        </div>
+                        <div class="item p-2 text-light-gray">
+                            <i class="bi bi-three-dots-vertical"></i> More
+                        </div>
+                    </div>
                 </div>
-                <!-- Logos -->
-                <div
-                  class="col-md-4">
-                  {{-- class="col-md-4 d-flex align-items-center gap-3 order-2 order-md-1 justify-content-center justify-content-md-start"> --}}
-                 <a href="/"> <img src="{{ asset($defaultSettings->site_logo ?? null) }}"
-                    alt="{{ $defaultSettings->site_title ?? null }}" style="height: 92px;"></a>
-                  {{-- <img src="https://www.skillindiadigital.gov.in/assets/new-ux-img/skill-india-big-logo.svg"
+            </div>
+        </div>
+        <header class="main-menu">
+            <div class="header-section">
+                <div class="container-fluid"
+                    style="background-color: #fafafa;border-bottom: 0px solid rgb(202, 202, 202);">
+                    <div class="hero-topbar-block py-2 bg-white"
+                        style="background-color: #fafafa;border-bottom: 0px solid rgb(202, 202, 202);">
+                        <div class="row align-items-center justify-content-between gy-2">
+                            <!-- Search Bar (Always First on Mobile) -->
+                            <form method="GET" action="{{ route('web.blog.filter') }}">
+                                <div class="col-12 d-block d-md-none order-1">
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-white border-end-0">
+                                            <i class="fa fa-search"></i>
+                                        </span>
+                                        <input type="text" name="search" class="form-control border-start-0"
+                                            placeholder="Search Skill Courses" value="{{ request('search') }}">
+                                        <button type="submit" class="btn btn-outline-secondary d-none">Search</button>
+                                    </div>
+                                </div>
+                            </form>
+
+
+                            <!-- Logos -->
+                            <div class="col-md-4">
+                                {{-- class="col-md-4 d-flex align-items-center gap-3 order-2 order-md-1 justify-content-center justify-content-md-start"> --}}
+                                <a href="/"> <img src="{{ asset($defaultSettings->site_logo ?? null) }}"
+                                        alt="{{ $defaultSettings->site_title ?? null }}" style="height: 92px;"></a>
+                                {{-- <img src="https://www.skillindiadigital.gov.in/assets/new-ux-img/skill-india-big-logo.svg"
                     alt="Skill India Logo" style="height: 44px;"> --}}
+                            </div>
+                            <!-- Search Bar (Visible on md+ screens only) -->
+                            <div class="col-md-4 my-2 d-none d-md-block order-md-2 mt-2">
+                                <form method="GET" action="{{ route('web.blog.filter') }}">
+                                    <div class="input-group mt-2 rounded-1">
+                                        <span class="input-group-text bg-white border-end-0">
+                                            <i class="fa fa-search"></i>
+                                        </span>
+                                        <input type="text" name="search" class="form-control border-start-0 p-2"
+                                            placeholder="Search Skill Courses" value="{{ request('search') }}">
+                                    </div>
+                            </div>
+
+                            {{-- Preserve filters if needed --}}
+                            @if (request()->has('category_id'))
+                                <input type="hidden" name="category_id" value="{{ request('category_id') }}">
+                            @endif
+                            @if (request()->has('type'))
+                                <input type="hidden" name="type" value="{{ request('type') }}">
+                            @endif
+                            </form>
+
+                            <!-- Right Buttons -->
+                            <div class="col-md-4 text-end gap-3 order-3 d-none d-md-block">
+                                <a href="#" class="btn btn-outline-success btn-sm d-none-tblet d-lg-block-one">
+                                    <i class="fa fa-tachometer-alt me-1 p-2"></i> Dashboards
+                                </a>
+                                <button class="btn btn-warning text-white btn-sm fw-bold p-2">REGISTER</button>
+                                <button class="btn btn-outline-warning btn-sm fw-bold p-2">LOGIN</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <!-- Search Bar (Visible on md+ screens only) -->
-                <div class="col-md-4 my-2 d-none d-md-block order-md-2 mt-2">
-                  <div class="input-group mt-2 rounded-1">
-                    <span class="input-group-text bg-white border-end-0"><i class="fa fa-search"></i></span>
-                    <input type="text" class="form-control border-start-0 p-2" placeholder="Search Skill Courses">
-                  </div>
-                </div>
-                <!-- Right Buttons -->
-                <div class="col-md-4 text-end gap-3 order-3 d-none d-md-block">
-                  <a href="#" class="btn btn-outline-success btn-sm d-none-tblet d-lg-block-one">
-                    <i class="fa fa-tachometer-alt me-1 p-2"></i> Dashboards
-                  </a>
-                  <button class="btn btn-warning text-white btn-sm fw-bold p-2">REGISTER</button>
-                  <button class="btn btn-outline-warning btn-sm fw-bold p-2">LOGIN</button>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="container-fluid">
-            <!-- <div class="hero-topbar-block">
+                <div class="container-fluid">
+                    <!-- <div class="hero-topbar-block">
                      <div class="row align-items-center">
                        <div class="col-xl-5 col-lg-3 col-1">
                          <a href="#" class="header-logo d-lg-flex d-none">
@@ -199,110 +220,129 @@
                        </div>
                      </div>
                      </div> -->
-            <div style="border-top: 1px solid #d8d8dc;" class="row align-items-center">
-              <div class="col-lg-8 col-6 mt-3">
-                <!-- <a href="#" class="header-logo d-lg-none d-block">
+                    <div style="border-top: 1px solid #d8d8dc;" class="row align-items-center">
+                        <div class="col-lg-8 col-6 mt-3">
+                            <!-- <a href="#" class="header-logo d-lg-none d-block">
                            <img src="assets/media/logo.png" alt="">
                            </a> -->
-                <div
-                  class="d-flex align-items-center justify-content-center justify-content-md-end gap-3 order-3 d-block d-md-none">
-                  <button class="btn btn-warning text-white btn-sm fw-bold">REGISTER</button>
-                  <button class="btn btn-outline-warning btn-sm fw-bold">LOGIN</button>
-                </div>
-                <nav class="navigation d-md-flex d-none">
-                  <div class="menu-button-right">
-                    <div class="main-menu__nav">
-                      <ul class="main-menu__list">
-                        <li>
-                          <a href="/" class="active"> Home</a>
-                        </li>
-                        <li><a href="{{ route('about') }}"> About</a></li>
-                          <li class="dropdown">
-                            <a href="javascript:void(0);">Initiatives</a>
-                            <ul class="sub-menu">
+                            <div
+                                class="d-flex align-items-center justify-content-center justify-content-md-end gap-3 order-3 d-block d-md-none">
+                                <button class="btn btn-warning text-white btn-sm fw-bold">REGISTER</button>
+                                <button class="btn btn-outline-warning btn-sm fw-bold">LOGIN</button>
+                            </div>
+                            <nav class="navigation d-md-flex d-none">
+                                <div class="menu-button-right">
+                                    <div class="main-menu__nav">
+                                        <ul class="main-menu__list">
+                                            <li>
+                                                <a href="/" class="active"> Home</a>
+                                            </li>
+                                            <li><a href="{{ route('about') }}"> About</a></li>
+                                            <li class="dropdown">
+                                                <a href="javascript:void(0);">Initiatives</a>
+                                                <ul class="sub-menu">
 
-                              {{-- Educational Programs --}}
-                              <li>
-                                {{-- {{ route('programe') }} --}}
-                                <a href="{{ route('web.catalog') }}">1. Educational Programs</a>
-                                <ul class="sub-menu mt-5">
-                                  {{-- {{ route('programe.details', $program->slug) }}" --}}
-                                  @foreach ($educationPrograms as $program)
-                                    <li><a href="{{ route('web.catalog') }}">{{ $program->name }}</a></li>
-                                  @endforeach
-                                </ul>
-                              </li>
+                                                    {{-- Educational Programs --}}
+                                                    <li>
+                                                        {{-- {{ route('programe') }} --}}
+                                                        <a href="{{ route('web.catalog') }}">1. Educational
+                                                            Programs</a>
+                                                        <ul class="sub-menu mt-5">
+                                                            {{-- {{ route('programe.details', $program->slug) }}" --}}
+                                                            @foreach ($educationPrograms as $program)
+                                                                <li><a
+                                                                        href="{{ route('web.catalog') }}">{{ $program->name }}</a>
+                                                                </li>
+                                                            @endforeach
+                                                        </ul>
+                                                    </li>
 
-                              {{-- Skill Development Programs --}}
-                              <li>
-                                <a href="{{ route('web.catalog') }}">2. Skill Development Programs</a>
-                                <ul class="sub-menu mt-5">
-                                  @foreach ($skillPrograms as $program)
-                                    <li><a href="{{ route('web.catalog') }}">{{ $program->name }}</a></li>
-                                  @endforeach
-                                </ul>
-                              </li>
+                                                    {{-- Skill Development Programs --}}
+                                                    <li>
+                                                        <a href="{{ route('web.catalog') }}">2. Skill Development
+                                                            Programs</a>
+                                                        <ul class="sub-menu mt-5">
+                                                            @foreach ($skillPrograms as $program)
+                                                                <li><a
+                                                                        href="{{ route('web.catalog') }}">{{ $program->name }}</a>
+                                                                </li>
+                                                            @endforeach
+                                                        </ul>
+                                                    </li>
 
-                              {{-- CSR Initiatives --}}
-                              <li>
-                                <a href="{{ route('web.catalog') }}">3. CSR Initiatives</a>
-                                <ul class="sub-menu mt-5">
-                                  @foreach ($csrPrograms as $program)
-                                    <li><a href="{{ route('web.catalog') }}">{{ $program->name }}</a></li>
-                                  @endforeach
-                                </ul>
-                              </li>
+                                                    {{-- CSR Initiatives --}}
+                                                    <li>
+                                                        <a href="{{ route('web.catalog') }}">3. CSR Initiatives</a>
+                                                        <ul class="sub-menu mt-5">
+                                                            @foreach ($csrPrograms as $program)
+                                                                <li><a
+                                                                        href="{{ route('web.catalog') }}">{{ $program->name }}</a>
+                                                                </li>
+                                                            @endforeach
+                                                        </ul>
+                                                    </li>
 
-                            </ul>
-                          </li>
-                        <li class="dropdown">
-                          <a href="{{ route('web.sector') }}"> Sectors </a>
-                        </li>
-                        <li class="dropdown">
-                          <a href="javascript:void(0);">Collaborations</a>
-                          <ul>
-                            @foreach ($collaborations as $collaboration)
-                              <li><a href="{{ route('web.blog.filter', ['category_id' => '', 'type' => 3]) }}">{{ $collaboration->menu_title }}</a></li>
-                            @endforeach
-                          </ul>
-                        </li>
-                        <li class="dropdown">
-                          <a href="javascript:void(0);">Resources </a>
-                          <ul>
-                            <li><a href="{{ route('web.blog.filter', ['category_id' => '', 'type' => 1]) }}">Blogs</a></li>
-                            <li><a href="{{ route('web.blog.filter', ['category_id' => '', 'type' => 7]) }}">Training Models</a></li>
-                            <li><a href="{{ route('web.blog.filter', ['category_id' => '', 'type' => 5]) }}">Research & Publications</a></li>
-                            <li><a href="{{ route('web.blog.filter', ['category_id' => '', 'type' => 6]) }}">Best Practices & Case Studies</a></li>
-                          </ul>
-                        </li>
-                        <li><a href="#">Global Pathways</a></li>
-                        <li><a href="{{ route('contact') }}">Contact</a></li>
-                      </ul>
+                                                </ul>
+                                            </li>
+                                            <li class="dropdown">
+                                                <a href="{{ route('web.sector') }}"> Sectors </a>
+                                            </li>
+                                            <li class="dropdown">
+                                                <a href="javascript:void(0);">Collaborations</a>
+                                                <ul>
+                                                    @foreach ($collaborations as $collaboration)
+                                                        <li><a
+                                                                href="{{ route('web.blog.filter', ['category_id' => '', 'type' => 3]) }}">{{ $collaboration->menu_title }}</a>
+                                                        </li>
+                                                    @endforeach
+                                                </ul>
+                                            </li>
+                                            <li class="dropdown">
+                                                <a href="javascript:void(0);">Resources </a>
+                                                <ul>
+                                                    <li><a
+                                                            href="{{ route('web.blog.filter', ['category_id' => '', 'type' => 1]) }}">Blogs</a>
+                                                    </li>
+                                                    <li><a
+                                                            href="{{ route('web.blog.filter', ['category_id' => '', 'type' => 7]) }}">Training
+                                                            Models</a></li>
+                                                    <li><a
+                                                            href="{{ route('web.blog.filter', ['category_id' => '', 'type' => 5]) }}">Research
+                                                            & Publications</a></li>
+                                                    <li><a
+                                                            href="{{ route('web.blog.filter', ['category_id' => '', 'type' => 6]) }}">Best
+                                                            Practices & Case Studies</a></li>
+                                                </ul>
+                                            </li>
+                                            <li><a href="#">Global Pathways</a></li>
+                                            <li><a href="{{ route('contact') }}">Contact</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </nav>
+                        </div>
+                        <div class="col-lg-4 col-6 p-0 mt-3">
+                            <div class="header-buttons">
+                                <div class="right-nav d-sm-flex gap-16 align-items-center d-none">
+                                    <a href="#" class="cus-btn">
+                                        <span class="text"> Donate Now</span>
+                                    </a>
+                                    <a href="#" class="cus-btn-2">
+                                        <span class="text">NTI Competetions/Events</span>
+                                    </a>
+                                </div>
+                                <a href="#" class="main-menu__toggler mobile-nav__toggler">
+                                    <img src="{{ asset('resource/web/assets/media/icons/menu-2.png') }}"
+                                        alt="">
+                                </a>
+                            </div>
+                        </div>
                     </div>
-                  </div>
-                </nav>
-              </div>
-              <div class="col-lg-4 col-6 p-0 mt-3">
-                <div class="header-buttons">
-                  <div class="right-nav d-sm-flex gap-16 align-items-center d-none">
-                    <a href="#" class="cus-btn">
-                      <span class="text"> Donate Now</span>
-                    </a>
-                    <a href="#" class="cus-btn-2">
-                      <span class="text">NTI Competetions/Events</span>
-                    </a>
-                  </div>
-                  <a href="#" class="main-menu__toggler mobile-nav__toggler">
-                    <img src="{{ asset('resource/web/assets/media/icons/menu-2.png')}}" alt="">
-                  </a>
                 </div>
-              </div>
             </div>
-          </div>
-        </div>
-      </header>
+        </header>
     </div>
     <!-- Header Menu End -->
     <div class="stricky-header stricked-menu">
-      <div class="sticky-header__content"></div>
+        <div class="sticky-header__content"></div>
     </div>

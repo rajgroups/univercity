@@ -2,7 +2,7 @@
 		<div class="sidebar" id="sidebar">
 			<!-- Logo -->
 			<div class="sidebar-logo active">
-				<a href="/" class="logo logo-normal">
+				<a href="{{ route('web.') }}" class="logo logo-normal">
 					<img src="{{ asset($defaultSettings->site_logo ?? null)}}" alt="Img">
 				</a>
 				<a href="/" class="logo logo-white">
@@ -101,6 +101,13 @@
 									<ul style="display: none;">
 										<li><a href="{{ route('admin.brand.index') }}">Brand List</a></li>
 										<li><a href="{{ route('admin.brand.create') }}">Add Brand</a></li>
+									</ul>
+								</li>
+								<li class="submenu">
+									<a href="javascript:void(0);" class=""><i data-feather="file-text"></i><span>Enquiry</span><span class="menu-arrow"></span></a>
+									<ul style="display: none;">
+										<li><a href="{{ route('admin.enquiry.index') }}">Brand List</a></li>
+										<li><a href="{{ route('admin.enquiry.create') }}">Add Brand</a></li>
 									</ul>
 								</li>
 							</ul>

@@ -10,7 +10,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class EnquiryNotification extends Mailable
+class EnquiryThankYou extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -19,10 +19,11 @@ class EnquiryNotification extends Mailable
      */
     public function __construct(public Enquiry $enquiry) {}
 
+
     public function build()
     {
-        return $this->subject('New Enquiry Received')
-                    ->markdown('emails.enquiry.admin', [
+        return $this->subject('Thank You for Your Enquiry')
+                    ->markdown('emails.enquiry.thankyou', [
                         'enquiry' => $this->enquiry
                     ]);
     }
@@ -33,7 +34,7 @@ class EnquiryNotification extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Enquiry Notification',
+            subject: 'Enquiry Thank You',
         );
     }
 
@@ -43,7 +44,7 @@ class EnquiryNotification extends Mailable
     public function content(): Content
     {
         return new Content(
-            markdown: 'emails.enquiry.admin',
+            view: 'view.name',
         );
     }
 

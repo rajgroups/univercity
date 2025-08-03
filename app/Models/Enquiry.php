@@ -9,7 +9,7 @@ class Enquiry extends Model
 {
     use HasFactory;
 
-    protected $table = 'enquiries';
+    protected $table = 'enquiry';
 
     /**
      * The attributes that are mass assignable.

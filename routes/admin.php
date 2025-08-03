@@ -9,6 +9,7 @@ use App\Http\Controllers\auth\LoginController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\admin\HomeController;
 use App\Http\Controllers\admin\DashboardController;
+use App\Http\Controllers\Admin\EnquiryController;
 use App\Http\Controllers\Admin\ProjectController;
 use App\Http\Controllers\Admin\SectorController;
 use App\Http\Controllers\Admin\SettingController;
@@ -61,6 +62,9 @@ Route::prefix('admin')->as('admin.')->group(function() {
 
         // Testimonial Routes
         Route::resource('testimonial', TestimonialController::class);
+
+        // Enquiry Routes
+        Route::resource('enquiry',EnquiryController::class);
         
         // Setting Home Page Settings Route
         Route::get('settings/home/edit',[SettingController::class,'editHomePage'])->name('setting.home.edit');

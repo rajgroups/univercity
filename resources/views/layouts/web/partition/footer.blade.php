@@ -18,8 +18,7 @@
                     <div class="d-flex gap-16 mt-2 mb-2">
                         <h2 class="fw-bold mb-3 text-white text-center fs-1">Join <span class="text-primary">Us</span>
                         </h2>
-                        <a href="#"><button class="cus-btn bg-white"><span class="text light-black">Donate
-                                    Now</span></button></a>
+                        <a href="#"><button class="cus-btn bg-white"><span class="text light-black">Donate Now</span></button></a>
                     </div>
 
                     <p class="lead text-white">We invite partnerships with government bodies, corporate entities, and
@@ -35,9 +34,40 @@
                         <p class="text-white mb-3">
                             We'd love to hear from you! Fill out the form below and we'll get in touch.
                         </p>
+                        {{-- Success Message --}}
+                        @if (session('success'))
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                {{ session('success') }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                    aria-label="Close"></button>
+                            </div>
+                        @endif
+
+                        {{-- Error Message --}}
+                        @if (session('error'))
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                {{ session('error') }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                    aria-label="Close"></button>
+                            </div>
+                        @endif
+
+                        {{-- Validation Errors (Optional for global display) --}}
+                        @if ($errors->any())
+                            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                Please fix the following errors:
+                                <ul class="mb-0">
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                    aria-label="Close"></button>
+                            </div>
+                        @endif
 
                         <!-- Contact form -->
-                        <form class="row g-3" method="POST" action="#">
+                        <form class="row g-3" method="POST" action="{{ route('web.enquiry') }}">
                             @csrf
 
                             <div class="col-md-6">
@@ -103,13 +133,16 @@
                             <ul class="unstyled">
                                 <li class="link mb-12"><a href="/"><i class="fa fa-arrow-alt-circle-right"></i>
                                         Home</a></li>
-                                <li class="link mb-12"><a href="/about"><i class="fa fa-arrow-alt-circle-right"></i> About
+                                <li class="link mb-12"><a href="/about"><i class="fa fa-arrow-alt-circle-right"></i>
+                                        About
                                         Us</a></li>
                                 <li class="link mb-12"><a href="/contact"><i class="fa fa-arrow-alt-circle-right"></i>
                                         Contact Us</a></li>
-                                <li class="link mb-12"><a href="#"><i class="fa fa-arrow-alt-circle-right"></i> Donate
+                                <li class="link mb-12"><a href="#"><i class="fa fa-arrow-alt-circle-right"></i>
+                                        Donate
                                         Now</a></li>
-                                <li class="link mb-12"><a href="#"><i class="fa fa-arrow-alt-circle-right"></i> NTI
+                                <li class="link mb-12"><a href="#"><i class="fa fa-arrow-alt-circle-right"></i>
+                                        NTI
                                         Competetions/Events</a>
                                 </li>
                             </ul>
@@ -126,7 +159,8 @@
                                 </li>
                                 <li class="link mb-12"><a href="#"><i class="fa fa-arrow-alt-circle-right"></i>
                                         Resources</a></li>
-                                <li class="link mb-12"><a href="#"><i class="fa fa-arrow-alt-circle-right"></i> Global
+                                <li class="link mb-12"><a href="#"><i class="fa fa-arrow-alt-circle-right"></i>
+                                        Global
                                         Pathways</a>
                                 </li>
                             </ul>
@@ -135,7 +169,8 @@
                             <h5 class="fw-600 mb-24">CONTACT DETALIS</h5>
                             <div class="d-flex align-items-center gap-8 mb-12">
                                 <a href="tel:+91{{ $defaultSettings->footer_phone ?? null }}"
-                                    class="h6 fw-400 black hover-content"> <i class="fa fa-phone text-primary"></i> +(91)
+                                    class="h6 fw-400 black hover-content"> <i class="fa fa-phone text-primary"></i>
+                                    +(91)
                                     {{ $defaultSettings->footer_phone ?? null }}</a>
                             </div>
                             <div class="d-flex align-items-center gap-8">

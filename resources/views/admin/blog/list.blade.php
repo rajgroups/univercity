@@ -78,7 +78,19 @@
                                 <td>{{ $loop->index + 1 }}</td>
                                 <td><span class="text-gray-9">{{ $blog->title }}</span></td>
                                 <td>{{ $blog->slug }}</td>
-                                <td>{{ $blog->type }}</td>
+                               @php
+                                $typeOptions = [
+                                    1 => 'Blog',
+                                    2 => 'News',
+                                    3 => 'Collaboration',
+                                    4 => 'Training Model',
+                                    5 => 'Research and Publication',
+                                    6 => 'Case Studies',
+                                    7 => 'Resource',
+                                ];
+                            @endphp
+
+                            <td>{{ $typeOptions[$blog->type] ?? 'N/A' }}</td>
                                 <td>{{ $blog->created_at->format('d M Y') }}</td>
 
                                 <td>

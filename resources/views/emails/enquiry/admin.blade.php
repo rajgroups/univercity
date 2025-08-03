@@ -1,12 +1,17 @@
-<x-mail::message>
-# Introduction
+@component('mail::message')
+# New Enquiry Received
 
-The body of your message.
+You have received a new enquiry. Below are the details:
 
-<x-mail::button :url="''">
-Button Text
-</x-mail::button>
+- **Name:** {{ $enquiry->name }}
+- **Email:** {{ $enquiry->email }}
+- **Mobile:** {{ $enquiry->mobile }}
+- **Is Philanthropist:** {{ $enquiry->is_philanthropist ? 'Yes' : 'No' }}
+
+@component('mail::button', ['url' => url('/')])
+Visit Website
+@endcomponent
 
 Thanks,<br>
 {{ config('app.name') }}
-</x-mail::message>
+@endcomponent
