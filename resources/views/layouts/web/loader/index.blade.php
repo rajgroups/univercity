@@ -1,16 +1,12 @@
   <!-- PRELOADER START -->
   <div id="preloader">
     <div class="zip-loader">
-      <img src="{{ asset('resource/web/assets/media/zip-loader.gif')}}" alt="Loading..." />
-      <img src="{{ asset('resource/web/assets/media/zip-loader.gif')}}" alt="Loading..." />
+      {{-- <img src="{{ asset('resource/web/assets/media/zip-loader.gif')}}" alt="Loading..." /> --}}
+      <img src="{{ asset($defaultSettings->loader_image)  ?? null }}" alt="Loading..." />
     </div>
   </div>
+  
   <!-- PRELOADER END -->
-
-  <!-- Cursor Style -->
-  <div id="cursor"></div>
-  <div id="cursor-border"></div>
-
 
   <style>
     #preloader {

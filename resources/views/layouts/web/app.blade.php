@@ -11,7 +11,7 @@
 </head>
 
 <body>
-    {{-- @include('layouts.web.loader.index') --}}
+    @include('layouts.web.loader.index')
 
     @include('layouts.web.partition.header')
     <!-- Main Sections -->

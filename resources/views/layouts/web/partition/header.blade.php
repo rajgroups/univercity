@@ -172,8 +172,8 @@
                                 <a href="#" class="btn btn-outline-success btn-sm d-none-tblet d-lg-block-one">
                                     <i class="fa fa-tachometer-alt me-1 p-2"></i> Dashboards
                                 </a>
-                                <button class="btn btn-warning text-white btn-sm fw-bold p-2">REGISTER</button>
-                                <button class="btn btn-outline-warning btn-sm fw-bold p-2">LOGIN</button>
+                                <button class="btn btn-warning text-white btn-sm fw-bold p-2"><i class="fa fa-user"></i> REGISTER</button>
+                                {{-- <button class="btn btn-outline-warning btn-sm fw-bold p-2">LOGIN</button> --}}
                             </div>
                         </div>
                     </div>
