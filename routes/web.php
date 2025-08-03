@@ -23,11 +23,11 @@ include(base_path('routes/admin.php'));
 Route::get('/all-clear', function () {
     Artisan::call('cache:clear');
     Artisan::call('route:clear');
-   //  Artisan::call('optimize');
+    //  Artisan::call('optimize');
     Artisan::call('config:cache');
     Artisan::call('view:clear');
-   //  Artisan::call('optimize');
-   return "All cleared successfully";
+    //  Artisan::call('optimize');
+    return "All cleared successfully";
 });
 
 // language
@@ -36,7 +36,7 @@ Route::get('password-hash', function () {
 });
 
 // Web Routes
-Route::get('/',[WebController::class,'home']);
+Route::get('/', [WebController::class, 'home']);
 // Route::get('/', [RegisterController::class, 'showRegistrationForm'])->name('registerform');
 Route::post('/register', [RegisterController::class, 'register'])->name('register');
 
@@ -72,31 +72,31 @@ Route::get('/event', function () {
     return view('web.event');
 })->name('event');
 
-    // Program Route
-    Route::get('/program/{category}/{slug}',[WebController::class,'program'])->name('web.announcement.program');
+// Program Route
+Route::get('/program/{category}/{slug}', [WebController::class, 'program'])->name('web.announcement.program');
 
-    // scheme Route
-    Route::get('/scheme/{category}/{slug}',[WebController::class,'scheme'])->name('web.announcement.scheme');
+// scheme Route
+Route::get('/scheme/{category}/{slug}', [WebController::class, 'scheme'])->name('web.announcement.scheme');
 
-    // upcoming-project  Route
-    Route::get('/upcoming-project/{category}/{slug}',[WebController::class,'upcoming'])->name('web.upcoming.project');
+// upcoming-project  Route
+Route::get('/upcoming-project/{category}/{slug}', [WebController::class, 'upcoming'])->name('web.upcoming.project');
 
-    // ongoing-project  Route
-    Route::get('/ongoing-project/{category}/{slug}',[WebController::class,'ongoing'])->name('web.ongoging.project');
+// ongoing-project  Route
+Route::get('/ongoing-project/{category}/{slug}', [WebController::class, 'ongoing'])->name('web.ongoging.project');
 
-    // Sector Routes
-    Route::get('/sector',[WebController::class,'sectors'])->name('web.sector');
+// Sector Routes
+Route::get('/sector', [WebController::class, 'sectors'])->name('web.sector');
 
-    // Course Routes
-    Route::get('/course',[WebController::class,'course'])->name('web.course.index');
-    Route::get('/course/{slug}',[WebController::class,'courseDetails'])->name('web.course.show');
+// Course Routes
+Route::get('/course', [WebController::class, 'course'])->name('web.course.index');
+Route::get('/course/{slug}', [WebController::class, 'courseDetails'])->name('web.course.show');
 
-    // For catelog (Program,scheme,upcoming-project,ongoing-project)
-    Route::get('/catalog', [WebController::class, 'catalog'])->name('web.catalog');
+// For catelog (Program,scheme,upcoming-project,ongoing-project)
+Route::get('/catalog', [WebController::class, 'catalog'])->name('web.catalog');
 
-    // For Blog Catelog
-    Route::get('/blogs', [WebController::class, 'blog'])->name('web.blog.filter');
-    Route::get('/blogs/{categoryslug}/{slug}', [WebController::class, 'blogShow'])->name('web.blog.show');
+// For Blog Catelog
+Route::get('/blogs', [WebController::class, 'blog'])->name('web.blog.filter');
+Route::get('/blogs/{categoryslug}/{slug}', [WebController::class, 'blogShow'])->name('web.blog.show');
 
-    // For Enquiry Mails
-    Route::post('/send-enquiry',[EnquiryController::class,'store'])->name('web.enquiry');
+// For Enquiry Mails
+Route::post('/send-enquiry', [EnquiryController::class, 'store'])->name('web.enquiry');

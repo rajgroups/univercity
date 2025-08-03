@@ -239,7 +239,7 @@
                         </div>
                         <h2 class="fw-bold mb-3">{{ $settings->about_title ?? null }}</h2>
                     </div>
-                    <p class="mb-36">{{ $defaultSettings->footer_text ?? null}}</p>
+                    <p class="mb-36">{{ $settings->about_description ?? null}}</p>
                     <div class="d-flex align-items-center gap-24 mb-36">
                         <div class="d-flex align-items-center gap-16"> <img src="{{ asset('resource/web/assets/media/vector/unique-course-vec.png')}}" class="content-vector" alt="Icon representing programs">
                             <div>
