@@ -161,6 +161,7 @@
                                         <option value="5" {{ old('type') == '5' ? 'selected' : '' }}>Research and Publication</option>
                                         <option value="6" {{ old('type') == '6' ? 'selected' : '' }}>Case Studies</option>
                                         <option value="7" {{ old('type') == '7' ? 'selected' : '' }}>Resource</option>
+                                        <option value="8" {{ old('type') == '8' ? 'selected' : '' }}>CSR Initiatives</option>
                                     </select>
                                     @error('type')
                                         <div class="invalid-feedback">{{ $message }}</div>

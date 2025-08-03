@@ -2,7 +2,7 @@
 		<div class="sidebar" id="sidebar">
 			<!-- Logo -->
 			<div class="sidebar-logo active">
-				<a href="{{ route('web.') }}" class="logo logo-normal">
+				<a href="/" class="logo logo-normal">
 					<img src="{{ asset($defaultSettings->site_logo ?? null)}}" alt="Img">
 				</a>
 				<a href="/" class="logo logo-white">

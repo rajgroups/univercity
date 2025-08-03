@@ -81,11 +81,13 @@
 <div id="scroll-container" class="main-wrapper">
     <!-- Header Menu Start -->
     <div class="header-wrapper">
-        <div class="header-top">
-            <div class="container-fluid">
-                <p class="white"> Indian Skill Institute Co-operation (ISICO)</p>
+        @if($defaultSettings->announcement_text)
+            <div class="header-top">
+                <div class="container-fluid">
+                    <p class="white"> {{ $defaultSettings->announcement_text ?? null}}</p>
+                </div>
             </div>
-        </div>
+        @endif
         <div class="main-header" style="background-color: #fafafa;border-bottom: 1px solid rgb(202, 202, 202);">
             <div class="container-fluid">
                 <div class="row p-2 bg-white text-dark justify-content-between align-items-center">
@@ -104,7 +106,8 @@
                             <i class="bi bi-geo-alt-fill"></i> Chennai
                         </div>
                         <div class="item p-2 text-light-gray">
-                            <i class="bi bi-house-fill"></i> Home
+                            <a href="{{ url('/') }}">
+                            <i class="bi bi-house-fill"></i> Home </a>
                         </div>
                         <div class="item p-2 text-light-gray">
                             <i class="bi bi-three-dots-vertical"></i> More
@@ -272,14 +275,14 @@
 
                                                     {{-- CSR Initiatives --}}
                                                     <li>
-                                                        <a href="{{ route('web.catalog') }}">3. CSR Initiatives</a>
-                                                        <ul class="sub-menu mt-5">
+                                                        <a href="{{ route('web.blog.filter', ['category_id' => '', 'type' => 6]) }}">3. CSR Initiatives</a>
+                                                        {{-- <ul class="sub-menu mt-5">
                                                             @foreach ($csrPrograms as $program)
                                                                 <li><a
-                                                                        href="{{ route('web.catalog') }}">{{ $program->name }}</a>
+                                                                        href="{{ route('web.blog.filter', ['category_id' => '', 'type' => 6]) }}">{{ $program->name }}</a>
                                                                 </li>
                                                             @endforeach
-                                                        </ul>
+                                                        </ul> --}}
                                                     </li>
 
                                                 </ul>

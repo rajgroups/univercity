@@ -29,6 +29,6 @@
 <script src="{{asset('resource/admin/assets/plugins/chartjs/chart-data.js')}}" type="text/javascript"></script>
 <!-- Custom JS -->
 <script src="{{asset('resource/admin/assets/js/theme-colorpicker.js')}}" type="text/javascript"></script>
-<script src="{{asset('resource/admin/assets/js/script.js')}}" type="text/javascript"></script>
 <script src="{{asset('resource/admin/assets/cdn-cgi/scripts/7d0fa10a/cloudflare-static/rocket-loader.min.js')}}"></script>
 <script src="{{asset('https://static.cloudflareinsights.com/beacon.min.js')}}"></script>
+<script src="{{asset('resource/admin/assets/js/script.js')}}" type="text/javascript"></script>
