@@ -64,6 +64,7 @@ class Settings extends Model
         'footer_email',
         'footer_phone',
         'footer_address',
+        'footer_copyright',
         'footer_gateway_image',
 
         // UI/Theme

@@ -299,6 +299,21 @@
                                     <label for="footer_copyright" class="form-label">Footer Copyright</label>
                                     <textarea class="form-control" name="footer_copyright" rows="2">{{ old('footer_copyright', $settings->footer_copyright ?? '') }}</textarea>
                                 </div>
+                                <div class="col-md-6">
+                                    <label for="footer_email" class="form-label">Footer Email</label>
+                                    <input type="email" class="form-control" id="footer_email" name="footer_email"
+                                        value="{{ old('footer_email', $settings->footer_email ?? '') }}" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="footer_phone" class="form-label">Footer Phone</label>
+                                    <input type="text" class="form-control" id="footer_phone" name="footer_phone"
+                                        value="{{ old('footer_phone', $settings->footer_phone ?? '') }}" required>
+                                </div>
+                                <div class="col-md-12">
+                                    <label for="footer_address" class="form-label">Address</label>
+                                    <input type="text" class="form-control" id="footer_address" name="footer_address"
+                                        value="{{ old('footer_address', $settings->footer_address ?? '') }}">
+                                </div>
                             </div>
 
                             <!-- Maintenance Mode -->

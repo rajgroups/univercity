@@ -417,6 +417,7 @@ class SettingController extends Controller
 
 public function generalUpdate(Request $request)
 {
+    // dd($request);
     $rules = [
         'site_title'        => 'required|string|max:255',
         'contact_email'     => 'nullable|email',
@@ -489,7 +490,12 @@ public function generalUpdate(Request $request)
         'meta_keywords'         => $request->meta_keywords,
         'meta_description'      => $request->meta_description,
         'google_analytics_id'   => $request->google_analytics_id,
+
         'footer_text'           => $request->footer_text,
+        'footer_phone'          => $request->footer_phone,
+        'footer_address'        => $request->footer_address,
+        'footer_copyright'      => $request->footer_copyright,
+
         'maintenance_mode'      => $request->maintenance_mode ?? 0,
         'announcement_enabled'  => $request->announcement_enabled ?? 0,
         'announcement_text'     => $request->announcement_text,
