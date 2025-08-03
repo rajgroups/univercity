@@ -70,10 +70,9 @@
                             <div class="row">
                                 <div class="col-sm-6 col-12">
                                     <div class="mb-3">
-                                        <label class="form-label">Announcement Title <span
-                                                class="text-danger">*</span></label>
+                                        <label class="form-label">Announcement Title <span class="text-danger">*</span></label>
                                         <input type="text" class="form-control  @error('title') is-invalid @enderror"
-                                            name="title" value="{{ old('title') }}" test>
+                                            name="title" value="{{ old('title') }}" placeholder="Please Enter Announcement title">
                                         @error('title')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -83,7 +82,7 @@
                                     <div class="mb-3">
                                         <label class="form-label">Slug <span class="text-danger">*</span></label>
                                         <input type="text" class="form-control @error('slug') is-invalid @enderror"
-                                            name="slug" value="{{ old('slug') }}" test>
+                                            name="slug" value="{{ old('slug') }}">
                                         @error('slug')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -93,7 +92,7 @@
 
                             <!-- Description -->
                             <div class="mb-3">
-                                <label for="short_description" class="form-label">Short Description</label>
+                                <label for="short_description" class="form-label">Short Description <span class="text-danger">*</span> </label>
                                 <textarea class="form-control @error('short_description') is-invalid @enderror" name="short_description"
                                     id="short_description" rows="3" class="form-control" placeholder="Brief short_description...">{{ old('short_description') }}</textarea>
                                 @error('slug')
@@ -106,20 +105,22 @@
                                     <div class="mb-3">
                                         <label class="form-label">Image <span class="text-danger">*</span></label>
                                         <input type="file" class="form-control @error('image') is-invalid @enderror"
-                                            name="image" accept="image/*" test>
+                                            name="image" accept="image/*">
                                         @error('image')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
+                                        <small class="form-text text-muted">Maximum file size: 5MB. Allowed types: JPG, PNG, JPEG, etc.</small>
                                     </div>
                                 </div>
                                 <div class="col-sm-6 col-12">
                                     <div class="mb-3">
                                         <label class="form-label">Banner Image <span class="text-danger">*</span></label>
                                         <input type="file" class="form-control @error('image') is-invalid @enderror"
-                                            name="banner_image" accept="image/*" test>
+                                            name="banner_image" accept="image/*">
                                         @error('banner_image')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
+                                        <small class="form-text text-muted">Maximum file size: 5MB. Allowed types: JPG, PNG, JPEG, etc.</small>
                                     </div>
                                 </div>
                                 <div class="col-sm-6 col-12">
@@ -231,8 +232,7 @@
 
                             <div class="col-lg-12">
                                 <div class="d-flex align-items-center justify-content-end mb-4">
-                                    <a href="{{ route('admin.announcement.index') }}"
-                                        class="btn btn-secondary me-2">Cancel</a>
+                                    <a href="{{ route('admin.announcement.index') }}" class="btn btn-secondary me-2">Cancel</a>
                                     <button type="submit" class="btn btn-primary">Create Announcement</button>
                                 </div>
                             </div>

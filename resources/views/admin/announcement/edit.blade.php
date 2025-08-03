@@ -90,7 +90,7 @@
                             <div class="row">
                                 <div class="col-sm-6 col-12">
                                     <div class="mb-3">
-                                        <label class="form-label">Image <span class="text-danger">*</span></label>
+                                        <label class="form-label">Image </label>
                                         <input type="file" class="form-control @error('image') is-invalid @enderror"
                                             name="image" accept="image/*">
                                         @if($announcement->image)
@@ -101,7 +101,7 @@
                                 </div>
                                 <div class="col-sm-6 col-12">
                                     <div class="mb-3">
-                                        <label class="form-label">Banner Image <span class="text-danger">*</span></label>
+                                        <label class="form-label">Banner Image </label>
                                         <input type="file" class="form-control @error('banner_image') is-invalid @enderror"
                                             name="banner_image" accept="image/*">
                                         @if($announcement->banner_image)

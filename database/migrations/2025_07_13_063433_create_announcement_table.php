@@ -19,12 +19,12 @@ return new class extends Migration
                 ->constrained('category')  // refers to 'id' in 'category' table
                 ->onDelete('restrict');    // stop delete if child (project) exists
             $table->string('subtitle')->nullable();
-            $table->string('short_description');
+            $table->longText('short_description');
             $table->string('slug')->unique();
             $table->string('image')->nullable();
             $table->string('banner_image')->nullable();
             $table->tinyInteger('type')->comment('1=>program,2=>Scheme')->default(1);
-            $table->text('description')->nullable();
+            $table->longText('description')->nullable();
             $table->json('points')->nullable();
             $table->boolean('status')->default(1);
             $table->timestamps();

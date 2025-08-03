@@ -83,6 +83,13 @@
 									</ul>
 								</li>
 								<li class="submenu">
+									<a href="javascript:void(0);" class=""><i class="ti ti-device-desktop fs-16 me-2"></i><span>Announcement</span><span class="menu-arrow"></span></a>
+									<ul style="display: none;">
+										<li><a href="{{ route('admin.announcement.index') }}">Project List</a></li>
+										<li><a href="{{ route('admin.announcement.create') }}">Add Project</a></li>
+									</ul>
+								</li>
+								<li class="submenu">
 									<a href="javascript:void(0);" class=""><i data-feather="box"></i><span>Project</span><span class="menu-arrow"></span></a>
 									<ul style="display: none;">
 										<li><a href="{{ route('admin.project.index') }}">Project List</a></li>
@@ -106,8 +113,8 @@
 								<li class="submenu">
 									<a href="javascript:void(0);" class=""><i data-feather="file-text"></i><span>Enquiry</span><span class="menu-arrow"></span></a>
 									<ul style="display: none;">
-										<li><a href="{{ route('admin.enquiry.index') }}">Brand List</a></li>
-										<li><a href="{{ route('admin.enquiry.create') }}">Add Brand</a></li>
+										<li><a href="{{ route('admin.enquiry.index') }}">Enquiry List</a></li>
+										{{-- <li><a href="{{ route('admin.enquiry.create') }}">Add Brand</a></li> --}}
 									</ul>
 								</li>
 							</ul>
@@ -137,11 +144,6 @@
                               <li class="submenu-open">
 									<a href="{{ route('admin.banner.index') }}"><i class="ti ti-device-mobile fs-16 me-2"></i>
 										<span>Banner</span>
-									</a>
-								</li>
-								<li class="submenu-open">
-									<a href="{{ route('admin.announcement.index') }}"><i class="ti ti-device-desktop fs-16 me-2"></i>
-										<span>Announcement</span>
 									</a>
 								</li>
 								<li>

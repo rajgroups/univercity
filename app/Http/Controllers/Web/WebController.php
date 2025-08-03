@@ -261,18 +261,20 @@ class WebController extends Controller
         }
 
         // Filter: Type
-        if ($request->type === 'project_1') {
-            $projects->where('type', 1);
-            $announcements->whereRaw('1=0'); // skip
-        } elseif ($request->type === 'project_2') {
-            $projects->where('type', 2);
-            $announcements->whereRaw('1=0');
-        } elseif ($request->type === 'announcement_1') {
-            $announcements->where('type', 1);
-            $projects->whereRaw('1=0');
-        } elseif ($request->type === 'announcement_2') {
-            $announcements->where('type', 2);
-            $projects->whereRaw('1=0');
+        if (in_array($request->type, ['project_1', 'project_2', 'announcement_1', 'announcement_2'])) {
+            if ($request->type === 'project_1') {
+                $projects->where('type', 1);
+                $announcements->whereRaw('1=0');
+            } elseif ($request->type === 'project_2') {
+                $projects->where('type', 2);
+                $announcements->whereRaw('1=0');
+            } elseif ($request->type === 'announcement_1') {
+                $announcements->where('type', 1);
+                $projects->whereRaw('1=0');
+            } elseif ($request->type === 'announcement_2') {
+                $announcements->where('type', 2);
+                $projects->whereRaw('1=0');
+            }
         }
 
         // Filter: Search
@@ -281,6 +283,7 @@ class WebController extends Controller
             $announcements->where('title', 'like', '%' . $request->search . '%');
         }
 
+        
         // Fetch and tag type for frontend
         $projectResults = $projects->get()->map(function ($item) {
             $item->type_label = $item->type == 1 ? 'Ongoing' : 'Upcoming';

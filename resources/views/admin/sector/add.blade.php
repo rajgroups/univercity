@@ -121,7 +121,7 @@
 
                             <div class="col-lg-12">
                                 <div class="summer-description-box">
-                                    <label class="form-label">Description</label>
+                                    <label class="form-label">Description <span class="text-danger">*</span></label>
                                     <textarea name="description" id="summernote" cols="30" rows="10" class="form-control @error('description') is-invalid @enderror">{{ old('description') }}</textarea>
                                     <p class="fs-14 mt-1">Maximum 60 Words</p>
                                     @error('description')

@@ -98,10 +98,10 @@
                         Indian Skill Institute
                     </div>
                     <div class="col-md-6 d-flex justify-content-between-sm" style="align-items: center;">
-                        <p class="p-2 d-none d-lg-block">Skip To Main Content</p>
-                        <div class="item p-2">
+                        {{-- <p class="p-2 d-none d-lg-block">Skip To Main Content</p> --}}
+                        {{-- <div class="item p-2">
                             <i class="bi bi-badge-ad p-2"></i>
-                        </div>
+                        </div> --}}
                         <div class="item p-2">
                             <i class="bi bi-geo-alt-fill"></i> Chennai
                         </div>

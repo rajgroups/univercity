@@ -39,10 +39,10 @@ class AnnouncementController extends Controller
     {
         // Store Announcement
         $validated = $request->validate([
-            'title'             => 'required|string|max:255',
-            'slug'              => 'required|string|max:255|unique:announcement,slug',
+            'title'             => 'required|string',
+            'slug'              => 'required|string|unique:announcement,slug',
             'short_description' => 'required|string',
-            'subtitle'          => 'nullable|string|max:255',
+            'subtitle'          => 'nullable|string',
             'image'             => 'required|image|mimes:jpeg,png,jpg,webp|max:2048',
             'banner_image'      => 'required|image|mimes:jpeg,png,jpg,webp|max:2048',
             'type'              => 'required|in:1,2',
@@ -122,8 +122,14 @@ class AnnouncementController extends Controller
             'description'           => 'nullable',
             'image'                 => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'banner_image'          => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'points'                => 'nullable|array',
-            'points.*'              => 'nullable|string|max:255',
+            'points'            => 'nullable|array',
+            'points.*'          => [
+                'nullable',
+                'string',
+                'max:255',
+                'regex:/^[^-\n]+ - [^-\n]+$/'
+            ],
+            'category_id'       => 'nullable|exists:category,id',
         ]);
 
         // Handle image upload
@@ -155,6 +161,7 @@ class AnnouncementController extends Controller
         $announcement->status           = $request->status;
         $announcement->description      = $request->description;
         $announcement->short_description= $request->short_description;
+        $announcement->category_id      = $request->category_id;
 
         // Save bullet points as JSON
         $announcement->points = json_encode(array_filter($request->points ?? [])); // Save cleaned array

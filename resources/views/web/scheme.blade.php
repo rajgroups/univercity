@@ -218,39 +218,47 @@
              </div>
         </section>
     <div class="container my-5">
-        
         @php
-            $points = is_array($announcement->points)
-                ? $announcement->points
-                : json_decode($announcement->points, true);
+            $points = [];
+
+            if (!empty($announcement->points)) {
+                $points = is_array($announcement->points)
+                    ? $announcement->points
+                    : json_decode($announcement->points, true);
+            }
         @endphp
         <div class="row">
-            <div class="col-lg-4 mb-4">
-                <nav id="navbar-example" class="navbar sticky-top flex-column align-items-stretch p-3 bg-light rounded">
-                    <h5 class="fw-bold mb-3">Collaboration Sections</h5>
+            @if(!empty($points))
+                <div class="col-lg-4 mb-4">
+                    <nav id="navbar-example" class="navbar sticky-top flex-column align-items-stretch p-3 bg-light rounded">
+                        <h5 class="fw-bold mb-3">Topics</h5>
+                        @foreach ($points as $index => $point)
+                            @php
+                                [$title, $content] = explode(' - ', $point, 2);
+                                $sectionId = 'section' . ($index + 1);
+                            @endphp
+                            <a class="nav-link" href="#{{ $sectionId }}">{{ $index + 1 }}. {{ $title }}</a>
+                        @endforeach
+                    </nav>
+                </div>
+
+                <div class="col-lg-8">
                     @foreach ($points as $index => $point)
                         @php
                             [$title, $content] = explode(' - ', $point, 2);
                             $sectionId = 'section' . ($index + 1);
                         @endphp
-                        <a class="nav-link" href="#{{ $sectionId }}">{{ $index + 1 }}. {{ $title }}</a>
-                    @endforeach
-                </nav>
-            </div>
 
+                        <section id="{{ $sectionId }}" class="mb-4">
+                            <h4 class="fw-bold mt-4">{{ $index + 1 }}. {{ $title }}</h4>
+                            <p>{{ $content }}</p>
+                        </section>
+                    @endforeach
+                    <img src="{{ asset($announcement->image) }}" alt="">
+                </div>
+            @endif
             <div class="col-lg-8">
                 <img src="{{ asset($announcement->image) }}" alt="">
-                @foreach ($points as $index => $point)
-                    @php
-                        [$title, $content] = explode(' - ', $point, 2);
-                        $sectionId = 'section' . ($index + 1);
-                    @endphp
-
-                    <section id="{{ $sectionId }}" class="mb-4">
-                        <h4 class="fw-bold mt-4">{{ $index + 1 }}. {{ $title }}</h4>
-                        <p>{{ $content }}</p>
-                    </section>
-                @endforeach
             </div>
         </div>
     </div>
