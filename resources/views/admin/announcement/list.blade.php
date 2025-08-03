@@ -87,7 +87,7 @@
                                 <td>{{ $loop->index + 1 }}</td>
                                 <td>{{ $announcement->title }}</td>
                                 <td>{{ $announcement->slug }}</td>
-                                <td>{{ $announcement->type }}</td>
+                                <td>{{ $announcement->type == 1 ? 'Program' : ($announcement->type == 2 ? 'Scheme' : '') }}</td>
                                 <td>
                                     @if ($announcement->status == '1')
                                         <span class="badge bg-success fw-medium fs-10">Active</span>

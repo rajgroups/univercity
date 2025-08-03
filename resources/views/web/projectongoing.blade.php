@@ -213,14 +213,19 @@
     </section>
     <div class="container my-5">
         @php
-            $points = is_array($announcement->points)
-                ? $announcement->points
-                : json_decode($announcement->points, true);
+            $points = [];
+
+            if (!empty($announcement->points)) {
+                $points = is_array($announcement->points)
+                    ? $announcement->points
+                    : json_decode($announcement->points, true);
+            }
         @endphp
+        @if(!empty($points))
         <div class="row">
             <div class="col-lg-4 mb-4">
                 <nav id="navbar-example" class="navbar sticky-top flex-column align-items-stretch p-3 bg-light rounded">
-                    <h5 class="fw-bold mb-3">Collaboration Sections</h5>
+                    <h5 class="fw-bold mb-3">Topics</h5>
                     @foreach ($points as $index => $point)
                         @php
                             [$title, $content] = explode(' - ', $point, 2);
@@ -232,7 +237,6 @@
             </div>
 
             <div class="col-lg-8">
-                <img src="{{ asset($announcement->image) }}" alt="">
                 @foreach ($points as $index => $point)
                     @php
                         [$title, $content] = explode(' - ', $point, 2);
@@ -246,7 +250,12 @@
                 @endforeach
             </div>
         </div>
-        <section class="brife-description mt-5">
+        @endif
+       <section class="brife-description mt-5">
+            <img src="{{ asset($announcement->image) }}"
+                alt="{{ $metaTitle ?? $announcement->title ?? 'Default Page Title' }}"
+                class="float-end ms-3 mb-3 img-fluid" style="max-width: 300px;">
+
             {!! $announcement->description !!}
         </section>
     </div>

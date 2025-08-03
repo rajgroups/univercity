@@ -46,7 +46,7 @@ class SectorController extends Controller
             'slug'        => 'required|string|max:255|unique:sectors,slug',
             'image'       => 'required|image',
             'status'      => 'required|in:0,1',
-            'description' => 'nullable|string',
+            'description' => 'required|string',
         ]);
 
         $imagePath = null;
@@ -96,7 +96,7 @@ class SectorController extends Controller
             'name'          => 'required|string|max:255',
             'slug'          => 'required|string|max:255|unique:sectors,slug,' . $sector->id,
             'status'        => 'required|in:1,0',
-            'description'   => 'nullable|string',
+            'description'   => 'required|string',
             'image'         => 'nullable|image|max:2048',
         ]);
 

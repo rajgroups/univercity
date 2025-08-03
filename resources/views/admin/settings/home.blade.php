@@ -100,7 +100,7 @@
                             <input type="file" class="form-control" name="operate_icon[]">
                             @if(isset($section['operate_icon']))
                                 <div class="mt-2">
-                                    <img src="{{ asset('storage/' . $section['operate_icon']) }}" width="50" class="existing-image">
+                                    <img src="{{ asset($section['operate_icon']) }}" width="50" class="existing-image">
                                     <input type="hidden" name="existing_operate_icon[]" value="{{ $section['operate_icon'] }}">
                                 </div>
                             @endif

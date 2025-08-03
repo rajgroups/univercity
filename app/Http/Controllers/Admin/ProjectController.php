@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Project;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class ProjectController extends Controller
 {
@@ -42,10 +43,17 @@ class ProjectController extends Controller
             'type'              => 'required|in:1,2',
             'status'            => 'required|in:0,1',
             'description'       => 'nullable|string',
-            // 'description'       => 'nullable|string|max:3000',
             'points'            => 'nullable|array',
-            'points.*'          => 'nullable|string',
-            'category_id'       => 'nullable|exists:category,id',
+            'points.*'          => [
+                'nullable', // or 'nullable' if it's optional
+                'string',
+                function ($attribute, $value, $fail) {
+                    if (!Str::contains($value, '-')) {
+                        $fail('Each point must contain a hyphen (-) to separate title and description.');
+                    }
+                },
+            ],
+            'category_id'       => 'required|exists:category,id',
         ]);
 
         // Convert type/status to int
@@ -107,10 +115,19 @@ class ProjectController extends Controller
             'status'                => 'required|in:0,1',
             'short_description'     => 'required|string',
             'description'           => 'nullable',
-            'image'                 => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'banner_image'          => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image'                 => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
+            'banner_image'          => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
             'points'                => 'nullable|array',
-            'points.*'              => 'nullable|string',
+            'points.*'              => [
+                'nullable', // or 'nullable' if it's optional
+                'string',
+                function ($attribute, $value, $fail) {
+                    if (!Str::contains($value, '-')) {
+                        $fail('Each point must contain a hyphen (-) to separate title and description.');
+                    }
+                },
+            ],
+            'category_id'           => 'required|exists:category,id',
         ]);
 
         // Handle image upload
@@ -135,13 +152,14 @@ class ProjectController extends Controller
         }
 
         // Update fields
-        $project->title            = $request->title;
-        $project->slug             = $request->slug;
-        $project->type             = $request->type;
-        $project->status           = $request->status;
-        $project->status           = $request->status;
-        $project->description      = $request->description;
-        $project->short_description= $request->short_description;
+        $project->title             = $request->title;
+        $project->slug              = $request->slug;
+        $project->type              = $request->type;
+        $project->status            = $request->status;
+        $project->status            = $request->status;
+        $project->description       = $request->description;
+        $project->short_description = $request->short_description;
+        $project->category_id       = $request->category_id;
 
         // Save bullet points as JSON
         $project->points = json_encode(array_filter($request->points ?? [])); // Save cleaned array

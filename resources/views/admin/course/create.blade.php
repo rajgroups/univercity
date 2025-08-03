@@ -74,7 +74,7 @@
                 <!-- Image Upload -->
                 <div class="col-md-6">
                     <label class="form-label">Image</label>
-                    <input type="file" class="form-control @error('image') is-invalid @enderror" name="image">
+                    <input type="file" class="form-control @error('image') is-invalid @enderror" name="image" multiple>
                     @error('image')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
@@ -336,16 +336,16 @@
 
                 <div class="col-md-4">
                      <div class="mb-3">
-                                        <label class="form-label">Status <span class="text-danger">*</span></label>
-                                        <select name="status" class="form-select @error('status') is-invalid @enderror">
-                                            <option value="">Select</option>
-                                            <option value="1" {{ old('status') == 1 ? 'selected' : '' }}>Active</option>
-                                            <option value="0" {{ old('status') == 0 ? 'selected' : '' }}>Inactive</option>
-                                        </select>
-                                        @error('status')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
+                        <label class="form-label">Status <span class="text-danger">*</span></label>
+                        <select name="status" class="form-select @error('status') is-invalid @enderror">
+                            <option value="">Select</option>
+                            <option value="1" {{ old('status') == 1 ? 'selected' : '' }}>Active</option>
+                            <option value="0" {{ old('status') == 0 ? 'selected' : '' }}>Inactive</option>
+                        </select>
+                        @error('status')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
                 </div>
 
                 <div class="col-md-4">

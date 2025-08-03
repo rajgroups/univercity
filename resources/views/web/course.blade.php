@@ -10,10 +10,9 @@
     <!-- Couse Section Start -->
     <section class="couses-sec mb-120">
         <div class="container-fluid">
-            <h4 class="text-center mb-5">Please select sectoy to expore skill courses</h4>
             <div
                 class="d-flex align-items-center justify-content-sm-between justify-content-center row-gap-4 flex-wrap mb-24">
-                <h4 class="text-center">Please select sectoy to expore skill courses</h4>
+                <h4 class="text-center">Please select Sector to expore skill courses</h4>
                 <div class="d-flex align-items-center gap-8">
                     <p class="flex-shrink-0 m-4">Sort By:</p>
                     <div class="w-100 drop-container">

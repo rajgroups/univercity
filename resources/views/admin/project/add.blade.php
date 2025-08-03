@@ -72,8 +72,7 @@
                                     <div class="mb-3">
                                         <label class="form-label">Project Title <span
                                                 class="text-danger">*</span></label>
-                                        <input type="text" class="form-control  @error('title') is-invalid @enderror"
-                                            name="title" value="{{ old('title') }}" test>
+                                        <input type="text" class="form-control  @error('title') is-invalid @enderror" name="title" value="{{ old('title') }}" placeholder="Enter Proect title">
                                         @error('title')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -83,7 +82,7 @@
                                     <div class="mb-3">
                                         <label class="form-label">Slug <span class="text-danger">*</span></label>
                                         <input type="text" class="form-control @error('slug') is-invalid @enderror"
-                                            name="slug" value="{{ old('slug') }}" test>
+                                            name="slug" value="{{ old('slug') }}">
                                         @error('slug')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -93,7 +92,7 @@
 
                             <!-- Description -->
                             <div class="mb-3">
-                                <label for="short_description" class="form-label">Short Description</label>
+                                <label for="short_description" class="form-label">Short Description<span class="text-danger">*</span></label>
                                 <textarea class="form-control @error('short_description') is-invalid @enderror" name="short_description"
                                     id="short_description" rows="3" class="form-control" placeholder="Brief short_description...">{{ old('short_description') }}</textarea>
                                 @error('slug')
@@ -106,32 +105,31 @@
                                     <div class="mb-3">
                                         <label class="form-label">Image <span class="text-danger">*</span></label>
                                         <input type="file" class="form-control @error('image') is-invalid @enderror"
-                                            name="image" accept="image/*" test>
+                                            name="image" accept="image/*">
                                         @error('image')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
+                                        <small class="form-text text-muted">Maximum file size: 5MB. Allowed types: JPG, PNG, JPEG, etc.</small>
                                     </div>
                                 </div>
                                 <div class="col-sm-6 col-12">
                                     <div class="mb-3">
                                         <label class="form-label">Banner Image <span class="text-danger">*</span></label>
                                         <input type="file" class="form-control @error('image') is-invalid @enderror"
-                                            name="banner_image" accept="image/*" test>
+                                            name="banner_image" accept="image/*">
                                         @error('banner_image')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
+                                        <small class="form-text text-muted">Maximum file size: 5MB. Allowed types: JPG, PNG, JPEG, etc.</small>
                                     </div>
                                 </div>
                                 <div class="col-sm-6 col-12">
                                     <div class="mb-3">
                                         <label class="form-label">Type <span class="text-danger">*</span></label>
-                                        <select name="type" class="form-select @error('type') is-invalid @enderror"
-                                            test>
+                                        <select name="type" class="form-select @error('type') is-invalid @enderror">
                                             <option value="">Select Type</option>
-                                            <option value="1" {{ old('type') == '1' ? 'selected' : '' }}>On Going
-                                            </option>
-                                            <option value="2" {{ old('type') == '2' ? 'selected' : '' }}>Up Coming
-                                            </option>
+                                            <option value="1" {{ old('type') == '1' ? 'selected' : '' }}>On Going </option>
+                                            <option value="2" {{ old('type') == '2' ? 'selected' : '' }}>Up Coming </option>
                                         </select>
                                         @error('type')
                                             <div class="invalid-feedback">{{ $message }}</div>
@@ -157,7 +155,7 @@
                                     <!-- /Editor -->
                                     <div class="mb-3">
                                         <label for="subtitle" class="form-label">Sub Title</label>
-                                        <input type="text" name="subtitle" id="subtitle" class="form-control @error('subtitle') is-invalid @enderror" value="{{ old('subtitle') }}" placeholder="Enter program sub title" test>
+                                        <input type="text" name="subtitle" id="subtitle" class="form-control @error('subtitle') is-invalid @enderror" value="{{ old('subtitle') }}" placeholder="Enter program sub title">
                                         @error('subtitle')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -218,20 +216,19 @@
                             </div>
                             <div class="col-lg-12">
                                 <div class="summer-description-box">
-                                    <label class="form-label">Description</label>
+                                    <label class="form-label">Description <span class="text-danger">*</span></label>
                                     <textarea name="description" id="summernote" class="form-control @error('description') is-invalid @enderror"
                                         rows="6" maxlength="600">{{ old('description') }}</textarea>
                                     @error('description')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
-                                    <p class="fs-14 mt-1">Maximum 60 Words</p>
+                                    {{-- <small class="form-text text-muted">Maximum file size: 5MB. Allowed types: JPG, PNG, JPEG, etc.</small> --}}
                                 </div>
                             </div>
 
                             <div class="col-lg-12">
                                 <div class="d-flex align-items-center justify-content-end mb-4">
-                                    <a href="{{ route('admin.announcement.index') }}"
-                                        class="btn btn-secondary me-2">Cancel</a>
+                                    <a href="{{ route('admin.project.index') }}" class="btn btn-secondary me-2">Cancel</a>
                                     <button type="submit" class="btn btn-primary">Create Project</button>
                                 </div>
                             </div>

@@ -228,14 +228,19 @@
             {!! $program->description !!}
             <img src="{{ asset($program->image) }}" class="br-24 w-100 mb-4" alt="program img">
             <div class="container my-5">
+               @php
+                  $points = [];
+
+                  if (!empty($program->points)) {
+                     $points = is_string($program->points) ? json_decode($program->points, true) : $program->points;
+                  }  
+               @endphp
+               @if (!empty($points))
                <div class="row">
                   <!-- Sidebar -->
-                  @php
-                  $points = is_string($program->points) ? json_decode($program->points, true) : $program->points;
-                  @endphp
                   <div class="col-lg-4 mb-4">
                      <nav id="navbar-example" class="navbar sticky-top flex-column align-items-stretch p-3 bg-light rounded">
-                        <h5 class="fw-bold mb-3">Programs</h5>
+                        <h5 class="fw-bold mb-3">Topics</h5>
                         <nav class="nav nav-pills flex-column">
                            @foreach($points as $index => $item)
                            @php
@@ -249,7 +254,7 @@
                   </div>
                   <!-- Content -->
                   <div class="col-lg-8">
-                     <h3 class="fw-bold mb-4">ISICO School Programs</h3>
+                     <h3 class="fw-bold mb-4">{{ $program->title ?? null }}</h3>
                      <p class="mb-4">
                         {!! $program->short_description !!}
                      </p>
@@ -278,7 +283,8 @@
                         @endforeach
                      </div>
                   </div>
-               </div>
+               </div>             
+               @endif
             </div>
          </div>
          <div class="col-lg-4">

@@ -111,8 +111,243 @@
 
         </div>
     </div>
+    <!-- BLog Detail Section Start -->
+    <section class="blog-detail-sec mt-5">
+        <div class="container-fluid">
+            <div class="row row-gap-4">
+                <div class="col-lg-8">
+                    {!! $course->long_description !!}
+                    <img src="{{ asset($course->image) }}" alt="Course Image" class="img-fluid mb-3"
+                        style="width: 100%">
+                </div>
+                <div class="col-lg-4">
+                    <div class="siderbar">
+                        {{-- <div class="sidebar-block mb-48">
+                            <form class="search-form">
+                                <input type="text" name="search" id="search" placeholder="Search">
+                                <button type="submit"><svg xmlns="http://www.w3.org/2000/svg" width="20"
+                                        height="21" viewBox="0 0 20 21" fill="none">
+                                        <path
+                                            d="M17.5 18L14.5834 15.0833M16.6667 10.0833C16.6667 13.9954 13.4954 17.1667 9.58333 17.1667C5.67132 17.1667 2.5 13.9954 2.5 10.0833C2.5 6.17132 5.67132 3 9.58333 3C13.4954 3 16.6667 6.17132 16.6667 10.0833Z"
+                                            stroke="#92949F" stroke-width="1.66667" stroke-linecap="round"
+                                            stroke-linejoin="round" />
+                                    </svg></button>
+                            </form>
+                        </div> --}}
+                        <div class="sidebar-block mb-48">
+                            <h5 class="fw-500 mb-24">Sectors</h5>
+                            <ul>
+                                @forelse ($sectors as $sector)
+                                    <li>
+                                        <a href="{{ route('web.sector') }}"
+                                            class="mb-12 light-gray">{{ $sector->name ?? null }}</a>
+                                    </li>
+                                @empty
+                                    <div class="alert alert-warning mt-3" role="alert">
+                                        No sectors available at the moment.
+                                    </div>
+                                @endforelse
 
-    <div class="container mt-5">
+                            </ul>
+                        </div>
+                        {{-- @if ($blogs->count())
+                            <div class="sidebar-block mb-48">
+                                <h5 class="fw-500 mb-24">Similar Blogs</h5>
+                                @foreach ($blogs as $blog)
+                                    <div class="recent-article mb-12">
+                                        <img src="{{ asset('uploads/blogs/' . $blog->image) }}" class="article-img"
+                                            alt="{{ $blog->title }}">
+                                        <div>
+                                            <a href="{{ route('web.blog.show', $blog->slug) }}"
+                                                class="fw-500 black mb-8 hover-content">
+                                                {{ Str::limit($blog->title, 50) }}
+                                            </a>
+                                            <p class="light-gray subtitle">
+                                                {{ \Carbon\Carbon::parse($blog->created_at)->format('d/m/Y') }}</p>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @endif --}}
+
+                        <div class="sidebar-block">
+                            <h5 class="fw-500 mb-24">Other Courses</h5>
+                            <div class="tag-block">
+                                @forelse ($otherCourses as $other)
+                                    <a href="{{ route('web.course.show', $other->slug) }}">
+                                        {{ $other->title }}
+                                    </a>
+                                @empty
+                                    <div class="alert alert-warning">No other courses found.</div>
+                                @endforelse
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- BLog Detail Section End -->
+    <!-- Our Programmes -->
+    <section class="out-team-sec mt-80 mb-120 wow fadeInUp animated animated" data-wow-delay="540ms"
+        style="visibility: visible; animation-delay: 540ms; animation-name: fadeInUp;">
+        <div class="container-fluid">
+            <div class="heading mb-48">
+                <div class="tagblock mb-16"> <img src="{{ asset('resource/web/assets/media/hero/buld-vec.png') }}"
+                        class="bulb-vec" alt="">
+                    <p class="black">Our Program</p>
+                </div>
+                <div class="text-start mt-2">{{ $settings->program_project_title }}</div>
+                <h3 class="fw-500 text-start mt-2 mb-2">{{ $settings->program_project_main_title }}<span
+                        class="color-primary"> {{ $settings->program_project_main_sub_title }}</span> </h3>
+                <p class="text-start">{{ $settings->program_final_title }}</p>
+            </div>
+            <div class="row align-items-stretch h-100">
+                @if ($programes->isNotEmpty())
+                    <div class="swiper mySwiperstwo p-0 m-0">
+                        <div class="swiper-wrapper">
+                            @foreach ($programes as $program)
+                                <div class="swiper-slide">
+                                    <div class="col-md-*">
+                                        <div class="team-block">
+                                            <div class="img-block">
+                                                <img class="w-100"
+                                                    src="{{ $program->image ? asset($program->image) : asset('resource/web/assets/media/default/default-img.png') }}"
+                                                    alt="{{ $program->title }}">
+                                            </div>
+                                            <div class="team-content">
+                                                <div>
+                                                    <a href="{{ route('web.announcement.program', [$program->category->slug, $program->slug]) }}"
+                                                        class="h6 fw-500 mb-4p">{{ $program->title }}</a>
+                                                    <p class="subtitle">
+                                                        {{ \Illuminate\Support\Str::limit(strip_tags($program->description), 80) }}
+                                                    </p>
+                                                </div>
+                                                @php
+                                                    $currentUrl = urlencode(request()->fullUrl()); // Dynamically get current page URL
+                                                    $shareText = urlencode($scheme->title ?? 'Check this out!');
+                                                @endphp
+
+                                                <div class="d-flex gap-8 align-items-center">
+                                                    {{-- LinkedIn Share --}}
+                                                    <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ $currentUrl }}"
+                                                        target="_blank">
+                                                        <img class="links-icon"
+                                                            src="{{ asset('resource/web/assets/media/vector/linkedin.png') }}"
+                                                            alt="LinkedIn">
+                                                    </a>
+
+                                                    {{-- Facebook Share --}}
+                                                    <a href="https://www.facebook.com/sharer/sharer.php?u={{ $currentUrl }}"
+                                                        target="_blank">
+                                                        <img class="links-icon"
+                                                            src="{{ asset('resource/web/assets/media/vector/facebook.png') }}"
+                                                            alt="Facebook">
+                                                    </a>
+
+                                                    {{-- Twitter (X) Share --}}
+                                                    <a href="https://twitter.com/intent/tweet?url={{ $currentUrl }}&text={{ $shareText }}"
+                                                        target="_blank">
+                                                        <img class="links-icon"
+                                                            src="{{ asset('resource/web/assets/media/vector/twitter.webp') }}"
+                                                            alt="Twitter">
+                                                    </a>
+
+                                                    {{-- Instagram: Not directly shareable via URL --}}
+                                                    <a href="https://www.instagram.com/" target="_blank">
+                                                        <img class="links-icon"
+                                                            src="{{ asset('resource/web/assets/media/vector/instagram.webp') }}"
+                                                            alt="Instagram">
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                        <!-- Swiper Controls -->
+                        <div class="swiper-button-prev"></div>
+                        <div class="swiper-button-next"></div>
+                        <div class="swiper-pagination"></div>
+                    </div>
+                @else
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                        <strong>No educational</strong> Programs available at the moment.
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endif
+
+            </div>
+    </section>
+    <!-- end of our Programmes -->
+
+    <!-- How We Operate Section End -->
+    <div class="blog-sec mt-80 mb-5">
+        <div class="container-fluid">
+            <div class="heading mb-10 text-start">
+                <div class="tagblock mb-16"> <img src="{{ asset('resource/web/assets/media/hero/buld-vec.png') }}"
+                        class="bulb-vec" alt="">
+                    <p class="black">Ongoing Projects</p>
+                </div>
+                <div class="cds-119 css-1v1mgi3 cds-121 mt-2">{{ $settings->on_going_project_title ?? null }}</div>
+                <h3 class="fw-bold mt-2 mb-2">{{ $settings->on_going_project_main_title ?? null }} <span
+                        class="color-primary"> {{ $settings->on_going_project_main_sub_title ?? null }}</span></h3>
+                <p class="cds-119 css-lg65q1 cds-121">{{ $settings->onging_final_titles ?? null }}</p>
+            </div> <!-- Swiper -->
+            <div class="swiper mySwipers">
+                <div class="swiper-wrapper">
+                    @if ($ongoingProjects->isEmpty())
+                        <div class="w-100">
+                            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                <strong>No projects found.</strong> Please check back later.
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                    aria-label="Close"></button>
+                            </div>
+                        </div>
+                    @else
+                        @foreach ($ongoingProjects as $project)
+                            <!-- Slide -->
+                            <div class="swiper-slide" data-swiper-autoplay="2000">
+                                <div class="blog-card">
+
+                                    <a href="{{ route('web.ongoging.project', [$project->category->slug, $project->slug]) }}"
+                                        class="card-img">
+                                        <img src="{{ asset($project->image) }}" alt="{{ $project->title }}">
+                                        <span class="date-block">
+                                            <span
+                                                class="h6 fw-400 light-black">{{ \Carbon\Carbon::parse($project->created_at)->format('d') }}</span>
+                                            <span
+                                                class="h6 fw-400 light-black">{{ \Carbon\Carbon::parse($project->created_at)->format('M') }}</span>
+                                        </span>
+                                    </a>
+                                    <div class="card-content">
+                                        {{-- <div class="d-flex align-items-center gap-8 mb-20">
+                                            <img src="{{ asset('upload/project/' . $project->image) }}" class="card-user"
+                                                alt="">
+                                            <p>By Admin</p>
+                                        </div> --}}
+                                        <a href="{{ route('web.ongoging.project', [$project->category->slug, $project->slug]) }}"
+                                            class="h6 fw-500 mb-8">{{ $project->title }}</a>
+                                        <p class="light-gray mb-24">
+                                            {{ \Illuminate\Support\Str::limit(strip_tags($project->description), 100) }}
+                                        </p>
+                                        <a href="{{ route('web.ongoging.project', [$project->category->slug, $project->slug]) }}"
+                                            class="card-btn"> Read More</a>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    @endif
+                </div>
+
+                <!-- Pagination -->
+                <div class="swiper-pagination"></div>
+            </div>
+        </div>
+    </div>
+    <!-- Our Courses Section Start -->
+        <div class="container mt-5">
         <ul class="nav nav-tabs justify-content-start" id="myTab" role="tablist">
             <li class="nav-item" role="presentation">
                 <button class="nav-link active" id="tab1-tab" data-bs-toggle="tab" data-bs-target="#tab1"
@@ -373,243 +608,7 @@
         </div>
     </div>
 
-    <!-- Our Programmes -->
-    <section class="out-team-sec mt-80 mb-120 wow fadeInUp animated animated" data-wow-delay="540ms"
-        style="visibility: visible; animation-delay: 540ms; animation-name: fadeInUp;">
-        <div class="container-fluid">
-            <div class="heading mb-48">
-                <div class="tagblock mb-16"> <img src="{{ asset('resource/web/assets/media/hero/buld-vec.png') }}"
-                        class="bulb-vec" alt="">
-                    <p class="black">Our Program</p>
-                </div>
-                <div class="text-start mt-2">{{ $settings->program_project_title }}</div>
-                <h3 class="fw-500 text-start mt-2 mb-2">{{ $settings->program_project_main_title }}<span
-                        class="color-primary"> {{ $settings->program_project_main_sub_title }}</span> </h3>
-                <p class="text-start">{{ $settings->program_final_title }}</p>
-            </div>
-            <div class="row align-items-stretch h-100">
-                @if ($programes->isNotEmpty())
-                    <div class="swiper mySwiperstwo p-0 m-0">
-                        <div class="swiper-wrapper">
-                            @foreach ($programes as $program)
-                                <div class="swiper-slide">
-                                    <div class="col-md-*">
-                                        <div class="team-block">
-                                            <div class="img-block">
-                                                <img class="w-100"
-                                                    src="{{ $program->image ? asset($program->image) : asset('resource/web/assets/media/default/default-img.png') }}"
-                                                    alt="{{ $program->title }}">
-                                            </div>
-                                            <div class="team-content">
-                                                <div>
-                                                    <a href="{{ route('web.announcement.program', [$program->category->slug, $program->slug]) }}"
-                                                        class="h6 fw-500 mb-4p">{{ $program->title }}</a>
-                                                    <p class="subtitle">
-                                                        {{ \Illuminate\Support\Str::limit(strip_tags($program->description), 80) }}
-                                                    </p>
-                                                </div>
-                                                @php
-                                                    $currentUrl = urlencode(request()->fullUrl()); // Dynamically get current page URL
-                                                    $shareText = urlencode($scheme->title ?? 'Check this out!');
-                                                @endphp
-
-                                                <div class="d-flex gap-8 align-items-center">
-                                                    {{-- LinkedIn Share --}}
-                                                    <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ $currentUrl }}"
-                                                        target="_blank">
-                                                        <img class="links-icon"
-                                                            src="{{ asset('resource/web/assets/media/vector/linkedin.png') }}"
-                                                            alt="LinkedIn">
-                                                    </a>
-
-                                                    {{-- Facebook Share --}}
-                                                    <a href="https://www.facebook.com/sharer/sharer.php?u={{ $currentUrl }}"
-                                                        target="_blank">
-                                                        <img class="links-icon"
-                                                            src="{{ asset('resource/web/assets/media/vector/facebook.png') }}"
-                                                            alt="Facebook">
-                                                    </a>
-
-                                                    {{-- Twitter (X) Share --}}
-                                                    <a href="https://twitter.com/intent/tweet?url={{ $currentUrl }}&text={{ $shareText }}"
-                                                        target="_blank">
-                                                        <img class="links-icon"
-                                                            src="{{ asset('resource/web/assets/media/vector/twitter.webp') }}"
-                                                            alt="Twitter">
-                                                    </a>
-
-                                                    {{-- Instagram: Not directly shareable via URL --}}
-                                                    <a href="https://www.instagram.com/" target="_blank">
-                                                        <img class="links-icon"
-                                                            src="{{ asset('resource/web/assets/media/vector/instagram.webp') }}"
-                                                            alt="Instagram">
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endforeach
-                        </div>
-                        <!-- Swiper Controls -->
-                        <div class="swiper-button-prev"></div>
-                        <div class="swiper-button-next"></div>
-                        <div class="swiper-pagination"></div>
-                    </div>
-                @else
-                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                        <strong>No educational</strong> Programs available at the moment.
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                @endif
-
-            </div>
-    </section>
-    <!-- end of our Programmes -->
-
-    <!-- How We Operate Section End -->
-    <div class="blog-sec mt-80 mb-5">
-        <div class="container-fluid">
-            <div class="heading mb-10 text-start">
-                <div class="tagblock mb-16"> <img src="{{ asset('resource/web/assets/media/hero/buld-vec.png') }}"
-                        class="bulb-vec" alt="">
-                    <p class="black">Ongoing Projects</p>
-                </div>
-                <div class="cds-119 css-1v1mgi3 cds-121 mt-2">{{ $settings->on_going_project_title ?? null }}</div>
-                <h3 class="fw-bold mt-2 mb-2">{{ $settings->on_going_project_main_title ?? null }} <span
-                        class="color-primary"> {{ $settings->on_going_project_main_sub_title ?? null }}</span></h3>
-                <p class="cds-119 css-lg65q1 cds-121">{{ $settings->onging_final_titles ?? null }}</p>
-            </div> <!-- Swiper -->
-            <div class="swiper mySwipers">
-                <div class="swiper-wrapper">
-                    @if ($ongoingProjects->isEmpty())
-                        <div class="w-100">
-                            <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                                <strong>No projects found.</strong> Please check back later.
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                    aria-label="Close"></button>
-                            </div>
-                        </div>
-                    @else
-                        @foreach ($ongoingProjects as $project)
-                            <!-- Slide -->
-                            <div class="swiper-slide" data-swiper-autoplay="2000">
-                                <div class="blog-card">
-
-                                    <a href="{{ route('web.ongoging.project', [$project->category->slug, $project->slug]) }}"
-                                        class="card-img">
-                                        <img src="{{ asset($project->image) }}" alt="{{ $project->title }}">
-                                        <span class="date-block">
-                                            <span
-                                                class="h6 fw-400 light-black">{{ \Carbon\Carbon::parse($project->created_at)->format('d') }}</span>
-                                            <span
-                                                class="h6 fw-400 light-black">{{ \Carbon\Carbon::parse($project->created_at)->format('M') }}</span>
-                                        </span>
-                                    </a>
-                                    <div class="card-content">
-                                        {{-- <div class="d-flex align-items-center gap-8 mb-20">
-                                            <img src="{{ asset('upload/project/' . $project->image) }}" class="card-user"
-                                                alt="">
-                                            <p>By Admin</p>
-                                        </div> --}}
-                                        <a href="{{ route('web.ongoging.project', [$project->category->slug, $project->slug]) }}"
-                                            class="h6 fw-500 mb-8">{{ $project->title }}</a>
-                                        <p class="light-gray mb-24">
-                                            {{ \Illuminate\Support\Str::limit(strip_tags($project->description), 100) }}
-                                        </p>
-                                        <a href="{{ route('web.ongoging.project', [$project->category->slug, $project->slug]) }}"
-                                            class="card-btn"> Read More</a>
-                                    </div>
-                                </div>
-                            </div>
-                        @endforeach
-                    @endif
-                </div>
-
-                <!-- Pagination -->
-                <div class="swiper-pagination"></div>
-            </div>
-        </div>
-    </div>
-    <!-- Our Courses Section Start -->
-    <!-- BLog Detail Section Start -->
-    <section class="blog-detail-sec mb-120">
-        <div class="container-fluid">
-            <div class="row row-gap-4">
-                <div class="col-lg-8">
-                    {!! $course->long_description !!}
-                    <img src="{{ asset($course->image) }}" alt="Course Image" class="img-fluid mb-3"
-                        style="width: 100%">
-                </div>
-                <div class="col-lg-4">
-                    <div class="siderbar">
-                        {{-- <div class="sidebar-block mb-48">
-                            <form class="search-form">
-                                <input type="text" name="search" id="search" placeholder="Search">
-                                <button type="submit"><svg xmlns="http://www.w3.org/2000/svg" width="20"
-                                        height="21" viewBox="0 0 20 21" fill="none">
-                                        <path
-                                            d="M17.5 18L14.5834 15.0833M16.6667 10.0833C16.6667 13.9954 13.4954 17.1667 9.58333 17.1667C5.67132 17.1667 2.5 13.9954 2.5 10.0833C2.5 6.17132 5.67132 3 9.58333 3C13.4954 3 16.6667 6.17132 16.6667 10.0833Z"
-                                            stroke="#92949F" stroke-width="1.66667" stroke-linecap="round"
-                                            stroke-linejoin="round" />
-                                    </svg></button>
-                            </form>
-                        </div> --}}
-                        <div class="sidebar-block mb-48">
-                            <h5 class="fw-500 mb-24">Sectors</h5>
-                            <ul>
-                                @forelse ($sectors as $sector)
-                                    <li>
-                                        <a href="{{ route('web.sector') }}"
-                                            class="mb-12 light-gray">{{ $sector->name ?? null }}</a>
-                                    </li>
-                                @empty
-                                    <div class="alert alert-warning mt-3" role="alert">
-                                        No sectors available at the moment.
-                                    </div>
-                                @endforelse
-
-                            </ul>
-                        </div>
-                        {{-- @if ($blogs->count())
-                            <div class="sidebar-block mb-48">
-                                <h5 class="fw-500 mb-24">Similar Blogs</h5>
-                                @foreach ($blogs as $blog)
-                                    <div class="recent-article mb-12">
-                                        <img src="{{ asset('uploads/blogs/' . $blog->image) }}" class="article-img"
-                                            alt="{{ $blog->title }}">
-                                        <div>
-                                            <a href="{{ route('web.blog.show', $blog->slug) }}"
-                                                class="fw-500 black mb-8 hover-content">
-                                                {{ Str::limit($blog->title, 50) }}
-                                            </a>
-                                            <p class="light-gray subtitle">
-                                                {{ \Carbon\Carbon::parse($blog->created_at)->format('d/m/Y') }}</p>
-                                        </div>
-                                    </div>
-                                @endforeach
-                            </div>
-                        @endif --}}
-
-                        <div class="sidebar-block">
-                            <h5 class="fw-500 mb-24">Other Courses</h5>
-                            <div class="tag-block">
-                                @forelse ($otherCourses as $other)
-                                    <a href="{{ route('web.course.show', $other->slug) }}">
-                                        {{ $other->title }}
-                                    </a>
-                                @empty
-                                    <div class="alert alert-warning">No other courses found.</div>
-                                @endforelse
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- BLog Detail Section End -->
-    <section class="title-banner mb-80 mb-5">
+    <section class="title-banner mb-120">
         <div class="container-fluid">
             <h2 class="fw-500 mb-24">{{ $course->name }}<br class="d-sm-block d-none">
                 {{ $course->short_name }} <span class="color-primary"> {{ $course->language }}</span></h2>
