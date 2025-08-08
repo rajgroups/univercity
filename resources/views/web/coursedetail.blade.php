@@ -28,6 +28,27 @@
 @extends('layouts.web.app')
 @section('content')
     <!-- Yout Content Here -->
+    <section class="title-banner mb-120">
+        <div class="container-fluid">
+            <h2 class="fw-500 mb-24">{{ $course->name }}<br class="d-sm-block d-none">
+                {{ $course->short_name }} <span class="color-primary"> {{ $course->language }}</span></h2>
+            <div class="d-flex align-items-center gap-16 flex-wrap row-gap-4">
+                <div class="d-flex align-items-center gap-8">
+                    <i class="bi bi-folder-fill text-warning"></i>
+                    <p class="light-gray">{{ $course->name }}</p>
+                </div>
+                <div class="d-flex align-items-center gap-8">
+                    <p class="text-muted">
+                        <i class="bi bi-calendar-event me-2 text-primary"></i>
+                        {{ \Carbon\Carbon::parse($course->created_at)->format('F jS, Y') }}
+                    </p>
+                </div>
+                {{-- <div class="d-flex align-items-center gap-8">
+                    <p class="light-gray">Emily Watson</p>
+                </div> --}}
+            </div>
+        </div>
+    </section>
     <div class="container-fluid mt-5">
         <div class="row">
             <div class="col-md-12 col-lg-6">
@@ -607,27 +628,5 @@
             </div>
         </div>
     </div>
-
-    <section class="title-banner mb-120">
-        <div class="container-fluid">
-            <h2 class="fw-500 mb-24">{{ $course->name }}<br class="d-sm-block d-none">
-                {{ $course->short_name }} <span class="color-primary"> {{ $course->language }}</span></h2>
-            <div class="d-flex align-items-center gap-16 flex-wrap row-gap-4">
-                <div class="d-flex align-items-center gap-8">
-                    <i class="bi bi-folder-fill text-warning"></i>
-                    <p class="light-gray">{{ $course->name }}</p>
-                </div>
-                <div class="d-flex align-items-center gap-8">
-                    <p class="text-muted">
-                        <i class="bi bi-calendar-event me-2 text-primary"></i>
-                        {{ \Carbon\Carbon::parse($course->created_at)->format('F jS, Y') }}
-                    </p>
-                </div>
-                {{-- <div class="d-flex align-items-center gap-8">
-                    <p class="light-gray">Emily Watson</p>
-                </div> --}}
-            </div>
-        </div>
-    </section>
     </div>
 @endsection

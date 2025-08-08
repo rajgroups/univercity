@@ -317,7 +317,7 @@
                                        <img src="{{ asset($similar->image) }}" class="article-img"
                                            alt="{{ $similar->title }}">
                                        <div>
-                                           <a href="{{ route('web.announcement.program', [$similar->category->slug, $similar->slug]) }}"
+                                           <a href="{{ route('web.upcoming.project', [$similar->category->slug, $similar->slug]) }}"
                                                class="fw-500 black mb-8 hover-content">
                                                {{ Str::limit($similar->title, 60) }}
                                            </a>

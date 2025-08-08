@@ -1,10 +1,10 @@
 <?php
 
-use App\Http\Controllers\web\EnquiryController;
+use App\Http\Controllers\Web\EnquiryController;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
-use App\Http\Controllers\web\RegisterController;
+use App\Http\Controllers\Web\RegisterController;
 use App\Http\Controllers\Web\WebController;
 
 /*

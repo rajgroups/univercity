@@ -124,7 +124,7 @@
                         style="background-color: #fafafa;border-bottom: 0px solid rgb(202, 202, 202);">
                         <div class="row align-items-center justify-content-between gy-2">
                             <!-- Search Bar (Always First on Mobile) -->
-                            <form method="GET" action="{{ route('web.blog.filter') }}">
+                            <form method="GET" action="{{ route('web.course.index') }}">
                                 <div class="col-12 d-block d-md-none order-1">
                                     <div class="input-group">
                                         <span class="input-group-text bg-white border-end-0">
@@ -148,7 +148,7 @@
                             </div>
                             <!-- Search Bar (Visible on md+ screens only) -->
                             <div class="col-md-4 my-2 d-none d-md-block order-md-2 mt-2">
-                                <form method="GET" action="{{ route('web.blog.filter') }}">
+                                <form method="GET" action="{{ route('web.course.index') }}">
                                     <div class="input-group mt-2 rounded-1">
                                         <span class="input-group-text bg-white border-end-0">
                                             <i class="fa fa-search"></i>
