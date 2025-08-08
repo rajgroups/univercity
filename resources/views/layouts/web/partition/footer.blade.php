@@ -98,8 +98,10 @@
                             </div>
 
                             <div class="col-md-6 form-check">
+                                <input type="hidden" name="is_philanthropist" value="0">
                                 <input class="form-check-input" type="checkbox" name="is_philanthropist"
-                                    id="philanthropistCheck" {{ old('is_philanthropist') ? 'checked' : '' }}>
+                                    id="philanthropistCheck" value="1"
+                                    {{ old('is_philanthropist') ? 'checked' : '' }}>
                                 <label class="form-check-label text-white" for="philanthropistCheck">
                                     Register as a Philanthropist or Sponsor
                                 </label>
