@@ -1,12 +1,13 @@
 <?php
 
+
 use App\Http\Controllers\web\EnquiryController;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\web\RegisterController;
 use App\Http\Controllers\Web\WebController;
-
+use App\Http\Controllers\Admin\FormController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -100,3 +101,7 @@ Route::get('/blogs/{categoryslug}/{slug}', [WebController::class, 'blogShow'])->
 
 // For Enquiry Mails
 Route::post('/send-enquiry', [EnquiryController::class, 'store'])->name('web.enquiry');
+
+
+Route::post('/send-student-details', [FormController::class, 'sendStudentDetails'])
+    ->name('sendStudentDetails');

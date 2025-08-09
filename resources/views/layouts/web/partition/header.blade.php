@@ -376,19 +376,24 @@
       <form id="userTypeForm">
         <div class="row justify-content-center g-3 mt-4">
 
-          <!-- Learner -->
-            <!-- Card Option - Partner -->
-            <div class="col-md-5 mt-3">
+
+        <!-- Card Option - Student / Learner -->
+        <div class="col-md-5 mt-3">
             <label class="w-100 border rounded-3 p-3 d-flex align-items-start gap-3 h-100"
-                    style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#studentDetailsModal">
-                <input type="radio" name="userType" value="partner" class="form-check-input mt-1" />
-                <img src="https://cdn-icons-png.flaticon.com/512/2922/2922510.png" alt="Partner" style="width: 50px; margin-left: 10px;">
+                style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#studentDetailsModal">
+
+                <input type="radio" name="userType" value="student" class="form-check-input mt-1" />
+                <img src="https://cdn-icons-png.flaticon.com/512/2922/2922510.png"
+                     alt="Student" style="width: 50px; margin-left: 10px;">
+
                 <div class="ms-2">
-                <h6 class="fw-bold mb-1">Student / Learner Registration Form</h6>
-                <p class="mb-0 small text-muted">Learning partner, Employer, Content Provider etc.</p>
+                    <h6 class="fw-bold mb-1">Student / Learner Registration Form</h6>
+                    <p class="mb-0 small text-muted">
+                        Fill your details to register as a learner.
+                    </p>
                 </div>
             </label>
-            </div>
+        </div>
 
 
           <!-- Partner -->
@@ -431,140 +436,179 @@
   </div>
 </div>
 
-    {{-- student details --}}
-    <!-- Student Details Modal -->
-    <div class="modal fade" id="studentDetailsModal" tabindex="-1" aria-labelledby="studentDetailsModalLabel" aria-hidden="true">
+        <div class="modal fade" id="studentDetailsModal" tabindex="-1" aria-labelledby="studentDetailsModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content p-4 rounded-4 border-0">
-        <div class="modal-header border-0">
-            <h5 class="modal-title fw-bold" id="studentDetailsModalLabel">Student Details</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-            <form>
-            <div class="row g-3">
 
-                <div class="col-md-6">
-                <label class="form-label">Student Name</label>
-                <input type="text" class="form-control">
-                </div>
-
-                <div class="col-md-6">
-                <label class="form-label">Father Name</label>
-                <input type="text" class="form-control">
-                </div>
-
-                <div class="col-md-6">
-                <label class="form-label">Mother Name</label>
-                <input type="text" class="form-control">
-                </div>
-
-                <div class="col-md-6">
-                <label class="form-label">Gender</label>
-                <select class="form-select">
-                    <option selected disabled>Choose...</option>
-                    <option>Male</option>
-                    <option>Female</option>
-                    <option>Other</option>
-                </select>
-                </div>
-
-                <div class="col-md-6">
-                <label class="form-label">Date of Birth</label>
-                <input type="date" class="form-control">
-                </div>
-
-                <div class="col-md-6">
-                <label class="form-label">Mobile Number</label>
-                <input type="tel" class="form-control">
-                </div>
-
-                <div class="col-md-6">
-                <label class="form-label">Email Id</label>
-                <input type="email" class="form-control">
-                </div>
-
-                <div class="col-md-6">
-                <label class="form-label">State</label>
-                <input type="text" class="form-control">
-                </div>
-
-                <div class="col-md-6">
-                <label class="form-label">District</label>
-                <input type="text" class="form-control">
-                </div>
-
-                <div class="col-md-6">
-                <label class="form-label">City/Town/Village</label>
-                <input type="text" class="form-control">
-                </div>
-
-                <div class="col-md-6">
-                <label class="form-label">Interested Skill Sector</label>
-                <input type="text" class="form-control">
-                </div>
-
-                <div class="col-md-6">
-                <label class="form-label">Level</label>
-                <select class="form-select" name="level">
-                    <option selected disabled>Choose your level</option>
-                    <option value="foundation">Foundation</option>
-                    <option value="middle">Middle</option>
-                    <option value="advanced">Advanced</option>
-                </select>
-                </div>
-
-
-                <div class="col-md-6">
-                <label class="form-label">Highest Qualification</label>
-                <input type="text" class="form-control">
-                </div>
-
-            <div class="col-md-6">
-                <label class="form-label">Current Status</label>
-                <select class="form-select" name="status">
-                    <option selected disabled>Choose your status</option>
-                    <option value="studying">Studying</option>
-                    <option value="working">Working</option>
-                    <option value="unemployed">Unemployed</option>
-                    <option value="business">Business</option>
-                </select>
-                </div>
-
-
-                <div class="col-md-6">
-                <label class="form-label">Preferred Learning Mode</label>
-                <select class="form-select" name="learningMode">
-                    <option selected disabled>Choose learning mode</option>
-                    <option value="online">Online</option>
-                    <option value="offline">Offline</option>
-                    <option value="hybrid">Hybrid</option>
-                </select>
-                </div>
-
-                <div class="col-md-6">
-                <label class="form-label">Work Experience</label>
-                <select class="form-select" name="workExp">
-                    <option selected disabled>Do you have work experience?</option>
-                    <option value="yes">Yes</option>
-                    <option value="no">No</option>
-                </select>
-                </div>
-
-
+            <div class="modal-header border-0">
+                <h5 class="modal-title fw-bold" id="studentDetailsModalLabel">Student Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
-            <!-- Back & Submit Buttons -->
-            <div class="d-flex justify-content-between mt-4">
-                <button type="button" class="btn btn-secondary px-4" data-bs-toggle="modal" data-bs-target="#registerModal"  data-bs-dismiss="modal">Back</button>
-                <button type="submit" class="btn btn-primary px-4">Submit</button>
+            <div class="modal-body">
+
+                {{-- ✅ Success Message --}}
+                @if(session('success'))
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        {{ session('success') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endif
+
+                {{-- ❌ Error Messages --}}
+                @if ($errors->any())
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <ul class="mb-0">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endif
+
+                <form action="{{ route('sendStudentDetails') }}" method="POST">
+                    @csrf
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Student Name</label>
+                            <input type="text" class="form-control" name="student_name" value="{{ old('student_name') }}" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Father Name</label>
+                            <input type="text" class="form-control" name="father_name" value="{{ old('father_name') }}">
+                        </div>
+
+                        {{-- ... (other fields same as your code) ... --}}
+                    </div>
+
+                     <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Student Name</label>
+                                <input type="text" class="form-control" name="student_name" required>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Father Name</label>
+                                <input type="text" class="form-control" name="father_name">
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Mother Name</label>
+                                <input type="text" class="form-control" name="mother_name">
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Gender</label>
+                                <select class="form-select" name="gender" required>
+                                    <option selected disabled>Choose...</option>
+                                    <option>Male</option>
+                                    <option>Female</option>
+                                    <option>Other</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Date of Birth</label>
+                                <input type="date" class="form-control" name="dob">
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Mobile Number</label>
+                                <input type="tel" class="form-control" name="mobile">
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Email Id</label>
+                                <input type="email" class="form-control" name="email">
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">State</label>
+                                <input type="text" class="form-control" name="state">
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">District</label>
+                                <input type="text" class="form-control" name="district">
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">City/Town/Village</label>
+                                <input type="text" class="form-control" name="city">
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Interested Skill Sector</label>
+                                <input type="text" class="form-control" name="skill_sector">
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Level</label>
+                                <select class="form-select" name="level">
+                                    <option selected disabled>Choose your level</option>
+                                    <option value="foundation">Foundation</option>
+                                    <option value="middle">Middle</option>
+                                    <option value="advanced">Advanced</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Highest Qualification</label>
+                                <input type="text" class="form-control" name="qualification">
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Current Status</label>
+                                <select class="form-select" name="status">
+                                    <option selected disabled>Choose your status</option>
+                                    <option value="studying">Studying</option>
+                                    <option value="working">Working</option>
+                                    <option value="unemployed">Unemployed</option>
+                                    <option value="business">Business</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Preferred Learning Mode</label>
+                                <select class="form-select" name="learning_mode">
+                                    <option selected disabled>Choose learning mode</option>
+                                    <option value="online">Online</option>
+                                    <option value="offline">Offline</option>
+                                    <option value="hybrid">Hybrid</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Work Experience</label>
+                                <select class="form-select" name="work_experience">
+                                    <option selected disabled>Do you have work experience?</option>
+                                    <option value="yes">Yes</option>
+                                    <option value="no">No</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Back & Submit Buttons -->
+                        <div class="d-flex justify-content-between mt-4">
+                            <button type="button"
+                                    class="btn btn-secondary px-4"
+                                    data-bs-dismiss="modal"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#registerModal">
+                                Back
+                            </button>
+                            <button type="submit" class="btn btn-primary px-4">Submit</button>
+                        </div>
+                    </form>
             </div>
 
-            </form>
-        </div>
         </div>
     </div>
-    </div>
+</div>
+
+
 
     <!-- Modal -->
     <div class="modal fade" id="cooperationModal" tabindex="-1" aria-labelledby="cooperationModalLabel" aria-hidden="true">
