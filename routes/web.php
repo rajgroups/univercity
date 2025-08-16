@@ -1,11 +1,14 @@
 <?php
 
-use App\Http\Controllers\Web\EnquiryController;
+use App\Http\Controllers\Admin\ActivityController;
+use App\Http\Controllers\web\EnquiryController;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\Web\RegisterController;
 use App\Http\Controllers\Web\WebController;
+use App\Http\Controllers\Admin\FormController;
+use Flasher\Laravel\Facade\Flasher;
 
 /*
 |--------------------------------------------------------------------------
@@ -72,6 +75,11 @@ Route::get('/event', function () {
     return view('web.event');
 })->name('event');
 
+// Collabration
+Route::get('/collaboration',function(){
+    return view('web.collaboration');
+})->name('web.collaboration');
+
 // Program Route
 Route::get('/program/{category}/{slug}', [WebController::class, 'program'])->name('web.announcement.program');
 
@@ -100,3 +108,11 @@ Route::get('/blogs/{categoryslug}/{slug}', [WebController::class, 'blogShow'])->
 
 // For Enquiry Mails
 Route::post('/send-enquiry', [EnquiryController::class, 'store'])->name('web.enquiry');
+
+Route::get('/event-and-competition', [WebController::class, 'activityFilter'])->name('web.activity');
+Route::get('/event-and-competition/{slug}', [WebController::class, 'activityshow'])->name('web.activity.show');
+
+Route::post('/send-student-details', [FormController::class, 'sendStudentDetails'])
+    ->name('sendStudentDetails');
+Route::post('/send-organization-details', [FormController::class, 'sendOrganizationDetails'])
+    ->name('sendOrganizationDetails');

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\ActivityController;
 use App\Http\Controllers\Admin\AnnouncementController;
 use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\BlogController;
@@ -10,9 +11,11 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\admin\HomeController;
 use App\Http\Controllers\admin\DashboardController;
 use App\Http\Controllers\Admin\EnquiryController;
+use App\Http\Controllers\Admin\OrganizationController;
 use App\Http\Controllers\Admin\ProjectController;
 use App\Http\Controllers\Admin\SectorController;
 use App\Http\Controllers\Admin\SettingController;
+use App\Http\Controllers\Admin\StudentController;
 use App\Http\Controllers\Admin\TestimonialController;
 use App\Http\Controllers\admin\UserController;
 use App\Http\Controllers\CategoryController;
@@ -63,8 +66,20 @@ Route::prefix('admin')->as('admin.')->group(function() {
         // Testimonial Routes
         Route::resource('testimonial', TestimonialController::class);
 
+        // Activities Routes
+        Route::resource('activity', ActivityController::class);
+        
         // Enquiry Routes
         Route::resource('enquiry',EnquiryController::class);
+
+        // Student Routes
+        Route::resource('student',StudentController::class);
+       
+        // organization Routes
+        Route::resource('organization',OrganizationController::class);
+    
+        // Onrginzation Routes
+        // Route::resource('organization',Or::class);
         
         // Setting Home Page Settings Route
         Route::get('settings/home/edit',[SettingController::class,'editHomePage'])->name('setting.home.edit');
@@ -81,5 +96,7 @@ Route::prefix('admin')->as('admin.')->group(function() {
         // You'll also need routes for 'create' and 'edit' to display the form
         Route::get('/projects/create', [App\Http\Controllers\Admin\ProjectController::class, 'create'])->name('project.create');
         Route::get('/projects/{project}/edit', [App\Http\Controllers\Admin\ProjectController::class, 'edit'])->name('project.edit');
+
+        Route::get('/dashboard/stats', [DashboardController::class, 'getStats'])->name('dashboard.stats');
     });
 });

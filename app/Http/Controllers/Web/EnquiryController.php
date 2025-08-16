@@ -6,8 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Mail\EnquiryNotification;
 use App\Mail\EnquiryThankYou;
 use App\Models\Enquiry;
+use Flasher\Laravel\Facade\Flasher;
+use Flasher\Prime\FlasherInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Validator;
 
 class EnquiryController extends Controller
 {
@@ -30,39 +33,76 @@ class EnquiryController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, FlasherInterface $flasher)
     {
-        // Validate input
-        $request->validate([
-            'name'                  => 'required|string|max:255',
-            'email'                 => 'required|email',
-            'mobile'                => 'required|string|max:15',
-            'is_philanthropist'     => 'nullable|boolean',
+        $validator = Validator::make($request->all(), [
+            'name'              => 'required|string|max:255',
+            'email'             => 'nullable|email|max:255',
+            'mobile'            => 'required|string|max:15|regex:/^[0-9]+$/',
+            'type'              => 'required|integer|in:1,2,3,4,5,6,7,8,9', // Only allow 8 or 9 as per your form
+            'message'           => 'nullable|string|max:1000',
+            'is_philanthropist' => 'nullable|boolean',
+            'paid'              => 'nullable|boolean',
+            // 'termsCheck'        => 'nullable|accepted'
+        ], [
+            'name.required'         => 'The name field is required.',
+            'mobile.required'       => 'The mobile number is required.',
+            'mobile.regex'          => 'Please enter a valid phone number (digits only).',
+            'email.email'           => 'Please enter a valid email address.',
+            'type.in'               => 'Invalid enquiry type selected.',
+            'termsCheck.accepted'   => 'You must accept the terms and conditions.'
         ]);
 
-        // Save enquiry to DB
-        $enquiry = Enquiry::create([
-            'name'                  => $request->name,
-            'email'                 => $request->email,
-            'mobile'                => $request->mobile,
-            'is_philanthropist'     => $request->has('is_philanthropist'),
-        ]);
+        if ($validator->fails()) {
+            foreach ($validator->errors()->all() as $error) {
+                $flasher->addError($error);
+            }
+            return redirect()->back()->withInput();
+        }
 
-        // Send email to admin
-        Mail::to('admin@example.com')->send(new EnquiryNotification($enquiry));
+        try {
+            $message = $request->message;
+            
+            // If the user is interested in a course, append a proper paragraph
+            if ($request->filled('course_name')) {
+                $message .= "\n\n---\nUser is interested in the course: \"" . $request->course_name . "\".";
+            }
 
-        // Send thank-you mail to user
-        Mail::to($enquiry->email)->send(new EnquiryThankYou($enquiry));
+            $enquiry = Enquiry::create([
+                'name'              => $request->name,
+                'email'             => $request->email,
+                'mobile'            => $request->mobile,
+                'type'              => $request->type,
+                'message'           => $message,
+                'is_philanthropist' => $request->boolean('is_philanthropist'),
+                'paid'              => $request->boolean('paid'),
+                'status'            => 1,
+            ]);
 
-        return redirect()->back()->with('success', 'Your enquiry has been submitted successfully.');
+            // Send emails
+            if (!empty($enquiry->email)) {
+                Mail::to('admin@example.com')->send(new EnquiryNotification($enquiry));
+                Mail::to($enquiry->email)->send(new EnquiryThankYou($enquiry));
+            } else {
+                Mail::to('admin@example.com')->send(new EnquiryNotification($enquiry));
+            }
+
+            $flasher->addSuccess('Your enquiry has been submitted successfully!');
+            return redirect()->back();
+
+        } catch (\Exception $e) {
+            $flasher->addError('An error occurred while submitting your enquiry. Please try again.');
+            return redirect()->back()->withInput();
+        }
     }
+
 
     /**
      * Display the specified resource.
      */
-    public function show(Enquiry $enquiry)
+    public function show($id)
     {
-        //
+
     }
 
     /**

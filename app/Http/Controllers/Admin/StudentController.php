@@ -3,19 +3,19 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Enquiry;
+use App\Models\Student;
 use Illuminate\Http\Request;
 
-class EnquiryController extends Controller
+class StudentController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        // List of Enquiry 
-        $enquiry = Enquiry::latest()->get(); // or paginate()
-        return view('admin.enquiry.list', compact('enquiry'));
+        // List Student
+        $students = Student::all();
+        return view('admin.student.list',compact('students'));
     }
 
     /**
@@ -39,14 +39,15 @@ class EnquiryController extends Controller
      */
     public function show($id)
     {
-        $enquiry = Enquiry::findOrFail($id);
-        return view('admin.enquiry.show', compact('enquiry'));
+        // Show Student
+        $student = Student::find($id);
+        return view('admin.student.show',compact('student'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Enquiry $enquiry)
+    public function edit(Student $student)
     {
         //
     }
@@ -54,7 +55,7 @@ class EnquiryController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Enquiry $enquiry)
+    public function update(Request $request, Student $student)
     {
         //
     }
@@ -62,13 +63,8 @@ class EnquiryController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Enquiry $enquiry)
+    public function destroy(Student $student)
     {
-        try {
-            $enquiry->delete();
-            return redirect()->back()->with('success', 'Enquiry deleted successfully.');
-        } catch (\Exception $e) {
-            return redirect()->back()->withErrors(['error' => 'Failed to delete enquiry.']);
-        }
+        //
     }
 }

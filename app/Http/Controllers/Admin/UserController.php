@@ -3,19 +3,18 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Enquiry;
+use App\Models\User;
 use Illuminate\Http\Request;
 
-class EnquiryController extends Controller
+class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        // List of Enquiry 
-        $enquiry = Enquiry::latest()->get(); // or paginate()
-        return view('admin.enquiry.list', compact('enquiry'));
+        // List Users
+
     }
 
     /**
@@ -37,16 +36,15 @@ class EnquiryController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($id)
+    public function show(User $users)
     {
-        $enquiry = Enquiry::findOrFail($id);
-        return view('admin.enquiry.show', compact('enquiry'));
+        //
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Enquiry $enquiry)
+    public function edit(User $users)
     {
         //
     }
@@ -54,7 +52,7 @@ class EnquiryController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Enquiry $enquiry)
+    public function update(Request $request, User $users)
     {
         //
     }
@@ -62,13 +60,8 @@ class EnquiryController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Enquiry $enquiry)
+    public function destroy(User $users)
     {
-        try {
-            $enquiry->delete();
-            return redirect()->back()->with('success', 'Enquiry deleted successfully.');
-        } catch (\Exception $e) {
-            return redirect()->back()->withErrors(['error' => 'Failed to delete enquiry.']);
-        }
+        //
     }
 }

@@ -29,12 +29,7 @@
                     </p>
                 </div>
                 <div class="col-lg-6">
-                    <div class="news-form mt-1">
-                        <!-- Contact form content paragraph -->
-                        <p class="text-white mb-3">
-                            We'd love to hear from you! Fill out the form below and we'll get in touch.
-                        </p>
-                        {{-- Success Message --}}
+                     {{-- Success Message --}}
                         @if (session('success'))
                             <div class="alert alert-success alert-dismissible fade show" role="alert">
                                 {{ session('success') }}
@@ -66,7 +61,13 @@
                             </div>
                         @endif
 
-                        <!-- Contact form -->
+
+                    <div class="news-form mt-1">
+                        <!-- Contact form content paragraph -->
+                        <p class="text-white mb-3">
+                            We'd love to hear from you! Fill out the form below and we'll get in touch.
+                        </p>
+                                               <!-- Contact form -->
                         <form class="row g-3" method="POST" action="{{ route('web.enquiry') }}">
                             @csrf
 
@@ -98,10 +99,7 @@
                             </div>
 
                             <div class="col-md-6 form-check">
-                                <input type="hidden" name="is_philanthropist" value="0">
-                                <input class="form-check-input" type="checkbox" name="is_philanthropist"
-                                    id="philanthropistCheck" value="1"
-                                    {{ old('is_philanthropist') ? 'checked' : '' }}>
+                                <input class="form-check-input" type="checkbox" name="is_philanthropist" id="philanthropistCheck" {{ old('is_philanthropist') ? 'checked' : '' }}>
                                 <label class="form-check-label text-white" for="philanthropistCheck">
                                     Register as a Philanthropist or Sponsor
                                 </label>

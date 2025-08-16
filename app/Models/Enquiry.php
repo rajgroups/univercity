@@ -19,7 +19,10 @@ class Enquiry extends Model
     protected $fillable = [
         'name',
         'email',
+        'type',
         'mobile',
+        'message',
+        'status',
         'is_philanthropist',
     ];
 
