@@ -169,10 +169,32 @@
                                     <i class="fas fa-user me-2"></i> REGISTER
                                 </button>
                                 
-                                <!-- Login Button -->
-                                <a href="#" class="btn btn-outline-success btn-sm px-3 py-2 d-none-tblet d-lg-block-one">
-                                    <i class="fas fa-sign-in-alt me-2"></i> LOGIN
-                                </a>
+                               <!-- Login Button -->
+<a href="#" class="btn btn-outline-success btn-sm px-3 py-2 d-none-tblet d-lg-block-one" data-bs-toggle="modal" data-bs-target="#comingSoonModal">
+    <i class="fas fa-sign-in-alt me-2"></i> LOGIN
+</a>
+
+<!-- Coming Soon Modal -->
+<div class="modal fade" id="comingSoonModal" tabindex="-1" aria-labelledby="comingSoonModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="comingSoonModalLabel">Login Feature</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+                <div class="mb-4">
+                    <i class="fas fa-clock fa-4x text-warning"></i>
+                </div>
+                <h4 class="mb-3">Coming Soon!</h4>
+                <p class="text-muted">We're currently working on this feature and it will be available shortly.</p>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-primary px-4" data-bs-dismiss="modal">Got It</button>
+            </div>
+        </div>
+    </div>
+</div>
                             </div>
                         </div>
                     </div>
