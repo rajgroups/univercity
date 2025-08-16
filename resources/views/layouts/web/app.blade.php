@@ -25,6 +25,19 @@
     </main>
     @include('layouts.web.partition.menu')
     @include('layouts.web.dependency.js')
+    @if ($errors->any())
+        @foreach ($errors->all() as $error)
+            <script>
+                toastr.error("{{ $error }}");
+            </script>
+        @endforeach
+    @endif
+
+    @if (session('success'))
+        <script>
+            toastr.success("{{ session('success') }}");
+        </script>
+    @endif
     @stack('scripts')
 </body>
 

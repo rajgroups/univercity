@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\ActivityController;
 use App\Http\Controllers\Admin\AnnouncementController;
 use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\BlogController;
@@ -63,6 +64,9 @@ Route::prefix('admin')->as('admin.')->group(function() {
         // Testimonial Routes
         Route::resource('testimonial', TestimonialController::class);
 
+        // Activities Routes
+        Route::resource('activity', ActivityController::class);
+        
         // Enquiry Routes
         Route::resource('enquiry',EnquiryController::class);
         

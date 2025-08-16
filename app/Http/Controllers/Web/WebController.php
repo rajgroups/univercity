@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use App\Models\Activity;
 use App\Models\Announcement;
 use App\Models\Banner;
 use App\Models\Blog;
@@ -12,8 +13,10 @@ use App\Models\Course;
 use App\Models\Project;
 use App\Models\Sector;
 use App\Models\Testimonial;
+use Carbon\Carbon;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class WebController extends Controller
 {
@@ -367,5 +370,137 @@ class WebController extends Controller
         return view('web.blogview', compact('blog', 'similars'));
     }
 
+
+    public function activityFilter(Request $request)
+    {
+        // Get all filter parameters from the request
+        $search = $request->input('search');
+        $types = $request->input('types', []);
+        $locations = $request->input('locations', []);
+        $categories = $request->input('categories', []);
+        $start_date = $request->input('start_date');
+        $end_date = $request->input('end_date');
+        $sort = $request->input('sort', 'newest_first');
+
+        // Base query for upcoming events
+        $events = Activity::query()
+            ->where('start_date', '>=', now())
+            ->with('category');
+
+        // Apply search filter
+        if ($search) {
+            $events->where(function($query) use ($search) {
+                $query->where('title', 'like', '%'.$search.'%')
+                      ->orWhere('description', 'like', '%'.$search.'%')
+                      ->orWhere('organizer_id', 'like', '%'.$search.'%');
+            });
+        }
+
+        // Apply type filter
+        if (!empty($types)) {
+            $events->whereIn('type', $types);
+        }
+
+        // Apply location filter
+        if (!empty($locations)) {
+            $events->whereIn('location_type', $locations);
+        }
+
+        // Apply category filter
+        if (!empty($categories)) {
+            $events->whereIn('category_id', $categories);
+        }
+
+        // Apply date range filter
+        if ($start_date) {
+            $events->where('start_date', '>=', $start_date);
+        }
+        if ($end_date) {
+            $events->where('start_date', '<=', $end_date);
+        }
+
+        // Apply sorting
+        switch ($sort) {
+            case 'date_soonest':
+                $events->orderBy('start_date')->orderBy('start_time');
+                break;
+            case 'popular':
+                // Assuming you have a 'views' or 'registrations_count' column
+                $events->orderBy('registrations_count', 'desc');
+                break;
+            case 'newest_first':
+            default:
+                $events->orderBy('created_at', 'desc');
+                break;
+        }
+
+        // Get all categories for filter sidebar
+        $categories = Category::get();
+
+        // Paginate results (15 items per page)
+        $events = $events->paginate(15);
+
+        return view('web.activity', [
+            'events' => $events,
+            'categories' => $categories,
+            'filters' => [
+                'search' => $search,
+                'types' => $types,
+                'locations' => $locations,
+                'categories' => $categories,
+                'start_date' => $start_date,
+                'end_date' => $end_date,
+                'sort' => $sort
+            ]
+        ]);
+    }
+
+        // Show single event/competition
+    public function activityShow($slug)
+    {
+        // Get the event with related data
+        $event = Activity::with('category')
+            ->where('slug', $slug)
+            ->firstOrFail();
+
+        // Check if registration deadline has passed
+        $registrationClosed = Carbon::now()->gt($event->registration_deadline);
+
+        // Get similar events (same category, excluding current event)
+        $similarEvents = Activity::where('category_id', $event->category_id)
+            ->where('id', '!=', $event->id)
+            ->where('status', 'published')
+            ->orderBy('start_date', 'asc')
+            ->limit(3)
+            ->get();
+
+        // Prepare agenda if exists
+        $agenda = null;
+        if ($event->agenda) {
+            $agenda = json_decode($event->agenda, true);
+        }
+
+        // Prepare rules if competition
+        $rules = null;
+        if ($event->is_competition && $event->rules) {
+            $rules = json_decode($event->rules, true);
+        }
+
+        // Prepare meta data
+        $metaTitle = $event->meta_title ?? $event->title;
+        $metaDescription = $event->meta_description ?? Str::limit(strip_tags($event->description), 150);
+        $metaImage = $event->image ? asset($event->image) : asset('images/default-event.jpg');
+
+        return view('web.activityshow', compact(
+            'event',
+            'registrationClosed',
+            'similarEvents',
+            'agenda',
+            'rules',
+            'metaTitle',
+            'metaDescription',
+            'metaImage'
+        ));
+    }
 
 }

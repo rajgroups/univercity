@@ -20,6 +20,8 @@ class Enquiry extends Model
         'name',
         'email',
         'mobile',
+        'message',
+        'status',
         'is_philanthropist',
     ];
 

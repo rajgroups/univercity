@@ -81,10 +81,10 @@
 <div id="scroll-container" class="main-wrapper">
     <!-- Header Menu Start -->
     <div class="header-wrapper">
-        @if($defaultSettings->announcement_text)
+        @if ($defaultSettings->announcement_text)
             <div class="header-top">
                 <div class="container-fluid">
-                    <p class="white"> {{ $defaultSettings->announcement_text ?? null}}</p>
+                    <p class="white"> {{ $defaultSettings->announcement_text ?? null }}</p>
                 </div>
             </div>
         @endif
@@ -107,7 +107,7 @@
                         </div>
                         <div class="item p-2 text-light-gray">
                             <a href="{{ url('/') }}">
-                            <i class="bi bi-house-fill"></i> Home </a>
+                                <i class="bi bi-house-fill"></i> Home </a>
                         </div>
                         <div class="item p-2 text-light-gray">
                             <i class="bi bi-three-dots-vertical"></i> More
@@ -136,15 +136,10 @@
                                     </div>
                                 </div>
                             </form>
-
-
                             <!-- Logos -->
                             <div class="col-md-4">
-                                {{-- class="col-md-4 d-flex align-items-center gap-3 order-2 order-md-1 justify-content-center justify-content-md-start"> --}}
                                 <a href="/"> <img src="{{ asset($defaultSettings->site_logo ?? null) }}"
-                                        alt="{{ $defaultSettings->site_title ?? null }}" style="height: 92px;"></a>
-                                {{-- <img src="https://www.skillindiadigital.gov.in/assets/new-ux-img/skill-india-big-logo.svg"
-                    alt="Skill India Logo" style="height: 44px;"> --}}
+                                        alt="{{ $defaultSettings->site_title ?? null }}" style="height: 54px;"></a>
                             </div>
                             <!-- Search Bar (Visible on md+ screens only) -->
                             <div class="col-md-4 my-2 d-none d-md-block order-md-2 mt-2">
@@ -167,17 +162,17 @@
                             @endif
                             </form>
 
-                            <!-- Right Buttons -->
+                           <!-- Right Buttons -->
                             <div class="col-md-4 text-end gap-3 order-3 d-none d-md-block">
-                                <a href="#" class="btn btn-outline-success btn-sm d-none-tblet d-lg-block-one">
-                                    <i class="fa fa-tachometer-alt me-1 p-2"></i> Dashboards
-                                </a>
-                               <button class="btn btn-warning text-white btn-sm fw-bold p-2" data-bs-toggle="modal" data-bs-target="#registerModal">
-                                <i class="fa fa-user"></i> REGISTER
+                                <!-- Register Button -->
+                                <button class="btn btn-warning text-white btn-sm fw-bold px-3 py-2" data-bs-toggle="modal" data-bs-target="#registerModal">
+                                    <i class="fas fa-user me-2"></i> REGISTER
                                 </button>
-
-
-                                {{-- <button class="btn btn-outline-warning btn-sm fw-bold p-2">LOGIN</button> --}}
+                                
+                                <!-- Login Button -->
+                                <a href="#" class="btn btn-outline-success btn-sm px-3 py-2 d-none-tblet d-lg-block-one">
+                                    <i class="fas fa-sign-in-alt me-2"></i> LOGIN
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -234,8 +229,9 @@
                            </a> -->
                             <div
                                 class="d-flex align-items-center justify-content-center justify-content-md-end gap-3 order-3 d-block d-md-none">
-                                <button class="btn btn-warning text-white btn-sm fw-bold p-2" data-bs-toggle="modal" data-bs-target="#registerModal">
-                                <i class="fa fa-user"></i> REGISTER
+                                <button class="btn btn-warning text-white btn-sm fw-bold p-2" data-bs-toggle="modal"
+                                    data-bs-target="#registerModal">
+                                    <i class="fa fa-user"></i> REGISTER
                                 </button>
 
                                 <button class="btn btn-outline-warning btn-sm fw-bold">LOGIN</button>
@@ -282,7 +278,9 @@
 
                                                     {{-- CSR Initiatives --}}
                                                     <li>
-                                                        <a href="{{ route('web.blog.filter', ['category_id' => '', 'type' => 6]) }}">3. CSR Initiatives</a>
+                                                        <a
+                                                            href="{{ route('web.blog.filter', ['category_id' => '', 'type' => 6]) }}">3.
+                                                            CSR Initiatives</a>
                                                         {{-- <ul class="sub-menu">
                                                             @foreach ($csrPrograms as $program)
                                                                 <li><a
@@ -298,7 +296,7 @@
                                                 <a href="{{ route('web.sector') }}"> Sectors </a>
                                             </li>
                                             <li class="dropdown">
-                                                <a href="javascript:void(0);">Collaborations</a>
+                                                <a href="{{ route('web.collaboration') }}">Collaborations</a>
                                                 <ul>
                                                     @foreach ($collaborations as $collaboration)
                                                         <li><a
@@ -337,7 +335,7 @@
                                     <a style="background-color: red;" href="#" class="cus-btn">
                                         <span class="text"> Donate Now</span>
                                     </a>
-                                    <a href="#" class="cus-btn-2">
+                                    <a href="{{ route('web.activity') }}" class="cus-btn-2">
                                         <span class="text">NTI Competetions/Events</span>
                                     </a>
                                 </div>
@@ -358,132 +356,150 @@
     </div>
 
 
-    <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-lg">
-    <div class="modal-content p-4 border-0 rounded-4">
+    <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content p-4 border-0 rounded-4">
 
-      <!-- Close Button -->
-      <button type="button" class="btn-close ms-auto" data-bs-dismiss="modal" aria-label="Close"></button>
+                <!-- Close Button -->
+                <button type="button" class="btn-close ms-auto" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
 
-      <!-- Logo & Heading -->
-      <div class="text-center">
-        <img src="https://www.skillindiadigital.gov.in/assets/images/logo.svg" alt="Skill India Logo" style="height: 50px;">
-        <h4 class="mt-3 fw-bold">Welcome to Skill India Digital Hub (SIDH)</h4>
-        <p class="text-muted">A platform to meet all your skilling needs digitally anytime anywhere</p>
-      </div>
+                <!-- Logo & Heading -->
+                <div class="text-center">
+                    <img src="https://www.skillindiadigital.gov.in/assets/images/logo.svg" alt="Skill India Logo"
+                        style="height: 50px;">
+                    <h4 class="mt-3 fw-bold">Welcome to Skill India Digital Hub (SIDH)</h4>
+                    <p class="text-muted">A platform to meet all your skilling needs digitally anytime anywhere</p>
+                </div>
 
-      <!-- Card Options with Radios -->
-      <form id="userTypeForm">
-        <div class="row justify-content-center g-3 mt-4">
+                <!-- Card Options with Radios -->
+                <form id="userTypeForm">
+                    <div class="row justify-content-center g-3 mt-4">
 
 
-        <!-- Card Option - Student / Learner -->
-        <div class="col-md-5 mt-3">
-            <label class="w-100 border rounded-3 p-3 d-flex align-items-start gap-3 h-100"
-                style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#studentDetailsModal">
+                        <!-- Card Option - Student / Learner -->
+                        <div class="col-md-5 mt-3">
+                            <label class="w-100 border rounded-3 p-3 d-flex align-items-start gap-3 h-100"
+                                style="cursor: pointer;" data-bs-toggle="modal"
+                                data-bs-target="#studentDetailsModal">
 
-                <input type="radio" name="userType" value="student" class="form-check-input mt-1" />
-                <img src="https://cdn-icons-png.flaticon.com/512/2922/2922510.png"
-                     alt="Student" style="width: 50px; margin-left: 10px;">
+                                <input type="radio" name="userType" value="student"
+                                    class="form-check-input mt-1" />
+                                <img src="https://cdn-icons-png.flaticon.com/512/2922/2922510.png" alt="Student"
+                                    style="width: 50px; margin-left: 10px;">
 
-                <div class="ms-2">
-                    <h6 class="fw-bold mb-1">Student / Learner Registration Form</h6>
-                    <p class="mb-0 small text-muted">
-                        Fill your details to register as a learner.
+                                <div class="ms-2">
+                                    <h6 class="fw-bold mb-1">Student / Learner Registration Form</h6>
+                                    <p class="mb-0 small text-muted">
+                                        Fill your details to register as a learner.
+                                    </p>
+                                </div>
+                            </label>
+                        </div>
+
+
+                        <!-- Partner -->
+                        <!-- Trigger Card -->
+                        <div class="col-md-5 mt-3">
+                            <label class="w-100 border rounded-3 p-3 d-flex align-items-start gap-3 h-100"
+                                style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#cooperationModal">
+                                <input type="radio" name="userType" value="partner"
+                                    class="form-check-input mt-1" />
+                                <img src="https://cdn-icons-png.flaticon.com/512/2922/2922510.png" alt="Partner"
+                                    style="width: 50px; margin-left: 10px;">
+                                <div class="ms-2">
+                                    <h6 class="fw-bold mb-1">Co-Operation Registration Form</h6>
+                                    <p class="mb-0 small text-muted">Learning partner, Employer, Content Provider etc.
+                                    </p>
+                                </div>
+                            </label>
+                        </div>
+
+                        <!-- ITI Partners -->
+                        <div class="col-md-5 mt-3">
+                            <label class="w-100 border rounded-3 p-3 d-flex align-items-start gap-3 h-100"
+                                style="cursor: pointer;">
+                                <input type="radio" name="userType" value="iti"
+                                    class="form-check-input mt-1 " />
+                                <img src="https://cdn-icons-png.flaticon.com/512/1087/1087929.png" alt="ITI Partner"
+                                    style="width: 50px; margin-left: 10px;">
+                                <div class="ms-2">
+                                    <h6 class="fw-bold mb-1">ITI Partners</h6>
+                                    <p class="mb-0 small text-muted">Exam Controller, ITI/NSTI Creator, NIMI Admin etc.
+                                    </p>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                </form>
+
+                <!-- Terms -->
+                <div class="text-center mt-4">
+                    <p class="small text-muted mb-0">
+                        By choosing to continue, you agree to accept all applicable
+                        <a href="#" class="text-decoration-none">Terms & Conditions</a> and
+                        <a href="#" class="text-decoration-none">Privacy Policy</a>.
                     </p>
                 </div>
-            </label>
-        </div>
 
-
-          <!-- Partner -->
-        <!-- Trigger Card -->
-        <div class="col-md-5 mt-3">
-            <label class="w-100 border rounded-3 p-3 d-flex align-items-start gap-3 h-100" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#cooperationModal">
-                <input type="radio" name="userType" value="partner" class="form-check-input mt-1" />
-                <img src="https://cdn-icons-png.flaticon.com/512/2922/2922510.png" alt="Partner" style="width: 50px; margin-left: 10px;">
-                <div class="ms-2">
-                <h6 class="fw-bold mb-1">Co-Operation Registration Form</h6>
-                <p class="mb-0 small text-muted">Learning partner, Employer, Content Provider etc.</p>
-                </div>
-            </label>
-        </div>
-
-          <!-- ITI Partners -->
-          <div class="col-md-5 mt-3">
-            <label class="w-100 border rounded-3 p-3 d-flex align-items-start gap-3 h-100" style="cursor: pointer;">
-              <input type="radio" name="userType" value="iti" class="form-check-input mt-1 " />
-              <img src="https://cdn-icons-png.flaticon.com/512/1087/1087929.png" alt="ITI Partner" style="width: 50px; margin-left: 10px;">
-              <div class="ms-2">
-                <h6 class="fw-bold mb-1">ITI Partners</h6>
-                <p class="mb-0 small text-muted">Exam Controller, ITI/NSTI Creator, NIMI Admin etc.</p>
-              </div>
-            </label>
-          </div>
-        </div>
-      </form>
-
-      <!-- Terms -->
-      <div class="text-center mt-4">
-        <p class="small text-muted mb-0">
-          By choosing to continue, you agree to accept all applicable
-          <a href="#" class="text-decoration-none">Terms & Conditions</a> and
-          <a href="#" class="text-decoration-none">Privacy Policy</a>.
-        </p>
-      </div>
-
-    </div>
-  </div>
-</div>
-
-        <div class="modal fade" id="studentDetailsModal" tabindex="-1" aria-labelledby="studentDetailsModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content p-4 rounded-4 border-0">
-
-            <div class="modal-header border-0">
-                <h5 class="modal-title fw-bold" id="studentDetailsModalLabel">Student Details</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
+        </div>
+    </div>
 
-            <div class="modal-body">
+    <div class="modal fade" id="studentDetailsModal" tabindex="-1" aria-labelledby="studentDetailsModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content p-4 rounded-4 border-0">
 
-                {{-- ✅ Success Message --}}
-                @if(session('success'))
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        {{ session('success') }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                @endif
+                <div class="modal-header border-0">
+                    <h5 class="modal-title fw-bold" id="studentDetailsModalLabel">Student Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
 
-                {{-- ❌ Error Messages --}}
-                @if ($errors->any())
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        <ul class="mb-0">
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                @endif
+                <div class="modal-body">
 
-                <form action="{{ route('sendStudentDetails') }}" method="POST">
-                    @csrf
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <label class="form-label">Student Name</label>
-                            <input type="text" class="form-control" name="student_name" value="{{ old('student_name') }}" required>
+                    {{-- ✅ Success Message --}}
+                    @if (session('success'))
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            {{ session('success') }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                aria-label="Close"></button>
+                        </div>
+                    @endif
+
+                    {{-- ❌ Error Messages --}}
+                    @if ($errors->any())
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <ul class="mb-0">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                aria-label="Close"></button>
+                        </div>
+                    @endif
+
+                    <form action="{{ route('sendStudentDetails') }}" method="POST">
+                        @csrf
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Student Name</label>
+                                <input type="text" class="form-control" name="student_name"
+                                    value="{{ old('student_name') }}" required>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Father Name</label>
+                                <input type="text" class="form-control" name="father_name"
+                                    value="{{ old('father_name') }}">
+                            </div>
+
+                            {{-- ... (other fields same as your code) ... --}}
                         </div>
 
-                        <div class="col-md-6">
-                            <label class="form-label">Father Name</label>
-                            <input type="text" class="form-control" name="father_name" value="{{ old('father_name') }}">
-                        </div>
-
-                        {{-- ... (other fields same as your code) ... --}}
-                    </div>
-
-                     <div class="row g-3">
+                        <div class="row g-3">
                             <div class="col-md-6">
                                 <label class="form-label">Student Name</label>
                                 <input type="text" class="form-control" name="student_name" required>
@@ -592,187 +608,181 @@
 
                         <!-- Back & Submit Buttons -->
                         <div class="d-flex justify-content-between mt-4">
-                            <button type="button"
-                                    class="btn btn-secondary px-4"
-                                    data-bs-dismiss="modal"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#registerModal">
+                            <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal"
+                                data-bs-toggle="modal" data-bs-target="#registerModal">
                                 Back
                             </button>
                             <button type="submit" class="btn btn-primary px-4">Submit</button>
                         </div>
                     </form>
-            </div>
+                </div>
 
+            </div>
         </div>
     </div>
-</div>
 
 
 
     <!-- Modal -->
-    <div class="modal fade" id="cooperationModal" tabindex="-1" aria-labelledby="cooperationModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-scrollable">
-        <div style="overflow: scroll;" class="modal-content p-4 rounded-4 border-0">
+    <div class="modal fade" id="cooperationModal" tabindex="-1" aria-labelledby="cooperationModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div style="overflow: scroll;" class="modal-content p-4 rounded-4 border-0">
 
-        <!-- Close Button -->
-        <button type="button" class="btn-close ms-auto" data-bs-dismiss="modal" aria-label="Close"></button>
+                <!-- Close Button -->
+                <button type="button" class="btn-close ms-auto" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
 
-        <!-- Modal Header -->
-        <div class="text-center mb-4">
-            <h4 class="fw-bold">Organization Partnership Registration</h4>
-            <p class="text-muted">Please fill the details below</p>
-        </div>
+                <!-- Modal Header -->
+                <div class="text-center mb-4">
+                    <h4 class="fw-bold">Organization Partnership Registration</h4>
+                    <p class="text-muted">Please fill the details below</p>
+                </div>
 
-        <!-- Form -->
-        <form class="row g-3">
+                <!-- Form -->
+                <form class="row g-3">
 
-            <!-- Organization Details -->
-            <div class="col-12">
-            <h5 class="fw-bold">Organization Details</h5>
+                    <!-- Organization Details -->
+                    <div class="col-12">
+                        <h5 class="fw-bold">Organization Details</h5>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Organization / Institution / Company Name</label>
+                        <input type="text" class="form-control" placeholder="Enter name">
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Type</label>
+                        <select class="form-select">
+                            <option selected disabled>Select type</option>
+                            <option>Institution</option>
+                            <option>Industry</option>
+                            <option>International Collaboration</option>
+                            <option>CSR</option>
+                            <option>NGO</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Website URL</label>
+                        <input type="url" class="form-control" placeholder="https://example.com">
+                    </div>
+
+                    <!-- Contact Person Details -->
+                    <div class="col-12 mt-4">
+                        <h5 class="fw-bold">Contact Person Details</h5>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Contact Person Name</label>
+                        <input type="text" class="form-control" placeholder="Full name">
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Designation</label>
+                        <input type="text" class="form-control" placeholder="e.g. Manager">
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Contact Number</label>
+                        <input type="tel" class="form-control" placeholder="e.g. 9876543210">
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Email ID</label>
+                        <input type="email" class="form-control" placeholder="example@email.com">
+                    </div>
+
+                    <!-- Address Details -->
+                    <div class="col-12 mt-4">
+                        <h5 class="fw-bold">Address Details</h5>
+                    </div>
+
+                    <div class="col-12">
+                        <label class="form-label">Office Address</label>
+                        <textarea class="form-control" rows="2" placeholder="Full address"></textarea>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Country</label>
+                        <input type="text" class="form-control" placeholder="Country">
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">State</label>
+                        <input type="text" class="form-control" placeholder="State">
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">District</label>
+                        <input type="text" class="form-control" placeholder="District">
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">City / Village</label>
+                        <input type="text" class="form-control" placeholder="City or Village">
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Pincode</label>
+                        <input type="text" class="form-control" placeholder="Pincode">
+                    </div>
+
+                    <!-- Partnership Interest -->
+                    <div class="col-12 mt-4">
+                        <h5 class="fw-bold">Partnership Interest</h5>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Area of Collaboration</label>
+                        <select class="form-select">
+                            <option>Skill Training</option>
+                            <option>Internship</option>
+                            <option>Placement</option>
+                            <option>Funding</option>
+                            <option>Curriculum Development</option>
+                            <option>International Exchange</option>
+                            <option>Infrastructure Support</option>
+                            <option>CSR Support</option>
+                            <option>Project Support</option>
+                            <option>Volunteers</option>
+                            <option>Research</option>
+                            <option>Others</option>
+                        </select>
+                        <small class="text-muted">Hold Ctrl (Windows) or Cmd (Mac) to select multiple options</small>
+                    </div>
+
+                    <!-- Target Beneficiary Group -->
+                    <div class="col-md-6">
+                        <label class="form-label">Target Beneficiary Group</label>
+                        <select class="form-select">
+                            <option>School</option>
+                            <option>College</option>
+                            <option>Women SHG</option>
+                            <option>Rural Youth</option>
+                            <option>Others</option>
+                        </select>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <!-- Back & Submit Buttons -->
+                    <div class="d-flex justify-content-between mt-4">
+                        <button type="button" class="btn btn-secondary px-4" data-bs-toggle="modal"
+                            data-bs-target="#registerModal" data-bs-dismiss="modal">Back</button>
+                        <button type="submit" class="btn btn-primary px-4">Submit</button>
+                    </div>
+
+                </form>
             </div>
-
-            <div class="col-md-6">
-            <label class="form-label">Organization / Institution / Company Name</label>
-            <input type="text" class="form-control" placeholder="Enter name">
-            </div>
-
-            <div class="col-md-6">
-            <label class="form-label">Type</label>
-            <select class="form-select">
-                <option selected disabled>Select type</option>
-                <option>Institution</option>
-                <option>Industry</option>
-                <option>International Collaboration</option>
-                <option>CSR</option>
-                <option>NGO</option>
-            </select>
-            </div>
-
-            <div class="col-md-6">
-            <label class="form-label">Website URL</label>
-            <input type="url" class="form-control" placeholder="https://example.com">
-            </div>
-
-            <!-- Contact Person Details -->
-            <div class="col-12 mt-4">
-            <h5 class="fw-bold">Contact Person Details</h5>
-            </div>
-
-            <div class="col-md-6">
-            <label class="form-label">Contact Person Name</label>
-            <input type="text" class="form-control" placeholder="Full name">
-            </div>
-
-            <div class="col-md-6">
-            <label class="form-label">Designation</label>
-            <input type="text" class="form-control" placeholder="e.g. Manager">
-            </div>
-
-            <div class="col-md-6">
-            <label class="form-label">Contact Number</label>
-            <input type="tel" class="form-control" placeholder="e.g. 9876543210">
-            </div>
-
-            <div class="col-md-6">
-            <label class="form-label">Email ID</label>
-            <input type="email" class="form-control" placeholder="example@email.com">
-            </div>
-
-            <!-- Address Details -->
-            <div class="col-12 mt-4">
-            <h5 class="fw-bold">Address Details</h5>
-            </div>
-
-            <div class="col-12">
-            <label class="form-label">Office Address</label>
-            <textarea class="form-control" rows="2" placeholder="Full address"></textarea>
-            </div>
-
-            <div class="col-md-6">
-            <label class="form-label">Country</label>
-            <input type="text" class="form-control" placeholder="Country">
-            </div>
-
-            <div class="col-md-6">
-            <label class="form-label">State</label>
-            <input type="text" class="form-control" placeholder="State">
-            </div>
-
-            <div class="col-md-6">
-            <label class="form-label">District</label>
-            <input type="text" class="form-control" placeholder="District">
-            </div>
-
-            <div class="col-md-6">
-            <label class="form-label">City / Village</label>
-            <input type="text" class="form-control" placeholder="City or Village">
-            </div>
-
-            <div class="col-md-6">
-            <label class="form-label">Pincode</label>
-            <input type="text" class="form-control" placeholder="Pincode">
-            </div>
-
-            <!-- Partnership Interest -->
-            <div class="col-12 mt-4">
-            <h5 class="fw-bold">Partnership Interest</h5>
-            </div>
-
-            <div class="col-md-6">
-            <label class="form-label">Area of Collaboration</label>
-            <select class="form-select">
-                <option>Skill Training</option>
-                <option>Internship</option>
-                <option>Placement</option>
-                <option>Funding</option>
-                <option>Curriculum Development</option>
-                <option>International Exchange</option>
-                <option>Infrastructure Support</option>
-                <option>CSR Support</option>
-                <option>Project Support</option>
-                <option>Volunteers</option>
-                <option>Research</option>
-                <option>Others</option>
-            </select>
-            <small class="text-muted">Hold Ctrl (Windows) or Cmd (Mac) to select multiple options</small>
-            </div>
-
-            <!-- Target Beneficiary Group -->
-            <div class="col-md-6">
-            <label class="form-label">Target Beneficiary Group</label>
-            <select class="form-select">
-                <option>School</option>
-                <option>College</option>
-                <option>Women SHG</option>
-                <option>Rural Youth</option>
-                <option>Others</option>
-            </select>
-            </div>
-
-            <!-- Submit Button -->
-             <!-- Back & Submit Buttons -->
-            <div class="d-flex justify-content-between mt-4">
-                <button type="button" class="btn btn-secondary px-4" data-bs-toggle="modal" data-bs-target="#registerModal" data-bs-dismiss="modal">Back</button>
-                <button type="submit" class="btn btn-primary px-4">Submit</button>
-            </div>
-
-        </form>
         </div>
     </div>
-    </div>
 
-<script>
-document.getElementById("userTypeForm").addEventListener("change", function (e) {
-  if (e.target.name === "userType") {
-    console.log("Selected user type:", e.target.value);
-    // You can redirect or handle based on selected value
-  }
-});
-</script>
-<style>
-    .form-check-input{
-        width: 3em;
-        height: 20px;
-    }
-</style>
+    <script>
+        document.getElementById("userTypeForm").addEventListener("change", function(e) {
+            if (e.target.name === "userType") {
+                console.log("Selected user type:", e.target.value);
+                // You can redirect or handle based on selected value
+            }
+        });
+    </script>
