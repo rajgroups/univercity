@@ -45,12 +45,12 @@ class EnquiryController extends Controller
             'paid'              => 'nullable|boolean',
             // 'termsCheck'        => 'nullable|accepted'
         ], [
-            'name.required' => 'The name field is required.',
-            'mobile.required' => 'The mobile number is required.',
-            'mobile.regex' => 'Please enter a valid phone number (digits only).',
-            'email.email' => 'Please enter a valid email address.',
-            'type.in' => 'Invalid enquiry type selected.',
-            'termsCheck.accepted' => 'You must accept the terms and conditions.'
+            'name.required'         => 'The name field is required.',
+            'mobile.required'       => 'The mobile number is required.',
+            'mobile.regex'          => 'Please enter a valid phone number (digits only).',
+            'email.email'           => 'Please enter a valid email address.',
+            'type.in'               => 'Invalid enquiry type selected.',
+            'termsCheck.accepted'   => 'You must accept the terms and conditions.'
         ]);
 
         if ($validator->fails()) {
@@ -61,12 +61,19 @@ class EnquiryController extends Controller
         }
 
         try {
+            $message = $request->message;
+            
+            // If the user is interested in a course, append a proper paragraph
+            if ($request->filled('course_name')) {
+                $message .= "\n\n---\nUser is interested in the course: \"" . $request->course_name . "\".";
+            }
+
             $enquiry = Enquiry::create([
                 'name'              => $request->name,
                 'email'             => $request->email,
                 'mobile'            => $request->mobile,
                 'type'              => $request->type,
-                'message'           => $request->message,
+                'message'           => $message,
                 'is_philanthropist' => $request->boolean('is_philanthropist'),
                 'paid'              => $request->boolean('paid'),
                 'status'            => 1,
@@ -93,9 +100,9 @@ class EnquiryController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Enquiry $enquiry)
+    public function show($id)
     {
-        //
+
     }
 
     /**

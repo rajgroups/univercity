@@ -121,11 +121,12 @@
                 </div>
                 <div class="col-lg-4">
                     <div class="siderbar">
-                          <h5 class="fw-500 mb-24">Sectors</h5>
+                          <h5 class="fw-500 mb-24">Contact Request</h5>
                           <div class="mb-48">
                         <form class="search-form" action="{{ route('web.enquiry') }}" method="POST" novalidate>
                             @csrf
                             <input type="hidden" name="type" value="7">
+                            <input type="hidden" name="course_name" value="{{ $course->name }}"> <!-- Hidden field for course -->
 
                             <div class="mb-3">
                                 <input type="text" class="form-control" name="name" placeholder="Your Name"

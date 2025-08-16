@@ -4,8 +4,8 @@
     <div class="page-header">
         <div class="add-item d-flex">
             <div class="page-title">
-                <h4 class="fw-bold">Enquiry</h4>
-                <h6>Manage your Enquiries</h6>
+                <h4 class="fw-bold">Students</h4>
+                <h6>Manage your Students</h6>
             </div>
         </div>
         <ul class="table-top-head">
@@ -90,8 +90,11 @@
                                     </span>
                                 </td>
                                 <td>{{ $row->created_at->format('d M Y') }}</td>
-                                <td class="action-table-data">
+                               <td class="action-table-data">
                                     <div class="d-flex">
+                                        <a href="{{ route('admin.enquiry.show', $row->id) }}" class="btn p-2 me-1" data-bs-toggle="tooltip" title="View">
+                                            <i data-feather="eye" class="feather-eye"></i>
+                                        </a>
                                         <a href="{{ route('admin.enquiry.edit', $row->id) }}" class="btn p-2 me-1" data-bs-toggle="tooltip" title="Edit">
                                             <i data-feather="edit" class="feather-edit"></i>
                                         </a>

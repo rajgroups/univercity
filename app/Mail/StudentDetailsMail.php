@@ -10,17 +10,17 @@ class StudentDetailsMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $data;
+    public $studentData;
 
-    public function __construct($data)
+    public function __construct(array $studentData)
     {
-        $this->data = $data;
+        $this->studentData = $studentData;
     }
 
     public function build()
     {
         return $this->subject('New Student Registration')
                     ->view('emails.student-details')
-                    ->with('data', $this->data);
+                    ->with('data', $this->studentData);
     }
 }

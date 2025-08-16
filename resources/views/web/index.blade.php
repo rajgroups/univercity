@@ -814,7 +814,7 @@
             <h2 class="fw-bold">Smart Learning. Trusted Experts. <span class="text-primary">Everywhere</span></h2>
         </div>
         <div class="row ">
-            <div class="col-md-4">
+            <div class="col-md-6">
                 <div class="row">
                     <div class="col-12">
                         <div class="card h-100 shadow-sm border-0">
@@ -884,7 +884,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-8">
+            <div class="col-md-6">
                 <img src="{{ asset('resource/web/assets/media/images/proccess.jfif') }}">
             </div>
         </div>

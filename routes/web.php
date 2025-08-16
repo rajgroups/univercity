@@ -114,3 +114,5 @@ Route::get('/event-and-competition/{slug}', [WebController::class, 'activityshow
 
 Route::post('/send-student-details', [FormController::class, 'sendStudentDetails'])
     ->name('sendStudentDetails');
+Route::post('/send-organization-details', [FormController::class, 'sendOrganizationDetails'])
+    ->name('sendOrganizationDetails');

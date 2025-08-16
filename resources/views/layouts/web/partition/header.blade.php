@@ -332,7 +332,7 @@
                         <div class="col-lg-4 col-4 p-0 mt-3">
                             <div class="header-buttons">
                                 <div class="right-nav d-sm-flex gap-16 align-items-center d-none">
-                                    <a style="background-color: red;" href="#" class="cus-btn">
+                                    <a href="{{ route('contact') }}" class="cus-btn">
                                         <span class="text"> Donate Now</span>
                                     </a>
                                     <a href="{{ route('web.activity') }}" class="cus-btn-2">
@@ -367,9 +367,9 @@
 
                 <!-- Logo & Heading -->
                 <div class="text-center">
-                    <img src="https://www.skillindiadigital.gov.in/assets/images/logo.svg" alt="Skill India Logo"
-                        style="height: 50px;">
-                    <h4 class="mt-3 fw-bold">Welcome to Skill India Digital Hub (SIDH)</h4>
+                    <a href="/"> <img src="{{ asset($defaultSettings->site_logo ?? null) }}"
+                                        alt="{{ $defaultSettings->site_title ?? null }}" style="height: 54px;"></a>
+                    <h4 class="mt-3 fw-bold">Welcome to ISICO</h4>
                     <p class="text-muted">A platform to meet all your skilling needs digitally anytime anywhere</p>
                 </div>
 
@@ -485,29 +485,13 @@
                         @csrf
                         <div class="row g-3">
                             <div class="col-md-6">
-                                <label class="form-label">Student Name</label>
-                                <input type="text" class="form-control" name="student_name"
-                                    value="{{ old('student_name') }}" required>
-                            </div>
-
-                            <div class="col-md-6">
-                                <label class="form-label">Father Name</label>
-                                <input type="text" class="form-control" name="father_name"
-                                    value="{{ old('father_name') }}">
-                            </div>
-
-                            {{-- ... (other fields same as your code) ... --}}
-                        </div>
-
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <label class="form-label">Student Name</label>
+                                <label class="form-label">Student Name <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" name="student_name" required>
                             </div>
 
                             <div class="col-md-6">
-                                <label class="form-label">Father Name</label>
-                                <input type="text" class="form-control" name="father_name">
+                                <label class="form-label">Father Name <span class="text-danger">*</span> </label>
+                                <input type="text" class="form-control" name="father_name" required>
                             </div>
 
                             <div class="col-md-6">
@@ -516,7 +500,7 @@
                             </div>
 
                             <div class="col-md-6">
-                                <label class="form-label">Gender</label>
+                                <label class="form-label">Gender <span class="text-danger">*</span></label>
                                 <select class="form-select" name="gender" required>
                                     <option selected disabled>Choose...</option>
                                     <option>Male</option>
@@ -531,8 +515,8 @@
                             </div>
 
                             <div class="col-md-6">
-                                <label class="form-label">Mobile Number</label>
-                                <input type="tel" class="form-control" name="mobile">
+                                <label class="form-label">Mobile Number  <span class="text-danger">*</span> </label>
+                                <input type="tel" class="form-control" name="mobile" required>
                             </div>
 
                             <div class="col-md-6">
@@ -640,7 +624,29 @@
                 </div>
 
                 <!-- Form -->
-                <form class="row g-3">
+                    {{-- ✅ Success Message --}}
+                    @if (session('success'))
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            {{ session('success') }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                aria-label="Close"></button>
+                        </div>
+                    @endif
+
+                    {{-- ❌ Error Messages --}}
+                    @if ($errors->any())
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <ul class="mb-0">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                aria-label="Close"></button>
+                        </div>
+                    @endif
+            <form class="row g-3" action="{{ route('sendOrganizationDetails') }}" method="POST">
+                @csrf
 
                     <!-- Organization Details -->
                     <div class="col-12">
@@ -648,13 +654,13 @@
                     </div>
 
                     <div class="col-md-6">
-                        <label class="form-label">Organization / Institution / Company Name</label>
-                        <input type="text" class="form-control" placeholder="Enter name">
+                        <label class="form-label">Organization / Institution / Company Name <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" placeholder="Enter name" name="name" required>
                     </div>
 
                     <div class="col-md-6">
-                        <label class="form-label">Type</label>
-                        <select class="form-select">
+                        <label class="form-label">Type <span class="text-danger">*</span></label>
+                        <select class="form-select" name="organization_type" required>
                             <option selected disabled>Select type</option>
                             <option>Institution</option>
                             <option>Industry</option>
@@ -666,7 +672,7 @@
 
                     <div class="col-md-6">
                         <label class="form-label">Website URL</label>
-                        <input type="url" class="form-control" placeholder="https://example.com">
+                        <input type="url" class="form-control" name="webiste" placeholder="https://example.com">
                     </div>
 
                     <!-- Contact Person Details -->
@@ -676,22 +682,22 @@
 
                     <div class="col-md-6">
                         <label class="form-label">Contact Person Name</label>
-                        <input type="text" class="form-control" placeholder="Full name">
+                        <input type="text" class="form-control" placeholder="Full name" name="contact_name" required>
                     </div>
 
                     <div class="col-md-6">
                         <label class="form-label">Designation</label>
-                        <input type="text" class="form-control" placeholder="e.g. Manager">
+                        <input type="text" class="form-control" placeholder="e.g. Manager" name="contact_designation" required >
                     </div>
 
                     <div class="col-md-6">
-                        <label class="form-label">Contact Number</label>
-                        <input type="tel" class="form-control" placeholder="e.g. 9876543210">
+                        <label class="form-label">Contact Number <span class="text-danger">*</span></label>
+                        <input type="tel" class="form-control" placeholder="e.g. 9876543210" name="contact_number" required>
                     </div>
 
                     <div class="col-md-6">
-                        <label class="form-label">Email ID</label>
-                        <input type="email" class="form-control" placeholder="example@email.com">
+                        <label class="form-label">Email ID <span class="text-danger">*</span> </label>
+                        <input type="email" class="form-control" placeholder="example@email.com" name="contact_email">
                     </div>
 
                     <!-- Address Details -->
@@ -700,33 +706,33 @@
                     </div>
 
                     <div class="col-12">
-                        <label class="form-label">Office Address</label>
-                        <textarea class="form-control" rows="2" placeholder="Full address"></textarea>
+                        <label class="form-label">Office Address <span class="text-danger">*</span> </label>
+                        <textarea class="form-control" rows="2" placeholder="Full address" name="address" required></textarea>
                     </div>
 
                     <div class="col-md-6">
-                        <label class="form-label">Country</label>
-                        <input type="text" class="form-control" placeholder="Country">
+                        <label class="form-label">Country <span class="text-danger">*</span> </label>
+                        <input type="text" class="form-control" placeholder="Country" name="country">
                     </div>
 
                     <div class="col-md-6">
-                        <label class="form-label">State</label>
-                        <input type="text" class="form-control" placeholder="State">
+                        <label class="form-label">State <span class="text-danger">*</span> </label>
+                        <input type="text" class="form-control" placeholder="State" name="state">
                     </div>
 
                     <div class="col-md-6">
-                        <label class="form-label">District</label>
-                        <input type="text" class="form-control" placeholder="District">
+                        <label class="form-label">District <span class="text-danger">*</span> </label>
+                        <input type="text" class="form-control" placeholder="District" name="district">
                     </div>
 
                     <div class="col-md-6">
                         <label class="form-label">City / Village</label>
-                        <input type="text" class="form-control" placeholder="City or Village">
+                        <input type="text" class="form-control" placeholder="City or Village" name="city_village">
                     </div>
 
                     <div class="col-md-6">
                         <label class="form-label">Pincode</label>
-                        <input type="text" class="form-control" placeholder="Pincode">
+                        <input type="text" class="form-control" placeholder="Pincode" name="pincode">
                     </div>
 
                     <!-- Partnership Interest -->
@@ -736,7 +742,7 @@
 
                     <div class="col-md-6">
                         <label class="form-label">Area of Collaboration</label>
-                        <select class="form-select">
+                        <select class="form-select" name="collaboration" required>
                             <option>Skill Training</option>
                             <option>Internship</option>
                             <option>Placement</option>
@@ -756,7 +762,7 @@
                     <!-- Target Beneficiary Group -->
                     <div class="col-md-6">
                         <label class="form-label">Target Beneficiary Group</label>
-                        <select class="form-select">
+                        <select class="form-select" name="beneficiary" required>
                             <option>School</option>
                             <option>College</option>
                             <option>Women SHG</option>
