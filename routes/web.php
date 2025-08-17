@@ -75,6 +75,10 @@ Route::get('/event', function () {
     return view('web.event');
 })->name('event');
 
+Route::get('/global-pathways', function () {
+    return view('web.coming-soon');
+})->name('global');
+
 // Collabration
 Route::get('/collaboration',function(){
     return view('web.collaboration');

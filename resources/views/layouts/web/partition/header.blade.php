@@ -344,7 +344,7 @@
                                                             Practices & Case Studies</a></li>
                                                 </ul>
                                             </li>
-                                            <li><a href="#">Global Pathways</a></li>
+                                            <li><a href="{{ route('global') }}">Global Pathways</a></li>
                                             <li><a href="{{ route('contact') }}">Contact</a></li>
                                         </ul>
                                     </div>
