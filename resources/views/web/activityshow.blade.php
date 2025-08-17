@@ -168,7 +168,15 @@
                     <!-- Event Highlights -->
                     <div class="card mb-4">
                         <div class="card-body">
-                            <h3 class="fw-bold mb-4">Key Details</h3>
+                            <h3 class="fw-bold mb-4">
+                                                @if ($event->type == 1)
+                                                    Event
+                                                @elseif ($event->type == 2)
+                                                    Competition
+                                                @else
+                                                    
+                                                @endif
+                                                Details</h3>
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="event-detail-item">
