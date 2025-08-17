@@ -13,8 +13,8 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12" data-aos="fade-down">
-                <h1 class="display-4 fw-bold text-center">Collaborations</h1>
-                <p class="lead text-center">Building strategic partnerships for impactful skill development</p>
+                <h1 class="display-4 fw-bold text-center text-white">Collaborations</h1>
+                <p class="lead text-center text-white">Building strategic partnerships for impactful skill development</p>
             </div>
         </div>
     </div>
