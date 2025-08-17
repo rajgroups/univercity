@@ -71,7 +71,7 @@
                         <form class="row g-3" method="POST" action="{{ route('web.enquiry') }}">
                             @csrf
 
-                            <div class="col-md-6">
+                            <div class="col-md-6 g-2">
                                 <input type="text" name="name"
                                     class="form-control @error('name') is-invalid @enderror" placeholder="Your Name"
                                     value="{{ old('name') }}" required>
@@ -80,7 +80,7 @@
                                 @enderror
                             </div>
 
-                            <div class="col-md-6">
+                            <div class="col-md-6 g-2">
                                 <input type="email" name="email"
                                     class="form-control @error('email') is-invalid @enderror" placeholder="Your Email"
                                     value="{{ old('email') }}" required>
@@ -89,7 +89,7 @@
                                 @enderror
                             </div>
 
-                            <div class="col-md-6">
+                            <div class="col-md-6 g-2">
                                 <input type="tel" name="mobile"
                                     class="form-control @error('mobile') is-invalid @enderror"
                                     placeholder="Mobile Number" value="{{ old('mobile') }}" required>
@@ -98,7 +98,7 @@
                                 @enderror
                             </div>
 
-                            <div class="col-md-6 form-check">
+                            <div class="col-md-6 g-2 form-check">
                                 <input class="form-check-input" type="checkbox" name="is_philanthropist" id="philanthropistCheck" {{ old('is_philanthropist') ? 'checked' : '' }}>
                                 <label class="form-check-label text-white" for="philanthropistCheck">
                                     Register as a Philanthropist or Sponsor

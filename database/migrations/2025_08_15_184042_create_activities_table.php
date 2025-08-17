@@ -33,7 +33,10 @@ return new class extends Migration
             $table->decimal('entry_fee', 8, 2)->nullable()->default(0);
             
             // Relationships
-            $table->foreignId('organizer_id')->constrained('users')->onDelete('cascade')->nullable();
+            $table->unsignedBigInteger('organizer_id')->nullable();
+            $table->foreign('organizer_id')
+                ->references('id')->on('users')
+                ->onDelete('cascade');
             $table->foreignId('category_id')->constrained('category')->onDelete('cascade');
             
             $table->timestamps();

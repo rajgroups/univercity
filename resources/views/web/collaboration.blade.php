@@ -2,7 +2,7 @@
 @section('content')
 <!-- Title Banner Section Start -->
 <section class="mb-5" style="
-    background: url('resource/web/assets/media/banner-two.jpg') no-repeat;
+    background: url({{ asset('resource/admin/assets/img/banner-two.jpg') }}) no-repeat;
     background-position: center;
     background-size: cover;
     height: clamp(250px, 22.344vw, 950px);

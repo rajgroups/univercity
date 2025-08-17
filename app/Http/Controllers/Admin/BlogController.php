@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Blog;
 use App\Models\Category;
 use App\Models\Course;
+use Flasher\Laravel\Facade\Flasher;
 use Illuminate\Http\Request;
 
 class BlogController extends Controller
@@ -41,15 +42,15 @@ class BlogController extends Controller
             'title'             => 'required|string|max:255',
             'menu_title'        => 'nullable|string|max:255',
             'category_id'       => 'nullable|exists:category,id',
-            'subtitle'          => 'nullable|string|max:255',
-            'short_description' => 'required|string|max:500',
+            'subtitle'          => 'nullable|string',
+            'short_description' => 'required|string',
             'slug'              => 'required|string|max:255|unique:blog,slug',
-            'image'             => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'banner_image'      => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'type'              => 'required|in:1,2,3,4,5,6',
+            'image'             => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
+            'banner_image'      => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
+            'type'              => 'required|in:1,2,3,4,5,6,7,8,9',
             'description'       => 'required|string',
             'points'            => 'nullable|array',
-            'points.*'          => 'nullable|string|max:255',
+            'points.*'          => 'nullable|string',
             'status'            => 'nullable|boolean',
         ]);
 
@@ -88,6 +89,7 @@ class BlogController extends Controller
                 'status'            => $request->has('status') ? 1 : 0,
             ]);
 
+            Flasher::addSuccess('Blog/News created successfully!');
             return redirect()->route('admin.blog.index')
                 ->with('success', 'Blog/News created successfully!');
 
@@ -128,12 +130,12 @@ class BlogController extends Controller
             'subtitle'          => 'nullable|string|max:255',
             'short_description' => 'required|string',
             'slug'              => 'required|string|max:255|unique:blog,slug,'.$blog->id,
-            'image'             => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'banner_image'      => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'type'              => 'required|in:1,2,3',
+            'image'             => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
+            'banner_image'      => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
+            'type'              => 'required|in:1,2,3,4,5,6,7,8,9',
             'description'       => 'required|string',
             'points'            => 'nullable|array',
-            'points.*'          => 'nullable|string|max:255',
+            'points.*'          => 'nullable|string',
             'status'            => 'required|boolean',
             'remove_image'      => 'nullable|boolean',
             'remove_banner_image' => 'nullable|boolean'
