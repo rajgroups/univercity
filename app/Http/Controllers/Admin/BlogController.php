@@ -36,13 +36,12 @@ class BlogController extends Controller
      */
     public function store(Request $request)
     {
-        // Store Blog News
         // Validate the request data
         $validated = $request->validate([
             'title'             => 'required|string|max:255',
             'menu_title'        => 'nullable|string|max:255',
             'category_id'       => 'nullable|exists:category,id',
-            'subtitle'          => 'nullable|string',
+            'subtitle'          => 'nullable|string|max:255',
             'short_description' => 'required|string',
             'slug'              => 'required|string|max:255|unique:blog,slug',
             'image'             => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
@@ -50,11 +49,39 @@ class BlogController extends Controller
             'type'              => 'required|in:1,2,3,4,5,6,7,8,9',
             'description'       => 'required|string',
             'points'            => 'nullable|array',
-            'points.*'          => 'nullable|string',
+            'points.*'          => [
+                'nullable',
+                'string',
+                'regex:/^[^-\n\r]+ - [^-]+$/'
+            ],
             'status'            => 'nullable|boolean',
+        ], [
+            'points.*.regex' => 'Each point must contain exactly one " - " with spaces around it.',
         ]);
 
+
         try {
+            // Filter out empty points and allow only one "-"
+            $filteredPoints = null;
+            if ($request->points) {
+                $filteredPoints = array_filter(array_map(function ($point) {
+                    if ($point === null) return null;
+
+                    // Trim spaces
+                    $point = trim($point);
+
+                    // Allow only first occurrence of "-"
+                    $parts = explode('-', $point, 2);
+                    $point = $parts[0];
+                    if (isset($parts[1])) {
+                        // keep only first "-" + rest (without further "-")
+                        $point .= '-' . str_replace(' - ', '', $parts[1]);
+                    }
+
+                    return $point !== '' ? $point : null;
+                }, $request->points));
+            }
+
             // Handle file uploads - store directly in public folder
             $imageName = null;
             if ($request->hasFile('image')) {
@@ -69,9 +96,6 @@ class BlogController extends Controller
                 $bannerName = 'banner_'.time().'.'.$banner->getClientOriginalExtension();
                 $banner->move(public_path('uploads/blogs'), $bannerName);
             }
-
-            // Filter out empty points
-            $filteredPoints = $request->points ? array_filter($request->points) : null;
 
             // Create the blog/news
             $blog = Blog::create([
@@ -99,6 +123,7 @@ class BlogController extends Controller
         }
     }
 
+
     /**
      * Display the specified resource.
      */
@@ -124,38 +149,42 @@ class BlogController extends Controller
     {
         // Validate the request data
         $validated = $request->validate([
-            'title'             => 'required|string|max:255',
-            'menu_title'        => 'nullable|string|max:255',
-            'category_id'       => 'nullable|exists:category,id',
-            'subtitle'          => 'nullable|string|max:255',
-            'short_description' => 'required|string',
-            'slug'              => 'required|string|max:255|unique:blog,slug,'.$blog->id,
-            'image'             => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
-            'banner_image'      => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
-            'type'              => 'required|in:1,2,3,4,5,6,7,8,9',
-            'description'       => 'required|string',
-            'points'            => 'nullable|array',
-            'points.*'          => 'nullable|string',
-            'status'            => 'required|boolean',
-            'remove_image'      => 'nullable|boolean',
+            'title'               => 'required|string|max:255',
+            'menu_title'          => 'nullable|string|max:255',
+            'category_id'         => 'nullable|exists:category,id',
+            'subtitle'            => 'nullable|string|max:255',
+            'short_description'   => 'required|string',
+            'slug'                => 'required|string|max:255|unique:blog,slug,'.$blog->id,
+            'image'               => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
+            'banner_image'        => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
+            'type'                => 'required|in:1,2,3,4,5,6,7,8,9',
+            'description'         => 'required|string',
+            'points'              => 'nullable|array',
+            'points.*'            => [
+                'nullable',
+                'string',
+                'regex:/^[^-\n\r]+ - [^-]+$/'
+            ],
+            'status'              => 'required|boolean',
+            'remove_image'        => 'nullable|boolean',
             'remove_banner_image' => 'nullable|boolean'
+        ],
+            [
+            'points.*.regex' => 'Each point must contain exactly one " - " with spaces around it.',
         ]);
 
         try {
             // Handle image uploads/removal
             $imagePath = $blog->image;
             if ($request->hasFile('image')) {
-                // Delete old image if exists
                 if ($blog->image && file_exists(public_path('uploads/blogs/'.$blog->image))) {
                     unlink(public_path('uploads/blogs/'.$blog->image));
                 }
-                // Upload new image
                 $image = $request->file('image');
                 $imageName = 'blog_'.time().'.'.$image->getClientOriginalExtension();
                 $image->move(public_path('uploads/blogs'), $imageName);
                 $imagePath = $imageName;
             } elseif ($request->remove_image) {
-                // Remove image if requested
                 if ($blog->image && file_exists(public_path('uploads/blogs/'.$blog->image))) {
                     unlink(public_path('uploads/blogs/'.$blog->image));
                 }
@@ -164,40 +193,53 @@ class BlogController extends Controller
 
             $bannerPath = $blog->banner_image;
             if ($request->hasFile('banner_image')) {
-                // Delete old banner if exists
                 if ($blog->banner_image && file_exists(public_path('uploads/blogs/'.$blog->banner_image))) {
                     unlink(public_path('uploads/blogs/'.$blog->banner_image));
                 }
-                // Upload new banner
                 $banner = $request->file('banner_image');
                 $bannerName = 'banner_'.time().'.'.$banner->getClientOriginalExtension();
                 $banner->move(public_path('uploads/blogs'), $bannerName);
                 $bannerPath = $bannerName;
             } elseif ($request->remove_banner_image) {
-                // Remove banner if requested
                 if ($blog->banner_image && file_exists(public_path('uploads/blogs/'.$blog->banner_image))) {
                     unlink(public_path('uploads/blogs/'.$blog->banner_image));
                 }
                 $bannerPath = null;
             }
 
-            // Filter out empty points
-            $filteredPoints = $request->points ? array_filter($request->points) : null;
+            // Filter out empty points and allow only one "-"
+            $filteredPoints = null;
+            if ($request->points) {
+                $filteredPoints = array_filter(array_map(function ($point) {
+                    if ($point === null) return null;
+
+                    $point = trim($point);
+
+                    // Allow only first occurrence of "-"
+                    $parts = explode('-', $point, 2);
+                    $point = $parts[0];
+                    if (isset($parts[1])) {
+                        $point .= '-' . str_replace(' - ', '', $parts[1]);
+                    }
+
+                    return $point !== '' ? $point : null;
+                }, $request->points));
+            }
 
             // Update the blog
             $blog->update([
-                'title'                 => $validated['title'],
-                'menu_title'            => $validated['menu_title'],
-                'category_id'           => $validated['category_id'],
-                'subtitle'              => $validated['subtitle'],
-                'short_description'     => $validated['short_description'],
-                'slug'                  => $validated['slug'],
-                'image'                 => $imagePath,
-                'banner_image'          => $bannerPath,
-                'type'                  => $validated['type'],
-                'description'           => $validated['description'],
-                'points'                => $filteredPoints ? json_encode($filteredPoints) : null,
-                'status'                => $validated['status'],
+                'title'             => $validated['title'],
+                'menu_title'        => $validated['menu_title'],
+                'category_id'       => $validated['category_id'],
+                'subtitle'          => $validated['subtitle'],
+                'short_description' => $validated['short_description'],
+                'slug'              => $validated['slug'],
+                'image'             => $imagePath,
+                'banner_image'      => $bannerPath,
+                'type'              => $validated['type'],
+                'description'       => $validated['description'],
+                'points'            => $filteredPoints ? json_encode($filteredPoints) : null,
+                'status'            => $validated['status'],
             ]);
 
             return redirect()->route('admin.blog.index')
@@ -208,6 +250,7 @@ class BlogController extends Controller
                 ->with('error', 'Error updating blog/news: '.$e->getMessage());
         }
     }
+
 
     /**
      * Remove the specified resource from storage.

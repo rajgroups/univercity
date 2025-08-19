@@ -211,12 +211,11 @@
                                                     class="form-control @error('points.' . $index) is-invalid @enderror"
                                                     placeholder="Example: Curriculum Integration - Blending vocational skills with academics"
                                                     value="{{ $point }}">
-                                                <button type="button"
-                                                    class="btn btn-outline-danger remove-bullet">−</button>
-                                                @error('points.' . $index)
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
+                                                <button type="button" class="btn btn-outline-danger remove-bullet">−</button>
                                             </div>
+                                            @error('points.' . $index)
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
                                         @endforeach
                                     @else
                                         {{-- Initial empty input for new announcement --}}

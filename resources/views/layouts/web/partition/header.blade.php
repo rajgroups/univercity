@@ -279,7 +279,7 @@
                                                             {{-- {{ route('programe.details', $program->slug) }}" --}}
                                                             @foreach ($educationPrograms as $program)
                                                                 <li><a
-                                                                        href="{{ route('web.catalog') }}">{{ $program->name }}</a>
+                                                                        href="{{ route('web.catalog', ['category_id'=>$program->id]) }}">{{ $program->name }}</a>
                                                                 </li>
                                                             @endforeach
                                                         </ul>
@@ -292,7 +292,7 @@
                                                         <ul class="sub-menu">
                                                             @foreach ($skillPrograms as $program)
                                                                 <li><a
-                                                                        href="{{ route('web.catalog') }}">{{ $program->name }}</a>
+                                                                        href="{{ route('web.catalog', ['category_id'=>$program->id]) }}">{{ $program->name }}</a>
                                                                 </li>
                                                             @endforeach
                                                         </ul>
