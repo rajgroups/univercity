@@ -301,7 +301,7 @@
                                                     {{-- CSR Initiatives --}}
                                                     <li>
                                                         <a
-                                                            href="{{ route('web.blog.filter', ['category_id' => '', 'type' => 6]) }}">3.
+                                                            href="{{ route('web.blog.filter', ['category_id' => '', 'type' => 8]) }}">3.
                                                             CSR Initiatives</a>
                                                         {{-- <ul class="sub-menu">
                                                             @foreach ($csrPrograms as $program)

@@ -419,23 +419,24 @@ public function generalUpdate(Request $request)
 {
     // dd($request);
     $rules = [
-        'site_title'        => 'required|string|max:255',
-        'contact_email'     => 'nullable|email',
-        'contact_phone'     => 'nullable|string|max:20',
-        'contact_address'   => 'nullable|string|max:255',
-        'about_title'       => 'nullable|string|max:255',
-        'currency_name'     => 'nullable|string|max:10',
-        'currency_symbol'   => 'nullable|string|max:5',
-        'currency_rate'     => 'nullable|numeric',
-        'smtp_port'         => 'nullable|numeric',
-        'smtp_from_email'   => 'nullable|email',
-        'site_logo'         => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
-        'favicon'           => 'nullable|image|mimes:ico,png|max:512',
-        'loader_image'      => 'nullable|image|mimes:gif,jpg,jpeg,png|max:1024',
-        'about_image'       => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-        'footer_gateway_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
-        'footer_copyright'   => 'nullable|string',
-        'maintenance_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        'site_title'                => 'required|string|max:255',
+        'contact_email'             => 'nullable|email',
+        'contact_phone'             => 'nullable|string|max:20',
+        'contact_address'           => 'nullable|string|max:255',
+        'about_title'               => 'nullable|string|max:255',
+        'currency_name'             => 'nullable|string|max:10',
+        'currency_symbol'           => 'nullable|string|max:5',
+        'currency_rate'             => 'nullable|numeric',
+        'smtp_port'                 => 'nullable|numeric',
+        'smtp_from_email'           => 'nullable|email',
+        'site_logo'                 => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+        'favicon'                   => 'nullable|image|mimes:ico,png|max:512',
+        'loader_image'              => 'nullable|image|mimes:gif,jpg,jpeg,png|max:1024',
+        'about_image'               => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        'footer_gateway_image'      => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+        'footer_copyright'          => 'nullable|string',
+        'footer_email'              => 'nullable|email',
+        'maintenance_image'         => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
     ];
 
     $validated = $request->validate($rules);
@@ -493,6 +494,7 @@ public function generalUpdate(Request $request)
 
         'footer_text'           => $request->footer_text,
         'footer_phone'          => $request->footer_phone,
+        'footer_email'          => $request->footer_email,
         'footer_address'        => $request->footer_address,
         'footer_copyright'      => $request->footer_copyright,
 
