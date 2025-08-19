@@ -133,15 +133,15 @@
                             <ul class="unstyled">
                                 <li class="link mb-12"><a href="/"><i class="fa fa-arrow-alt-circle-right"></i>
                                         Home</a></li>
-                                <li class="link mb-12"><a href="/about"><i class="fa fa-arrow-alt-circle-right"></i>
+                                <li class="link mb-12"><a href="{{ route('about') }}"><i class="fa fa-arrow-alt-circle-right"></i>
                                         About
                                         Us</a></li>
-                                <li class="link mb-12"><a href="/contact"><i class="fa fa-arrow-alt-circle-right"></i>
+                                <li class="link mb-12"><a href="{{ route('contact') }}"><i class="fa fa-arrow-alt-circle-right"></i>
                                         Contact Us</a></li>
-                                <li class="link mb-12"><a href="#"><i class="fa fa-arrow-alt-circle-right"></i>
+                                <li class="link mb-12"><a href="{{ route('contact') }}"><i class="fa fa-arrow-alt-circle-right"></i>
                                         Donate
                                         Now</a></li>
-                                <li class="link mb-12"><a href="#"><i class="fa fa-arrow-alt-circle-right"></i>
+                                <li class="link mb-12"><a href="{{ route('web.activity') }}"><i class="fa fa-arrow-alt-circle-right"></i>
                                         NTI
                                         Competetions/Events</a>
                                 </li>
@@ -150,18 +150,11 @@
                         <div class="col-md-4">
                             <h5 class="fw-500 mb-24">USEFUL LINKS</h5>
                             <ul class="unstyled">
-                                <li class="link mb-12"><a href="#"><i class="fa fa-arrow-alt-circle-right"></i>
-                                        Initiatives</a></li>
-                                <li class="link mb-12"><a href="#"><i class="fa fa-arrow-alt-circle-right"></i>
-                                        Sectors</a></li>
-                                <li class="link mb-12"><a href="#"><i class="fa fa-arrow-alt-circle-right"></i>
-                                        Collaborations</a>
-                                </li>
-                                <li class="link mb-12"><a href="#"><i class="fa fa-arrow-alt-circle-right"></i>
-                                        Resources</a></li>
-                                <li class="link mb-12"><a href="#"><i class="fa fa-arrow-alt-circle-right"></i>
-                                        Global
-                                        Pathways</a>
+                                <li class="link mb-12"><a href="{{ route('web.catalog') }}"><i class="fa fa-arrow-alt-circle-right"></i> Initiatives</a></li>
+                                <li class="link mb-12"><a href="{{ route('web.sector') }}"><i class="fa fa-arrow-alt-circle-right"></i>Sectors</a></li>
+                                <li class="link mb-12"><a href="{{ route('web.collaboration') }}"><i class="fa fa-arrow-alt-circle-right"></i>Collaborations</a></li>
+                                <li class="link mb-12"><a href="{{ route('web.blog.filter') }}"><i class="fa fa-arrow-alt-circle-right"></i> Resources</a></li>
+                                <li class="link mb-12"><a href="{{ route('global') }}"><i class="fa fa-arrow-alt-circle-right"></i> Global Pathways</a>
                                 </li>
                             </ul>
                         </div>
