@@ -110,12 +110,12 @@
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                             class="me-2 bi bi-trophy-fill" viewBox="0 0 16 16">
                             <path d="M2 1a1 1 0 0 0-1 1v1a3 3 0 0 0 3 3h.184a5.978
-                    5.978 0 0 0 2.223 2.223A5.978
-                    5.978 0 0 0 5 10.816V12h6v-1.184a5.978
-                    5.978 0 0 0-2.223-2.223A5.978
-                    5.978 0 0 0 10.816 6H11a3 3 0 0
-                    0 3-3V2a1 1 0 0 0-1-1H2zm3 12a1 1 0 0
-                    0-1 1v1h8v-1a1 1 0 0 0-1-1H5z" />
+                        5.978 0 0 0 2.223 2.223A5.978
+                        5.978 0 0 0 5 10.816V12h6v-1.184a5.978
+                        5.978 0 0 0-2.223-2.223A5.978
+                        5.978 0 0 0 10.816 6H11a3 3 0 0
+                        0 3-3V2a1 1 0 0 0-1-1H2zm3 12a1 1 0 0
+                        0-1 1v1h8v-1a1 1 0 0 0-1-1H5z" />
                         </svg>
                         Competition
                     </span>
@@ -124,19 +124,19 @@
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                             class="me-2 bi bi-calendar-event" viewBox="0 0 16 16">
                             <path d="M11 6a1 1 0 0 1 1 1v1a1 1 0 0
-                    1-1 1H5a1 1 0 0 1-1-1V7a1 1 0
-                    1 1 1h6z" />
+                        1-1 1H5a1 1 0 0 1-1-1V7a1 1 0
+                        1 1 1h6z" />
                             <path d="M3.5 0a.5.5 0 0 1
-                    .5.5V1h8V.5a.5.5 0 0
-                    1 1 0V1h1a2 2 0 0
-                    1 2 2v11a2 2 0 0
-                    1-2 2H2a2 2 0 0
-                    1-2-2V3a2 2 0 0
-                    1 2-2h1V.5a.5.5
-                    0 0 1 .5-.5zM1
-                    4v10a1 1 0 0 0 1
-                    1h12a1 1 0 0 0
-                    1-1V4H1z" />
+                        .5.5V1h8V.5a.5.5 0 0
+                        1 1 0V1h1a2 2 0 0
+                        1 2 2v11a2 2 0 0
+                        1-2 2H2a2 2 0 0
+                        1-2-2V3a2 2 0 0
+                        1 2-2h1V.5a.5.5
+                        0 0 1 .5-.5zM1
+                        4v10a1 1 0 0 0 1
+                        1h12a1 1 0 0 0
+                        1-1V4H1z" />
                         </svg>
                         Event
                     </span>
@@ -164,19 +164,57 @@
             <div class="row row-gap-4">
                 <!-- Main Content -->
                 <div class="col-lg-8">
+                    <div class="mb-3">
+                            {{-- Event Or Compition Images --}}
+                            @if($event->images && $event->images->count() > 0)
+                            <div id="carouselId" class="carousel slide" data-bs-ride="carousel">
+
+                                {{-- Indicators --}}
+                                <div class="carousel-indicators">
+                                    @foreach($event->images as $index => $image)
+                                        <button type="button" data-bs-target="#carouselId" data-bs-slide-to="{{ $index }}"
+                                            @class(['active' => $index === 0])
+                                            aria-current="{{ $index === 0 ? 'true' : 'false' }}"
+                                            aria-label="Slide {{ $index + 1 }}"></button>
+                                    @endforeach
+                                </div>
+
+                                {{-- Slides --}}
+                                <div class="carousel-inner" role="listbox">
+                                    @foreach($event->images as $index => $image)
+                                        <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
+                                            <img src="{{ asset($image->file_name) }}"
+                                                class="w-100 d-block"
+                                                alt="{{ $image->alt_text ?? 'Slide ' . ($index + 1) }}">
+                                        </div>
+                                    @endforeach
+                                </div>
+
+                                {{-- Controls --}}
+                                <button class="carousel-control-prev" type="button" data-bs-target="#carouselId" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#carouselId" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Next</span>
+                                </button>
+                            </div>
+                        @endif
+                    </div>
 
                     <!-- Event Highlights -->
                     <div class="card mb-4">
                         <div class="card-body">
                             <h3 class="fw-bold mb-4">
-                                                @if ($event->type == 1)
-                                                    Event
-                                                @elseif ($event->type == 2)
-                                                    Competition
-                                                @else
-                                                    
-                                                @endif
-                                                Details</h3>
+                                @if ($event->type == 1)
+                                    Event
+                                @elseif ($event->type == 2)
+                                    Competition
+                                @else
+                                @endif
+                                Details
+                            </h3>
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="event-detail-item">
@@ -259,7 +297,8 @@
 
                     <div class="card mb-4">
                         <div class="card-body">
-                            <h3 class="fw-bold mb-4">About This {{ $event->is_competition ? 'Competition' : 'Event' }}</h3>
+                            <h3 class="fw-bold mb-4">About This {{ $event->is_competition ? 'Competition' : 'Event' }}
+                            </h3>
                             {!! $event->description !!}
                         </div>
                     </div>
@@ -435,7 +474,7 @@
                                                         width="80" height="80" alt="{{ $similar->title }}">
                                                     <div>
                                                         <h6 class="mb-1">
-                                                            <a href="{{ route('web.events.show', $similar->slug) }}"
+                                                            <a href="{{ route('web.activity.show', $similar->slug) }}"
                                                                 class="text-dark">
                                                                 {{ Str::limit($similar->title, 40) }}
                                                             </a>

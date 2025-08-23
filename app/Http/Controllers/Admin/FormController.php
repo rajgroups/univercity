@@ -9,6 +9,7 @@ use App\Mail\CooperationDetailsMail;
 use App\Mail\OrganizationRegistrationMail;
 use App\Models\Organization;
 use App\Models\Student;
+use App\Models\Volunteers;
 use Flasher\Prime\FlasherInterface;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
@@ -125,6 +126,43 @@ class FormController extends Controller
         } catch (\Exception $e) {
             return redirect()->back()
                 ->with('error', 'Error submitting organization details: ' . $e->getMessage())
+                ->withInput();
+        }
+    }
+
+    public function sendVolunteer(Request $request, FlasherInterface $flasher)
+    {
+        // ✅ Validate the request data
+        $validator = Validator::make($request->all(), [
+            'name'         => 'required|string|max:255',
+            'mobile'       => 'required|string|max:15',
+            'gender'       => 'required|in:Male,Female,Other',
+            'dob'          => 'required|date',
+            'qualification'=> 'nullable|string|max:255',
+            'location'     => 'required|string|max:255',
+            'experience'   => 'required|in:Yes,No',
+        ]);
+
+        // ❌ Validation errors
+        if ($validator->fails()) {
+            foreach ($validator->errors()->all() as $error) {
+                $flasher->addError($error);
+            }
+            return redirect()->back()->withInput();
+        }
+
+        try {
+            $validated = $validator->validated();
+
+            // ✅ Save volunteer record
+            Volunteers::create($validated);
+
+            return redirect()->back()
+                ->with('success', 'Thank you for registering as a volunteer!');
+
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('error', 'Error submitting volunteer details: ' . $e->getMessage())
                 ->withInput();
         }
     }

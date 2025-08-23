@@ -45,6 +45,7 @@ class AnnouncementController extends Controller
             'subtitle'          => 'nullable|string',
             'image'             => 'required|image|mimes:jpeg,png,jpg,webp|max:2048',
             'banner_image'      => 'required|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'gallery.*'         => 'nullable|image|mimes:jpeg,png,jpg,gif|max:3072', // gallery images
             'type'              => 'required|in:1,2',
             'status'            => 'required|in:0,1',
             'description'       => 'nullable|string',
@@ -83,8 +84,23 @@ class AnnouncementController extends Controller
         // Save points JSON
         $validated['points'] = $request->filled('points') ? json_encode(array_filter($request->input('points'))) : null;
 
-        Announcement::create($validated);
+        $announcement = Announcement::create($validated);
 
+        // Handle multiple gallery images
+        if ($request->hasFile('gallery')) {
+            foreach ($request->file('gallery') as $key => $imageFile) {
+                $imageName = time() . '_' . $key . '.' . $imageFile->getClientOriginalExtension();
+                $imageFile->move(public_path('uploads/gallery'), $imageName);
+
+                $announcement->images()->create([
+                    'file_name' => 'uploads/gallery/' . $imageName,
+                    'alt_text'  => $announcement->title,
+                ]);
+            }
+        }
+
+        // Add a success notification
+        flash()->success('Product created successfully!');
         return redirect()->route('admin.announcement.index')->with('success', 'Announcement created successfully.');
     }
 
@@ -120,6 +136,7 @@ class AnnouncementController extends Controller
             'status'                => 'required|in:0,1',
             'short_description'     => 'required|string',
             'description'           => 'nullable',
+            'gallery.*'             => 'nullable|image|mimes:jpeg,png,jpg,gif|max:3072', // gallery images
             'image'                 => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'banner_image'          => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'points'            => 'nullable|array',
@@ -151,6 +168,28 @@ class AnnouncementController extends Controller
             $bannerImageName = time() . '_banner.' . $request->banner_image->extension();
             $request->banner_image->move(public_path('uploads/announcements'), $bannerImageName);
             $announcement->banner_image = asset('uploads/announcements/' . $bannerImageName); // Full path
+        }
+
+        // ✅ Handle gallery images (delete old + upload new)
+        if ($request->hasFile('gallery')) {
+            // Delete old images from DB + filesystem
+            foreach ($announcement->images as $oldImage) {
+                if (file_exists(public_path($oldImage->file_name))) {
+                    unlink(public_path($oldImage->file_name));
+                }
+                $oldImage->delete();
+            }
+
+            // Save new gallery images
+            foreach ($request->file('gallery') as $image) {
+                $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+                $image->move(public_path('uploads/gallery'), $imageName);
+
+                $announcement->images()->create([
+                    'file_name' => 'uploads/gallery/' . $imageName,
+                    'is_featured' => false,
+                ]);
+            }
         }
 
         // Update fields

@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-     <title>{{ $defaultSettings->site_title ?? null }}</title>
+    <title>{{ $defaultSettings->site_title ?? null }}</title>
     @include('layouts.admin.dependency.css')
     @stack('css')
 </head>
@@ -22,10 +22,9 @@
         @include('layouts.admin.partition.horizontal')
 
         <div class="page-wrapper">
-			<div class="content">
+            <div class="content">
                 <!-- start Page-content -->
                 @section('content')
-
                 @show
                 <!-- end main content-->
             </div>
@@ -38,6 +37,19 @@
 
     <!-- JAVASCRIPT -->
     @include('layouts.admin.dependency.js')
+    @if ($errors->any())
+        @foreach ($errors->all() as $error)
+            <script>
+                toastr.error("{{ $error }}");
+            </script>
+        @endforeach
+    @endif
+
+    @if (session('success'))
+        <script>
+            toastr.success("{{ session('success') }}");
+        </script>
+    @endif
     @stack('scripts')
 </body>
 

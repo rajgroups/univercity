@@ -93,7 +93,7 @@
                                     class="accordion-collapse collapse {{ count(request('languages', [])) ? 'show' : '' }}"
                                     aria-labelledby="headingLang" data-bs-parent="#filterAccordion">
                                     <div class="accordion-body pt-2">
-                                        @foreach (['English', 'Odia', 'Hindi'] as $language)
+                                        @foreach (['English', 'Tamil', 'Hindi'] as $language)
                                             <div class="form-check mb-2">
                                                 <input class="form-check-input" type="checkbox" name="languages[]"
                                                     id="lang{{ $loop->index }}" value="{{ $language }}"

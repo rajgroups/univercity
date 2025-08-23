@@ -61,9 +61,9 @@
 							<h6 class="submenu-hdr">Users</h6>
 							<ul>
 								<li class="submenu">
-									<a href="javascript:void(0);" class=""><i class="ti ti-user fs-16 me-2"></i><span>Users</span><span class="menu-arrow"></span></a>
+									<a href="javascript:void(0);" class=""><i class="ti ti-user fs-16 me-2"></i><span>Student</span><span class="menu-arrow"></span></a>
 									<ul style="display: none;">
-										<li><a href="{{ route('admin.student.index') }}">Users List</a></li>
+										<li><a href="{{ route('admin.student.index') }}">Student List</a></li>
 										{{-- <li><a href="{{ route('admin.category.create') }}">Add Category</a></li> --}}
 									</ul>
 								</li>
@@ -71,6 +71,13 @@
 									<a href="javascript:void(0);" class=""><i class="ti ti-users fs-16 me-2"></i><span>Organization</span><span class="menu-arrow"></span></a>
 									<ul style="display: none;">
 										<li><a href="{{ route('admin.sectors.index') }}">Organization List</a></li>
+										{{-- <li><a href="{{ route('admin.sectors.create') }}">Add Sector</a></li> --}}
+									</ul>
+								</li>
+								<li class="submenu">
+									<a href="javascript:void(0);" class=""><i class="ti ti-users fs-16 me-2"></i><span>Volunteer</span><span class="menu-arrow"></span></a>
+									<ul style="display: none;">
+										<li><a href="{{ route('admin.volunteer.index') }}">Volunteer List</a></li>
 										{{-- <li><a href="{{ route('admin.sectors.create') }}">Add Sector</a></li> --}}
 									</ul>
 								</li>

@@ -16,6 +16,7 @@
         "laravel/socialite": "^5.16",
         "laravel/tinker": "^2.8",
         "league/flysystem-google-cloud-storage": "^3.0",
+        "php-flasher/flasher-laravel": "^1.15",
         "php-flasher/flasher-toastr-laravel": "^1.15",
         "php-flasher/flasher-toastr-symfony": "^1.15",
         "spatie/laravel-google-cloud-storage": "^2.3"

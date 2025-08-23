@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Activity;
 use App\Models\User;
 use App\Models\Category;
+use Flasher\Laravel\Facade\Flasher;
+use Flasher\Prime\FlasherInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
@@ -38,7 +40,7 @@ class ActivityController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, FlasherInterface $flasher)
     {
         $validated = $request->validate([
             'title'                 => 'required|string|max:255',
@@ -51,6 +53,7 @@ class ActivityController extends Controller
             'location'              => 'required|string|max:255',
             'thumbnail_image'       => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             'banner_image'          => 'required|image|mimes:jpeg,png,jpg,gif|max:3072',
+            'images.*'              => 'nullable|image|mimes:jpeg,png,jpg,gif|max:3072', // gallery images
             'type'                  => 'required|in:1,2', // 1=event, 2=competition
             'status'                => 'required|in:0,1,2,3,4', // 0=draft, etc.
             'organizer_id'          => 'nullable|exists:users,id',
@@ -81,8 +84,23 @@ class ActivityController extends Controller
         // Create the activity
         $activity = Activity::create($validated);
 
-        return redirect()->route('admin.activity.index')
-            ->with('success', 'Activity created successfully!');
+        // Handle multiple gallery images
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $key => $imageFile) {
+                $imageName = time() . '_' . $key . '.' . $imageFile->getClientOriginalExtension();
+                $imageFile->move(public_path('uploads/gallery'), $imageName);
+
+                $activity->images()->create([
+                    'file_name' => 'uploads/gallery/' . $imageName,
+                    'alt_text'  => $activity->title,
+                ]);
+            }
+        }
+
+        // Add a success notification
+        flash()->success('Product created successfully!');
+        return redirect()->route('admin.activity.index');
+            // ->with('success', 'Activity created successfully!');
     }
 
     /**
@@ -121,6 +139,7 @@ class ActivityController extends Controller
             'location'                  => 'required|string|max:255',
             'thumbnail_image'           => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'banner_image'              => 'nullable|image|mimes:jpeg,png,jpg,gif|max:3072',
+            'images.*'                  => 'nullable|image|mimes:jpeg,png,jpg,gif|max:3072',
             'type'                      => 'required|in:1,2',
             'status'                    => 'required|in:0,1,2,3,4',
             'organizer_id'              => 'nullable|exists:users,id',
@@ -157,7 +176,28 @@ class ActivityController extends Controller
             $validated['banner_image'] = 'uploads/activity/banners/' . $bannerName;
         }
 
+        // ✅ Handle gallery images (delete old + upload new)
+        if ($request->hasFile('images')) {
+            // Delete old images from DB + filesystem
+            foreach ($activity->images as $oldImage) {
+                if (file_exists(public_path($oldImage->file_name))) {
+                    unlink(public_path($oldImage->file_name));
+                }
+                $oldImage->delete();
+            }
 
+            // Save new gallery images
+            foreach ($request->file('images') as $image) {
+                $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+                $image->move(public_path('uploads/gallery'), $imageName);
+
+                $activity->images()->create([
+                    'file_name' => 'uploads/gallery/' . $imageName,
+                    'is_featured' => false,
+                ]);
+            }
+        }
+        
         $activity->update($validated);
 
         return redirect()->route('admin.activity.index')

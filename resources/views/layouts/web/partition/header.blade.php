@@ -110,7 +110,16 @@
                                 <i class="bi bi-house-fill"></i> Home </a>
                         </div>
                         <div class="item p-2 text-light-gray">
-                            <i class="bi bi-three-dots-vertical"></i> More
+                            <div class="dropdown">
+                                <button class="btn p-2 text-light-gray" id="moreMenu" data-bs-toggle="dropdown" aria-expanded="false">
+                                    More <i class="bi bi-three-dots-vertical"></i> 
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="moreMenu">
+                                    <li><a class="dropdown-item" href="{{ route('web.activity') }}">NTI Competetions/Events</a></li>
+                                    <li><a class="dropdown-item" href="{{ route('contact') }}">Donate Now</a></li>
+                                </ul>
+                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -162,101 +171,65 @@
                             @endif
                             </form>
 
-                           <!-- Right Buttons -->
-                            <div class="col-md-4 text-end gap-3 order-3 d-none d-md-block">
+                            <!-- Right Buttons -->
+                            <div class="col-md-4 text-end gap-3 order-3 d-flex fs-sm-12 d-none-mobile">
                                 <!-- Register Button -->
-                                <button class="btn btn-warning text-white btn-sm fw-bold px-3 py-2" data-bs-toggle="modal" data-bs-target="#registerModal">
+                                <button class="btn btn-warning text-white btn-sm fw-bold px-3 py-2 fs-sm-12"
+                                    data-bs-toggle="modal" data-bs-target="#registerModal">
                                     <i class="fas fa-user me-2"></i> REGISTER
                                 </button>
-                                
-                               <!-- Login Button -->
-<a href="#" class="btn btn-outline-success btn-sm px-3 py-2 d-none-tblet d-lg-block-one" data-bs-toggle="modal" data-bs-target="#comingSoonModal">
-    <i class="fas fa-sign-in-alt me-2"></i> LOGIN
-</a>
 
-<!-- Coming Soon Modal -->
-<div class="modal fade" id="comingSoonModal" tabindex="-1" aria-labelledby="comingSoonModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="comingSoonModalLabel">Login Feature</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body text-center">
-                <div class="mb-4">
-                    <i class="fas fa-clock fa-4x text-warning"></i>
+                                <!-- Login Button -->
+                                <a href="#"
+                                    class="btn btn-outline-success btn-sm px-3 py-2 fs-sm-12"
+                                    data-bs-toggle="modal" data-bs-target="#comingSoonModal">
+                                    <i class="fas fa-sign-in-alt me-2"></i> LOGIN
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <h4 class="mb-3">Coming Soon!</h4>
-                <p class="text-muted">We're currently working on this feature and it will be available shortly.</p>
-            </div>
-            <div class="modal-footer justify-content-center">
-                <button type="button" class="btn btn-primary px-4" data-bs-dismiss="modal">Got It</button>
-            </div>
-        </div>
-    </div>
-</div>
+                <!-- Coming Soon Modal -->
+                <div class="modal fade" id="comingSoonModal" tabindex="-1"
+                    aria-labelledby="comingSoonModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="comingSoonModalLabel">Login Feature</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body text-center">
+                                <div class="mb-4">
+                                    <i class="fas fa-clock fa-4x text-warning"></i>
+                                </div>
+                                <h4 class="mb-3">Coming Soon!</h4>
+                                <p class="text-muted">We're currently working on this feature and it
+                                    will be available shortly.</p>
+                            </div>
+                            <div class="modal-footer justify-content-center">
+                                <button type="button" class="btn btn-primary px-4"
+                                    data-bs-dismiss="modal">Got It</button>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="container-fluid">
-                    <!-- <div class="hero-topbar-block">
-                     <div class="row align-items-center">
-                       <div class="col-xl-5 col-lg-3 col-1">
-                         <a href="#" class="header-logo d-lg-flex d-none">
-                           <img src="assets/media/logo.png" alt="">
-                         </a>
-                       </div>
-                       <div class="col-xl-7 col-lg-9 col-md-11">
-                         <div class="d-flex align-items-center gap-24">
-                           <div class="dropdown flex-shrink-0">
-                             <a href="javascript:void(0);" class="fw-600 black"><svg xmlns="http://www.w3.org/2000/svg" width="33" height="32" viewBox="0 0 33 32" fill="none">
-                               <g clip-path="url(#clip0_9539_215)">
-                                 <path d="M31.25 5H1.75C1.05963 5 0.5 5.4477 0.5 6C0.5 6.5523 1.05963 7 1.75 7H31.25C31.9404 7 32.5 6.5523 32.5 6C32.5 5.4477 31.9404 5 31.25 5Z" fill="#141516"/>
-                                 <path d="M31.25 15H1.75C1.05963 15 0.5 15.4477 0.5 16C0.5 16.5523 1.05963 17 1.75 17H31.25C31.9404 17 32.5 16.5523 32.5 16C32.5 15.4477 31.9404 15 31.25 15Z" fill="#141516"/>
-                                 <path d="M31.25 25H1.75C1.05963 25 0.5 25.4477 0.5 26C0.5 26.5523 1.05963 27 1.75 27H31.25C31.9404 27 32.5 26.5523 32.5 26C32.5 25.4477 31.9404 25 31.25 25Z" fill="#141516"/>
-                               </g>
-                               <defs>
-                                 <clipPath>
-                                   <rect width="32" height="32" fill="white" transform="translate(0.5)"/>
-                                 </clipPath>
-                               </defs>
-                             </svg>&nbsp;&nbsp;&nbsp;Categories&nbsp;<i
-                                 class="fa-solid fa-chevron-down"></i></a>
-                             <ul class="sub-menu unstyled">
-                               <li><a href="#">Programming & IT</a></li>
-                               <li><a href="#">Business & Marketing</a></li>
-                               <li><a href="#">Design & Creativity</a></li>
-                               <li><a href="#">Copy Writing</a></li>
-                               <li><a href="#">Business Studies</a></li>
-                             </ul>
-                           </div>
-                           <form class="searchbar">
-                             <svg class="searchbar-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                               viewBox="0 0 20 20" fill="none">
-                               <path
-                                 d="M17.5 17.5L14.5834 14.5833M16.6667 9.58333C16.6667 13.4954 13.4954 16.6667 9.58333 16.6667C5.67132 16.6667 2.5 13.4954 2.5 9.58333C2.5 5.67132 5.67132 2.5 9.58333 2.5C13.4954 2.5 16.6667 5.67132 16.6667 9.58333Z"
-                                 stroke="#92949F" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round" />
-                             </svg>
-                             <input type="text" name="search" id="searchbar" placeholder="Search for a course">
-                           </form>
-                         </div>
-                       </div>
-                     </div>
-                     </div> -->
                     <div style="border-top: 1px solid #d8d8dc;" class="row align-items-center">
-                        <div class="col-lg-8 col-8 mt-3">
-                            <!-- <a href="#" class="header-logo d-lg-none d-block">
-                           <img src="assets/media/logo.png" alt="">
-                           </a> -->
-                            <div
-                                class="d-flex align-items-center justify-content-center justify-content-md-end gap-3 order-3 d-block d-md-none">
-                                <button class="btn btn-warning text-white btn-sm fw-bold p-2" data-bs-toggle="modal"
-                                    data-bs-target="#registerModal">
-                                    <i class="fa fa-user"></i> REGISTER
+                        <div class="col-lg-8 col-md-6 col-10 mt-3">
+                            <div class="d-flex align-items-center justify-content-center justify-content-md-end gap-3 order-3 d-block d-md-none">
+                                <!-- Register Button -->
+                                <button class="btn btn-warning text-white btn-sm fw-bold px-3 py-2 fs-sm-12"
+                                    data-bs-toggle="modal" data-bs-target="#registerModal">
+                                    <i class="fas fa-user me-2"></i> REGISTER
                                 </button>
 
-                                <button class="btn btn-outline-warning btn-sm fw-bold">LOGIN</button>
+                                <!-- Login Button -->
+                                <a href="#"
+                                    class="btn btn-outline-success btn-sm px-3 py-2 fs-sm-12"
+                                    data-bs-toggle="modal" data-bs-target="#comingSoonModal">
+                                    <i class="fas fa-sign-in-alt me-2"></i> LOGIN
+                                </a>
                             </div>
                             <nav class="navigation d-md-flex d-none">
                                 <div class="menu-button-right">
@@ -279,7 +252,7 @@
                                                             {{-- {{ route('programe.details', $program->slug) }}" --}}
                                                             @foreach ($educationPrograms as $program)
                                                                 <li><a
-                                                                        href="{{ route('web.catalog', ['category_id'=>$program->id]) }}">{{ $program->name }}</a>
+                                                                        href="{{ route('web.catalog', ['category_id' => $program->id]) }}">{{ $program->name }}</a>
                                                                 </li>
                                                             @endforeach
                                                         </ul>
@@ -292,7 +265,7 @@
                                                         <ul class="sub-menu">
                                                             @foreach ($skillPrograms as $program)
                                                                 <li><a
-                                                                        href="{{ route('web.catalog', ['category_id'=>$program->id]) }}">{{ $program->name }}</a>
+                                                                        href="{{ route('web.catalog', ['category_id' => $program->id]) }}">{{ $program->name }}</a>
                                                                 </li>
                                                             @endforeach
                                                         </ul>
@@ -351,7 +324,7 @@
                                 </div>
                             </nav>
                         </div>
-                        <div class="col-lg-4 col-4 p-0 mt-3">
+                        <div class="col-lg-4 col-md-6 col-2 p-0 mt-3">
                             <div class="header-buttons">
                                 <div class="right-nav d-sm-flex gap-16 align-items-center d-none">
                                     <a href="{{ route('contact') }}" class="cus-btn">
@@ -390,7 +363,7 @@
                 <!-- Logo & Heading -->
                 <div class="text-center">
                     <a href="/"> <img src="{{ asset($defaultSettings->site_logo ?? null) }}"
-                                        alt="{{ $defaultSettings->site_title ?? null }}" style="height: 54px;"></a>
+                            alt="{{ $defaultSettings->site_title ?? null }}" style="height: 54px;"></a>
                     <h4 class="mt-3 fw-bold">Welcome to ISICO</h4>
                     <p class="text-muted">A platform to meet all your skilling needs digitally anytime anywhere</p>
                 </div>
@@ -398,8 +371,6 @@
                 <!-- Card Options with Radios -->
                 <form id="userTypeForm">
                     <div class="row justify-content-center g-3 mt-4">
-
-
                         <!-- Card Option - Student / Learner -->
                         <div class="col-md-5 mt-3">
                             <label class="w-100 border rounded-3 p-3 d-flex align-items-start gap-3 h-100"
@@ -419,9 +390,6 @@
                                 </div>
                             </label>
                         </div>
-
-
-                        <!-- Partner -->
                         <!-- Trigger Card -->
                         <div class="col-md-5 mt-3">
                             <label class="w-100 border rounded-3 p-3 d-flex align-items-start gap-3 h-100"
@@ -437,18 +405,17 @@
                                 </div>
                             </label>
                         </div>
-
                         <!-- ITI Partners -->
                         <div class="col-md-5 mt-3">
-                            <label class="w-100 border rounded-3 p-3 d-flex align-items-start gap-3 h-100"
+                            <label class="w-100 border rounded-3 p-3 d-flex align-items-start gap-3 h-100" data-bs-toggle="modal" data-bs-target="#volunteerModal"
                                 style="cursor: pointer;">
                                 <input type="radio" name="userType" value="iti"
                                     class="form-check-input mt-1 " />
                                 <img src="https://cdn-icons-png.flaticon.com/512/1087/1087929.png" alt="ITI Partner"
                                     style="width: 50px; margin-left: 10px;">
                                 <div class="ms-2">
-                                    <h6 class="fw-bold mb-1">ITI Partners</h6>
-                                    <p class="mb-0 small text-muted">Exam Controller, ITI/NSTI Creator, NIMI Admin etc.
+                                    <h6 class="fw-bold mb-1">Volunteer Partners</h6>
+                                    <p class="mb-0 small text-muted">Exam Csontroller, ITI/NSTI Creator, NIMI Admin etc.
                                     </p>
                                 </div>
                             </label>
@@ -469,6 +436,7 @@
         </div>
     </div>
 
+    {{-- Model For Student Registration --}}
     <div class="modal fade" id="studentDetailsModal" tabindex="-1" aria-labelledby="studentDetailsModalLabel"
         aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -537,7 +505,7 @@
                             </div>
 
                             <div class="col-md-6">
-                                <label class="form-label">Mobile Number  <span class="text-danger">*</span> </label>
+                                <label class="form-label">Mobile Number <span class="text-danger">*</span> </label>
                                 <input type="tel" class="form-control" name="mobile" required>
                             </div>
 
@@ -626,10 +594,7 @@
             </div>
         </div>
     </div>
-
-
-
-    <!-- Modal -->
+    <!-- Modal For Co-operation Registration Form -->
     <div class="modal fade" id="cooperationModal" tabindex="-1" aria-labelledby="cooperationModalLabel"
         aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-scrollable">
@@ -646,29 +611,29 @@
                 </div>
 
                 <!-- Form -->
-                    {{-- ✅ Success Message --}}
-                    @if (session('success'))
-                        <div class="alert alert-success alert-dismissible fade show" role="alert">
-                            {{ session('success') }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                aria-label="Close"></button>
-                        </div>
-                    @endif
+                {{-- ✅ Success Message --}}
+                @if (session('success'))
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        {{ session('success') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"
+                            aria-label="Close"></button>
+                    </div>
+                @endif
 
-                    {{-- ❌ Error Messages --}}
-                    @if ($errors->any())
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                            <ul class="mb-0">
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                aria-label="Close"></button>
-                        </div>
-                    @endif
-            <form class="row g-3" action="{{ route('sendOrganizationDetails') }}" method="POST">
-                @csrf
+                {{-- ❌ Error Messages --}}
+                @if ($errors->any())
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <ul class="mb-0">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"
+                            aria-label="Close"></button>
+                    </div>
+                @endif
+                <form class="row g-3" action="{{ route('sendOrganizationDetails') }}" method="POST">
+                    @csrf
 
                     <!-- Organization Details -->
                     <div class="col-12">
@@ -676,7 +641,8 @@
                     </div>
 
                     <div class="col-md-6">
-                        <label class="form-label">Organization / Institution / Company Name <span class="text-danger">*</span></label>
+                        <label class="form-label">Organization / Institution / Company Name <span
+                                class="text-danger">*</span></label>
                         <input type="text" class="form-control" placeholder="Enter name" name="name" required>
                     </div>
 
@@ -704,22 +670,26 @@
 
                     <div class="col-md-6">
                         <label class="form-label">Contact Person Name</label>
-                        <input type="text" class="form-control" placeholder="Full name" name="contact_name" required>
+                        <input type="text" class="form-control" placeholder="Full name" name="contact_name"
+                            required>
                     </div>
 
                     <div class="col-md-6">
                         <label class="form-label">Designation</label>
-                        <input type="text" class="form-control" placeholder="e.g. Manager" name="contact_designation" required >
+                        <input type="text" class="form-control" placeholder="e.g. Manager"
+                            name="contact_designation" required>
                     </div>
 
                     <div class="col-md-6">
                         <label class="form-label">Contact Number <span class="text-danger">*</span></label>
-                        <input type="tel" class="form-control" placeholder="e.g. 9876543210" name="contact_number" required>
+                        <input type="tel" class="form-control" placeholder="e.g. 9876543210"
+                            name="contact_number" required>
                     </div>
 
                     <div class="col-md-6">
                         <label class="form-label">Email ID <span class="text-danger">*</span> </label>
-                        <input type="email" class="form-control" placeholder="example@email.com" name="contact_email">
+                        <input type="email" class="form-control" placeholder="example@email.com"
+                            name="contact_email">
                     </div>
 
                     <!-- Address Details -->
@@ -749,7 +719,8 @@
 
                     <div class="col-md-6">
                         <label class="form-label">City / Village</label>
-                        <input type="text" class="form-control" placeholder="City or Village" name="city_village">
+                        <input type="text" class="form-control" placeholder="City or Village"
+                            name="city_village">
                     </div>
 
                     <div class="col-md-6">
@@ -805,6 +776,109 @@
             </div>
         </div>
     </div>
+    <!-- Modal For Volunteer Registration Form -->
+    <div class="modal fade" id="volunteerModal" tabindex="-1" aria-labelledby="volunteerModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div style="overflow: scroll;" class="modal-content p-4 rounded-4 border-0">
+
+                <!-- Close Button -->
+                <button type="button" class="btn-close ms-auto" data-bs-dismiss="modal" aria-label="Close"></button>
+
+                <!-- Modal Header -->
+                <div class="text-center mb-4">
+                    <h4 class="fw-bold">Volunteer Registration</h4>
+                    <p class="text-muted">Please fill the details below</p>
+                </div>
+
+                {{-- ✅ Success Message --}}
+                @if (session('success'))
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        {{ session('success') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endif
+
+                {{-- ❌ Error Messages --}}
+                @if ($errors->any())
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <ul class="mb-0">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endif
+
+                <!-- Form -->
+                <form class="row g-3" action="{{ route('sendvolunteer') }}" method="POST">
+                    @csrf
+
+                    <!-- Name -->
+                    <div class="col-md-6">
+                        <label class="form-label">Name <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" placeholder="Enter your name" 
+                            name="name" value="{{ old('name') }}" required>
+                    </div>
+
+                    <!-- Mobile Number -->
+                    <div class="col-md-6">
+                        <label class="form-label">Mobile Number <span class="text-danger">*</span></label>
+                        <input type="tel" class="form-control" placeholder="e.g. 9876543210" 
+                            name="mobile" value="{{ old('mobile') }}" required>
+                    </div>
+
+                    <!-- Gender -->
+                    <div class="col-md-6">
+                        <label class="form-label">Gender <span class="text-danger">*</span></label>
+                        <select class="form-select" name="gender" required>
+                            <option disabled {{ old('gender') ? '' : 'selected' }}>Select Gender</option>
+                            <option value="Male" {{ old('gender') == 'Male' ? 'selected' : '' }}>Male</option>
+                            <option value="Female" {{ old('gender') == 'Female' ? 'selected' : '' }}>Female</option>
+                            <option value="Other" {{ old('gender') == 'Other' ? 'selected' : '' }}>Other</option>
+                        </select>
+                    </div>
+
+                    <!-- Date of Birth -->
+                    <div class="col-md-6">
+                        <label class="form-label">Date of Birth <span class="text-danger">*</span></label>
+                        <input type="date" class="form-control" name="dob" 
+                            value="{{ old('dob') }}" required>
+                    </div>
+
+                    <!-- Qualification -->
+                    <div class="col-md-6">
+                        <label class="form-label">Qualification</label>
+                        <input type="text" class="form-control" placeholder="e.g. Graduate, Diploma" 
+                            name="qualification" value="{{ old('qualification') }}">
+                    </div>
+
+                    <!-- Location -->
+                    <div class="col-md-6">
+                        <label class="form-label">Location <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" placeholder="Enter your location" 
+                            name="location" value="{{ old('location') }}" required>
+                    </div>
+
+                    <!-- Volunteer Experience -->
+                    <div class="col-md-6">
+                        <label class="form-label">Volunteer Experience <span class="text-danger">*</span></label>
+                        <select class="form-select" name="experience" required>
+                            <option value="Yes" {{ old('experience') == 'Yes' ? 'selected' : '' }}>Yes</option>
+                            <option value="No" {{ old('experience') == 'No' ? 'selected' : '' }}>No</option>
+                        </select>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="d-flex justify-content-end mt-4">
+                        <button type="submit" class="btn btn-primary px-4">Submit</button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+
 
     <script>
         document.getElementById("userTypeForm").addEventListener("change", function(e) {

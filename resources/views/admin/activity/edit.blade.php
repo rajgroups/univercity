@@ -331,6 +331,17 @@
                                 </div>
                             </div>
 
+                             <div class="col-sm-6 col-12">
+                                <div class="mb-3">
+                                    <label class="form-label">Gallery Images <span class="text-danger">*</span></label>
+                                    <input type="file" class="form-control @error('images') is-invalid @enderror" name="images[]" accept="image/*" multiple>
+                                    @error('images')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                    <small class="form-text text-muted">Recommended: 1200×400px (Max 3MB)</small>
+                                </div>
+                            </div>
+
                             <div class="col-lg-12 mt-3">
                                 <div class="d-flex align-items-center justify-content-end mb-4">
                                     <a href="{{ route('admin.activity.index') }}" class="btn btn-secondary me-2">Cancel</a>

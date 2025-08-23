@@ -38,6 +38,7 @@ class ProjectController extends Controller
             'slug'              => 'required|string|max:255|unique:projects,slug',
             'short_description' => 'required|string',
             'subtitle'          => 'nullable|string',
+            'gallery.*'         => 'nullable|image|mimes:jpeg,png,jpg,gif|max:3072', // gallery images
             'image'             => 'required|image|mimes:jpeg,png,jpg,webp|max:2048',
             'banner_image'      => 'required|image|mimes:jpeg,png,jpg,webp|max:2048',
             'type'              => 'required|in:1,2',
@@ -78,8 +79,22 @@ class ProjectController extends Controller
         // Save points JSON
         $validated['points'] = $request->filled('points') ? json_encode(array_filter($request->input('points'))) : null;
 
-        Project::create($validated);
+        $project = Project::create($validated);
+        // Handle multiple gallery images
+        if ($request->hasFile('gallery')) {
+            foreach ($request->file('gallery') as $key => $imageFile) {
+                $imageName = time() . '_' . $key . '.' . $imageFile->getClientOriginalExtension();
+                $imageFile->move(public_path('uploads/gallery'), $imageName);
 
+                $project->images()->create([
+                    'file_name' => 'uploads/gallery/' . $imageName,
+                    'alt_text'  => $project->title,
+                ]);
+            }
+        }
+
+        // Add a success notification
+        flash()->success('Product created successfully!');
         return redirect()->route('admin.project.index')->with('success', 'Project created successfully.');
     }
 
@@ -115,6 +130,7 @@ class ProjectController extends Controller
             'status'                => 'required|in:0,1',
             'short_description'     => 'required|string',
             'description'           => 'nullable',
+            'gallery.*'             => 'nullable|image|mimes:jpeg,png,jpg,gif|max:3072', // gallery images
             'image'                 => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
             'banner_image'          => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
             'points'                => 'nullable|array',
@@ -149,6 +165,28 @@ class ProjectController extends Controller
             $bannerImageName = time() . '_banner.' . $request->banner_image->extension();
             $request->banner_image->move(public_path('uploads/projects'), $bannerImageName);
             $project->banner_image = asset('uploads/projects/' . $bannerImageName); // Full path
+        }
+
+        // ✅ Handle gallery images (delete old + upload new)
+        if ($request->hasFile('gallery')) {
+            // Delete old images from DB + filesystem
+            foreach ($project->images as $oldImage) {
+                if (file_exists(public_path($oldImage->file_name))) {
+                    unlink(public_path($oldImage->file_name));
+                }
+                $oldImage->delete();
+            }
+
+            // Save new gallery images
+            foreach ($request->file('gallery') as $image) {
+                $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+                $image->move(public_path('uploads/gallery'), $imageName);
+
+                $project->images()->create([
+                    'file_name' => 'uploads/gallery/' . $imageName,
+                    'is_featured' => false,
+                ]);
+            }
         }
 
         // Update fields

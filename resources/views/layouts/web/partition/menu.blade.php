@@ -10,6 +10,16 @@
         <a href="/" aria-label="logo image"><img src="{{ asset($defaultSettings->site_logo ?? null)}}" alt=""></a>
       </div>
       <div class="mobile-nav__container"></div>
+       <div class="header-buttons">
+            <div class="right-nav d-sm-flex gap-16 align-items-center">
+                <a href="{{ route('contact') }}" class="cus-btn mb-4">
+                    <span class="text"> Donate Now</span>
+                </a>
+                <a href="{{ route('web.activity') }}" class="cus-btn-2">
+                    <span class="text">NTI Competetions/Events</span>
+                </a>
+            </div>
+        </div>
       <ul class="mobile-nav__contact list-unstyled">
         <li>
           <i class="fas fa-envelope"></i>

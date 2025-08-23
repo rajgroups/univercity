@@ -120,3 +120,5 @@ Route::post('/send-student-details', [FormController::class, 'sendStudentDetails
     ->name('sendStudentDetails');
 Route::post('/send-organization-details', [FormController::class, 'sendOrganizationDetails'])
     ->name('sendOrganizationDetails');
+Route::post('/send-volunteer -details', [FormController::class, 'sendVolunteer'])
+    ->name('sendvolunteer');

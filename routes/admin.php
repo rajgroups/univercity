@@ -18,9 +18,12 @@ use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\StudentController;
 use App\Http\Controllers\Admin\TestimonialController;
 use App\Http\Controllers\admin\UserController;
+use App\Http\Controllers\Admin\VolunteerController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\RegisterController;
 use App\Models\Testimonial;
+use Flasher\Laravel\Facade\Flasher;
+use Flasher\Prime\FlasherInterface;
 
 Route::prefix('admin')->as('admin.')->group(function() {
 
@@ -77,6 +80,9 @@ Route::prefix('admin')->as('admin.')->group(function() {
        
         // organization Routes
         Route::resource('organization',OrganizationController::class);
+        
+        // organization Routes
+        Route::resource('volunteer',VolunteerController::class);
     
         // Onrginzation Routes
         // Route::resource('organization',Or::class);
@@ -98,5 +104,11 @@ Route::prefix('admin')->as('admin.')->group(function() {
         Route::get('/projects/{project}/edit', [App\Http\Controllers\Admin\ProjectController::class, 'edit'])->name('project.edit');
 
         Route::get('/dashboard/stats', [DashboardController::class, 'getStats'])->name('dashboard.stats');
+
+        Route::get('/empty',function(FlasherInterface $flasher){
+            // Flasher::addSuccess('Activity created successfully!');
+            $flasher->addSuccess('Activity created successfully');
+            return view('admin.empty.empty');
+        });
     });
 });

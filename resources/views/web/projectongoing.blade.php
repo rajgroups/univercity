@@ -1,9 +1,10 @@
 {{-- @dd($metaDescription) --}}
 @extends('layouts.web.app')
 @push('meta')
-   <title>{{ $metaTitle ?? $announcement->title ?? 'Default Page Title' }}</title>
+    <title>{{ $metaTitle ?? ($announcement->title ?? 'Default Page Title') }}</title>
 
-    <meta name="description" content="{{ $metaDescription ?? Str::limit(strip_tags($announcement->description ?? ''), 150) }}">
+    <meta name="description"
+        content="{{ $metaDescription ?? Str::limit(strip_tags($announcement->description ?? ''), 150) }}">
     <meta name="keywords" content="{{ $metaKeywords ?? 'announcement, news, education' }}">
     <meta name="author" content="{{ $metaAuthor ?? 'YourSiteName' }}">
     <meta name="robots" content="{{ $metaRobots ?? 'index, follow' }}">
@@ -12,16 +13,18 @@
     <link rel="canonical" href="{{ $metaCanonical ?? url()->current() }}">
 
     <!-- Open Graph -->
-    <meta property="og:title" content="{{ $metaOgTitle ?? $announcement->title ?? 'Default OG Title' }}">
-    <meta property="og:description" content="{{ $metaOgDescription ?? Str::limit(strip_tags($announcement->description ?? ''), 150) }}">
+    <meta property="og:title" content="{{ $metaOgTitle ?? ($announcement->title ?? 'Default OG Title') }}">
+    <meta property="og:description"
+        content="{{ $metaOgDescription ?? Str::limit(strip_tags($announcement->description ?? ''), 150) }}">
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ $metaOgUrl ?? url()->current() }}">
     <meta property="og:image" content="{{ $metaOgImage ?? asset($announcement->image ?? 'default.jpg') }}">
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="{{ $metaTwitterTitle ?? $announcement->title ?? 'Default Twitter Title' }}">
-    <meta name="twitter:description" content="{{ $metaTwitterDescription ?? Str::limit(strip_tags($announcement->description ?? ''), 150) }}">
+    <meta name="twitter:title" content="{{ $metaTwitterTitle ?? ($announcement->title ?? 'Default Twitter Title') }}">
+    <meta name="twitter:description"
+        content="{{ $metaTwitterDescription ?? Str::limit(strip_tags($announcement->description ?? ''), 150) }}">
     <meta name="twitter:image" content="{{ $metaTwitterImage ?? asset($announcement->image ?? 'default.jpg') }}">
 @endpush
 
@@ -35,7 +38,8 @@
             </h2>
             <div class="d-flex align-items-center gap-16 flex-wrap row-gap-4">
                 <div class="d-flex align-items-center gap-8">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none">
                         <path
                             d="M18.749 6H10.1002L8.61652 3.3801C8.5511 3.2647 8.45623 3.16871 8.3416 3.10194C8.22697 3.03516 8.09668 2.99999 7.96402 3H1.49902C1.30011 3 1.10935 3.07902 0.968693 3.21967C0.828041 3.36032 0.749023 3.55109 0.749023 3.75V20.25C0.749088 20.4252 0.810412 20.5948 0.922373 20.7295C1.03433 20.8642 1.18988 20.9555 1.36207 20.9876C1.40741 20.9956 1.45335 20.9998 1.4994 21C1.65093 21 1.7989 20.9541 1.92382 20.8683C2.04875 20.7825 2.14476 20.661 2.19922 20.5196L5.76427 11.25H18.749C18.9479 11.25 19.1387 11.171 19.2794 11.0303C19.42 10.8897 19.499 10.6989 19.499 10.5V6.75C19.499 6.55109 19.42 6.36032 19.2794 6.21967C19.1387 6.07902 18.9479 6 18.749 6Z"
                             fill="#E8A113"></path>
@@ -178,35 +182,6 @@
                     <p class="light-gray">{{ \Carbon\Carbon::parse($announcement->created_at)->format('F jS, Y') }}</p>
                 </div>
                 <div class="d-flex align-items-center gap-8">
-                    {{-- <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                        fill="none">
-                        <g clip-path="url(#clip0_11629_7476)">
-                            <path
-                                d="M24 12C24 15.512 22.491 18.6716 20.0865 20.8663C17.9531 22.8127 15.1154 24 12 24C8.88464 24 6.04688 22.8127 3.91351 20.8663C1.50897 18.6716 0 15.512 0 12C0 5.37286 5.37286 0 12 0C18.6271 0 24 5.37286 24 12Z"
-                                fill="#FFAA20"></path>
-                            <path
-                                d="M24 12C24 15.512 22.491 18.6716 20.0865 20.8663C17.9531 22.8127 15.1154 24 12 24V0C18.6271 0 24 5.37286 24 12Z"
-                                fill="#FF8900"></path>
-                            <path
-                                d="M20.087 20.8187V20.8665C17.9537 22.8129 15.1159 24.0002 12.0005 24.0002C8.88519 24.0002 6.04742 22.8129 3.91406 20.8665V20.8187C3.91406 17.3425 6.1192 14.371 9.20453 13.2312C10.0759 12.9086 11.018 12.7324 12.0005 12.7324C12.9831 12.7324 13.9252 12.9086 14.7971 13.2312C17.8824 14.3716 20.087 17.3425 20.087 20.8187Z"
-                                fill="#7985EB"></path>
-                            <path
-                                d="M20.0865 20.8187V20.8665C17.9531 22.8129 15.1154 24.0002 12 24.0002V12.7324C12.9825 12.7324 13.9246 12.9086 14.7966 13.2312C17.8819 14.3716 20.0865 17.3425 20.0865 20.8187Z"
-                                fill="#4B5BE6"></path>
-                            <path
-                                d="M16.9596 9.13751C16.9596 11.8722 14.735 14.0975 11.9998 14.0975C9.26514 14.0975 7.04004 11.8722 7.04004 9.13751C7.04004 6.40283 9.26514 4.17773 11.9998 4.17773C14.735 4.17773 16.9596 6.40283 16.9596 9.13751Z"
-                                fill="#FFDBA9"></path>
-                            <path
-                                d="M16.9598 9.13751C16.9598 11.8722 14.7352 14.0975 12 14.0975V4.17773C14.7352 4.17773 16.9598 6.40283 16.9598 9.13751Z"
-                                fill="#FFC473"></path>
-                        </g>
-                        <defs>
-                            <clipPath>
-                                <rect width="24" height="24" fill="white"></rect>
-                            </clipPath>
-                        </defs>
-                    </svg> --}}
-                    {{-- <p class="light-gray">By Admin</p> --}}
                 </div>
             </div>
         </div>
@@ -221,41 +196,78 @@
                     : json_decode($announcement->points, true);
             }
         @endphp
-        @if(!empty($points))
-        <div class="row">
-            <div class="col-lg-4 mb-4">
-                <nav id="navbar-example" class="navbar sticky-top flex-column align-items-stretch p-3 bg-light rounded">
-                    <h5 class="fw-bold mb-3">Topics</h5>
+        @if (!empty($points))
+            <div class="row">
+                <div class="col-lg-4 mb-4">
+                    <nav id="navbar-example"
+                        class="navbar sticky-top flex-column align-items-stretch p-3 bg-light rounded">
+                        <h5 class="fw-bold mb-3">Topics</h5>
+                        @foreach ($points as $index => $point)
+                            @php
+                                [$title, $content] = explode(' - ', $point, 2);
+                                $sectionId = 'section' . ($index + 1);
+                            @endphp
+                            <a class="nav-link" href="#{{ $sectionId }}">{{ $index + 1 }}.
+                                {{ $title }}</a>
+                        @endforeach
+                    </nav>
+                </div>
+
+                <div class="col-lg-8">
                     @foreach ($points as $index => $point)
                         @php
                             [$title, $content] = explode(' - ', $point, 2);
                             $sectionId = 'section' . ($index + 1);
                         @endphp
-                        <a class="nav-link" href="#{{ $sectionId }}">{{ $index + 1 }}. {{ $title }}</a>
+
+                        <section id="{{ $sectionId }}" class="mb-4">
+                            <h4 class="fw-bold mt-4">{{ $index + 1 }}. {{ $title }}</h4>
+                            <p>{{ $content }}</p>
+                        </section>
                     @endforeach
-                </nav>
+                </div>
             </div>
-
-            <div class="col-lg-8">
-                @foreach ($points as $index => $point)
-                    @php
-                        [$title, $content] = explode(' - ', $point, 2);
-                        $sectionId = 'section' . ($index + 1);
-                    @endphp
-
-                    <section id="{{ $sectionId }}" class="mb-4">
-                        <h4 class="fw-bold mt-4">{{ $index + 1 }}. {{ $title }}</h4>
-                        <p>{{ $content }}</p>
-                    </section>
-                @endforeach
-            </div>
-        </div>
         @endif
-       <section class="brife-description mt-5">
-            <img src="{{ asset($announcement->image) }}"
-                alt="{{ $metaTitle ?? $announcement->title ?? 'Default Page Title' }}"
-                class="float-end ms-3 mb-3 img-fluid" style="max-width: 300px;">
+        <section class="brife-description mt-5">
+            <div class="mb-3">
+                {{-- Event Or Compition Images --}}
+                @if ($announcement->images && $announcement->images->count() > 0)
+                    <div id="carouselId" class="carousel slide" data-bs-ride="carousel">
 
+                        {{-- Indicators --}}
+                        <div class="carousel-indicators">
+                            @foreach ($announcement->images as $index => $image)
+                                <button type="button" data-bs-target="#carouselId"
+                                    data-bs-slide-to="{{ $index }}" @class(['active' => $index === 0])
+                                    aria-current="{{ $index === 0 ? 'true' : 'false' }}"
+                                    aria-label="Slide {{ $index + 1 }}"></button>
+                            @endforeach
+                        </div>
+
+                        {{-- Slides --}}
+                        <div class="carousel-inner" role="listbox">
+                            @foreach ($announcement->images as $index => $image)
+                                <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
+                                    <img src="{{ asset($image->file_name) }}" class="w-100 d-block"
+                                        alt="{{ $image->alt_text ?? 'Slide ' . ($index + 1) }}">
+                                </div>
+                            @endforeach
+                        </div>
+
+                        {{-- Controls --}}
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselId"
+                            data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hsidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#carouselId"
+                            data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+                @endif
+            </div>
             {!! $announcement->description !!}
         </section>
     </div>

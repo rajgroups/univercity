@@ -20,14 +20,14 @@
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="{{ $metaTwitterTitle ?? $program->title ?? 'Default Twitter Title' }}">
-    <meta name="twitter:description" content="{{ $metaTwitterDescription ?? Str::limit(strip_tags($program->description ?? ''), 150) }}">
+    <meta name="twitter:description" content="{{ $metaTwitfterDescription ?? Str::limit(strip_tags($program->description ?? ''), 150) }}">
     <meta name="twitter:image" content="{{ $metaTwitterImage ?? asset($program->image ?? 'default.jpg') }}">
 @endpush
 @section('content')
 <!-- Yout Content Here -->
 <section class="title-banner mb-80" style="background-image: url({{ asset($program->banner_image) }})">
    <div class="container-fluid">
-      <h2 class="fw-500 mb-24">{{ $program->title ?? null }}<br class="d-sm-block d-none">
+      <h2 class="fw-500 mb-24 head-title">{{ $program->title ?? null }}<br class="d-sm-block d-none">
          <span class="color-primary">{{ $program->subtitle ?? null }}</span>
       </h2>
       <div class="d-flex align-items-center gap-16 flex-wrap row-gap-4">
@@ -225,6 +225,42 @@
    <div class="container-fluid">
       <div class="row row-gap-4">
          <div class="col-lg-8">
+            <div class="mb-3">
+               {{-- Event Or Compition Images --}}
+               @if ($program->images && $program->images->count() > 0)
+                     <div id="carouselId" class="carousel slide" data-bs-ride="carousel">
+
+                        {{-- Indicators --}}
+                        <div class="carousel-indicators">
+                           @foreach ($program->images as $index => $image)
+                                 <button type="button" data-bs-target="#carouselId" data-bs-slide-to="{{ $index }}"
+                                    @class(['active' => $index === 0]) aria-current="{{ $index === 0 ? 'true' : 'false' }}"
+                                    aria-label="Slide {{ $index + 1 }}"></button>
+                           @endforeach
+                        </div>
+
+                        {{-- Slides --}}
+                        <div class="carousel-inner" role="listbox">
+                           @foreach ($program->images as $index => $image)
+                                 <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
+                                    <img src="{{ asset($image->file_name) }}" class="w-100 d-block"
+                                       alt="{{ $image->alt_text ?? 'Slide ' . ($index + 1) }}">
+                                 </div>
+                           @endforeach
+                        </div>
+
+                        {{-- Controls --}}
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselId" data-bs-slide="prev">
+                           <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                           <span class="visually-hsidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#carouselId" data-bs-slide="next">
+                           <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                           <span class="visually-hidden">Next</span>
+                        </button>
+                     </div>
+               @endif
+            </div>
             {!! $program->description !!}
             <img src="{{ asset($program->image) }}" class="br-24 w-100 mb-4" alt="program img">
             <div class="container my-5">

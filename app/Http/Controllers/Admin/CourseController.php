@@ -39,7 +39,7 @@ class CourseController extends Controller
         $validated = $request->validate([
             'name'                      => 'required|string|max:255',
             'short_name'                => 'nullable|string|max:100',
-            'image'                     => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image'                     => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             'duration'                  => 'nullable|string|max:100',
             'paid_type'                 => 'required|in:Free,Paid',
             'sector_id'                 => 'required|exists:sectors,id',
@@ -68,7 +68,7 @@ class CourseController extends Controller
             'status'                    => 'required|in:0,1',
             'enrollment_count'          => 'nullable|integer|min:0',
             'topics'                    => 'nullable|array',
-            'topics.*.title'            => 'required_with:topics|string|max:255',
+            'topics.*.title'            => 'nullable|string|max:255',
             'topics.*.description'      => 'nullable|string',
         ]);
 
@@ -159,7 +159,7 @@ class CourseController extends Controller
             'status'                    => 'required|in:0,1',
             'enrollment_count'          => 'nullable|integer|min:0',
             'topics'                    => 'nullable|array',
-            'topics.*.title'            => 'required_with:topics|string|max:255',
+            'topics.*.title'            => 'nullable|string|max:255',
             'topics.*.description'      => 'nullable|string',
         ]);
 

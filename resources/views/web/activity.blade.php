@@ -98,7 +98,7 @@
                             </div>
 
                             <!-- Location Filter -->
-                            <div class="accordion-item border-0 mb-3 shadow-sm">
+                            {{-- <div class="accordion-item border-0 mb-3 shadow-sm">
                                 <h2 class="accordion-header" id="headingLocation">
                                     <button class="accordion-button collapsed shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#collapseLocation" aria-expanded="false">
                                         <i class="bi bi-geo-alt me-2"></i> Location
@@ -115,7 +115,7 @@
                                         @endforeach
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
 
                             <!-- Category Filter -->
                             <div class="accordion-item border-0 mb-3 shadow-sm">

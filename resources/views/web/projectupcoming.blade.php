@@ -178,35 +178,6 @@
                        <p class="light-gray">{{ \Carbon\Carbon::parse($program->created_at)->format('F jS, Y') }}</p>
                    </div>
                    <div class="d-flex align-items-center gap-8">
-                       {{-- <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                  fill="none">
-                  <g clip-path="url(#clip0_11629_7476)">
-                     <path
-                        d="M24 12C24 15.512 22.491 18.6716 20.0865 20.8663C17.9531 22.8127 15.1154 24 12 24C8.88464 24 6.04688 22.8127 3.91351 20.8663C1.50897 18.6716 0 15.512 0 12C0 5.37286 5.37286 0 12 0C18.6271 0 24 5.37286 24 12Z"
-                        fill="#FFAA20"></path>
-                     <path
-                        d="M24 12C24 15.512 22.491 18.6716 20.0865 20.8663C17.9531 22.8127 15.1154 24 12 24V0C18.6271 0 24 5.37286 24 12Z"
-                        fill="#FF8900"></path>
-                     <path
-                        d="M20.087 20.8187V20.8665C17.9537 22.8129 15.1159 24.0002 12.0005 24.0002C8.88519 24.0002 6.04742 22.8129 3.91406 20.8665V20.8187C3.91406 17.3425 6.1192 14.371 9.20453 13.2312C10.0759 12.9086 11.018 12.7324 12.0005 12.7324C12.9831 12.7324 13.9252 12.9086 14.7971 13.2312C17.8824 14.3716 20.087 17.3425 20.087 20.8187Z"
-                        fill="#7985EB"></path>
-                     <path
-                        d="M20.0865 20.8187V20.8665C17.9531 22.8129 15.1154 24.0002 12 24.0002V12.7324C12.9825 12.7324 13.9246 12.9086 14.7966 13.2312C17.8819 14.3716 20.0865 17.3425 20.0865 20.8187Z"
-                        fill="#4B5BE6"></path>
-                     <path
-                        d="M16.9596 9.13751C16.9596 11.8722 14.735 14.0975 11.9998 14.0975C9.26514 14.0975 7.04004 11.8722 7.04004 9.13751C7.04004 6.40283 9.26514 4.17773 11.9998 4.17773C14.735 4.17773 16.9596 6.40283 16.9596 9.13751Z"
-                        fill="#FFDBA9"></path>
-                     <path
-                        d="M16.9598 9.13751C16.9598 11.8722 14.7352 14.0975 12 14.0975V4.17773C14.7352 4.17773 16.9598 6.40283 16.9598 9.13751Z"
-                        fill="#FFC473"></path>
-                  </g>
-                  <defs>
-                     <clipPath>
-                        <rect width="24" height="24" fill="white"></rect>
-                     </clipPath>
-                  </defs>
-               </svg> --}}
-                       {{-- <p class="light-gray">By Admin</p> --}}
                    </div>
                </div>
            </div>
@@ -229,10 +200,45 @@
            <div class="container-fluid">
                <div class="row row-gap-4">
                    <div class="col-lg-8">
+                    <div class="mb-3">
+                        {{-- Event Or Compition Images --}}
+                        @if ($program->images && $program->images->count() > 0)
+                            <div id="carouselId" class="carousel slide" data-bs-ride="carousel">
+
+                                {{-- Indicators --}}
+                                <div class="carousel-indicators">
+                                @foreach ($program->images as $index => $image)
+                                        <button type="button" data-bs-target="#carouselId" data-bs-slide-to="{{ $index }}"
+                                            @class(['active' => $index === 0]) aria-current="{{ $index === 0 ? 'true' : 'false' }}"
+                                            aria-label="Slide {{ $index + 1 }}"></button>
+                                @endforeach
+                                </div>
+
+                                {{-- Slides --}}
+                                <div class="carousel-inner" role="listbox">
+                                @foreach ($program->images as $index => $image)
+                                        <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
+                                            <img src="{{ asset($image->file_name) }}" class="w-100 d-block"
+                                            alt="{{ $image->alt_text ?? 'Slide ' . ($index + 1) }}">
+                                        </div>
+                                @endforeach
+                                </div>
+
+                                {{-- Controls --}}
+                                <button class="carousel-control-prev" type="button" data-bs-target="#carouselId" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hsidden">Previous</span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#carouselId" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                                </button>
+                            </div>
+                        @endif
+                    </div>
                      <div class="overflow-auto">
                         {!! $program->description !!}
                      </div>
-                       <img src="{{ asset($program->image) }}" class="br-24 w-100 mb-4" alt="">
                        <div class="container my-5">
                            @php
                               $points = [];
