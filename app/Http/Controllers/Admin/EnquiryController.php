@@ -66,6 +66,7 @@ class EnquiryController extends Controller
     {
         try {
             $enquiry->delete();
+            notyf()->addSuccess('Enquiry deleted successfully.');
             return redirect()->back()->with('success', 'Enquiry deleted successfully.');
         } catch (\Exception $e) {
             return redirect()->back()->withErrors(['error' => 'Failed to delete enquiry.']);

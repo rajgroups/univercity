@@ -75,6 +75,17 @@
       0 => 'Flasher\\Laravel\\FlasherServiceProvider',
     ),
   ),
+  'php-flasher/flasher-notyf-laravel' => 
+  array (
+    'aliases' => 
+    array (
+      'Notyf' => 'Flasher\\Notyf\\Laravel\\Facade\\Notyf',
+    ),
+    'providers' => 
+    array (
+      0 => 'Flasher\\Notyf\\Laravel\\FlasherNotyfServiceProvider',
+    ),
+  ),
   'php-flasher/flasher-toastr-laravel' => 
   array (
     'aliases' => 

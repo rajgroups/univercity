@@ -70,7 +70,7 @@
 								<li class="submenu">
 									<a href="javascript:void(0);" class=""><i class="ti ti-users fs-16 me-2"></i><span>Organization</span><span class="menu-arrow"></span></a>
 									<ul style="display: none;">
-										<li><a href="{{ route('admin.sectors.index') }}">Organization List</a></li>
+										<li><a href="{{ route('admin.organization.index') }}">Organization List</a></li>
 										{{-- <li><a href="{{ route('admin.sectors.create') }}">Add Sector</a></li> --}}
 									</ul>
 								</li>

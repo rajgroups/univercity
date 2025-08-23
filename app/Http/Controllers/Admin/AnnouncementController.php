@@ -100,7 +100,7 @@ class AnnouncementController extends Controller
         }
 
         // Add a success notification
-        flash()->success('Product created successfully!');
+        notyf()->addSuccess('Announcement created successfully.');
         return redirect()->route('admin.announcement.index')->with('success', 'Announcement created successfully.');
     }
 
@@ -206,7 +206,7 @@ class AnnouncementController extends Controller
         $announcement->points = json_encode(array_filter($request->points ?? [])); // Save cleaned array
 
         $announcement->save();
-
+        notyf()->addSuccess('Announcement updated successfully.');
         return redirect()->route('admin.announcement.edit', $announcement->id)
                         ->with('success', 'Announcement updated successfully.');
     }
@@ -231,7 +231,7 @@ class AnnouncementController extends Controller
 
             // Delete record
             $announcement->delete();
-
+            notyf()->addSuccess('Announcement deleted successfully.');
             return redirect()->route('admin.announcement.index')->with('success', 'Announcement deleted successfully.');
         } catch (\Exception $e) {
             return redirect()->back()->withErrors(['error' => 'Failed to delete announcement.']);

@@ -42,7 +42,7 @@ class CategoryController extends Controller
         $validated['status'] = 1;
 
         Category::create($validated);
-
+        notyf()->addSuccess('Category created successfully.');
         return redirect()->route('admin.category.index')->with('success', 'Category created successfully.');
     }
 
@@ -83,7 +83,7 @@ class CategoryController extends Controller
         $validated['slug'] = Str::slug($validated['name']);
 
         $category->update($validated);
-
+        notyf()->addSuccess('Category updated successfully.');
         return redirect()->route('admin.category.index')->with('success', 'Category updated successfully.');
     }
 
@@ -94,7 +94,7 @@ class CategoryController extends Controller
         }
 
         $category->delete();
-
+        notyf()->addSuccess('Category deleted successfully.');
         return redirect()->route('admin.category.index')->with('success', 'Category deleted successfully.');
     }
 }

@@ -94,7 +94,8 @@ class ProjectController extends Controller
         }
 
         // Add a success notification
-        flash()->success('Product created successfully!');
+        // flash()->success('Product created successfully!');
+        notyf()->addSuccess('Project created successfully.');
         return redirect()->route('admin.project.index')->with('success', 'Project created successfully.');
     }
 
@@ -203,7 +204,7 @@ class ProjectController extends Controller
         $project->points = json_encode(array_filter($request->points ?? [])); // Save cleaned array
 
         $project->save();
-
+        notyf()->addSuccess('Project updated successfully.');
         return redirect()->route('admin.project.index')->with('success', 'Project updated successfully.');
     }
 
@@ -227,7 +228,7 @@ class ProjectController extends Controller
 
             // Delete record
             $project->delete();
-
+            notyf()->addSuccess('Project deleted successfully.');
             return redirect()->route('admin.project.index')->with('success', 'Project deleted successfully.');
         } catch (\Exception $e) {
             return redirect()->back()->withErrors(['error' => 'Failed to delete Project.']);

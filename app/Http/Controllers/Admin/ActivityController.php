@@ -98,7 +98,7 @@ class ActivityController extends Controller
         }
 
         // Add a success notification
-        flash()->success('Product created successfully!');
+        notyf()->addSuccess('event or competition created successfully!');
         return redirect()->route('admin.activity.index');
             // ->with('success', 'Activity created successfully!');
     }
@@ -199,7 +199,7 @@ class ActivityController extends Controller
         }
         
         $activity->update($validated);
-
+        notyf()->addSuccess('Activity updated successfully!');
         return redirect()->route('admin.activity.index')
             ->with('success', 'Activity updated successfully!');
     }
@@ -220,7 +220,7 @@ class ActivityController extends Controller
 
         // Delete the activity record
         $activity->delete();
-
+        notyf()->addSuccess(' deleted successfully!');
         return redirect()->route('admin.activity.index')
             ->with('success', 'Activity deleted successfully!');
     }

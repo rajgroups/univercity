@@ -70,7 +70,7 @@ class HomeController extends Controller
 
         $company->password = Hash::make($request->new_password);
         $company->save();
-
+        notyf()->addSuccess('Password successfully changed');
         return back()->with('success', 'Password successfully changed');
     }
 
@@ -93,7 +93,7 @@ class HomeController extends Controller
 
         // Update the donation with the validated data
         $updated = $siteData->update($validatedData);
-
+        notyf()->addSuccess('Updated Successfully');
         return back()->withsuccess('Updated Successfully');
     }
 

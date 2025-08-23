@@ -53,7 +53,7 @@ class TestimonialController extends Controller
         }
 
         $testimonial->save();
-
+        notyf()->addSuccess('Testimonial created successfully.');
         return redirect()->route('admin.testimonial.index')->with('success', 'Testimonial created successfully.');
     }
 
@@ -95,7 +95,7 @@ class TestimonialController extends Controller
         }
 
         $testimonial->save();
-
+        notyf()->addSuccess('Testimonial updated successfully.');
         return redirect()->route('admin.testimonial.index')->with('success', 'Testimonial updated successfully.');
     }
 
@@ -109,7 +109,7 @@ class TestimonialController extends Controller
         }
 
         $testimonial->delete();
-
+        notyf()->addSuccess('Testimonial deleted successfully.');
         return redirect()->back()->with('success', 'Testimonial deleted successfully.');
     }
 }

@@ -118,8 +118,8 @@ class SettingController extends Controller
             'collaboration_sub_title'       => $validatedData['collaboration_sub_title'] ?? null,
             'international_collaborations'  => $internationalCollaborations, // Stored as JSON
         ]);
-
-        return redirect()->route('admin.project.index')->with('success', 'Project created successfully!');
+        notyf()->addSuccess('Setting created successfully!');
+        return redirect()->route('admin.project.index')->with('success', 'Setting created successfully!');
     }
 
     public function homeUpdate(Request $request, $id)
@@ -315,7 +315,7 @@ class SettingController extends Controller
 
         // Update the home setting
         $homeSetting->update($updateData);
-
+        notyf()->addSuccess('Home settings updated successfully!');
         return redirect()->back()->with('success', 'Home settings updated successfully!');
     }
     /**
@@ -518,7 +518,7 @@ public function generalUpdate(Request $request)
     }
 
     $settings->save();
-
+    notyf()->addSuccess('settings updated successfully!');
     return back()->with('success', 'Settings updated successfully.');
 }
 }

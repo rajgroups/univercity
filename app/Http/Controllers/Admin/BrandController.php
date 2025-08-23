@@ -49,7 +49,7 @@ class BrandController extends Controller
         }
 
         $brand->save();
-
+        notyf()->addSuccess('Brand created successfully.');
         return redirect()->route('admin.brand.index')->with('success', 'Brand created successfully.');
     }
 
@@ -96,7 +96,7 @@ class BrandController extends Controller
         }
 
         $brand->save();
-
+        notyf()->addSuccess('Brand updated successfully.');
         return redirect()->route('admin.brand.index')->with('success', 'Brand updated successfully.');
     }
 
@@ -110,7 +110,7 @@ class BrandController extends Controller
         }
 
         $brand->delete();
-
+        notyf()->addSuccess('Brand deleted successfully.');
         return redirect()->route('admin.brand.index')->with('success', 'Brand deleted successfully.');
     }
 }

@@ -40,14 +40,14 @@
     @if ($errors->any())
         @foreach ($errors->all() as $error)
             <script>
-                toastr.error("{{ $error }}");
+                notyf.error("{{ $error }}");
             </script>
         @endforeach
     @endif
 
     @if (session('success'))
         <script>
-            toastr.success("{{ session('success') }}");
+            notyf.success("{{ session('success') }}");
         </script>
     @endif
     @stack('scripts')

@@ -65,6 +65,7 @@ class SectorController extends Controller
         $sector->description = $request->description;
         $sector->save();
 
+        notyf()->addSuccess('Sector created successfully!');
         return redirect()->back()->with('success', 'Sector created successfully!');
     }
 
@@ -113,9 +114,8 @@ class SectorController extends Controller
         }
 
         $sector->update($validated);
-
-        return redirect()->route('admin.sectors.edit', $sector->id)
-                        ->with('success', 'Sector updated successfully.');
+        notyf()->addSuccess('Sector updated successfully.');
+        return redirect()->route('admin.sectors.index')->with('success', 'Sector updated successfully.');
     }
 
     /**
@@ -130,7 +130,7 @@ class SectorController extends Controller
             }
 
             $sector->delete();
-
+            notyf()->addSuccess('Sector deleted successfully.');
             return redirect()->route('admin.sectors.index')->with('success', 'Sector deleted successfully.');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Something went wrong while deleting the sector.');

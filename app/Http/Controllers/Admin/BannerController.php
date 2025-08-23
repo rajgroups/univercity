@@ -72,7 +72,7 @@ class BannerController extends Controller
                 $banner->save();
             }
         }
-
+        notyf()->addSuccess('Banners created successfully!');
         return redirect()->route('admin.banner.create')->with('success', 'Banners created successfully!');
     }
 
@@ -130,7 +130,7 @@ class BannerController extends Controller
 
         // Save updated banner
         $banner->save();
-
+        notyf()->addSuccess('Banner updated successfully.');
         return redirect()->route('admin.banner.edit', $banner->id)
                  ->with('success', 'Banner updated successfully.');
 
@@ -149,7 +149,7 @@ class BannerController extends Controller
 
         // Delete the banner record from the database
         $banner->delete();
-
+        notyf()->addSuccess('Banner deleted successfully.');
         return redirect()->route('admin.banner.index')->with('success', 'Banner deleted successfully.');
     }
 

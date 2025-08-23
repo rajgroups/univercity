@@ -122,3 +122,6 @@ Route::post('/send-organization-details', [FormController::class, 'sendOrganizat
     ->name('sendOrganizationDetails');
 Route::post('/send-volunteer -details', [FormController::class, 'sendVolunteer'])
     ->name('sendvolunteer');
+Route::get('flash-test',function(){
+    return view('web.test-toastr');
+});

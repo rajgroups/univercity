@@ -98,7 +98,7 @@ class CourseController extends Controller
 
         // Create the course
         $course = Course::create($validated);
-
+        notyf()->addSuccess('Course created successfully!');
         return redirect()->route('admin.course.index')
             ->with('success', 'Course created successfully!');
     }
@@ -203,7 +203,7 @@ class CourseController extends Controller
 
         // Update the course
         $course->update($validated);
-
+        notyf()->addSuccess('Course updated successfully!');
         return redirect()->route('admin.course.index')
             ->with('success', 'Course updated successfully!');
     }
@@ -229,7 +229,7 @@ class CourseController extends Controller
 
         // Delete the course
         $course->delete();
-
+        notyf()->addSuccess('Course deleted successfully!');
         return redirect()->route('admin.course.index')
             ->with('success', 'Course deleted successfully!');
     }

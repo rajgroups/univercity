@@ -113,7 +113,7 @@ class BlogController extends Controller
                 'status'            => $request->has('status') ? 1 : 0,
             ]);
 
-            Flasher::addSuccess('Blog/News created successfully!');
+            notyf()->addSuccess('Blog/News created successfully!');
             return redirect()->route('admin.blog.index')
                 ->with('success', 'Blog/News created successfully!');
 
@@ -242,6 +242,7 @@ class BlogController extends Controller
                 'status'            => $validated['status'],
             ]);
 
+            notyf()->addSuccess('Blog/News updated successfully!');
             return redirect()->route('admin.blog.index')
                 ->with('success', 'Blog/News updated successfully!');
 
@@ -269,7 +270,7 @@ class BlogController extends Controller
 
             // Delete the blog record
             $blog->delete();
-
+            notyf()->addSuccess('Blog/News deleted successfully!');
             return redirect()->route('admin.blog.index')
                 ->with('success', 'Blog/News deleted successfully!');
 

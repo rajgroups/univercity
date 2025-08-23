@@ -96,18 +96,16 @@ Route::prefix('admin')->as('admin.')->group(function() {
         Route::post('/settings/general/update',[SettingController::class,'generalUpdate'])->name('setting.general.update');
 
         // For storing a new project
-        Route::post('/projects', [App\Http\Controllers\Admin\ProjectController::class, 'store'])->name('project.store');
+        Route::post('/projects', [ProjectController::class, 'store'])->name('project.store');
         // For updating an existing project (assuming you have a route model binding)
-        Route::put('/projects/{project}', [App\Http\Controllers\Admin\ProjectController::class, 'update'])->name('project.update');
+        Route::put('/projects/{project}', [ProjectController::class, 'update'])->name('project.update');
         // You'll also need routes for 'create' and 'edit' to display the form
-        Route::get('/projects/create', [App\Http\Controllers\Admin\ProjectController::class, 'create'])->name('project.create');
-        Route::get('/projects/{project}/edit', [App\Http\Controllers\Admin\ProjectController::class, 'edit'])->name('project.edit');
+        Route::get('/projects/create', [ProjectController::class, 'create'])->name('project.create');
+        Route::get('/projects/{project}/edit', [ProjectController::class, 'edit'])->name('project.edit');
 
         Route::get('/dashboard/stats', [DashboardController::class, 'getStats'])->name('dashboard.stats');
-
-        Route::get('/empty',function(FlasherInterface $flasher){
-            // Flasher::addSuccess('Activity created successfully!');
-            $flasher->addSuccess('Activity created successfully');
+        Route::get('/empty', function () {
+            notyf()->addSuccess('Your account has been verified.');
             return view('admin.empty.empty');
         });
     });
