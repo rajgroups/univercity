@@ -1,4 +1,29 @@
 @extends('layouts.web.app')
+@push('meta')
+    <title>Education Sectors - Indian Skill Institute Co-operation (ISICO)</title>
+
+    <meta name="description" content="Explore the education sectors covered by the Indian Skill Institute Co-operation (ISICO). From skill development to entrepreneurship and innovation, ISICO works across diverse sectors to empower communities and strengthen India’s socio-economic growth.">
+    <meta name="keywords" content="ISICO education sectors, Indian Skill Institute, skill development sectors, education initiatives, entrepreneurship sectors, vocational training, innovation, socio-economic development, NEP 2020">
+    <meta name="author" content="Indian Skill Institute Co-operation (ISICO)">
+    <meta name="robots" content="index, follow">
+
+    <!-- Canonical Tag -->
+    <link rel="canonical" href="{{ url()->current() }}">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Education Sectors - Indian Skill Institute Co-operation (ISICO)">
+    <meta property="og:description" content="Discover ISICO’s initiatives across various education sectors including skill training, entrepreneurship, and innovation to build a skilled and inclusive India.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:image" content="{{ asset('default-sectors.jpg') }}">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Education Sectors - Indian Skill Institute Co-operation (ISICO)">
+    <meta name="twitter:description" content="Learn about ISICO’s focus on diverse education sectors to advance skill development, entrepreneurship, and socio-economic progress.">
+    <meta name="twitter:image" content="{{ asset('default-sectors.jpg') }}">
+@endpush
+
 @section('content')
             <!-- Title Banner Section Start -->
             <section class="title-banner mb-80">

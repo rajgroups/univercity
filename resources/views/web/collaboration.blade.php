@@ -1,4 +1,29 @@
 @extends('layouts.web.app')
+@push('meta')
+    <title>Partnerships & Collaborations - Indian Skill Institute Co-operation (ISICO)</title>
+
+    <meta name="description" content="Explore partnerships and collaborations of the Indian Skill Institute Co-operation (ISICO) with corporate, government, strategic, international, and academic institutions. Together, these alliances strengthen education, skill development, and entrepreneurship for India’s future.">
+    <meta name="keywords" content="ISICO partnerships, ISICO collaborations, corporate partnerships, government collaborations, strategic partnerships, international partnerships, academic collaborations, Indian Skill Institute, skill development alliances">
+    <meta name="author" content="Indian Skill Institute Co-operation (ISICO)">
+    <meta name="robots" content="index, follow">
+
+    <!-- Canonical Tag -->
+    <link rel="canonical" href="{{ url()->current() }}">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Partnerships & Collaborations - Indian Skill Institute Co-operation (ISICO)">
+    <meta property="og:description" content="Discover ISICO’s collaborations with corporate, government, academic, and international institutions that empower skill development and innovation.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:image" content="{{ asset('default-partnerships.jpg') }}">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Partnerships & Collaborations - Indian Skill Institute Co-operation (ISICO)">
+    <meta name="twitter:description" content="ISICO builds partnerships across corporate, government, academic, and international sectors to strengthen education, entrepreneurship, and skill development.">
+    <meta name="twitter:image" content="{{ asset('default-partnerships.jpg') }}">
+@endpush
+
 @section('content')
 <!-- Title Banner Section Start -->
 <section class="mb-5" style="

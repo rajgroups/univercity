@@ -1,4 +1,29 @@
 @extends('layouts.web.app')
+@push('meta')
+    <title>Events & Competitions - Indian Skill Institute Co-operation (ISICO)</title>
+
+    <meta name="description" content="Explore events and competitions by the Indian Skill Institute Co-operation (ISICO), designed to promote skill development, innovation, and entrepreneurship. Join national-level contests, workshops, and challenges that empower individuals to showcase their talents and contribute to India’s growth.">
+    <meta name="keywords" content="ISICO events, ISICO competitions, skill competitions, workshops, innovation, entrepreneurship, contests, Indian Skill Institute, national competitions, youth empowerment">
+    <meta name="author" content="Indian Skill Institute Co-operation (ISICO)">
+    <meta name="robots" content="index, follow">
+
+    <!-- Canonical Tag -->
+    <link rel="canonical" href="{{ url()->current() }}">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Events & Competitions - Indian Skill Institute Co-operation (ISICO)">
+    <meta property="og:description" content="Discover ISICO’s events and competitions that foster skill development, creativity, and entrepreneurship. Participate in workshops, challenges, and contests shaping India’s future talent.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:image" content="{{ asset('default-event.jpg') }}">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Events & Competitions - Indian Skill Institute Co-operation (ISICO)">
+    <meta name="twitter:description" content="Be part of ISICO’s national-level events and competitions that drive innovation, entrepreneurship, and skill development across India.">
+    <meta name="twitter:image" content="{{ asset('default-event.jpg') }}">
+@endpush
+
 @section('content')
     <!-- Title Banner Section Start -->
     <section class="title-banner mb-80">

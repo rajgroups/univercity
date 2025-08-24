@@ -1,4 +1,28 @@
 @extends('layouts.web.app')
+@push('meta')
+    <title>Blog - Indian Skill Institute Co-operation (ISICO)</title>
+
+    <meta name="description" content="Read the latest blogs from the Indian Skill Institute Co-operation (ISICO). Explore insights on education, skill development, entrepreneurship, innovation, and national growth initiatives.">
+    <meta name="keywords" content="ISICO blog, Indian Skill Institute, skill development articles, education blogs, entrepreneurship insights, innovation, socio-economic growth, NEP 2020, Skill India, Make in India">
+    <meta name="author" content="Indian Skill Institute Co-operation (ISICO)">
+    <meta name="robots" content="index, follow">
+
+    <!-- Canonical Tag -->
+    <link rel="canonical" href="{{ url()->current() }}">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Blog - Indian Skill Institute Co-operation (ISICO)">
+    <meta property="og:description" content="Stay updated with ISICO’s blogs covering education, skill enhancement, entrepreneurship, and India’s socio-economic development.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:image" content="{{ asset('default-blog.jpg') }}">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Blog - Indian Skill Institute Co-operation (ISICO)">
+    <meta name="twitter:description" content="Explore the ISICO blog for articles and insights on skill development, innovation, entrepreneurship, and education in India.">
+    <meta name="twitter:image" content="{{ asset('default-blog.jpg') }}">
+@endpush
 
 @section('content')
 <div class="container py-5">

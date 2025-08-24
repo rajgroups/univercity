@@ -1,4 +1,29 @@
 @extends('layouts.web.app')
+@push('meta')
+    <title>Contact Us - Indian Skill Institute Co-operation (ISICO)</title>
+
+    <meta name="description" content="Get in touch with the Indian Skill Institute Co-operation (ISICO) for inquiries, collaborations, or support. Connect with us to learn more about our initiatives in education, skill development, and entrepreneurship.">
+    <meta name="keywords" content="ISICO contact, Indian Skill Institute contact, ISICO support, ISICO office, skill development contact, education institute contact, partnerships, collaborations, get in touch">
+    <meta name="author" content="Indian Skill Institute Co-operation (ISICO)">
+    <meta name="robots" content="index, follow">
+
+    <!-- Canonical Tag -->
+    <link rel="canonical" href="{{ url()->current() }}">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Contact Us - Indian Skill Institute Co-operation (ISICO)">
+    <meta property="og:description" content="Reach out to ISICO for inquiries, collaborations, or support related to education, skill development, and entrepreneurship.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:image" content="{{ asset('default-contact.jpg') }}">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Contact Us - Indian Skill Institute Co-operation (ISICO)">
+    <meta name="twitter:description" content="Contact ISICO to learn more about our programs, initiatives, and collaborations for education, skills, and entrepreneurship.">
+    <meta name="twitter:image" content="{{ asset('default-contact.jpg') }}">
+@endpush
+
 @section('content')
     <section class="contact-sec mb-120 bg-transparent p-0">
         <div class="container-fluid">

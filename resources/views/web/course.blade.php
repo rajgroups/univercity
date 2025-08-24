@@ -1,4 +1,29 @@
 @extends('layouts.web.app')
+@push('meta')
+    <title>Courses - Indian Skill Institute Co-operation (ISICO)</title>
+
+    <meta name="description" content="Explore professional courses offered by the Indian Skill Institute Co-operation (ISICO). Our programs focus on skill development, education, entrepreneurship, and innovation to prepare learners for future opportunities.">
+    <meta name="keywords" content="ISICO courses, Indian Skill Institute courses, skill development training, education programs, entrepreneurship courses, professional learning, career development, innovation, NEP 2020">
+    <meta name="author" content="Indian Skill Institute Co-operation (ISICO)">
+    <meta name="robots" content="index, follow">
+
+    <!-- Canonical Tag -->
+    <link rel="canonical" href="{{ url()->current() }}">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Courses - Indian Skill Institute Co-operation (ISICO)">
+    <meta property="og:description" content="Discover ISICO’s skill development and professional courses designed to empower learners with practical knowledge, entrepreneurship, and career opportunities.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:image" content="{{ asset('default-courses.jpg') }}">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Courses - Indian Skill Institute Co-operation (ISICO)">
+    <meta name="twitter:description" content="Join ISICO’s education and skill development courses to build knowledge, innovation, and entrepreneurial skills for the future.">
+    <meta name="twitter:image" content="{{ asset('default-courses.jpg') }}">
+@endpush
+
 @section('content')
     <!-- Title Banner Section Start -->
     <section class="title-banner mb-80">

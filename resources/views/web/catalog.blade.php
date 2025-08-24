@@ -1,4 +1,28 @@
 @extends('layouts.web.app')
+@push('meta')
+    <title>Upcoming & Ongoing Projects, Schemes & Programs - Indian Skill Institute Co-operation (ISICO)</title>
+
+    <meta name="description" content="Discover upcoming and ongoing projects, schemes, and programs by the Indian Skill Institute Co-operation (ISICO). Focused on education, skill development, entrepreneurship, and socio-economic growth, ISICO initiatives aim to empower communities and build a sustainable future for India.">
+    <meta name="keywords" content="ISICO projects, ISICO schemes, ISICO programs, upcoming initiatives, ongoing projects, Indian Skill Institute, skill development schemes, education programs, entrepreneurship initiatives, socio-economic growth">
+    <meta name="author" content="Indian Skill Institute Co-operation (ISICO)">
+    <meta name="robots" content="index, follow">
+
+    <!-- Canonical Tag -->
+    <link rel="canonical" href="{{ url()->current() }}">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Upcoming & Ongoing Projects, Schemes & Programs - Indian Skill Institute Co-operation (ISICO)">
+    <meta property="og:description" content="Stay updated with ISICO’s ongoing and upcoming projects, schemes, and programs that drive skill development, education, and entrepreneurship across India.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:image" content="{{ asset('default-projects.jpg') }}">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Upcoming & Ongoing Projects, Schemes & Programs - Indian Skill Institute Co-operation (ISICO)">
+    <meta name="twitter:description" content="Explore ISICO’s initiatives including projects, schemes, and programs dedicated to skill development, education, and entrepreneurship.">
+    <meta name="twitter:image" content="{{ asset('default-projects.jpg') }}">
+@endpush
 
 @section('content')
 <div class="container py-5">
