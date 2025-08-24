@@ -81,13 +81,13 @@ class FormController extends Controller
             'name' => 'required|string|max:255',
             'organization_type' => 'required|string|max:255',
             'website' => 'nullable|url|max:255',
-            
+
             // Contact Person Details
             'contact_name' => 'required|string|max:255',
             'contact_designation' => 'required|string|max:255',
             'contact_number' => 'required|string|max:15',
             'contact_email' => 'required|email|max:255',
-            
+
             // Address Details
             'address' => 'required|string',
             'country' => 'required|string|max:255',
@@ -95,7 +95,7 @@ class FormController extends Controller
             'district' => 'required|string|max:255',
             'city_village' => 'nullable|string|max:255',
             'pincode' => 'nullable|string|max:10',
-            
+
             // Partnership Interest
             'collaboration' => 'required|string|max:255',
             'beneficiary' => 'required|string|max:255',
@@ -134,13 +134,18 @@ class FormController extends Controller
     {
         // ✅ Validate the request data
         $validator = Validator::make($request->all(), [
-            'name'         => 'required|string|max:255',
-            'mobile'       => 'required|string|max:15',
-            'gender'       => 'required|in:Male,Female,Other',
-            'dob'          => 'required|date',
-            'qualification'=> 'nullable|string|max:255',
-            'location'     => 'required|string|max:255',
-            'experience'   => 'required|in:Yes,No',
+            'name'          => 'required|string|max:255',
+            'mobile'        => 'required|string|max:15',
+            'gender'        => 'required|in:Male,Female,Other',
+            'dob'           => 'required|date',
+            'qualification' => 'nullable|string|max:255',
+            'location'      => 'required|string|max:255',
+            'experience'    => 'required|in:Yes,No',
+            'skills'        => 'nullable|array',
+            'skills.*'      => 'string|max:255',
+            'interests'     => 'nullable|array',
+            'interests.*'   => 'string|max:255',
+            'preferred_mode'=> 'required|in:Online,On-site,Both',
         ]);
 
         // ❌ Validation errors
@@ -154,16 +159,20 @@ class FormController extends Controller
         try {
             $validated = $validator->validated();
 
+            // ✅ Encode arrays into JSON
+            $validated['skills']    = !empty($request->skills) ? json_encode($request->skills) : null;
+            $validated['interests'] = !empty($request->interests) ? json_encode($request->interests) : null;
+
             // ✅ Save volunteer record
             Volunteers::create($validated);
 
-            return redirect()->back()
-                ->with('success', 'Thank you for registering as a volunteer!');
+            $flasher->addSuccess('Thank you for registering as a volunteer!');
+            return redirect()->back();
 
         } catch (\Exception $e) {
-            return redirect()->back()
-                ->with('error', 'Error submitting volunteer details: ' . $e->getMessage())
-                ->withInput();
+            $flasher->addError('Error submitting volunteer details: ' . $e->getMessage());
+            return redirect()->back()->withInput();
         }
     }
+
 }

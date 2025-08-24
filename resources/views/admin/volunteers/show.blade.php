@@ -62,6 +62,10 @@
                                 <td>{{ $volunteer->experience ?? 'N/A' }}</td>
                             </tr>
                             <tr>
+                                <th>Preferred Mode</th>
+                                <td>{{ $volunteer->preferred_mode ?? 'N/A' }}</td>
+                            </tr>
+                            <tr>
                                 <th>Status</th>
                                 <td>
                                     <span class="badge bg-{{ $volunteer->status == 'active' ? 'success' : 'secondary' }}">
@@ -71,6 +75,43 @@
                             </tr>
                         </tbody>
                     </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Skills & Interests -->
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Skills / Expertise</h5>
+                    </div>
+                    <div class="card-body">
+                        @if($volunteer->skills)
+                            @foreach(json_decode($volunteer->skills, true) as $skill)
+                                <span class="badge bg-primary me-1">{{ $skill }}</span>
+                            @endforeach
+                        @else
+                            <p>No skills provided.</p>
+                        @endif
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Areas of Interest</h5>
+                    </div>
+                    <div class="card-body">
+                        @if($volunteer->interests)
+                            @foreach(json_decode($volunteer->interests, true) as $interest)
+                                <span class="badge bg-info me-1">{{ $interest }}</span>
+                            @endforeach
+                        @else
+                            <p>No interests provided.</p>
+                        @endif
+                    </div>
                 </div>
             </div>
         </div>
