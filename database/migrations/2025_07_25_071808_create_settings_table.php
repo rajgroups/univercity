@@ -24,6 +24,7 @@ return new class extends Migration
             $table->string('contact_email')->nullable();
             $table->string('contact_phone')->nullable();
             $table->string('contact_address')->nullable();
+            $table->string('contact_secondary_phone')->nullable();
             $table->text('contact_map_embed')->nullable(); // Google Maps iframe
 
             // About Page

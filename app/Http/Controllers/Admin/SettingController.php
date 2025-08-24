@@ -421,7 +421,8 @@ public function generalUpdate(Request $request)
     $rules = [
         'site_title'                => 'required|string|max:255',
         'contact_email'             => 'nullable|email',
-        'contact_phone'             => 'nullable|string|max:20',
+        'contact_phone '            => 'nullable|string|max:20',
+        'contact_secondary_phone'   => 'nullable|string|max:20',
         'contact_address'           => 'nullable|string|max:255',
         'about_title'               => 'nullable|string|max:255',
         'currency_name'             => 'nullable|string|max:10',
@@ -473,6 +474,7 @@ public function generalUpdate(Request $request)
         'site_title'            => $request->site_title,
         'contact_email'         => $request->contact_email,
         'contact_phone'         => $request->contact_phone,
+        'contact_secondary_phone'=> $request->contact_secondary_phone,
         'contact_address'       => $request->contact_address,
         'contact_map_embed'     => $request->contact_map_embed,
         'about_title'           => $request->about_title,

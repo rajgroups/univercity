@@ -38,8 +38,12 @@
                         <div class="d-flex align-items-center justify-content-between flex-wrap">
                             <div>
                                 <p class="fw-500 black mb-16">Support Center 24/7</p>
-                                <a href="tel:+91{{ $defaultSettings->contact_phone ?? null }}"
-                                    class="h4 fw-500 hover-content light-black">+91{{ $defaultSettings->contact_phone ?? null }}</a>
+                                <a href="tel:{{ $defaultSettings->contact_phone ?? null }}"
+                                    class="h4 fw-500 hover-content light-black">{{ $defaultSettings->contact_phone ?? null }}</a>
+                                    <br>
+                                     <br>
+                                <a href="tel:{{ $defaultSettings->contact_secondary_phone ?? null }}"
+                                    class="h4 fw-500 hover-content light-black">{{ $defaultSettings->contact_secondary_phone ?? null }}</a>
                             </div>
                             <div>
                                 <p class="fw-500 black mb-16">Write To Us</p>
