@@ -589,7 +589,19 @@
                                         </div>
                                     @endforeach
                                 </div>
+                                <h3 class="h5 mt-4 text-primary mb-2">Benefits</h3>
+                                <div class="alert alert-primary">
+                                    <ul class="mb-0">
+                                        <li>Opportunity to contribute to sustainable development goals (SDGs) and national priorities.</li>
+                                        <li>Recognition as a change-maker in empowering rural communities</li>
+                                        <li>Access to ISICO’s network of trained individuals and successful projects, offering valuable insights and data for impactful interventions.</li>
+                                    </ul>
+                                </div>
 
+                                <h3 class="h5 mt-4 text-primary mb-2">Call for Action</h3>
+                                <div class="alert alert-primary">
+                                   <p>ISICO invites strategic partners to collaborate with us to transform education, skill development, and community empowerment. Together, we can create sustainable growth and improve lives across India’s rural and urban landscapes.</p>
+                                </div>
                             </div>
                         </div>
                     </div>
