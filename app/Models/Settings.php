@@ -19,6 +19,7 @@ class Settings extends Model
         // Contact Page
         'contact_email',
         'contact_phone',
+        'contact_secondary_phone',
         'contact_address',
         'contact_map_embed',
 

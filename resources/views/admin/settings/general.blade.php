@@ -140,6 +140,11 @@
                                     <input type="text" class="form-control" id="contact_phone" name="contact_phone"
                                         value="{{ old('contact_phone', $settings->contact_phone ?? '') }}" required>
                                 </div>
+                                <div class="col-md-6">
+                                    <label for="contact_phone" class="form-label">Secondary Phone</label>
+                                    <input type="text" class="form-control" id="contact_secondary_phone" name="contact_secondary_phone"
+                                        value="{{ old('contact_secondary_phone', $settings->contact_secondary_phone ?? '') }}" required>
+                                </div>
                                 <div class="col-md-12">
                                     <label for="contact_address" class="form-label">Address</label>
                                     <input type="text" class="form-control" id="contact_address"
