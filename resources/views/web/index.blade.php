@@ -1,4 +1,29 @@
 @extends('layouts.web.app')
+@push('meta')
+    <title>Indian Skill Institute Co-operation (ISICO)</title>
+
+    <meta name="description" content="Welcome to the Indian Skill Institute Co-operation (ISICO). Founded in 2020, ISICO is dedicated to advancing India’s socio-economic growth through education, skill development, entrepreneurship, and innovation. Empowering communities across diverse sectors, aligned with NEP 2020 and national initiatives like Skill India and Make in India.">
+    <meta name="keywords" content="ISICO, Indian Skill Institute, skill development, education, entrepreneurship, innovation, socio-economic growth, NEP 2020, Skill India, Make in India, SDGs, training, projects">
+    <meta name="author" content="Indian Skill Institute Co-operation (ISICO)">
+    <meta name="robots" content="index, follow">
+
+    <!-- Canonical Tag -->
+    <link rel="canonical" href="{{ url()->current() }}">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Home - Indian Skill Institute Co-operation (ISICO)">
+    <meta property="og:description" content="ISICO works across education, skill development, entrepreneurship, and innovation to empower individuals and communities for India’s future.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:image" content="{{ asset('default-home.jpg') }}">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Home - Indian Skill Institute Co-operation (ISICO)">
+    <meta name="twitter:description" content="Empowering India through education, skill development, entrepreneurship, and innovation. Explore ISICO’s initiatives for a skilled and inclusive future.">
+    <meta name="twitter:image" content="{{ asset('default-home.jpg') }}">
+@endpush
+
 @section('content')
 
     <style>
