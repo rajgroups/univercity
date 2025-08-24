@@ -1219,9 +1219,15 @@
                         <h2 class="fw-bold mb-3">Future <span class="text-primary">Goals</span></h2>
                     </div>
                     <p>ISICO is steadfast in its commitment to:</p>
-                    @if (!empty($settings->future_goals) && is_array($settings->future_goals))
+                   @php
+                        $futureGoals = is_array($settings->future_goals)
+                            ? $settings->future_goals
+                            : json_decode($settings->future_goals, true);
+                    @endphp
+
+                    @if (!empty($futureGoals) && is_array($futureGoals))
                         <div class="accordion" id="futureGoalsAccordion">
-                            @foreach ($settings->future_goals as $index => $goal)
+                            @foreach ($futureGoals as $index => $goal)
                                 @php
                                     $goalId = 'goal' . $index;
                                 @endphp
