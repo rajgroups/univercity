@@ -1151,38 +1151,50 @@
                         <h2 class="mt-5 mb-4 text-primary">Partnerships</h2>
                         <div class="faq card">
                             <div class="card-body">
-                                <div class="faq-block mb-24"> <a href="#" class="accordion-button"
+                                <div class="faq-block mb-24">
+                                    <a href="#" class="accordion-button d-flex justify-content-between align-items-center"
                                         data-bs-toggle="collapse" data-bs-target="#partner1" aria-expanded="true"
-                                        aria-controls="partner1"> <span class="fw-500">01.</span> &nbsp; Government
-                                        Schemes </a>
+                                        aria-controls="partner1">
+                                        <span><span class="fw-500">01.</span> &nbsp; Government Schemes</span>
+                                        <i class="bi bi-chevron-down ms-2"></i>
+                                    </a>
                                     <div id="partner1" class="accordion-collapse collapse show"
                                         aria-labelledby="partner1" data-bs-parent="#partnershipsSection">
                                         <p class="text-start">Partnering with state and central programs to implement skill
                                             and education initiatives.</p>
                                     </div>
                                 </div>
-                                <div class="faq-block mb-24"> <a href="#" class="accordion-button collapsed"
+
+                                <div class="faq-block mb-24">
+                                    <a href="#" class="accordion-button collapsed d-flex justify-content-between align-items-center"
                                         data-bs-toggle="collapse" data-bs-target="#partner2" aria-expanded="false"
-                                        aria-controls="partner2"> <span class="fw-500">02.</span> &nbsp; Corporate Social
-                                        Responsibility (CSR) </a>
-                                    <div id="partner2" class="accordion-collapse collapse" aria-labelledby="partner2"
-                                        data-bs-parent="#partnershipsSection">
+                                        aria-controls="partner2">
+                                        <span><span class="fw-500">02.</span> &nbsp; Corporate Social Responsibility (CSR)</span>
+                                        <i class="bi bi-chevron-down ms-2"></i>
+                                    </a>
+                                    <div id="partner2" class="accordion-collapse collapse"
+                                        aria-labelledby="partner2" data-bs-parent="#partnershipsSection">
                                         <p>Leveraging CSR support for community-based projects in education and
                                             skill-building.</p>
                                     </div>
                                 </div>
-                                <div class="faq-block"> <a href="#" class="accordion-button collapsed"
+
+                                <div class="faq-block">
+                                    <a href="#" class="accordion-button collapsed d-flex justify-content-between align-items-center"
                                         data-bs-toggle="collapse" data-bs-target="#partner3" aria-expanded="false"
-                                        aria-controls="partner3"> <span class="fw-500">03.</span> &nbsp; International
-                                        Partnerships </a>
-                                    <div id="partner3" class="accordion-collapse collapse" aria-labelledby="partner3"
-                                        data-bs-parent="#partnershipsSection">
+                                        aria-controls="partner3">
+                                        <span><span class="fw-500">03.</span> &nbsp; International Partnerships</span>
+                                        <i class="bi bi-chevron-down ms-2"></i>
+                                    </a>
+                                    <div id="partner3" class="accordion-collapse collapse"
+                                        aria-labelledby="partner3" data-bs-parent="#partnershipsSection">
                                         <p>Facilitating knowledge exchange and technical expertise to bring global best
                                             practices to Indian communities. </p>
                                     </div>
                                 </div>
                             </div>
                         </div>
+
                     </div>
                 </div>
             </div> <!-- Future Goals -->
