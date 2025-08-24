@@ -95,7 +95,7 @@
                         {{-- <img src="https://www.skillindiadigital.gov.in/assets/new-ux-img/india-flag.svg" alt="" srcset=""> | --}}
                         <img src="{{ asset('resource/web/assets/media/vector/india-flag.svg') }}" alt="flag"
                             srcset=""> |
-                        Indian Skill Institute
+                       ISICO | National Skill Development NGO
                     </div>
                     <div class="col-md-6 d-flex justify-content-between-sm" style="align-items: center;">
                         {{-- <p class="p-2 d-none d-lg-block">Skip To Main Content</p> --}}
@@ -112,7 +112,7 @@
                         <div class="item p-2 text-light-gray">
                             <div class="dropdown">
                                 <button class="btn p-2 text-light-gray" id="moreMenu" data-bs-toggle="dropdown" aria-expanded="false">
-                                    More <i class="bi bi-three-dots-vertical"></i> 
+                                    More <i class="bi bi-three-dots-vertical"></i>
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="moreMenu">
                                     <li><a class="dropdown-item" href="{{ route('web.activity') }}">NTI Competetions/Events</a></li>
@@ -351,11 +351,9 @@
     </div>
 
 
-    <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content p-4 border-0 rounded-4">
-
+    <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl"> <!-- changed to modal-xl -->
+        <div class="modal-content p-4 border-0 rounded-4">
                 <!-- Close Button -->
                 <button type="button" class="btn-close ms-auto" data-bs-dismiss="modal"
                     aria-label="Close"></button>
@@ -364,8 +362,8 @@
                 <div class="text-center">
                     <a href="/"> <img src="{{ asset($defaultSettings->site_logo ?? null) }}"
                             alt="{{ $defaultSettings->site_title ?? null }}" style="height: 54px;"></a>
-                    <h4 class="mt-3 fw-bold">Welcome to ISICO</h4>
-                    <p class="text-muted">A platform to meet all your skilling needs digitally anytime anywhere</p>
+                    <h4 class="mt-3 fw-bold">Welcome to ISICO Registration</h4>
+                    <p class="text-muted">Be part of ISICO’s mission to transform rural communities through education, skills, and entrepreneurship. Register as a learner, partner, or volunteer to learn, collaborate, and empower.</p>
                 </div>
 
                 <!-- Card Options with Radios -->
@@ -379,13 +377,13 @@
 
                                 <input type="radio" name="userType" value="student"
                                     class="form-check-input mt-1" />
-                                <img src="https://cdn-icons-png.flaticon.com/512/2922/2922510.png" alt="Student"
+                                <img src="{{ asset('resource/web/assets/media/images/graduated.png') }}" alt="Student"
                                     style="width: 50px; margin-left: 10px;">
 
                                 <div class="ms-2">
                                     <h6 class="fw-bold mb-1">Student / Learner Registration Form</h6>
                                     <p class="mb-0 small text-muted">
-                                        Fill your details to register as a learner.
+                                        Register to gain skills, education, and opportunities for a sustainable future.
                                     </p>
                                 </div>
                             </label>
@@ -396,11 +394,11 @@
                                 style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#cooperationModal">
                                 <input type="radio" name="userType" value="partner"
                                     class="form-check-input mt-1" />
-                                <img src="https://cdn-icons-png.flaticon.com/512/2922/2922510.png" alt="Partner"
+                                <img src="{{ asset('resource/web/assets/media/images/friendship.png') }}" alt="Partner"
                                     style="width: 50px; margin-left: 10px;">
                                 <div class="ms-2">
                                     <h6 class="fw-bold mb-1">Co-Operation Registration Form</h6>
-                                    <p class="mb-0 small text-muted">Learning partner, Employer, Content Provider etc.
+                                    <p class="mb-0 small text-muted">Collaborate with ISICO as an institution, industry, CSR, or NGO to strengthen rural skill ecosystems.
                                     </p>
                                 </div>
                             </label>
@@ -411,11 +409,11 @@
                                 style="cursor: pointer;">
                                 <input type="radio" name="userType" value="iti"
                                     class="form-check-input mt-1 " />
-                                <img src="https://cdn-icons-png.flaticon.com/512/1087/1087929.png" alt="ITI Partner"
+                                <img src="{{ asset('resource/web/assets/media/images/volunteer.png') }}" alt="ITI Partner"
                                     style="width: 50px; margin-left: 10px;">
                                 <div class="ms-2">
-                                    <h6 class="fw-bold mb-1">Volunteer Partners</h6>
-                                    <p class="mb-0 small text-muted">Exam Csontroller, ITI/NSTI Creator, NIMI Admin etc.
+                                    <h6 class="fw-bold mb-1">Volunteer Partners Registration</h6>
+                                    <p class="mb-0 small text-muted">Join ISICO as a mentor, examiner, Event Organiser or content creator to empower learners and communities.
                                     </p>
                                 </div>
                             </label>
@@ -810,71 +808,127 @@
                     </div>
                 @endif
 
-                <!-- Form -->
-                <form class="row g-3" action="{{ route('sendvolunteer') }}" method="POST">
-                    @csrf
+               <!-- Form -->
+            <form class="row g-3" action="{{ route('sendvolunteer') }}" method="POST">
+                @csrf
 
-                    <!-- Name -->
-                    <div class="col-md-6">
-                        <label class="form-label">Name <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" placeholder="Enter your name" 
-                            name="name" value="{{ old('name') }}" required>
+                <!-- Name -->
+                <div class="col-md-6">
+                    <label class="form-label">Name <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" placeholder="Enter your name"
+                        name="name" value="{{ old('name') }}" required>
+                </div>
+
+                <!-- Mobile Number -->
+                <div class="col-md-6">
+                    <label class="form-label">Mobile Number <span class="text-danger">*</span></label>
+                    <input type="tel" class="form-control" placeholder="e.g. 9876543210"
+                        name="mobile" value="{{ old('mobile') }}" required>
+                </div>
+
+                <!-- Gender -->
+                <div class="col-md-6">
+                    <label class="form-label">Gender <span class="text-danger">*</span></label>
+                    <select class="form-select" name="gender" required>
+                        <option disabled {{ old('gender') ? '' : 'selected' }}>Select Gender</option>
+                        <option value="Male" {{ old('gender') == 'Male' ? 'selected' : '' }}>Male</option>
+                        <option value="Female" {{ old('gender') == 'Female' ? 'selected' : '' }}>Female</option>
+                        <option value="Other" {{ old('gender') == 'Other' ? 'selected' : '' }}>Other</option>
+                    </select>
+                </div>
+
+                <!-- Date of Birth -->
+                <div class="col-md-6">
+                    <label class="form-label">Date of Birth <span class="text-danger">*</span></label>
+                    <input type="date" class="form-control" name="dob"
+                        value="{{ old('dob') }}" required>
+                </div>
+
+                <!-- Qualification -->
+                <div class="col-md-6">
+                    <label class="form-label">Qualification</label>
+                    <input type="text" class="form-control" placeholder="e.g. Graduate, Diploma"
+                        name="qualification" value="{{ old('qualification') }}">
+                </div>
+
+                <!-- Location -->
+                <div class="col-md-6">
+                    <label class="form-label">Location <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" placeholder="Enter your location"
+                        name="location" value="{{ old('location') }}" required>
+                </div>
+
+                <!-- Volunteer Experience -->
+                <div class="col-md-6">
+                    <label class="form-label">Volunteer Experience <span class="text-danger">*</span></label>
+                    <select class="form-select" name="experience" required>
+                        <option value="Yes" {{ old('experience') == 'Yes' ? 'selected' : '' }}>Yes</option>
+                        <option value="No" {{ old('experience') == 'No' ? 'selected' : '' }}>No</option>
+                    </select>
+                </div>
+
+                <!-- Skills / Expertise -->
+                <div class="col-md-12">
+                    <label class="form-label">Skills / Expertise (select one or more):</label>
+                    <div class="row">
+                        @php
+                            $skills = ["Teaching / Mentoring", "Content Creation", "Examination / Evaluation",
+                                    "Community Support", "Technical Support", "Organising / Event Management"];
+                        @endphp
+                        @foreach($skills as $skill)
+                            <div class="col-md-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="skills[]"
+                                        value="{{ $skill }}" {{ (is_array(old('skills')) && in_array($skill, old('skills'))) ? 'checked' : '' }}>
+                                    <label class="form-check-label">{{ $skill }}</label>
+                                </div>
+                            </div>
+                        @endforeach
                     </div>
+                </div>
 
-                    <!-- Mobile Number -->
-                    <div class="col-md-6">
-                        <label class="form-label">Mobile Number <span class="text-danger">*</span></label>
-                        <input type="tel" class="form-control" placeholder="e.g. 9876543210" 
-                            name="mobile" value="{{ old('mobile') }}" required>
+                <!-- Area of Interest -->
+                <div class="col-md-12">
+                    <label class="form-label">Area of Interest:</label>
+                    <div class="row">
+                        @php
+                            $interests = ["Education Support", "Skill Training", "Entrepreneurship Development",
+                                        "Rural Development", "Women & Youth Empowerment"];
+                        @endphp
+                        @foreach($interests as $interest)
+                            <div class="col-md-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="interests[]"
+                                        value="{{ $interest }}" {{ (is_array(old('interests')) && in_array($interest, old('interests'))) ? 'checked' : '' }}>
+                                    <label class="form-check-label">{{ $interest }}</label>
+                                </div>
+                            </div>
+                        @endforeach
                     </div>
+                </div>
 
-                    <!-- Gender -->
-                    <div class="col-md-6">
-                        <label class="form-label">Gender <span class="text-danger">*</span></label>
-                        <select class="form-select" name="gender" required>
-                            <option disabled {{ old('gender') ? '' : 'selected' }}>Select Gender</option>
-                            <option value="Male" {{ old('gender') == 'Male' ? 'selected' : '' }}>Male</option>
-                            <option value="Female" {{ old('gender') == 'Female' ? 'selected' : '' }}>Female</option>
-                            <option value="Other" {{ old('gender') == 'Other' ? 'selected' : '' }}>Other</option>
-                        </select>
+                <!-- Preferred Mode -->
+                <div class="col-md-12">
+                    <label class="form-label">Preferred Mode:</label>
+                    <div class="d-flex gap-3">
+                        @php
+                            $modes = ["Online", "On-site", "Both"];
+                        @endphp
+                        @foreach($modes as $mode)
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="preferred_mode"
+                                    value="{{ $mode }}" {{ old('preferred_mode') == $mode ? 'checked' : '' }}>
+                                <label class="form-check-label">{{ $mode }}</label>
+                            </div>
+                        @endforeach
                     </div>
+                </div>
 
-                    <!-- Date of Birth -->
-                    <div class="col-md-6">
-                        <label class="form-label">Date of Birth <span class="text-danger">*</span></label>
-                        <input type="date" class="form-control" name="dob" 
-                            value="{{ old('dob') }}" required>
-                    </div>
-
-                    <!-- Qualification -->
-                    <div class="col-md-6">
-                        <label class="form-label">Qualification</label>
-                        <input type="text" class="form-control" placeholder="e.g. Graduate, Diploma" 
-                            name="qualification" value="{{ old('qualification') }}">
-                    </div>
-
-                    <!-- Location -->
-                    <div class="col-md-6">
-                        <label class="form-label">Location <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" placeholder="Enter your location" 
-                            name="location" value="{{ old('location') }}" required>
-                    </div>
-
-                    <!-- Volunteer Experience -->
-                    <div class="col-md-6">
-                        <label class="form-label">Volunteer Experience <span class="text-danger">*</span></label>
-                        <select class="form-select" name="experience" required>
-                            <option value="Yes" {{ old('experience') == 'Yes' ? 'selected' : '' }}>Yes</option>
-                            <option value="No" {{ old('experience') == 'No' ? 'selected' : '' }}>No</option>
-                        </select>
-                    </div>
-
-                    <!-- Submit Button -->
-                    <div class="d-flex justify-content-end mt-4">
-                        <button type="submit" class="btn btn-primary px-4">Submit</button>
-                    </div>
-
-                </form>
+                <!-- Submit Button -->
+                <div class="d-flex justify-content-end mt-4">
+                    <button type="submit" class="btn btn-primary px-4">Submit</button>
+                </div>
+            </form>
             </div>
         </div>
     </div>

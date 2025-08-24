@@ -446,61 +446,63 @@
                         <div class="swiper-wrapper">
                             @foreach ($programes as $program)
                                 <div class="swiper-slide">
-                                    <div class="col-md-*">
-                                        <div class="team-block">
-                                            <div class="img-block">
-                                                <img class="w-100"
-                                                    src="{{ $program->image ? asset($program->image) : asset('resource/web/assets/media/default/default-img.png') }}"
-                                                    alt="{{ $program->title }}">
-                                            </div>
-                                            <div class="team-content">
-                                                <div>
-                                                    <a href="{{ route('web.announcement.program', [$program->category->slug, $program->slug]) }}"
-                                                        class="h6 fw-500 mb-4p">{{ $program->title }}</a>
-                                                    <p class="subtitle">
-                                                        {{ \Illuminate\Support\Str::limit(strip_tags($program->description), 80) }}
-                                                    </p>
+                                     <a href="{{ route('web.announcement.program', [$program->category->slug, $program->slug]) }}" class="h6 fw-500 mb-4p">
+                                        <div class="col-md-*">
+                                            <div class="team-block">
+                                                <div class="img-block">
+                                                    <img class="w-100"
+                                                        src="{{ $program->image ? asset($program->image) : asset('resource/web/assets/media/default/default-img.png') }}"
+                                                        alt="{{ $program->title }}">
                                                 </div>
-                                                @php
-                                                    $currentUrl = urlencode(request()->fullUrl()); // Dynamically get current page URL
-                                                    $shareText = urlencode($scheme->title ?? 'Check this out!');
-                                                @endphp
+                                                <div class="team-content">
+                                                    <div>
+                                                        <a href="{{ route('web.announcement.program', [$program->category->slug, $program->slug]) }}"
+                                                            class="h6 fw-500 mb-4p">{{ $program->title }}</a>
+                                                        <p class="subtitle">
+                                                            {{ \Illuminate\Support\Str::limit(strip_tags($program->description), 80) }}
+                                                        </p>
+                                                    </div>
+                                                    @php
+                                                        $currentUrl = urlencode(request()->fullUrl()); // Dynamically get current page URL
+                                                        $shareText = urlencode($scheme->title ?? 'Check this out!');
+                                                    @endphp
 
-                                                <div class="d-flex gap-8 align-items-center">
-                                                    {{-- LinkedIn Share --}}
-                                                    <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ $currentUrl }}"
-                                                        target="_blank">
-                                                        <img class="links-icon"
-                                                            src="{{ asset('resource/web/assets/media/vector/linkedin.png') }}"
-                                                            alt="LinkedIn">
-                                                    </a>
+                                                    <div class="d-flex gap-8 align-items-center">
+                                                        {{-- LinkedIn Share --}}
+                                                        <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ $currentUrl }}"
+                                                            target="_blank">
+                                                            <img class="links-icon"
+                                                                src="{{ asset('resource/web/assets/media/vector/linkedin.png') }}"
+                                                                alt="LinkedIn">
+                                                        </a>
 
-                                                    {{-- Facebook Share --}}
-                                                    <a href="https://www.facebook.com/sharer/sharer.php?u={{ $currentUrl }}"
-                                                        target="_blank">
-                                                        <img class="links-icon"
-                                                            src="{{ asset('resource/web/assets/media/vector/facebook.png') }}"
-                                                            alt="Facebook">
-                                                    </a>
+                                                        {{-- Facebook Share --}}
+                                                        <a href="https://www.facebook.com/sharer/sharer.php?u={{ $currentUrl }}"
+                                                            target="_blank">
+                                                            <img class="links-icon"
+                                                                src="{{ asset('resource/web/assets/media/vector/facebook.png') }}"
+                                                                alt="Facebook">
+                                                        </a>
 
-                                                    {{-- Twitter (X) Share --}}
-                                                    <a href="https://twitter.com/intent/tweet?url={{ $currentUrl }}&text={{ $shareText }}"
-                                                        target="_blank">
-                                                        <img class="links-icon"
-                                                            src="{{ asset('resource/web/assets/media/vector/twitter.webp') }}"
-                                                            alt="Twitter">
-                                                    </a>
+                                                        {{-- Twitter (X) Share --}}
+                                                        <a href="https://twitter.com/intent/tweet?url={{ $currentUrl }}&text={{ $shareText }}"
+                                                            target="_blank">
+                                                            <img class="links-icon"
+                                                                src="{{ asset('resource/web/assets/media/vector/twitter.webp') }}"
+                                                                alt="Twitter">
+                                                        </a>
 
-                                                    {{-- Instagram: Not directly shareable via URL --}}
-                                                    <a href="https://www.instagram.com/" target="_blank">
-                                                        <img class="links-icon"
-                                                            src="{{ asset('resource/web/assets/media/vector/instagram.webp') }}"
-                                                            alt="Instagram">
-                                                    </a>
+                                                        {{-- Instagram: Not directly shareable via URL --}}
+                                                        <a href="https://www.instagram.com/" target="_blank">
+                                                            <img class="links-icon"
+                                                                src="{{ asset('resource/web/assets/media/vector/instagram.webp') }}"
+                                                                alt="Instagram">
+                                                        </a>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                     </a>
                                 </div>
                             @endforeach
                         </div>
@@ -913,60 +915,62 @@
                         <div class="swiper-wrapper">
                             @foreach ($schemes as $scheme)
                                 <div class="swiper-slide">
-                                    <div class="col-md-*">
-                                        <div class="team-block">
-                                            <div class="img-block">
-                                                <img class="w-100" src="{{ asset($scheme->image) }}"
-                                                    alt="{{ $scheme->title }}">
-                                            </div>
-                                            <div class="team-content">
-                                                <div>
-                                                    {{-- {{ route('scheme.details', $scheme->slug) }} --}}
-                                                    <a href="{{ route('web.announcement.scheme', [$scheme->category->slug, $scheme->slug]) }}"
-                                                        class="h6 fw-500 mb-4p">{{ $scheme->title }}</a>
-                                                    <p class="subtitle">{{ $scheme->subtitle }}</p>
+                                    <a href="{{ route('web.announcement.scheme', [$scheme->category->slug, $scheme->slug]) }}" class="h6 fw-500 mb-4p">
+                                        <div class="col-md-*">
+                                            <div class="team-block">
+                                                <div class="img-block">
+                                                    <img class="w-100" src="{{ asset($scheme->image) }}"
+                                                        alt="{{ $scheme->title }}">
                                                 </div>
-                                                @php
-                                                    $currentUrl = urlencode(request()->fullUrl()); // Dynamically get current page URL
-                                                    $shareText = urlencode($scheme->title ?? 'Check this out!');
-                                                @endphp
+                                                <div class="team-content">
+                                                    <div>
+                                                        {{-- {{ route('scheme.details', $scheme->slug) }} --}}
+                                                        <a href="{{ route('web.announcement.scheme', [$scheme->category->slug, $scheme->slug]) }}"
+                                                            class="h6 fw-500 mb-4p">{{ $scheme->title }}</a>
+                                                        <p class="subtitle">{{ $scheme->subtitle }}</p>
+                                                    </div>
+                                                    @php
+                                                        $currentUrl = urlencode(request()->fullUrl()); // Dynamically get current page URL
+                                                        $shareText = urlencode($scheme->title ?? 'Check this out!');
+                                                    @endphp
 
-                                                <div class="d-flex gap-8 align-items-center">
-                                                    {{-- LinkedIn Share --}}
-                                                    <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ $currentUrl }}"
-                                                        target="_blank">
-                                                        <img class="links-icon"
-                                                            src="{{ asset('resource/web/assets/media/vector/linkedin.png') }}"
-                                                            alt="LinkedIn">
-                                                    </a>
+                                                    <div class="d-flex gap-8 align-items-center">
+                                                        {{-- LinkedIn Share --}}
+                                                        <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ $currentUrl }}"
+                                                            target="_blank">
+                                                            <img class="links-icon"
+                                                                src="{{ asset('resource/web/assets/media/vector/linkedin.png') }}"
+                                                                alt="LinkedIn">
+                                                        </a>
 
-                                                    {{-- Facebook Share --}}
-                                                    <a href="https://www.facebook.com/sharer/sharer.php?u={{ $currentUrl }}"
-                                                        target="_blank">
-                                                        <img class="links-icon"
-                                                            src="{{ asset('resource/web/assets/media/vector/facebook.png') }}"
-                                                            alt="Facebook">
-                                                    </a>
+                                                        {{-- Facebook Share --}}
+                                                        <a href="https://www.facebook.com/sharer/sharer.php?u={{ $currentUrl }}"
+                                                            target="_blank">
+                                                            <img class="links-icon"
+                                                                src="{{ asset('resource/web/assets/media/vector/facebook.png') }}"
+                                                                alt="Facebook">
+                                                        </a>
 
-                                                    {{-- Twitter (X) Share --}}
-                                                    <a href="https://twitter.com/intent/tweet?url={{ $currentUrl }}&text={{ $shareText }}"
-                                                        target="_blank">
-                                                        <img class="links-icon"
-                                                            src="{{ asset('resource/web/assets/media/vector/twitter.webp') }}"
-                                                            alt="Twitter">
-                                                    </a>
+                                                        {{-- Twitter (X) Share --}}
+                                                        <a href="https://twitter.com/intent/tweet?url={{ $currentUrl }}&text={{ $shareText }}"
+                                                            target="_blank">
+                                                            <img class="links-icon"
+                                                                src="{{ asset('resource/web/assets/media/vector/twitter.webp') }}"
+                                                                alt="Twitter">
+                                                        </a>
 
-                                                    {{-- Instagram: Not directly shareable via URL --}}
-                                                    <a href="https://www.instagram.com/" target="_blank">
-                                                        <img class="links-icon"
-                                                            src="{{ asset('resource/web/assets/media/vector/instagram.webp') }}"
-                                                            alt="Instagram">
-                                                    </a>
+                                                        {{-- Instagram: Not directly shareable via URL --}}
+                                                        <a href="https://www.instagram.com/" target="_blank">
+                                                            <img class="links-icon"
+                                                                src="{{ asset('resource/web/assets/media/vector/instagram.webp') }}"
+                                                                alt="Instagram">
+                                                        </a>
+                                                    </div>
+
                                                 </div>
-
                                             </div>
                                         </div>
-                                    </div>
+                                    </a>
                                 </div>
                             @endforeach
                         </div>

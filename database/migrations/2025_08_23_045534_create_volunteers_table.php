@@ -13,13 +13,19 @@ return new class extends Migration
     {
         Schema::create('volunteers', function (Blueprint $table) {
             $table->id();
-            $table->string('name');                       // Volunteer Name
-            $table->string('mobile');                     // Mobile Number
-            $table->enum('gender', ['Male','Female','Other']); // Gender
-            $table->date('dob');                          // Date of Birth
-            $table->string('qualification')->nullable();  // Qualification
-            $table->string('location');                   // Location
-            $table->enum('experience', ['Yes','No']);     // Volunteer Experience
+            $table->string('name');                                      // Volunteer Name
+            $table->string('mobile');                                    // Mobile Number
+            $table->enum('gender', ['Male','Female','Other']);           // Gender
+            $table->date('dob');                                         // Date of Birth
+            $table->string('qualification')->nullable();                 // Qualification
+            $table->string('location');                                  // Location
+            $table->enum('experience', ['Yes','No']);                    // Volunteer Experience
+
+            // New fields
+            $table->json('skills')->nullable();                          // Multiple skills (JSON)
+            $table->json('interests')->nullable();                       // Multiple areas of interest (JSON)
+            $table->enum('preferred_mode', ['Online','On-site','Both']); // Preferred Mode
+
             $table->timestamps();
         });
     }
