@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container py-5">
-    <h2 class="mb-4">Blog & Publications</h2>
+    {{-- <h2 class="mb-4">Blog & Publications</h2> --}}
 
     <form method="GET" action="{{ route('web.blog.filter') }}" class="row g-3 mb-4">
         {{-- Category Filter --}}

@@ -2,11 +2,11 @@
 
 @section('content')
 <div class="container py-5">
-    <h2 class="mb-4">Catalog</h2>
+    {{-- <h2 class="mb-4">Catalog</h2> --}}
 
-    <form method="GET" action="{{ route('web.catalog') }}" class="row g-3 mb-4">
+    <form method="GET" action="{{ route('web.catalog') }}" class="row gx-3 mb-4">
         {{-- Category Filter --}}
-        <div class="col-md-4">
+        <div class="col-md-4 mb-1">
             <select name="category_id" class="form-select">
                 <option value="">All Categories</option>
                 @foreach($categories as $category)
@@ -18,7 +18,7 @@
         </div>
 
         {{-- Type Filter --}}
-        <div class="col-md-4">
+        <div class="col-md-4 mb-1">
             <select name="type" class="form-select">
                 <option value="">All Types</option>
                 <option value="project_1" {{ request('type') == 'project_1' ? 'selected' : '' }}>Ongoing Projects</option>
@@ -29,13 +29,13 @@
         </div>
 
         {{-- Search --}}
-        <div class="col-md-4">
+        <div class="col-md-4 mb-1">
             <input type="text" name="search" value="{{ request('search') }}" class="form-control" placeholder="Search by title">
         </div>
 
         {{-- Submit --}}
-        <div class="col-12">
-            <button type="submit" class="btn btn-primary">Filter</button>
+        <div class="col-12 mb-1">
+            <button type="submit" class="btn btn-primary">Apply Filter</button>
             <a href="{{ route('web.catalog') }}" class="btn btn-secondary">Reset</a>
         </div>
     </form>
