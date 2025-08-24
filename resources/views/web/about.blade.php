@@ -104,7 +104,7 @@
                             </div>
                             <div class="col-md-12">
                                 <div class="w-100">
-                                    <img src="https://d2twr397zv17p4.cloudfront.net/image/discovery-img/about/about3.jpg"
+                                    <img src="https://static.vecteezy.com/system/resources/thumbnails/023/060/798/small_2x/farming-tractor-spraying-plants-in-a-field-photo.jpg"
                                         class="" alt="">
                                 </div>
                             </div>

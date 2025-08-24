@@ -236,9 +236,11 @@
                                     <div class="main-menu__nav">
                                         <ul class="main-menu__list">
                                             <li>
-                                                <a href="/" class="active"> Home</a>
+                                                <a href="/" class="{{ request()->is('/') ? 'active' : '' }}"> Home</a>
                                             </li>
-                                            <li><a href="{{ route('about') }}"> About</a></li>
+                                            <li>
+                                                <a href="{{ route('about') }}" class="{{ request()->routeIs('about') ? 'active' : '' }}"> About</a>
+                                            </li>
                                             <li class="dropdown">
                                                 <a href="javascript:void(0);">Initiatives</a>
                                                 <ul class="sub-menu">
@@ -287,10 +289,13 @@
 
                                                 </ul>
                                             </li>
-                                            <li class="dropdown">
-                                                <a href="{{ route('web.sector') }}"> Sectors </a>
+                                            <li>
+                                                <a href="{{ route('web.sector') }}" class="{{ request()->routeIs('web.sector') ? 'active' : '' }}"> Sectors</a>
                                             </li>
-                                            <li class="dropdown">
+                                           <li>
+                                                <a href="{{ route('web.collaboration') }}" class="{{ request()->routeIs('web.collaboration') ? 'active' : '' }}"> collaboration</a>
+                                            </li>
+                                            {{-- <li class="dropdown">
                                                 <a href="{{ route('web.collaboration') }}">Collaborations</a>
                                                 <ul>
                                                     @foreach ($collaborations as $collaboration)
@@ -299,7 +304,7 @@
                                                         </li>
                                                     @endforeach
                                                 </ul>
-                                            </li>
+                                            </li> --}}
                                             <li class="dropdown">
                                                 <a href="javascript:void(0);">Resources </a>
                                                 <ul>
@@ -317,8 +322,8 @@
                                                             Practices & Case Studies</a></li>
                                                 </ul>
                                             </li>
-                                            <li><a href="{{ route('global') }}">Global Pathways</a></li>
-                                            <li><a href="{{ route('contact') }}">Contact</a></li>
+                                            <li><a href="{{ route('global') }}" class="{{ request()->routeIs('global') ? 'active' : '' }}">Global Pathways</a></li>
+                                            <li><a href="{{ route('contact') }}" class="{{ request()->routeIs('contact') ? 'active' : '' }}">Contact</a></li>
                                         </ul>
                                     </div>
                                 </div>
