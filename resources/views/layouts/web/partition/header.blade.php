@@ -175,7 +175,7 @@
                             <div class="col-md-4 text-end gap-3 order-3 d-flex fs-sm-12 d-none-mobile">
                                 <!-- Register Button -->
                                 <button class="btn btn-warning text-white btn-sm fw-bold px-3 py-2 fs-sm-12"
-                                    data-bs-toggle="modal" data-bs-target="#registerModal">
+                                    data-bs-toggle="modal" data-bs-target="#registerModal" style="background-color: #FF671F">
                                     <i class="fas fa-user me-2"></i> REGISTER
                                 </button>
 
@@ -220,7 +220,7 @@
                             <div class="d-flex align-items-center justify-content-center justify-content-md-end gap-3 order-3 d-block d-md-none">
                                 <!-- Register Button -->
                                 <button class="btn btn-warning text-white btn-sm fw-bold px-3 py-2 fs-sm-12"
-                                    data-bs-toggle="modal" data-bs-target="#registerModal">
+                                    data-bs-toggle="modal" data-bs-target="#registerModal" style="background-color: #FF671F">
                                     <i class="fas fa-user me-2"></i> REGISTER
                                 </button>
 

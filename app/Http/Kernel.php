@@ -26,6 +26,8 @@ class Kernel extends HttpKernel
     protected $routeMiddleware = [
         // other middleware...
         'auth.admin' => \App\Http\Middleware\AdminAuth::class,
+            // Your custom middleware
+        'maintenance' => \App\Http\Middleware\MaintenanceMode::class,
     ];
     /**
      * The application's route middleware groups.
@@ -40,6 +42,7 @@ class Kernel extends HttpKernel
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            \App\Http\Middleware\MaintenanceMode::class,
         ],
 
         'api' => [

