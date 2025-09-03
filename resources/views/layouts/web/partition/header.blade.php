@@ -322,7 +322,7 @@
                                                             Practices & Case Studies</a></li>
                                                 </ul>
                                             </li>
-                                            <li><a href="{{ route('global') }}" class="{{ request()->routeIs('global') ? 'active' : '' }}">Global Pathways</a></li>
+                                            <li><a href="{{ route('web.global.country') }}" class="{{ request()->routeIs('global') ? 'active' : '' }}">Global Pathways</a></li>
                                             <li><a href="{{ route('contact') }}" class="{{ request()->routeIs('contact') ? 'active' : '' }}">Contact</a></li>
                                         </ul>
                                     </div>
@@ -366,7 +366,7 @@
                 <!-- Logo & Heading -->
                 <div class="text-center">
                     <a href="/"> <img src="{{ asset($defaultSettings->site_logo ?? null) }}"
-                            alt="{{ $defaultSettings->site_title ?? null }}" style="height: 54px;"></a>
+                            alt="{{ $defaultSettings->site_title ?? null }}" style="height: auto;"></a>
                     <h4 class="mt-3 fw-bold">Welcome to ISICO Registration</h4>
                     <p class="text-muted">Be part of ISICO’s mission to transform rural communities through education, skills, and entrepreneurship. Register as a learner, partner, or volunteer to learn, collaborate, and empower.</p>
                 </div>

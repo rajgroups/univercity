@@ -103,6 +103,12 @@ Route::middleware(['maintenance'])->group(function () {
     // Sector Routes
     Route::get('/sector', [WebController::class, 'sectors'])->name('web.sector');
 
+    // Sector Routes
+    Route::get('/global/course/country', [WebController::class, 'courseCountry'])->name('web.global.country');
+
+    // global Course
+    Route::get('/global/course', [WebController::class, 'globalcourse'])->name('web.global.course');
+    Route::get('/global/course/{slug}', [WebController::class, 'globalcourseDetails'])->name('web.global.course.show');
     // Course Routes
     Route::get('/course', [WebController::class, 'course'])->name('web.course.index');
     Route::get('/course/{slug}', [WebController::class, 'courseDetails'])->name('web.course.show');

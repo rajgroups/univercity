@@ -5,12 +5,14 @@ use App\Http\Controllers\Admin\AnnouncementController;
 use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\BlogController;
 use App\Http\Controllers\Admin\BrandController;
+use App\Http\Controllers\Admin\CountryController;
 use App\Http\Controllers\Admin\CourseController;
 use App\Http\Controllers\auth\LoginController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\admin\HomeController;
 use App\Http\Controllers\admin\DashboardController;
 use App\Http\Controllers\Admin\EnquiryController;
+use App\Http\Controllers\Admin\IntlCourseController;
 use App\Http\Controllers\Admin\OrganizationController;
 use App\Http\Controllers\Admin\ProjectController;
 use App\Http\Controllers\Admin\SectorController;
@@ -83,6 +85,12 @@ Route::prefix('admin')->as('admin.')->group(function() {
         
         // organization Routes
         Route::resource('volunteer',VolunteerController::class);
+        
+        // Country Routes
+        Route::resource('country',CountryController::class);
+
+        // Country Routes
+        Route::resource('intlcourse',IntlCourseController::class);
     
         // Onrginzation Routes
         // Route::resource('organization',Or::class);

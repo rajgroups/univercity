@@ -95,7 +95,7 @@
 									</ul>
 								</li>
 								<li class="submenu">
-									<a href="javascript:void(0);" class=""><i class="ti ti-world fs-16 me-2"></i><span>Sector</span><span class="menu-arrow"></span></a>
+									<a href="javascript:void(0);" class=""><i class="ti ti-folder fs-16 me-2"></i><span>Sector</span><span class="menu-arrow"></span></a>
 									<ul style="display: none;">
 										<li><a href="{{ route('admin.sectors.index') }}">Sector List</a></li>
 										<li><a href="{{ route('admin.sectors.create') }}">Add Sector</a></li>
@@ -108,6 +108,13 @@
 										<li><a href="{{ route('admin.course.create') }}">Add Course</a></li>
 									</ul>
 								</li>
+								<li class="submenu">
+									<a href="javascript:void(0);" class=""><i class="ti ti-world fs-16 me-2"></i><span>Global Course</span><span class="menu-arrow"></span></a>
+									<ul style="display: none;">
+										<li><a href="{{ route('admin.intlcourse.index') }}">Global Course List</a></li>
+										<li><a href="{{ route('admin.intlcourse.create') }}">Add Global Course</a></li>
+									</ul>
+								</li>	
 								<li class="submenu">
 									<a href="javascript:void(0);" class=""><i class="ti ti-cup fs-16 me-2"></i><span>Event & Competition</span><span class="menu-arrow"></span></a>
 									<ul style="display: none;">
@@ -178,6 +185,9 @@
 									<a href="{{ route('admin.banner.index') }}"><i class="ti ti-device-mobile fs-16 me-2"></i>
 										<span>Banner</span>
 									</a>
+								</li>
+								<li class="submenu-open">
+									<a href="{{ route('admin.country.index') }}"><i class="ti ti-world fs-16 me-2"></i><span>Country</span></a>
 								</li>
 								<li>
 									<a href="#"><i class="ti ti-logout fs-16 me-2"></i><span>Logout</span> </a>

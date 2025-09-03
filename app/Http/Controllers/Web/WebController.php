@@ -9,7 +9,9 @@ use App\Models\Banner;
 use App\Models\Blog;
 use App\Models\Brand;
 use App\Models\Category;
+use App\Models\Country;
 use App\Models\Course;
+use App\Models\IntlCourse;
 use App\Models\Project;
 use App\Models\Sector;
 use App\Models\Testimonial;
@@ -153,6 +155,100 @@ class WebController extends Controller
         return view('web.sector', compact('sectors'));
     }
 
+    public function courseCountry(Request $request)
+    {
+        // dd('hi');
+        $query = Country::where('status', 1);
+
+        if ($request->has('searchQueryInput') && !empty($request->searchQueryInput)) {
+            $search = $request->searchQueryInput;
+            $query->where('name', 'like', "%{$search}%");
+        }
+
+        $country = $query->paginate(8)->appends($request->all()); // Preserve search on pagination
+
+        return view('web.globalpathwaycountry', compact('country'));
+    }
+
+    public function globalcourse(Request $request)
+    {
+        $query = IntlCourse::query();
+
+        // 🔍 Search filter (by title or description)
+        if ($request->has('search') && !empty($request->search)) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%$search%")
+                    ->orWhere('short_description', 'like', "%$search%");
+            });
+        }
+
+        // 🌐 Language filter
+        if ($request->has('languages')) {
+            $query->whereIn('language', $request->input('languages'));
+        }
+
+        // ⏱️ Duration filter
+        if ($request->has('durations')) {
+            $durationConditions = [];
+            foreach ($request->input('durations') as $duration) {
+                if ($duration === '1-2 Hours') {
+                    $durationConditions[] = ['duration', 'like', '%1-2%'];
+                } elseif ($duration === '3+ Hours') {
+                    $durationConditions[] = ['duration', 'like', '%3+%'];
+                }
+            }
+            $query->where(function ($q) use ($durationConditions) {
+                foreach ($durationConditions as $condition) {
+                    $q->orWhere([$condition]);
+                }
+            });
+        }
+
+        // 🎓 Learning Product Type filter
+        if ($request->has('product_types')) {
+            $query->whereIn('learning_product_type', $request->input('product_types'));
+        }
+
+        // 💰 Price filter
+        if ($request->has('prices')) {
+            $query->where(function ($q) use ($request) {
+                if (in_array('Free', $request->input('prices'))) {
+                    $q->orWhere('paid_type', 'Free');
+                }
+                if (in_array('Paid', $request->input('prices'))) {
+                    $q->orWhere('paid_type', 'Paid');
+                }
+            });
+        }
+
+        // 🏭 Sector filter
+        if ($request->has('sectors')) {
+            $query->whereIn('sector_id', $request->input('sectors'));
+        }
+
+        // 🌍 Country filter
+        if ($request->has('countries')) {
+            $query->whereIn('country_id', $request->input('countries'));
+        }
+
+        // 📂 Category filter
+        if ($request->has('categories')) {
+            $query->whereIn('category_id', $request->input('categories'));
+        }
+
+        // 📊 Get results with pagination
+        $courses = $query->paginate(10);
+
+        // Dropdown filter options
+        $sectors = Sector::all(); 
+        $countries = Country::where('status', 1)->get();
+        $categories = Category::where('type', 6)->get();
+
+        return view('web.globalcourse', compact('courses', 'sectors', 'countries', 'categories'));
+    }
+
+
     public function course(Request $request)
     {
         $query = Course::query();
@@ -214,6 +310,50 @@ class WebController extends Controller
         return view('web.course', compact('courses', 'sectors'));
     }
 
+    public function globalcourseDetails(Request $request,$slug){
+        // Find Course Record From Course table
+        $course = IntlCourse::with([
+                'country' => function ($q) {
+                    $q->select('id', 'name'); // ✅ load only id + name
+                },
+                'category' => function ($q) {
+                    $q->select('id', 'name'); // ✅ load only id + name
+                }
+            ])->where('slug',$slug)->first();
+
+        // get All Sectors
+        $sectors = Sector::where('status',1)->get();
+
+
+        // Get other courses except current one
+        $otherCourses = IntlCourse::where('slug', '!=', $slug)->latest()->limit(6)->get();
+
+        // ✅ Fetch latest 2-3 blogss
+        // $blogs = Blog::where('status', 1)->latest()->limit(3)->get();
+
+        // 1=>ongoing,2=>upcoming
+        $ongoingProjects = Project::where('status',1)->where('type',1)->latest()->limit(10)->get();
+        $upcomingProjects = Project::where('status',1)->where('type',2)->latest()->limit(10)->get();
+
+        // 1=>program,2=>Scheme
+        $programes = Announcement::where('status',1)->where('type',1)->latest()->limit(10)->get();
+        $schemes = Announcement::where('status',1)->where('type',2)->latest()->limit(10)->get();
+
+        // Fetch only active banners with image field
+        $banners = Banner::where('status', 1)->select('image')->get();
+                // dd($course);
+        return view('web.globalcoursedetails',compact(
+            'ongoingProjects',
+            'upcomingProjects',
+            'programes',
+            'schemes',
+            'banners',
+            'course',
+            'sectors',
+            'otherCourses',
+            // 'blogs',
+        ));
+    }
     public function courseDetails(Request $request,$slug){
         // Find Course Record From Course table
         $course = Course::where('slug',$slug)->first();
