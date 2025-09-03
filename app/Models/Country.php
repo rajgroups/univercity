@@ -36,6 +36,8 @@ class Country extends Model
         'emojiU',
         'flag',
         'wikiDataId',
+        'status',
+        'image'
     ];
 
     /**
