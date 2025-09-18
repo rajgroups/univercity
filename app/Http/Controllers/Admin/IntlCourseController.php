@@ -76,6 +76,11 @@ class IntlCourseController extends Controller
             'topics'                    => 'nullable|array',
             'topics.*.title'            => 'nullable|string|max:255',
             'topics.*.description'      => 'nullable|string',
+
+            // Added Fields
+            'internship'                => 'required|string|max:255',
+            'visa_proccess'             => 'nullable|string',
+            'other_info '               => 'nullable|string',
         ]);
 
         if ($request->hasFile('image')) {
@@ -172,6 +177,10 @@ class IntlCourseController extends Controller
             'topics'                    => 'nullable|array',
             'topics.*.title'            => 'nullable|string|max:255',
             'topics.*.description'      => 'nullable|string',
+
+            'internship'                => 'required|string|max:255',
+            'visa_proccess'             => 'nullable|string',
+            'other_info '               => 'nullable|string',
         ]);
 
         // Find the course

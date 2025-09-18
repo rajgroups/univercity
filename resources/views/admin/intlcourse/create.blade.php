@@ -156,11 +156,29 @@
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
-
+                {{-- Long Description --}}
                 <div class="col-md-12">
                     <label class="form-label">Long Description</label>
                     <textarea class="form-control @error('long_description') is-invalid @enderror" name="long_description" rows="4" id="long_description">{{ old('long_description') }}</textarea>
                     @error('long_description')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                {{-- visa_proccess --}}
+                 <div class="col-md-12">
+                    <label class="form-label">Visa Process</label>
+                    <textarea class="form-control @error('visa_proccess') is-invalid @enderror" name="visa_proccess" rows="4" id="visa_proccess">{{ old('visa_proccess') }}</textarea>
+                    @error('visa_proccess')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                {{-- other_importent --}}
+                 <div class="col-md-12">
+                    <label class="form-label">Other Importent Info</label>
+                    <textarea class="form-control @error('other_info') is-invalid @enderror" name="other_info" rows="4" id="other_info">{{ old('other_info') }}</textarea>
+                    @error('other_info')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
@@ -366,6 +384,18 @@
                     @enderror
                 </div>
 
+                <!-- Internshipe -->
+                <div class="col-md-4">
+                    <label class="form-label">Is Internship?</label>
+                    <select name="internship" class="form-select @error('internship') is-invalid @enderror">
+                        <option value="0" {{ old('internship', 0) == 0 ? 'selected' : '' }}>No</option>
+                        <option value="1" {{ old('internship') == 1 ? 'selected' : '' }}>Yes</option>
+                    </select>
+                    @error('internship')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
                 <div class="col-md-4">
                      <div class="mb-3">
                         <label class="form-label">Status <span class="text-danger">*</span></label>
@@ -424,17 +454,17 @@ $(document).on('click', '.remove-topic', function () {
 });
 </script>
     <script>
-        $(document).ready(function() {
-            $('#long_description').summernote({
-                height: 200,
-                toolbar: [
-                    ['style', ['bold', 'italic', 'underline', 'clear']],
-                    ['para', ['ul', 'ol', 'paragraph']],
-                    ['insert', ['link', 'picture']],
-                    ['view', ['fullscreen', 'codeview']]
-                ],
-                placeholder: 'Write your project description here (max 60 words)...'
-            });
-        });
+$(document).ready(function() {
+  $('#long_description, #other_info, #visa_proccess, #terms_conditions, #extra_notes').summernote({
+    height: 200,
+    toolbar: [
+      ['style', ['bold', 'italic', 'underline', 'clear']],
+      ['para', ['ul', 'ol', 'paragraph']],
+      ['insert', ['link', 'picture']],
+      ['view', ['fullscreen', 'codeview']]
+    ],
+    placeholder: 'Write your project description here (max 60 words)...'
+  });
+});
     </script>
 @endpush

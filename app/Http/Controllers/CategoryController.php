@@ -23,7 +23,7 @@ class CategoryController extends Controller
     {
         $validated = $request->validate([
             'name'              => 'required|string|max:255|unique:category,name',
-            'type'              => 'required|in:1,2,3,4,5',
+            'type'              => 'required|in:1,2,3,4,5,6',
             'image'             => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'meta_title'        => 'nullable|string|max:255',
             'status'            => 'required|in:0,1',
@@ -61,7 +61,7 @@ class CategoryController extends Controller
         $validated = $request->validate([
             'name'              => 'required|string|max:255|unique:category,name,' . $category->id,
             'status'            => 'required|in:0,1',
-            'type'              => 'required|in:1,2,3,4,5',
+            'type'              => 'required|in:1,2,3,4,5,6',
             'image'             => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'meta_title'        => 'nullable|string|max:255',
             'meta_description'  => 'nullable|string|max:255',

@@ -134,6 +134,10 @@
             <div class="row row-gap-4">
                 <div class="col-lg-8">
                     {!! $course->long_description !!}
+                    <h3 class="p-3">Visa Proccess</h3>
+                    {!! $course->visa_proccess !!}
+                     <h3 class="p-3">Important Updates</h3>
+                    {!! $course->other_info !!}
                     {{-- <img src="{{ asset($course->image) }}" alt="Course Image" class="img-fluid mb-3" style="width: 100%"> --}}
                 </div>
                 <div class="col-lg-4">
@@ -262,6 +266,14 @@
                 <button class="nav-link" id="tab4-tab" data-bs-toggle="tab" data-bs-target="#tab4" type="button"
                     role="tab">Elibibility Criteria</button>
             </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tab5-tab" data-bs-toggle="tab" data-bs-target="#tab5" type="button"
+                    role="tab">Visa Proccess</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tab6-tab" data-bs-toggle="tab" data-bs-target="#tab6" type="button"
+                    role="tab">Importent Updates</button>
+            </li>
         </ul>
 
         <div class="tab-content" id="myTabContent">
@@ -345,6 +357,24 @@
                                 </div>
                             </div>
                         @endif
+                        @if ($course->internship)
+                            <div class="col-md-3 mb-3">
+                                <div class="d-flex align-items-start">
+                                    <i class="bi bi-person-workspace fs-3 me-3 text-dark"></i>
+                                    <div>
+                                        <h6 class="mb-1">Internship</h6>
+                                         <p class="mb-0 text-muted">
+                                            @if ($course->internship == 1)
+                                                <span class="badge bg-success">Available</span>
+                                            @else
+                                                <span class="badge bg-danger">Not Available</span>
+                                            @endif
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+
                     </div>
                 </div>
 
@@ -502,6 +532,12 @@
                 </div>
 
             </div>
+             <div class="tab-pane fade" id="tab5" role="tabpanel">
+                <p> {!! $course->visa_proccess !!}</p>
+             </div>
+             <div class="tab-pane fade" id="tab6" role="tabpanel">
+                <p> {!! $course->other_info !!}</p>
+             </div>
         </div>
     </div>
     <!-- Our Programmes -->

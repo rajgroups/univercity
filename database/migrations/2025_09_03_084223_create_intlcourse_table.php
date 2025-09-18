@@ -44,6 +44,8 @@ return new class extends Migration
 
             $table->text('short_description')->nullable();
             $table->longText('long_description')->nullable(); // For detailed course info
+            $table->longText('visa_proccess')->nullable(); // For visa_proccess detailed course info
+            $table->longText('other_info')->nullable(); // For other_info detailed course info
 
             $table->string('provider')->nullable(); // Training Partner
             $table->string('language')->default('English');
@@ -69,6 +71,7 @@ return new class extends Migration
 
             $table->json('topics')->nullable(); // Dynamic inputs as JSON
             $table->boolean('is_featured')->default(0); // For home page highlighting
+            $table->boolean('internship')->default(0); // For home page highlighting
             $table->boolean('status')->default(1)->comment('1 => Active, 0 => Inactive');
             $table->date('start_date')->nullable(); // Optional
             $table->date('end_date')->nullable(); // Optional

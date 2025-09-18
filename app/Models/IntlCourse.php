@@ -46,12 +46,15 @@ class IntlCourse extends Model
         'start_date',
         'end_date',
         'enrollment_count',
+        'internship',
+        'visa_proccess',
+        'other_info',
     ];
 
     /**
      * Relationships
      */
-    
+
     protected $casts = [
         'topics' => 'array', // JSON field
         'is_featured' => 'boolean',

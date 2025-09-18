@@ -83,12 +83,13 @@
                                             <option value="3" {{ old('type') == 3 ? 'selected' : '' }}>Women Scheme</option>
                                             <option value="4" {{ old('type') == 4 ? 'selected' : '' }}>General Scheme</option>
                                             <option value="5" {{ old('type') == 5 ? 'selected' : '' }}>Course</option>
+                                            <option value="6" {{ old('type') == 6 ? 'selected' : '' }}>Intl Course</option>
                                         </select>
                                         @error('type')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                                     </div>
-                                </div>  
+                                </div>
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <label class="form-label">Status <span class="text-danger">*</span></label>
@@ -103,7 +104,7 @@
                                     </div>
                                 </div>
                             </div>
-                            
+
 
                             <div class="d-flex justify-content-end mt-4">
                                 <a href="{{ route('admin.category.index') }}" class="btn btn-secondary me-2">Cancel</a>
