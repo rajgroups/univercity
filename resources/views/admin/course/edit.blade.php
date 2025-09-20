@@ -215,12 +215,15 @@
                 <!-- Learning Product, Program, Domain -->
                 <div class="col-md-4">
                     <label class="form-label">Learning Product Type</label>
-                    <input type="text" class="form-control @error('learning_product_type') is-invalid @enderror"
-                           name="learning_product_type" value="{{ old('learning_product_type', $course->learning_product_type) }}">
+                     <select name="learning_product_type" class="form-select @error('learning_product_type') is-invalid @enderror">
+                        <option value="Offline" {{ old('learning_product_type',$course->learning_product_type) == 'Offline' ? 'selected' : '' }}>Offline</option>
+                        <option value="Online" {{ old('learning_product_type',$course->learning_product_type) == 'Online' ? 'selected' : '' }}>Online</option>
+                    </select>
                     @error('learning_product_type')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
+
                 <div class="col-md-4">
                     <label class="form-label">Program By</label>
                     <input type="text" class="form-control @error('program_by') is-invalid @enderror"

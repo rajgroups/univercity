@@ -20,7 +20,7 @@
             </li>
         </ul>
         <div class="page-btn mt-0">
-            <a href="{{ route('admin.course.index') }}" class="btn btn-secondary">
+            <a href="{{ route('admin.intlcourse.index') }}" class="btn btn-secondary">
                 <i class="feather feather-arrow-left me-2"></i>Back to List
             </a>
         </div>

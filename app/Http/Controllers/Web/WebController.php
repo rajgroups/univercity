@@ -143,7 +143,7 @@ class WebController extends Controller
 
     public function sectors(Request $request)
     {
-        $query = Sector::where('status', 1);
+        $query = Sector::where('status', 1)->where('type',1);
 
         if ($request->has('searchQueryInput') && !empty($request->searchQueryInput)) {
             $search = $request->searchQueryInput;
@@ -172,7 +172,11 @@ class WebController extends Controller
 
     public function globalcourse(Request $request)
     {
+
         $query = IntlCourse::query();
+
+        // ✅ Must Active Course Only
+        $query->where('status', 1);
 
         // 🔍 Search filter (by title or description)
         if ($request->has('search') && !empty($request->search)) {
@@ -228,8 +232,8 @@ class WebController extends Controller
         }
 
         // 🌍 Country filter
-        if ($request->has('countries')) {
-            $query->whereIn('country_id', $request->input('countries'));
+        if ($request->has('country')) {
+            $query->whereIn('country_id', $request->input('country'));
         }
 
         // 📂 Category filter
@@ -241,7 +245,7 @@ class WebController extends Controller
         $courses = $query->paginate(10);
 
         // Dropdown filter options
-        $sectors = Sector::all(); 
+        $sectors = Sector::where('type',2)->get();
         $countries = Country::where('status', 1)->get();
         $categories = Category::where('type', 6)->get();
 
@@ -305,7 +309,7 @@ class WebController extends Controller
         }
 
         $courses = $query->paginate(10);
-        $sectors = Sector::all(); // For sector filter options
+        $sectors = Sector::where('type',1)->get(); // For sector filter options
 
         return view('web.course', compact('courses', 'sectors'));
     }
@@ -426,7 +430,7 @@ class WebController extends Controller
             $announcements->where('title', 'like', '%' . $request->search . '%');
         }
 
-        
+
         // Fetch and tag type for frontend
         $projectResults = $projects->get()->map(function ($item) {
             $item->type_label = $item->type == 1 ? 'Ongoing' : 'Upcoming';

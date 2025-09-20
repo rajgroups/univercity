@@ -91,9 +91,20 @@
                                     @enderror
                                 </div>
                             </div>
+                                        <div class="col-md-6 col-12">
+                                            <div class="mb-3">
+                                                <label class="form-label">Type <span class="text-danger">*</span></label>
+                                                <select name="type" class="form-select @error('type') is-invalid @enderror">
+                                                    <option value="">Select</option>
+                                                    <option value="1" {{ old('type') == 1 ? 'selected' : '' }}>Normal</option>
+                                                    <option value="2" {{ old('type') == 2 ? 'selected' : '' }}>INTL</option>
+                                                </select>
+                                                @error('type')
+                                                    <div class="invalid-feedback">{{ $message }}</div>
+                                                @enderror
+                                            </div>
+                                        </div>
 
-
-                            <div class="row">
                                 <div class="col-sm-6 col-12">
                                     <div class="mb-3">
                                         <label class="form-label">Image <span class="text-danger">*</span></label>

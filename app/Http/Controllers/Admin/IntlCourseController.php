@@ -28,7 +28,7 @@ class IntlCourseController extends Controller
     public function create()
     {
         // Create Course
-        $sectors = Sector::where('status', 1)->get();
+        $sectors = Sector::where('status', 1)->where('type',2)->get();
         $countrys = Country::where('status',1)->get();
         $categories = Category::where('type',6)->get();
         return view('admin.intlcourse.create', compact('sectors','countrys','categories'));
@@ -110,7 +110,7 @@ class IntlCourseController extends Controller
         // Create the course
         $course = IntlCourse::create($validated);
         notyf()->addSuccess('Course created successfully!');
-        return redirect()->route('admin.course.index')
+        return redirect()->route('admin.intlcourse.index')
             ->with('success', 'Course created successfully!');
     }
 
@@ -130,7 +130,7 @@ class IntlCourseController extends Controller
         $course = IntlCourse::findOrFail($id); // This will throw 404 if not found
         $countrys = Country::where('status',1)->get();
         $categories = Category::where('type',6)->get();
-        $sectors = Sector::all();
+        $sectors = Sector::where('status', 1)->where('type',2)->get();
         return view('admin.intlcourse.edit', compact('course', 'sectors','countrys','categories'));
     }
 

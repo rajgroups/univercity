@@ -234,7 +234,7 @@
                             <div class="tag-block">
                                 @forelse ($otherCourses as $other)
                                     <a href="{{ route('web.course.show', $other->slug) }}">
-                                        {{ $other->title }}
+                                        {{ $other->name }}
                                     </a>
                                 @empty
                                     <div class="alert alert-warning">No other courses found.</div>

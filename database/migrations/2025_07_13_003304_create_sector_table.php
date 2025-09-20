@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('slug')->unique();
             $table->string('image')->nullable();
+            $table->tinyInteger('type')->nullable()->comment('1=>normal course,2=>intl course ')->default(1);
             $table->boolean('status');
             $table->longText('description')->nullable();
             $table->timestamps();

@@ -26,7 +26,8 @@ class CourseController extends Controller
     public function create()
     {
         // Create Course
-        $sectors = Sector::where('status', 1)->get();
+        $sectors = Sector::where('status',1)->where('type',1)->get();
+        // dd($sectors);
         return view('admin.course.create', compact('sectors'));
     }
 
@@ -117,7 +118,7 @@ class CourseController extends Controller
     public function edit($id)
     {
         $course = Course::findOrFail($id); // This will throw 404 if not found
-        $sectors = Sector::all();
+        $sectors = Sector::where('type',1)->where('status',1)->get();
         return view('admin.course.edit', compact('course', 'sectors'));
     }
 

@@ -18,7 +18,7 @@
         </ul>
         <div class="page-btn">
             <a href="{{ route('admin.intlcourse.create') }}" class="btn btn-primary"><i class="ti ti-circle-plus me-1"></i>Add
-                Course</a>
+                Intl Course</a>
         </div>
     </div>
     {{-- Success Message --}}

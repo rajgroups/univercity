@@ -44,6 +44,7 @@ class SectorController extends Controller
         $request->validate([
             'name'        => 'required|string|max:255',
             'slug'        => 'required|string|max:255|unique:sectors,slug',
+            'type'        => 'required|in:1,2',
             'image'       => 'required|image',
             'status'      => 'required|in:0,1',
             'description' => 'required|string',
@@ -60,7 +61,8 @@ class SectorController extends Controller
         $sector = new Sector;
         $sector->name        = $request->name;
         $sector->slug        = $request->slug;
-        $sector->image       = $imagePath; // 👈 Save full path
+        $sector->image       = $imagePath;
+        $sector->type        = $request->type;
         $sector->status      = $request->status;
         $sector->description = $request->description;
         $sector->save();
@@ -96,6 +98,7 @@ class SectorController extends Controller
         $validated = $request->validate([
             'name'          => 'required|string|max:255',
             'slug'          => 'required|string|max:255|unique:sectors,slug,' . $sector->id,
+            'type'          => 'required|in:1,2',
             'status'        => 'required|in:1,0',
             'description'   => 'required|string',
             'image'         => 'nullable|image|max:2048',

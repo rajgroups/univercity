@@ -65,6 +65,7 @@
                         <tr>
                             <th>S.No</th>
                             <th>Sector</th>
+                            <th>Type</th>
                             <th>Slug</th>
                             <th>Created On</th>
                             <th>Status</th>
@@ -76,6 +77,14 @@
                             <tr>
                                 <td>{{ $loop->index + 1 }}</td>
                                 <td>{{ $sector->name }}</td>
+                                <td>
+                                    @if($sector->type == 0)
+                                        Normal
+                                    @else
+                                                        INTL
+
+                                    @endif
+                                </td>
                                 <td>{{ $sector->slug }}</td>
                                 <td>{{ $sector->created_at->format('d M Y') }}</td>
                                 <td>

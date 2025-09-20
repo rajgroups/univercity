@@ -13,6 +13,7 @@ class Sector extends Model
         'name',
         'slug',
         'image',
+        'type',
         'status',
         'description',
     ];

@@ -301,12 +301,14 @@
                                             </div>
 
                                             <!-- Credits and Rating -->
-                                            <div class="d-flex justify-content-between mt-2">
-                                                <span class="text-muted small">
-                                                    {{ $course->credits_assigned ?? 'No Credit' }}
-                                                </span>
-                                                <span class="rating-stars">★ 0.0 (0 review)</span>
-                                            </div>
+                                            @if($course->credits_assigned)
+                                                <div class="d-flex justify-content-between mt-2">
+                                                    <span class="text-muted small">
+                                                        {{ $course->credits_assigned ?? 'No Credit' }}
+                                                    </span>
+                                                    <span class="rating-stars">★ 0.0 (0 review)</span>
+                                                </div>
+                                            @endif
 
                                             <!-- Apply Button -->
                                             <div class="mt-2">
