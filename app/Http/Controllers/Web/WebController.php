@@ -143,14 +143,20 @@ class WebController extends Controller
 
     public function sectors(Request $request)
     {
-        $query = Sector::where('status', 1)->where('type',1);
+        // dd('hi');
+        $query = Sector::where('status', 1)
+            ->where('type', 1);
 
-        if ($request->has('searchQueryInput') && !empty($request->searchQueryInput)) {
+        if ($request->filled('searchQueryInput')) {
             $search = $request->searchQueryInput;
             $query->where('name', 'like', "%{$search}%");
         }
 
-        $sectors = $query->paginate(8)->appends($request->all()); // Preserve search on pagination
+        // 🔽 Order sectors by position first, then by name (or created_at as fallback)
+        $sectors = $query->orderBy('position', 'asc')
+            ->orderBy('created_at', 'desc')
+            ->paginate(8)
+            ->appends($request->all()); // Preserve search on pagination
 
         return view('web.sector', compact('sectors'));
     }

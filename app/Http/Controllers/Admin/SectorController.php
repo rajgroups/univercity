@@ -47,6 +47,7 @@ class SectorController extends Controller
             'type'        => 'required|in:1,2',
             'image'       => 'required|image',
             'status'      => 'required|in:0,1',
+            'position'    => 'required|integer|min:0',
             'description' => 'required|string',
         ]);
 
@@ -64,6 +65,7 @@ class SectorController extends Controller
         $sector->image       = $imagePath;
         $sector->type        = $request->type;
         $sector->status      = $request->status;
+        $sector->position    = $request->position;
         $sector->description = $request->description;
         $sector->save();
 
@@ -101,6 +103,7 @@ class SectorController extends Controller
             'type'          => 'required|in:1,2',
             'status'        => 'required|in:1,0',
             'description'   => 'required|string',
+            'position'      => 'required|integer|min:0',
             'image'         => 'nullable|image|max:2048',
         ]);
 
@@ -139,7 +142,4 @@ class SectorController extends Controller
             return redirect()->back()->with('error', 'Something went wrong while deleting the sector.');
         }
     }
-
-
-
 }
