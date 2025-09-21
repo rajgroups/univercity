@@ -65,6 +65,7 @@
                         <tr>
                             <th>S.No</th>
                             <th>Sector</th>
+                            <th>Position</th>
                             <th>Type</th>
                             <th>Slug</th>
                             <th>Created On</th>
@@ -77,6 +78,7 @@
                             <tr>
                                 <td>{{ $loop->index + 1 }}</td>
                                 <td>{{ $sector->name }}</td>
+                                <td>{{ $sector->position ?? NULL }}</td>
                                 <td>
                                     @if($sector->type == 0)
                                         Normal
