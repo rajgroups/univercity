@@ -257,7 +257,7 @@
                             <button type="submit" class="btn btn-primary">
                                 <i class="bi bi-funnel me-1"></i> Apply Filters
                             </button>
-                            <a href="{{ route('web.course.index') }}" class="btn btn-outline-secondary">
+                            <a href="{{ route('web.global.course') }}" class="btn btn-outline-secondary">
                                 <i class="bi bi-arrow-counterclockwise me-1"></i> Reset All
                             </a>
                         </div>

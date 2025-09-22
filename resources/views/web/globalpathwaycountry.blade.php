@@ -101,11 +101,11 @@
                         @foreach ($country as $item)
                              <div class="col-lg-3 col-md-6">
                                 <div class="course-card">
-                                    <a href="{{ route('web.global.course', ['country[]' => $item->id]) }}" class="card-img">
+                                    <a href="{{ route('web.global.course', ['countries[]' => $item->id]) }}" class="card-img">
                                         <img src="{{ asset($item->image)}}" alt="img">
                                     </a>
                                     <div class="card-content">
-                                        <a href="{{ route('web.global.course', ['country[]' => $item->id]) }}" class="h5 fw-500 mb-16">{{ $item->name }}</a>
+                                        <a href="{{ route('web.global.course', ['countries[]' => $item->id]) }}" class="h5 fw-500 mb-16">{{ $item->name }}</a>
                                         <p>{{ \Illuminate\Support\Str::limit(strip_tags($item->description), 100) }}</p>
                                     </div>
                                 </div>

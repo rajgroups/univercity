@@ -82,6 +82,15 @@ class IntlCourseController extends Controller
             'visa_proccess'             => 'nullable|string',
             'other_info '               => 'nullable|string',
         ]);
+            // Generate slug
+        $slug = Str::slug($validated['name']);
+        // ✅ Check if slug already exists
+        if (IntlCourse::where('slug', $slug)->exists()) {
+            notyf()->addError('A course with a similar name already exists. Please choose a different name');
+            return back()
+                ->withErrors(['name' => 'A course with a similar name already exists. Please choose a different name.'])
+                ->withInput();
+        }
 
         if ($request->hasFile('image')) {
             $image = $request->file('image');

@@ -49,85 +49,85 @@
             </div>
         </div>
     </section>
-    <div class="container-fluid mt-5">
-        <div class="row">
-            <div class="col-md-12 col-lg-6">
-                <div id="prodetailsslider" class="carousel slide" data-bs-ride="carousel">
-                    <ol class="carousel-indicators">
-                        <li data-bs-target="#carouselId" data-bs-slide-to="0" class="active" aria-current="true"
-                            aria-label="First slide"></li>
-                        <li data-bs-target="#carouselId" data-bs-slide-to="1" aria-label="Second slide"></li>
-                        <li data-bs-target="#carouselId" data-bs-slide-to="2" aria-label="Third slide"></li>
-                    </ol>
-                    <div class="carousel-inner" role="listbox">
-                        <div class="carousel-item active">
-                            <img src="{{ asset($course->image) }}" class="w-100 d-block" alt="First slide" />
-                        </div>
+<div class="container mt-5">
+    <div class="row g-4">
+        <!-- Carousel / Image Slider -->
+        <div class="col-lg-6">
+            <div id="prodetailsslider" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <img src="{{ asset($course->image) }}" class="d-block w-100 rounded" alt="Course Image">
                     </div>
-                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselId" data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Previous</span>
-                    </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#carouselId" data-bs-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Next</span>
-                    </button>
+                    <!-- Add more carousel items if needed -->
+                </div>
+
+                <button class="carousel-control-prev" type="button" data-bs-target="#prodetailsslider" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#prodetailsslider" data-bs-slide="next">
+                    <span class="carousel-control-next-icon"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+
+                <!-- Optional indicators -->
+                <div class="carousel-indicators mt-3">
+                    <button type="button" data-bs-target="#prodetailsslider" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                    <button type="button" data-bs-target="#prodetailsslider" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                    <button type="button" data-bs-target="#prodetailsslider" data-bs-slide-to="2" aria-label="Slide 3"></button>
                 </div>
             </div>
-            <div class="col-md-12 col-lg-6">
-                <div class="card text-start">
-                    <!-- <img class="card-img-top" src="holder.js/100px180/" alt="Title" /> -->
-                    <div class="card-body">
-                        <div class="pt-3 pb-3 course-info">
-                            <h4 class="card-title">{{ $course->name ?? null }}</h4>
-                        </div>
-                        <div class="course-provider d-flex align-items-center gap-20">
-                            <div class="course-provider-name"><a>{{ $course->provider ?? null }}</a></div>
-                            <div class="course-ratings"><!----></div>
-                            <div class="course-payment">
-                                <h6>
-                                    @if ($course->paid_type == 'Free')
-                                        <i class="fas fa-badge-check text-success"></i> Free
-                                    @else
-                                        <i class="fas fa-money-bill-wave text-warning"></i> Paid
-                                    @endif
-                                </h6>
-                            </div>
-                        </div>
-                        <div
-                            class="course-sector-info d-flex flex-column flex-md-row justify-content-evenly align-items-center text-light-gray pt-2 pb-2">
-                            <p>{{ $course->program_by ?? null }}</p>
-                            <p><i class="fa fa-users"></i>&nbsp;&nbsp;{{ $course->enrollment_count ?? null }}+ Enrolled
-                            </p>
+        </div>
 
-                            <p><i class="fa fa-clock" aria-hidden="true"></i>&nbsp;&nbsp; {{ $course->duration ?? null }}
-                                Minutes</p>
-                        </div>
-                        <div class="row">
-                            @if($course->country)
-                                <div class="col-md-6 d-flex align-items-center mb-2">
-                                    <i class="fas fa-flag text-primary me-2"></i>
-                                    <span>{{ $course->country->name }}</span>
-                                </div>
-                            @endif
+        <!-- Course Info Card -->
+        <div class="col-lg-6">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body d-flex flex-column">
+                    <h3 class="card-title mb-3">{{ $course->name ?? '' }}</h3>
 
-                            @if($course->category)
-                                <div class="col-md-6 d-flex align-items-center mb-2">
-                                    <i class="fas fa-layer-group text-info me-2"></i>
-                                    <span>{{ $course->category->name }}</span>
-                                </div>
-                            @endif
-                        </div>
-                        <div class="course-short-desc pt-3 text-secondary">
-                            <p class="">{!! $course->short_description ?? null !!}</p>
-                        </div>
+                    <div class="d-flex flex-wrap align-items-center gap-3 mb-3">
+                        <span class="badge bg-primary">{{ $course->provider ?? 'Unknown Provider' }}</span>
+
+                        @if ($course->paid_type == 'Free')
+                            <span class="badge bg-success"><i class="fas fa-check-circle me-1"></i>Free</span>
+                        @else
+                            <span class="badge bg-warning text-dark"><i class="fas fa-money-bill-wave me-1"></i>Paid</span>
+                        @endif
                     </div>
 
+                    <div class="d-flex flex-wrap gap-3 text-muted mb-3">
+                        <small><i class="fa fa-users me-1"></i>{{ $course->enrollment_count ?? 0 }}+ Enrolled</small>
+                        <small><i class="fa fa-clock me-1"></i>{{ $course->duration ?? 0 }} Minutes</small>
+                        <small>{{ $course->program_by ?? 'N/A' }}</small>
+                    </div>
+
+                    <div class="row mb-3">
+                        @if($course->country)
+                        <div class="col-6 d-flex align-items-center mb-2">
+                            <i class="fas fa-flag text-primary me-2"></i>
+                            <span>{{ $course->country->name }}</span>
+                        </div>
+                        @endif
+
+                        @if($course->category)
+                        <div class="col-6 d-flex align-items-center mb-2">
+                            <i class="fas fa-layer-group text-info me-2"></i>
+                            <span>{{ $course->category->name }}</span>
+                        </div>
+                        @endif
+                    </div>
+
+                    <p class="text-secondary">{!! $course->short_description ?? '' !!}</p>
+
+                    <div class="mt-auto">
+                        <a href="#" class="btn btn-primary w-100">Enroll Now</a>
+                    </div>
                 </div>
             </div>
-
         </div>
     </div>
+</div>
+
     <!-- BLog Detail Section Start -->
     <section class="blog-detail-sec mt-5">
         <div class="container-fluid">
@@ -233,7 +233,7 @@
                             <h5 class="fw-500 mb-24">Other Courses</h5>
                             <div class="tag-block">
                                 @forelse ($otherCourses as $other)
-                                    <a href="{{ route('web.course.show', $other->slug) }}">
+                                    <a href="{{ route('web.global.course.show', $other->slug) }}">
                                         {{ $other->name }}
                                     </a>
                                 @empty
