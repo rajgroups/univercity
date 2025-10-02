@@ -1,3 +1,12 @@
+-- Specifically ensure emoji fields can store 4-byte chars
+ALTER TABLE countries 
+    MODIFY emoji VARCHAR(191) 
+    CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL;
+
+ALTER TABLE countries 
+    MODIFY emojiU VARCHAR(191) 
+    CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL;
+    
 INSERT INTO `countries` (`id`, `name`, `iso3`, `numeric_code`, `iso2`, `phonecode`, `capital`, `currency`, `currency_name`, `currency_symbol`, `tld`, `native`, `region`, `region_id`, `subregion`, `subregion_id`, `nationality`, `timezones`, `translations`, `latitude`, `longitude`, `emoji`, `emojiU`, `created_at`, `updated_at`, `flag`, `wikiDataId`, `image`, `status`) VALUES
 (1, 'Afghanistan', 'AFG', '004', 'AF', '93', 'Kabul', 'AFN', 'Afghan afghani', '؋', '.af', 'افغانستان', 'Asia', 3, 'Southern Asia', 14, 'Afghan', '[{\"zoneName\":\"Asia/Kabul\",\"gmtOffset\":16200,\"gmtOffsetName\":\"UTC+04:30\",\"abbreviation\":\"AFT\",\"tzName\":\"Afghanistan Time\"}]', '{\"br\": \"Afghanistan\",\"ko\":\"아프가니스탄\",\"pt-BR\":\"Afeganistão\",\"pt\":\"Afeganistão\",\"nl\":\"Afghanistan\",\"hr\":\"Afganistan\",\"fa\":\"افغانستان\",\"de\":\"Afghanistan\",\"es\":\"Afganistán\",\"fr\":\"Afghanistan\",\"ja\":\"アフガニスタン\",\"it\":\"Afghanistan\",\"zh-CN\":\"阿富汗\",\"tr\":\"Afganistan\",\"ru\":\"Афганистан\",\"uk\":\"Афганістан\",\"pl\":\"Afganistan\"}', 33.00000000, 65.00000000, '🇦🇫', 'U+1F1E6 U+1F1EB', '2018-07-21 07:11:03', '2023-08-08 21:04:58', 1, 'Q889', NULL, 1),
 (2, 'Aland Islands', 'ALA', '248', 'AX', '358', 'Mariehamn', 'EUR', 'Euro', '€', '.ax', 'Åland', 'Europe', 4, 'Northern Europe', 18, 'Aland Island', '[{\"zoneName\":\"Europe/Mariehamn\",\"gmtOffset\":7200,\"gmtOffsetName\":\"UTC+02:00\",\"abbreviation\":\"EET\",\"tzName\":\"Eastern European Time\"}]', '{\"br\": \"Åland\",\"ko\":\"올란드 제도\",\"pt-BR\":\"Ilhas de Aland\",\"pt\":\"Ilhas de Aland\",\"nl\":\"Ålandeilanden\",\"hr\":\"Ålandski otoci\",\"fa\":\"جزایر الند\",\"de\":\"Åland\",\"es\":\"Alandia\",\"fr\":\"Åland\",\"ja\":\"オーランド諸島\",\"it\":\"Isole Aland\",\"zh-CN\":\"奥兰群岛\",\"tr\":\"Åland Adalari\",\"ru\":\"Аландские острова\",\"uk\":\"Аландські острови\",\"pl\":\"Wyspy Alandzkie\"}', 60.11666700, 19.90000000, '🇦🇽', 'U+1F1E6 U+1F1FD', '2018-07-21 07:11:03', '2024-12-19 14:52:33', 1, 'Q5689', NULL, 1),

@@ -7,7 +7,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class subregionsTableSeeder extends Seeder
+class SubregionsTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.

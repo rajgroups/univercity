@@ -9,6 +9,7 @@ use App\Helpers\GcsAdapterFactory;
 use App\Models\HomeSetting;
 use App\Models\Settings;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Schema;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -26,6 +27,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Paginator::useBootstrap();
+        Schema::defaultStringLength(191); 
         // Load the first HomeSetting record
         $settings = HomeSetting::first();
         $defaultSettings = Settings::first();
