@@ -26,98 +26,143 @@
 
 @section('content')
 <div class="container py-5">
-    {{-- <h2 class="mb-4">Catalog</h2> --}}
+    {{-- Filter Button for Mobile --}}
+    <div class="d-md-none mb-3 text-end">
+        <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileFilterCanvas">
+            <i class="bi bi-funnel"></i> Filters
+        </button>
+    </div>
 
-    <form method="GET" action="{{ route('web.catalog') }}" class="row gx-3 mb-4">
-        {{-- Category Filter --}}
-        <div class="col-md-4 mb-1">
-            <select name="category_id" class="form-select">
-                <option value="">All Categories</option>
-                @foreach($categories as $category)
-                    <option value="{{ $category->id }}" {{ request('category_id') == $category->id ? 'selected' : '' }}>
-                        {{ $category->name }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
-
-        {{-- Type Filter --}}
-        <div class="col-md-4 mb-1">
-            <select name="type" class="form-select">
-                <option value="">All Types</option>
-                <option value="project_1" {{ request('type') == 'project_1' ? 'selected' : '' }}>Ongoing Projects</option>
-                <option value="project_2" {{ request('type') == 'project_2' ? 'selected' : '' }}>Upcoming Projects</option>
-                <option value="announcement_1" {{ request('type') == 'announcement_1' ? 'selected' : '' }}>Programs</option>
-                <option value="announcement_2" {{ request('type') == 'announcement_2' ? 'selected' : '' }}>Schemes</option>
-            </select>
-        </div>
-
-        {{-- Search --}}
-        <div class="col-md-4 mb-1">
-            <input type="text" name="search" value="{{ request('search') }}" class="form-control" placeholder="Search by title">
-        </div>
-
-        {{-- Submit --}}
-        <div class="col-12 mb-1">
-            <button type="submit" class="btn btn-primary">Apply Filter</button>
-            <a href="{{ route('web.catalog') }}" class="btn btn-secondary">Reset</a>
-        </div>
-    </form>
-
-    {{-- Results --}}
     <div class="row">
-        @forelse($results as $item)
-            <div class="col-md-4 mb-4">
-                <div class="card h-100">
-                    <div class="card-body">
-                    @php
-                        $imagePath = $item->item_type === 'project'
-                            ? asset($item->image ?? 'uploads/projects/default.png')
-                            : asset($item->image ?? 'uploads/announcements/default.png');
-                    @endphp
+        {{-- Desktop Filters Sidebar --}}
+        <div class="col-md-3 d-none d-md-block">
+            <div class="sticky-top" style="top: 90px;">
+                <form method="GET" action="{{ route('web.catalog') }}" id="desktopFilters">
+                    <div class="mb-3">
+                        <label class="form-label">Search by title</label>
+                        <input type="text" name="search" value="{{ request('search') }}" class="form-control" placeholder="Search...">
+                    </div>
 
-                    <img src="{{ $imagePath }}" class="card-img-top" alt="{{ $item->title }}" style="height: 200px; object-fit: cover;">
+                    <div class="mb-3">
+                        <label class="form-label">Type</label>
+                        <select name="type" class="form-select">
+                            <option value="">All Types</option>
+                            <option value="project_1" {{ request('type')=='project_1'?'selected':'' }}>Ongoing Projects</option>
+                            <option value="project_2" {{ request('type')=='project_2'?'selected':'' }}>Upcoming Projects</option>
+                            <option value="announcement_1" {{ request('type')=='announcement_1'?'selected':'' }}>Programs</option>
+                            <option value="announcement_2" {{ request('type')=='announcement_2'?'selected':'' }}>Schemes</option>
+                        </select>
+                    </div>
 
-                        <h5 class="card-title mt-3">{{ $item->title }}</h5>
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">Apply Filter</button>
+                        <a href="{{ route('web.catalog') }}" class="btn btn-outline-secondary">Reset</a>
+                    </div>
+                </form>
+            </div>
+        </div>
 
-                        <p style="text-indent: 35px;">{{ \Illuminate\Support\Str::limit(strip_tags($item->description), 100) }}</p>
-                        <div class="d-flex justify-content-between mt-2">
-                            <p class="mb-2"><strong>Type:</strong> {{ $item->type_label }}</p>
-                            <p class="mb-2"><strong>Category:</strong> {{ $item->category->name ?? '-' }}</p>
+        {{-- Results --}}
+        <div class="col-md-9">
+            <div class="row g-4">
+                @forelse($results as $item)
+                    <div class="col-md-6 col-lg-4">
+                        <div class="card h-100 shadow-sm">
+                            @php
+                                $imagePath = $item->item_type === 'project'
+                                    ? asset($item->image ?? 'uploads/projects/default.png')
+                                    : asset($item->image ?? 'uploads/announcements/default.png');
+                            @endphp
+                            <img src="{{ $imagePath }}" class="card-img-top" alt="{{ $item->title }}" style="height: 200px; object-fit: cover;">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ $item->title }}</h5>
+                                <p style="text-indent: 25px;">{{ \Illuminate\Support\Str::limit(strip_tags($item->description), 100) }}</p>
+                                <div class="d-flex justify-content-between">
+                                    <small class="text-muted">Type: {{ $item->type_label }}</small>
+                                    <small class="text-muted">Category: {{ $item->category->name ?? '-' }}</small>
+                                </div>
+                            </div>
+                            <div class="card-footer bg-white border-top-0">
+                                @php
+                                    $categorySlug = $item->category->slug ?? 'category';
+                                    $slug = $item->slug;
+                                @endphp
+                                @if ($item instanceof \App\Models\Project)
+                                    @if ($item->type == 1)
+                                        <a href="{{ route('web.ongoging.project', [$categorySlug, $slug]) }}" class="btn btn-outline-primary btn-sm">View More</a>
+                                    @else
+                                        <a href="{{ route('web.upcoming.project', [$categorySlug, $slug]) }}" class="btn btn-outline-primary btn-sm">View More</a>
+                                    @endif
+                                @elseif ($item instanceof \App\Models\Announcement)
+                                    @if ($item->type == 1)
+                                        <a href="{{ route('web.announcement.program', [$categorySlug, $slug]) }}" class="btn btn-outline-success btn-sm">View More</a>
+                                    @else
+                                        <a href="{{ route('web.announcement.scheme', [$categorySlug, $slug]) }}" class="btn btn-outline-success btn-sm">View More</a>
+                                    @endif
+                                @endif
+                            </div>
                         </div>
                     </div>
-                    <div class="card-footer bg-white border-top-0">
-                        @php
-                            $categorySlug = $item->category->slug ?? 'category';
-                            $slug = $item->slug;
-                        @endphp
-
-                        @if ($item instanceof \App\Models\Project)
-                            @if ($item->type == 1)
-                                <a href="{{ route('web.ongoging.project', [$categorySlug, $slug]) }}" class="btn btn-outline-primary btn-sm">View More</a>
-                            @else
-                                <a href="{{ route('web.upcoming.project', [$categorySlug, $slug]) }}" class="btn btn-outline-primary btn-sm">View More</a>
-                            @endif
-                        @elseif ($item instanceof \App\Models\Announcement)
-                            @if ($item->type == 1)
-                                <a href="{{ route('web.announcement.program', [$categorySlug, $slug]) }}" class="btn btn-outline-success btn-sm">View More</a>
-                            @else
-                                <a href="{{ route('web.announcement.scheme', [$categorySlug, $slug]) }}" class="btn btn-outline-success btn-sm">View More</a>
-                            @endif
-                        @endif
+                @empty
+                    <div class="col-12">
+                        <p class="text-muted">No records found.</p>
                     </div>
-                </div>
+                @endforelse
             </div>
-        @empty
-            <div class="col-12">
-                <p class="text-muted">No records found.</p>
+
+            {{-- Pagination --}}
+            <div class="mt-4">
+                {{ $results->withQueryString()->links() }}
             </div>
-        @endforelse
+        </div>
     </div>
 
-    {{-- Pagination --}}
-    <div class="mt-4">
-        {{ $results->withQueryString()->links() }}
+    {{-- Mobile Offcanvas Filters --}}
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="mobileFilterCanvas">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title"><i class="bi bi-funnel"></i> Filters</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+        </div>
+        <div class="offcanvas-body">
+            <form method="GET" action="{{ route('web.catalog') }}" id="mobileFilters">
+                <div class="filter-content">
+                    {{-- Filters will be dynamically appended here --}}
+                </div>
+                <div class="d-grid gap-2 mt-4">
+                    <button type="submit" class="btn btn-primary">Apply Filter</button>
+                    <a href="{{ route('web.catalog') }}" class="btn btn-outline-secondary">Reset</a>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
+
+@push('scripts')
+<script>
+$(document).ready(function () {
+    // Append desktop filters to mobile offcanvas on first open
+    $('[data-bs-target="#mobileFilterCanvas"]').on('click', function () {
+        let $mobileContent = $('#mobileFilters .filter-content');
+
+        if ($mobileContent.children().length === 0) {
+            let $desktopFilters = $('#desktopFilters').clone();
+
+            // Remove buttons from desktop clone (we keep mobile buttons)
+            $desktopFilters.find('button[type="submit"]').remove();
+            $desktopFilters.find('a.btn').remove();
+
+            $mobileContent.append($desktopFilters.html());
+
+            // Optional: Copy selected values from desktop to mobile
+            $('#desktopFilters select, #desktopFilters input').each(function () {
+                let name = $(this).attr('name');
+                let val = $(this).val();
+                $mobileContent.find('[name="'+name+'"]').val(val);
+            });
+        }
+    });
+});
+</script>
+@endpush
 @endsection
+

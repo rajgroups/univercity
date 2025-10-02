@@ -6,13 +6,24 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
+        /**
      * Run the migrations.
      */
     public function up(): void
     {
         Schema::create('intlcourse', function (Blueprint $table) {
             $table->id();
+
+            // Provider & Affiliation Details
+            $table->string('admin_provider')->nullable();
+            $table->string('partner')->nullable();
+            $table->string('accreditation_recognition')->nullable();
+
+            // Course Details
+            $table->string('course_name');
+            $table->string('slug')->nullable()->unique();
+            $table->string('level');
+            $table->string('image');
 
             // Sector relationship
             $table->unsignedBigInteger('sector_id')->nullable();
@@ -35,51 +46,80 @@ return new class extends Migration
                 ->on('category')
                 ->onDelete('set null');
 
-            $table->string('name');
-            $table->string('slug')->unique(); // SEO-friendly URL
-            $table->string('short_name')->nullable(); // e.g., "M.Sc", "AI/ML"
-            $table->string('image')->nullable(); // Store image path
-            $table->string('duration')->nullable();
-            $table->string('paid_type')->comment('Free / Paid');
+            $table->enum('pathway_type', ['online_pathway', 'onsite_abroad', 'hybrid', 'dual_credit', 'twinning_program']);
+            $table->string('language_instruction');
+            $table->string('learning_product_type')->nullable();
+            $table->enum('paid_type', ['Free', 'Paid'])->default('Free');
+            $table->text('short_description');
+            $table->text('long_description');
 
-            $table->text('short_description')->nullable();
-            $table->longText('long_description')->nullable(); // For detailed course info
-            $table->longText('visa_proccess')->nullable(); // For visa_proccess detailed course info
-            $table->longText('other_info')->nullable(); // For other_info detailed course info
+            // Additional Course Details
+            $table->string('certification_type')->nullable();
+            $table->string('isico_course_code');
+            $table->string('international_mapping')->nullable();
+            $table->enum('credits_transferable', ['Yes', 'No'])->nullable();
+            $table->integer('max_credits')->nullable();
+            $table->string('internship')->nullable();
 
-            $table->string('provider')->nullable(); // Training Partner
-            $table->string('language')->default('English');
-            $table->string('certification_type')->nullable(); // e.g. Certificate of Completion
-            $table->string('assessment_mode')->nullable(); // e.g. Proctor Assessment
+            // Delivery & Assessment
+            $table->string('provider');
+            $table->string('assessment_mode');
+            $table->string('learning_tools');
+            $table->string('bridge_modules')->nullable();
 
-            $table->string('qp_code')->nullable(); // e.g. Non QP Aligned
-            $table->string('nsqf_level')->nullable(); // e.g. Non QP Aligned
-            $table->string('credits_assigned')->nullable(); // e.g. No Credit Available
-            $table->string('learning_product_type')->nullable(); // e.g. Skill Course
+            // Eligibility Details
+            $table->string('required_age');
+            $table->string('minimum_education');
+            $table->string('industry_experience');
+            $table->string('language_proficiency_requirement')->nullable();
+            $table->text('visa_proccess');
+            $table->text('other_info');
 
-            $table->string('program_by')->nullable(); // e.g. Skill India CSR
-            $table->string('initiative_of')->nullable(); // e.g. Reliance Foundation
+            // QP & NSQF & Credit
+            $table->string('qp_code');
+            $table->string('nsqf_level');
+            $table->string('credits_assigned');
+            $table->string('program_by');
+            $table->string('initiative_of');
+            $table->string('program');
+            $table->string('occupations');
 
-            $table->string('program')->nullable(); // e.g. Reliance Foundation Skilling Academy
-            $table->string('domain')->nullable(); // e.g. Airline
-            $table->string('occupations')->nullable(); // e.g. Customer Service
+            // Topics (stored as JSON)
+            $table->json('topics')->nullable();
 
-            $table->string('required_age')->nullable(); // e.g. Any
-            $table->string('minimum_education')->nullable(); // e.g. 12th Pass, ITI, Diploma
-            $table->string('industry_experience')->nullable(); // e.g. 0
-            $table->string('learning_tools')->nullable(); // e.g. NA
+            // Logistics & Costs
+            $table->string('duration_local')->nullable();
+            $table->string('duration_overseas')->nullable();
+            $table->string('total_duration')->nullable();
+            $table->string('fee_structure')->nullable();
+            $table->string('scholarship_funding')->nullable();
+            $table->string('accommodation_cost')->nullable();
 
-            $table->json('topics')->nullable(); // Dynamic inputs as JSON
-            $table->boolean('is_featured')->default(0); // For home page highlighting
-            $table->boolean('internship')->default(0); // For home page highlighting
-            $table->boolean('status')->default(1)->comment('1 => Active, 0 => Inactive');
-            $table->date('start_date')->nullable(); // Optional
-            $table->date('end_date')->nullable(); // Optional
-            $table->unsignedInteger('enrollment_count')->default(0); // For analytics
+            // Pathway & Outcomes
+            $table->string('next_degree')->nullable();
+            $table->json('career_outcomes')->nullable();
+            $table->string('international_recognition')->nullable();
+            $table->text('pathway_next_courses')->nullable();
 
+            // Dates & Status
+            $table->date('start_date');
+            $table->date('end_date');
+            $table->boolean('is_featured')->default(false);
+            $table->boolean('status')->default(true);
+            $table->integer('enrollment_count')->default(0);
+
+            // Timestamps
             $table->timestamps();
-        });
 
+            // Indexes
+            $table->index('sector_id');
+            $table->index('course_name');
+            $table->index('category_id');
+            $table->index('country_id');
+            $table->index('is_featured');
+            $table->index('status');
+            $table->index('created_at');
+        });
     }
 
     /**
@@ -87,6 +127,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('intlcourse');
+        Schema::dropIfExists('intlcourses');
     }
 };

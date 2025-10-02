@@ -4941,7 +4941,14 @@ footer .privacy-text p {
   border-radius: 4px;
   background: #018c01;
 }
-
+  .sm-title-banner {
+    background-position: center;
+    background-size: cover;
+    height: clamp(250px, 22.344vw, 950px);
+    display: flex;
+    align-items: center;
+    justify-content: start;
+}
 /*# sourceMappingURL=app.css.map */
 /* Extra small devices (phones, 600px and down) */
 @media only screen and (max-width: 600px) {
@@ -4951,20 +4958,94 @@ footer .privacy-text p {
   .d-none-mobile{
     display: none !important;
   }
+  .fs-xs-10 { font-size: 10px !important; }
+  .fs-xs-12 { font-size: 12px !important; }
+  .fs-xs-14 { font-size: 14px !important; }
+  .fs-xs-16 { font-size: 16px !important; }
+  .fs-xs-18 { font-size: 18px !important; }
+  .fs-xs-20 { font-size: 20px !important; }
+  .fs-xs-22 { font-size: 22px !important; }
+  .fs-xs-24 { font-size: 24px !important; }
+
+  /* Utility to hide on mobile */
+  .d-none-mobile { display: none !important; }
+
+  .sm-title-banner {
+    background-position: center;
+    background-size: cover;
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+}
+
 }
 
 /* Small devices (portrait tablets and large phones, 600px and up) */
-@media only screen and (min-width: 600px) {...}
+@media only screen and (min-width: 600px) {
+  .fs-sm-10 { font-size: 10px !important; }
+  .fs-sm-12 { font-size: 12px !important; }
+  .fs-sm-14 { font-size: 14px !important; }
+  .fs-sm-16 { font-size: 16px !important; }
+  .fs-sm-18 { font-size: 18px !important; }
+  .fs-sm-20 { font-size: 20px !important; }
+  .fs-sm-22 { font-size: 22px !important; }
+  .fs-sm-24 { font-size: 24px !important; }
+    .sm-title-banner {
+    background-size: cover;
+    height: clamp(630px, 22.344vw, 950px);
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    background-position: center center;
+}
+}
 
 /* Medium devices (landscape tablets, 768px and up) */
 @media only screen and (min-width: 768px) {
   .fs-sm-12{
     font-size: 12px;
   }
+    .fs-md-10 { font-size: 10px !important; }
+  .fs-md-12 { font-size: 12px !important; }
+  .fs-md-14 { font-size: 14px !important; }
+  .fs-md-16 { font-size: 16px !important; }
+  .fs-md-18 { font-size: 18px !important; }
+  .fs-md-20 { font-size: 20px !important; }
+  .fs-sm-22 { font-size: 22px !important; }
+  .fs-md-24 { font-size: 24px !important; }
+
 }
 
 /* Large devices (laptops/desktops, 992px and up) */
-@media only screen and (min-width: 992px) {...}
+@media only screen and (min-width: 992px) {
+ .fs-lg-10 { font-size: 10px !important; }
+  .fs-lg-12 { font-size: 12px !important; }
+  .fs-lg-14 { font-size: 14px !important; }
+  .fs-lg-16 { font-size: 16px !important; }
+  .fs-lg-18 { font-size: 18px !important; }
+  .fs-lg-20 { font-size: 20px !important; }
+  .fs-sm-22 { font-size: 22px !important; }
+  .fs-lg-24 { font-size: 24px !important; }
+      .sm-title-banner {
+    background-position: center;
+    background-size: cover;
+    height: clamp(360px, 22.344vw, 950px);
+    display: flex;
+    align-items: center;
+    justify-content: start;
+}
+}
 
 /* Extra large devices (large laptops and desktops, 1200px and up) */
-@media only screen and (min-width: 1200px) {...}
+@media only screen and (min-width: 1200px) {
+      .fs-xl-10 { font-size: 10px !important; }
+  .fs-xl-12 { font-size: 12px !important; }
+  .fs-xl-14 { font-size: 14px !important; }
+  .fs-xl-16 { font-size: 16px !important; }
+  .fs-xl-18 { font-size: 18px !important; }
+  .fs-xl-20 { font-size: 20px !important; }
+  .fs-sm-22 { font-size: 22px !important; }
+  .fs-xl-24 { font-size: 24px !important; }
+}
+

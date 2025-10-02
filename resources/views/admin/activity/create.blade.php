@@ -66,7 +66,7 @@
                                 <div class="col-sm-6 col-12">
                                     <div class="mb-3">
                                         <label class="form-label">Title(Event & competition) <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control @error('title') is-invalid @enderror" 
+                                        <input type="text" class="form-control @error('title') is-invalid @enderror"
                                             name="title" value="{{ old('title') }}" placeholder="Enter Activity title" id="activity-title">
                                         @error('title')
                                             <div class="invalid-feedback">{{ $message }}</div>
@@ -95,7 +95,56 @@
                                 @enderror
                             </div>
 
+                            <!-- Add this section after the Gallery Images field and before the submit button -->
+
+<!-- Sponsor Information -->
+<div class="row">
+    <div class="col-12">
+        <h6 class="mb-3">Sponsor Information</h6>
+    </div>
+
+    <div class="col-sm-6 col-12">
+        <div class="mb-3">
+            <label class="form-label">Sponsor Name</label>
+            <input type="text" class="form-control @error('sponsor_name') is-invalid @enderror"
+                name="sponsor_name" value="{{ old('sponsor_name') }}"
+                placeholder="Enter sponsor name">
+            @error('sponsor_name')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
+        </div>
+    </div>
+
+    <div class="col-sm-6 col-12">
+        <div class="mb-3">
+            <label class="form-label">Sponsor Details</label>
+            <input type="text" class="form-control @error('sponsor_details') is-invalid @enderror"
+                name="sponsor_details" value="{{ old('sponsor_details') }}"
+                placeholder="e.g., Gold Sponsor, CSR Partner">
+            @error('sponsor_details')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
+        </div>
+    </div>
+
+    <div class="col-sm-6 col-12">
+        <div class="mb-3">
+            <label class="form-label">Sponsor Logo/Image</label>
+            <input type="file" class="form-control @error('sponsor_logo') is-invalid @enderror"
+                name="sponsor_logo" accept="image/*">
+            @error('sponsor_logo')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
+            <small class="form-text text-muted">Recommended: 300×150px (Max 1MB)</small>
+        </div>
+    </div>
+</div>
+
+
                             <div class="row">
+                                    <div class="col-12">
+                                            <h6 class="mb-3">Other Information</h6>
+                                        </div>
                                 <div class="col-sm-6 col-12">
                                     <div class="mb-3">
                                         <label class="form-label">Start Date <span class="text-danger">*</span></label>
@@ -288,7 +337,7 @@
                                         @endforeach
                                     @else
                                         <div class="input-group mb-2">
-                                            <input type="text" name="highlights[]" class="form-control" 
+                                            <input type="text" name="highlights[]" class="form-control"
                                                 placeholder="Example: Keynote speech by industry leader">
                                             <button type="button" class="btn btn-outline-secondary add-highlight">+</button>
                                         </div>
@@ -376,7 +425,7 @@
             $(document).on('click', '.add-highlight', function() {
                 const newHighlight = `
                     <div class="input-group mb-2">
-                        <input type="text" name="highlights[]" class="form-control" 
+                        <input type="text" name="highlights[]" class="form-control"
                             placeholder="Example: Keynote speech by industry leader">
                         <button type="button" class="btn btn-outline-danger remove-highlight">−</button>
                     </div>`;

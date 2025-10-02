@@ -17,6 +17,9 @@ return new class extends Migration
             $table->string('title');
             $table->string('slug')->unique();
             $table->text('short_description');
+            $table->string('sponsor_name')->nullable();
+            $table->string('sponsor_details')->nullable();
+            $table->string('sponsor_logo')->nullable();
             $table->longText('description');
             $table->dateTime('start_date');
             $table->dateTime('end_date');
@@ -25,20 +28,20 @@ return new class extends Migration
             $table->string('banner_image')->nullable();
             $table->string('thumbnail_image')->nullable();
             $table->tinyInteger('status')->default(0); // 0=draft, 1=upcoming, etc.
-            
+
             // Competition-specific
             $table->text('rules')->nullable();
             $table->json('highlights')->nullable();
             $table->integer('max_participants')->nullable();
             $table->decimal('entry_fee', 8, 2)->nullable()->default(0);
-            
+
             // Relationships
             $table->unsignedBigInteger('organizer_id')->nullable();
             $table->foreign('organizer_id')
                 ->references('id')->on('users')
                 ->onDelete('cascade');
             $table->foreignId('category_id')->constrained('category')->onDelete('cascade');
-            
+
             $table->timestamps();
             $table->softDeletes();
         });

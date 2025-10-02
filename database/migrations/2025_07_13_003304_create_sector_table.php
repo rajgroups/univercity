@@ -15,6 +15,7 @@ return new class extends Migration
         Schema::create('sectors', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('prefix');
             $table->string('slug')->unique();
             $table->string('image')->nullable();
             $table->tinyInteger('type')->nullable()->comment('1=>normal course,2=>intl course ')->default(1);

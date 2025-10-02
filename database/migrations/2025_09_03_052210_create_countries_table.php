@@ -39,9 +39,9 @@ return new class extends Migration
             $table->tinyInteger('flag')->default(1);
             $table->string('image')->nullable();
             $table->string('wikiDataId')->nullable()->comment('Rapid API GeoDB Cities');
-            $table->tinyInteger('status');
+            $table->tinyInteger('status')->nullable()->default(0);
 
-            // Indexes
+            // Indexess
             $table->index('region_id', 'country_continent');
             $table->index('subregion_id', 'country_subregion');
 

@@ -73,7 +73,7 @@
                             <tr>
                                 {{-- <td><input type="checkbox" class="select-item" value="{{ $item->id }}"></td> --}}
                                 <td>{{ $loop->index + 1 }}</td>
-                                <td><span class="text-gray-9">{{ $item->name }}</span></td>
+                                <td><span class="text-gray-9">{{ $item->course_name }}</span></td>
                                 <td>{{ $item->slug }}</td>
                                 <td>{{ $item->created_at->format('d M Y') }}</td>
 

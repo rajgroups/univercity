@@ -41,57 +41,95 @@ class IntlCourseController extends Controller
     {
         // Validate the request data
         $validated = $request->validate([
-            'name'                      => 'required|string|max:255',
-            'short_name'                => 'nullable|string|max:100',
-            'image'                     => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'duration'                  => 'nullable|string|max:100',
-            'paid_type'                 => 'required|in:Free,Paid',
-            'category_id'               => 'required|exists:category,id',
-            'country_id'                => 'required|exists:countries,id',
-            'sector_id'                 => 'required|exists:sectors,id',
-            'short_description'         => 'nullable|string',
-            'long_description'          => 'nullable|string',
-            'provider'                  => 'nullable|string|max:255',
-            'language'                  => 'nullable|string|max:100',
-            'certification_type'        => 'nullable|string|max:255',
-            'assessment_mode'           => 'nullable|string|max:255',
-            'qp_code'                   => 'nullable|string|max:100',
-            'nsqf_level'                => 'nullable|string|max:50',
-            'credits_assigned'          => 'nullable|string|max:50',
-            'learning_product_type'     => 'nullable|string|max:255',
-            'program_by'                => 'nullable|string|max:255',
-            'initiative_of'             => 'nullable|string|max:255',
-            'program'                   => 'nullable|string|max:255',
-            'domain'                    => 'nullable|string|max:255',
-            'occupations'               => 'nullable|string|max:255',
-            'required_age'              => 'nullable|string|max:50',
-            'minimum_education'         => 'nullable|string|max:255',
-            'industry_experience'       => 'nullable|string|max:255',
-            'learning_tools'            => 'nullable|string|max:255',
-            'start_date'                => 'nullable|date',
-            'end_date'                  => 'nullable|date|after_or_equal:start_date',
-            'is_featured'               => 'required|boolean',
-            'status'                    => 'required|in:0,1',
-            'enrollment_count'          => 'nullable|integer|min:0',
-            'topics'                    => 'nullable|array',
-            'topics.*.title'            => 'nullable|string|max:255',
-            'topics.*.description'      => 'nullable|string',
+            // Provider & Affiliation Details
+            'admin_provider' => 'nullable|string|max:255',
+            'partner' => 'required|string|max:255',
+            'accreditation_recognition' => 'nullable|string|max:255',
 
-            // Added Fields
-            'internship'                => 'required|string|max:255',
-            'visa_proccess'             => 'nullable|string',
-            'other_info '               => 'nullable|string',
+            // Course Details
+            'course_name' => 'required|string|max:255',
+            'level' => 'required|string|max:100',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'sector_id' => 'required|exists:sectors,id',
+            'category_id' => 'required|exists:category,id',
+            'pathway_type' => 'required|in:online_pathway,onsite_abroad,hybrid,dual_credit,twinning_program',
+            'country_id' => 'required|exists:countries,id',
+            'language_instruction' => 'required|string|max:100',
+            'learning_product_type' => 'nullable|string|max:255',
+            'paid_type' => 'required|in:Free,Paid',
+            'short_description' => 'required|string',
+            'long_description' => 'required|string',
+
+            // Additional Course Details
+            'certification_type' => 'nullable|string|max:255',
+            'isico_course_code' => 'required|string|max:100',
+            'international_mapping' => 'nullable|string|max:255',
+            'credits_transferable' => 'nullable|in:Yes,No',
+            'max_credits' => 'nullable|integer|min:0',
+            'internship' => 'nullable|string|max:255',
+
+            // Delivery & Assessment
+            'provider' => 'required|string|max:255',
+            'assessment_mode' => 'required|string|max:255',
+            'learning_tools' => 'required|string|max:255',
+            'bridge_modules' => 'nullable|string|max:255',
+
+            // Eligibility Details
+            'required_age' => 'required|string|max:50',
+            'minimum_education' => 'required|string|max:255',
+            'industry_experience' => 'required|string|max:255',
+            'language_proficiency_requirement' => 'nullable|string|max:255',
+            'visa_proccess' => 'required|string',
+            'other_info' => 'required|string',
+
+            // QP & NSQF & Credit
+            'qp_code' => 'required|string|max:100',
+            'nsqf_level' => 'required|string|max:50',
+            'credits_assigned' => 'required|string|max:50',
+            'program_by' => 'required|string|max:255',
+            'initiative_of' => 'required|string|max:255',
+            'program' => 'required|string|max:255',
+            'occupations' => 'required|string|max:255',
+
+            // Topics
+            'topics' => 'nullable|array',
+            'topics.*.title' => 'nullable|string|max:255',
+            'topics.*.description' => 'nullable|string',
+
+            // Logistics & Costs
+            'duration_local' => 'nullable|string|max:255',
+            'duration_overseas' => 'nullable|string|max:255',
+            'total_duration' => 'nullable|string|max:255',
+            'fee_structure' => 'nullable|string|max:255',
+            'scholarship_funding' => 'nullable|string|max:255',
+            'accommodation_cost' => 'nullable|string|max:255',
+
+            // Pathway & Outcomes
+            'next_degree' => 'nullable|string|max:255',
+            'career_outcomes_json' => 'nullable|string',
+            'international_recognition' => 'nullable|string|max:255',
+            'pathway_next_courses' => 'nullable|string',
+
+            // Dates & Status
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after_or_equal:start_date',
+            'is_featured' => 'required|boolean',
+            'status' => 'required|in:0,1',
+            'enrollment_count' => 'required|integer|min:0',
         ]);
-            // Generate slug
-        $slug = Str::slug($validated['name']);
+
+        // Generate slug from course_name
+        $slug = Str::slug($validated['course_name']);
+
         // ✅ Check if slug already exists
         if (IntlCourse::where('slug', $slug)->exists()) {
             notyf()->addError('A course with a similar name already exists. Please choose a different name');
             return back()
-                ->withErrors(['name' => 'A course with a similar name already exists. Please choose a different name.'])
+                ->withErrors(['course_name' => 'A course with a similar name already exists. Please choose a different name.'])
                 ->withInput();
         }
 
+        // Handle image upload
         if ($request->hasFile('image')) {
             $image = $request->file('image');
             $filename = time() . '_' . $image->getClientOriginalName();
@@ -108,21 +146,42 @@ class IntlCourseController extends Controller
             $validated['image'] = 'uploads/intlcourse/' . $filename;
         }
 
-        // Generate slug
-        $validated['slug'] = Str::slug($validated['name']);
+        // Add slug to validated data
+        $validated['slug'] = $slug;
 
         // Convert topics array to JSON if present
         if (isset($validated['topics'])) {
             $validated['topics'] = json_encode($validated['topics']);
         }
 
-        // Create the course
-        $course = IntlCourse::create($validated);
-        notyf()->addSuccess('Course created successfully!');
-        return redirect()->route('admin.intlcourse.index')
-            ->with('success', 'Course created successfully!');
-    }
+        // Handle career outcomes JSON
+        if ($request->has('career_outcomes_json') && !empty($request->career_outcomes_json)) {
+            $validated['career_outcomes'] = $request->career_outcomes_json;
+        }
 
+        // Clean up the data - remove fields that don't exist in the model
+        $modelFields = [
+            'admin_provider', 'partner', 'accreditation_recognition', 'course_name', 'level',
+            'image', 'sector_id', 'category_id', 'pathway_type', 'country_id', 'language_instruction',
+            'learning_product_type', 'paid_type', 'short_description', 'long_description', 'certification_type',
+            'isico_course_code', 'international_mapping', 'credits_transferable', 'max_credits', 'internship',
+            'provider', 'assessment_mode', 'learning_tools', 'bridge_modules', 'required_age', 'minimum_education',
+            'industry_experience', 'language_proficiency_requirement', 'visa_proccess', 'other_info', 'qp_code',
+            'nsqf_level', 'credits_assigned', 'program_by', 'initiative_of', 'program', 'occupations', 'topics',
+            'duration_local', 'duration_overseas', 'total_duration', 'fee_structure', 'scholarship_funding',
+            'accommodation_cost', 'next_degree', 'career_outcomes', 'international_recognition', 'pathway_next_courses',
+            'start_date', 'end_date', 'is_featured', 'status', 'enrollment_count', 'slug'
+        ];
+
+        $createData = array_intersect_key($validated, array_flip($modelFields));
+
+        // Create the course
+        $course = IntlCourse::create($createData);
+
+        notyf()->addSuccess('International Course created successfully!');
+        return redirect()->route('admin.intlcourse.index')
+            ->with('success', 'International Course created successfully!');
+    }
     /**
      * Display the specified resource.
      */
@@ -148,48 +207,83 @@ class IntlCourseController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // dd($request->all());
         // Validate the request data
         $validated = $request->validate([
-            'name'                      => 'required|string|max:255',
-            'short_name'                => 'nullable|string|max:100',
-            'image'                     => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'duration'                  => 'nullable|string|max:100',
-            'paid_type'                 => 'required|in:Free,Paid',
-            'category_id'               => 'required|exists:category,id',
-            'country_id'                => 'required|exists:countries,id',
-            'sector_id'                 => 'required|exists:sectors,id',
-            'short_description'         => 'nullable|string',
-            'long_description'          => 'nullable|string',
-            'provider'                  => 'nullable|string|max:255',
-            'language'                  => 'nullable|string|max:100',
-            'certification_type'        => 'nullable|string|max:255',
-            'assessment_mode'           => 'nullable|string|max:255',
-            'qp_code'                   => 'nullable|string|max:100',
-            'nsqf_level'                => 'nullable|string|max:50',
-            'credits_assigned'          => 'nullable|string|max:50',
-            'learning_product_type'     => 'nullable|string|max:255',
-            'program_by'                => 'nullable|string|max:255',
-            'initiative_of'             => 'nullable|string|max:255',
-            'program'                   => 'nullable|string|max:255',
-            'domain'                    => 'nullable|string|max:255',
-            'occupations'               => 'nullable|string|max:255',
-            'required_age'              => 'nullable|string|max:50',
-            'minimum_education'         => 'nullable|string|max:255',
-            'industry_experience'       => 'nullable|string|max:255',
-            'learning_tools'            => 'nullable|string|max:255',
-            'start_date'                => 'nullable|date',
-            'end_date'                  => 'nullable|date|after_or_equal:start_date',
-            'is_featured'               => 'required|boolean',
-            'status'                    => 'required|in:0,1',
-            'enrollment_count'          => 'nullable|integer|min:0',
-            'topics'                    => 'nullable|array',
-            'topics.*.title'            => 'nullable|string|max:255',
-            'topics.*.description'      => 'nullable|string',
+            // Provider & Affiliation Details
+            'admin_provider' => 'nullable|string|max:255',
+            'partner' => 'required|string|max:255',
+            'accreditation_recognition' => 'nullable|string|max:255',
 
-            'internship'                => 'required|string|max:255',
-            'visa_proccess'             => 'nullable|string',
-            'other_info '               => 'nullable|string',
+            // Course Details
+            'course_name' => 'required|string|max:255',
+            'level' => 'required|string|max:100',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'sector_id' => 'required|exists:sectors,id',
+            'category_id' => 'required|exists:category,id',
+            'pathway_type' => 'required|in:online_pathway,onsite_abroad,hybrid,dual_credit,twinning_program',
+            'country_id' => 'required|exists:countries,id',
+            'language_instruction' => 'required|string|max:100',
+            'learning_product_type' => 'nullable|string|max:255',
+            'paid_type' => 'required|in:Free,Paid',
+            'short_description' => 'required|string',
+            'long_description' => 'required|string',
+
+            // Additional Course Details
+            'certification_type' => 'nullable|string|max:255',
+            'isico_course_code' => 'required|string|max:100',
+            'international_mapping' => 'nullable|string|max:255',
+            'credits_transferable' => 'nullable|in:Yes,No',
+            'max_credits' => 'nullable|integer|min:0',
+            'internship' => 'nullable|string|max:255',
+
+            // Delivery & Assessment
+            'provider' => 'required|string|max:255',
+            'assessment_mode' => 'required|string|max:255',
+            'learning_tools' => 'required|string|max:255',
+            'bridge_modules' => 'nullable|string|max:255',
+
+            // Eligibility Details
+            'required_age' => 'required|string|max:50',
+            'minimum_education' => 'required|string|max:255',
+            'industry_experience' => 'required|string|max:255',
+            'language_proficiency_requirement' => 'nullable|string|max:255',
+            'visa_proccess' => 'required|string',
+            'other_info' => 'required|string',
+
+            // QP & NSQF & Credit
+            'qp_code' => 'required|string|max:100',
+            'nsqf_level' => 'required|string|max:50',
+            'credits_assigned' => 'required|string|max:50',
+            'program_by' => 'required|string|max:255',
+            'initiative_of' => 'required|string|max:255',
+            'program' => 'required|string|max:255',
+            'occupations' => 'required|string|max:255',
+
+            // Topics
+            'topics' => 'nullable|array',
+            'topics.*.title' => 'nullable|string|max:255',
+            'topics.*.description' => 'nullable|string',
+
+            // Logistics & Costs
+            'duration_local' => 'nullable|string|max:255',
+            'duration_overseas' => 'nullable|string|max:255',
+            'total_duration' => 'nullable|string|max:255',
+            'fee_structure' => 'nullable|string|max:255',
+            'scholarship_funding' => 'nullable|string|max:255',
+            'accommodation_cost' => 'nullable|string|max:255',
+
+            // Pathway & Outcomes
+            'next_degree' => 'nullable|string|max:255',
+            'career_outcomes_json' => 'nullable|string',
+            'international_recognition' => 'nullable|string|max:255',
+            'pathway_next_courses' => 'nullable|string',
+
+            // Dates & Status
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after_or_equal:start_date',
+            'is_featured' => 'required|boolean',
+            'status' => 'required|in:0,1',
+            'enrollment_count' => 'required|integer|min:0',
         ]);
 
         // Find the course
@@ -223,6 +317,21 @@ class IntlCourseController extends Controller
             $validated['image'] = null;
         }
 
+        // Generate slug if course name changed
+        if ($course->course_name !== $validated['course_name']) {
+            $slug = Str::slug($validated['course_name']);
+
+            // Check if slug already exists (excluding current course)
+            if (IntlCourse::where('slug', $slug)->where('id', '!=', $id)->exists()) {
+                notyf()->addError('A course with a similar name already exists. Please choose a different name');
+                return back()
+                    ->withErrors(['course_name' => 'A course with a similar name already exists. Please choose a different name.'])
+                    ->withInput();
+            }
+
+            $validated['slug'] = $slug;
+        }
+
         // Convert topics array to JSON if present
         if (isset($validated['topics'])) {
             $validated['topics'] = json_encode($validated['topics']);
@@ -230,13 +339,36 @@ class IntlCourseController extends Controller
             $validated['topics'] = null;
         }
 
-        // Update the course
-        $course->update($validated);
-        notyf()->addSuccess('Course updated successfully!');
-        return redirect()->route('admin.intlcourse.index')
-            ->with('success', 'Course updated successfully!');
-    }
+        // Handle career outcomes JSON
+        if ($request->has('career_outcomes_json') && !empty($request->career_outcomes_json)) {
+            $validated['career_outcomes'] = $request->career_outcomes_json;
+        } else {
+            $validated['career_outcomes'] = null;
+        }
 
+        // Clean up the data - remove fields that don't exist in the model
+        $modelFields = [
+            'admin_provider', 'partner', 'accreditation_recognition', 'course_name', 'level',
+            'image', 'sector_id', 'category_id', 'pathway_type', 'country_id', 'language_instruction',
+            'learning_product_type', 'paid_type', 'short_description', 'long_description', 'certification_type',
+            'isico_course_code', 'international_mapping', 'credits_transferable', 'max_credits', 'internship',
+            'provider', 'assessment_mode', 'learning_tools', 'bridge_modules', 'required_age', 'minimum_education',
+            'industry_experience', 'language_proficiency_requirement', 'visa_proccess', 'other_info', 'qp_code',
+            'nsqf_level', 'credits_assigned', 'program_by', 'initiative_of', 'program', 'occupations', 'topics',
+            'duration_local', 'duration_overseas', 'total_duration', 'fee_structure', 'scholarship_funding',
+            'accommodation_cost', 'next_degree', 'career_outcomes', 'international_recognition', 'pathway_next_courses',
+            'start_date', 'end_date', 'is_featured', 'status', 'enrollment_count', 'slug'
+        ];
+
+        $updateData = array_intersect_key($validated, array_flip($modelFields));
+
+        // Update the course
+        $course->update($updateData);
+
+        notyf()->addSuccess('International Course updated successfully!');
+        return redirect()->route('admin.intlcourse.index')
+            ->with('success', 'International Course updated successfully!');
+    }
     /**
      * Remove the specified resource from storage.
      */

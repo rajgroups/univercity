@@ -2,8 +2,10 @@
 @push('meta')
     <title>Courses - Indian Skill Institute Co-operation (ISICO)</title>
 
-    <meta name="description" content="Explore professional courses offered by the Indian Skill Institute Co-operation (ISICO). Our programs focus on skill development, education, entrepreneurship, and innovation to prepare learners for future opportunities.">
-    <meta name="keywords" content="ISICO courses, Indian Skill Institute courses, skill development training, education programs, entrepreneurship courses, professional learning, career development, innovation, NEP 2020">
+    <meta name="description"
+        content="Explore professional courses offered by the Indian Skill Institute Co-operation (ISICO). Our programs focus on skill development, education, entrepreneurship, and innovation to prepare learners for future opportunities.">
+    <meta name="keywords"
+        content="ISICO courses, Indian Skill Institute courses, skill development training, education programs, entrepreneurship courses, professional learning, career development, innovation, NEP 2020">
     <meta name="author" content="Indian Skill Institute Co-operation (ISICO)">
     <meta name="robots" content="index, follow">
 
@@ -12,7 +14,8 @@
 
     <!-- Open Graph -->
     <meta property="og:title" content="Courses - Indian Skill Institute Co-operation (ISICO)">
-    <meta property="og:description" content="Discover ISICO’s skill development and professional courses designed to empower learners with practical knowledge, entrepreneurship, and career opportunities.">
+    <meta property="og:description"
+        content="Discover ISICO’s skill development and professional courses designed to empower learners with practical knowledge, entrepreneurship, and career opportunities.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ url()->current() }}">
     <meta property="og:image" content="{{ asset('default-courses.jpg') }}">
@@ -20,7 +23,8 @@
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Courses - Indian Skill Institute Co-operation (ISICO)">
-    <meta name="twitter:description" content="Join ISICO’s education and skill development courses to build knowledge, innovation, and entrepreneurial skills for the future.">
+    <meta name="twitter:description"
+        content="Join ISICO’s education and skill development courses to build knowledge, innovation, and entrepreneurial skills for the future.">
     <meta name="twitter:image" content="{{ asset('default-courses.jpg') }}">
 @endpush
 
@@ -39,7 +43,7 @@
                 class="d-flex align-items-center justify-content-sm-between justify-content-center row-gap-4 flex-wrap mb-24">
                 <h4 class="text-center">Skill courses</h4>
                 <div class="d-flex align-items-center gap-8">
-                    <p class="flex-shrink-0 m-4">Sort By:</p>
+                    {{-- <p class="flex-shrink-0 m-4">Sort By:</p> --}}
                     <div class="w-100 drop-container">
                         <div class="wrapper-dropdown form-control" id="dropdown-l2">
                             <div class=" d-flex align-items-center justify-content-between gap-64">
@@ -61,10 +65,18 @@
                 </div>
             </div>
             <div class="row">
-                <!-- Sidebar Filters -->
-                <div class="col-md-3">
-                    <form action="{{ route('web.course.index') }}" method="GET" id="courseFilters">
-                        <!-- Search Bar with Functional Input -->
+                <!-- Filter Button (Mobile only) -->
+                <div class="col-12 d-md-none mb-3 text-end">
+                    <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas"
+                        data-bs-target="#mobileFilters">
+                        <i class="bi bi-funnel"></i> Filters
+                    </button>
+                </div>
+
+                <!-- Sidebar Filters (Desktop) -->
+                <div class="col-md-3 d-none d-md-block">
+                    <form action="{{ route('web.course.index') }}" method="GET" id="courseFiltersDesktop">
+                        <!-- Search -->
                         <div class="mb-4">
                             <div class="input-group">
                                 <input type="text" class="form-control" name="search"
@@ -75,27 +87,27 @@
                             </div>
                         </div>
 
-                        <div class="accordion" id="filterAccordion">
+                        <div class="accordion" id="filterAccordionDesktop">
                             <!-- Sector Filter -->
                             <div class="accordion-item border-0 mb-3 shadow-sm">
-                                <h2 class="accordion-header" id="headingSector">
+                                <h2 class="accordion-header" id="headingSectorDesktop">
                                     <button class="accordion-button collapsed shadow-none" type="button"
-                                        data-bs-toggle="collapse" data-bs-target="#collapseSector" aria-expanded="false">
+                                        data-bs-toggle="collapse" data-bs-target="#collapseSectorDesktop"
+                                        aria-expanded="false">
                                         <i class="bi bi-grid me-2"></i> Sector
                                         <span class="badge bg-primary ms-auto">{{ count(request('sectors', [])) }}</span>
                                     </button>
                                 </h2>
-                                <div id="collapseSector"
-                                    class="accordion-collapse collapse {{ count(request('sectors', [])) ? 'show' : '' }}"
-                                    aria-labelledby="headingSector" data-bs-parent="#filterAccordion">
+                                <div id="collapseSectorDesktop"
+                                    class="accordion-collapse collapse {{ count(request('sectors', [])) ? 'show' : '' }}">
                                     <div class="accordion-body pt-2">
                                         @foreach ($sectors as $sector)
                                             <div class="form-check mb-2">
                                                 <input class="form-check-input" type="checkbox" name="sectors[]"
-                                                    id="sector{{ $sector->id }}" value="{{ $sector->id }}"
+                                                    id="sectorDesktop{{ $sector->id }}" value="{{ $sector->id }}"
                                                     {{ in_array($sector->id, request('sectors', [])) ? 'checked' : '' }}>
                                                 <label class="form-check-label d-flex justify-content-between w-100"
-                                                    for="sector{{ $sector->id }}">
+                                                    for="sectorDesktop{{ $sector->id }}">
                                                     <span>{{ $sector->name }}</span>
                                                     <span class="text-muted small">{{ $sector->courses_count ?? 0 }}</span>
                                                 </label>
@@ -107,24 +119,25 @@
 
                             <!-- Language Filter -->
                             <div class="accordion-item border-0 mb-3 shadow-sm">
-                                <h2 class="accordion-header" id="headingLang">
+                                <h2 class="accordion-header" id="headingLangDesktop">
                                     <button class="accordion-button collapsed shadow-none" type="button"
-                                        data-bs-toggle="collapse" data-bs-target="#collapseLang" aria-expanded="false">
+                                        data-bs-toggle="collapse" data-bs-target="#collapseLangDesktop"
+                                        aria-expanded="false">
                                         <i class="bi bi-translate me-2"></i> Language
-                                        <span class="badge bg-primary ms-auto">{{ count(request('languages', [])) }}</span>
+                                        <span
+                                            class="badge bg-primary ms-auto">{{ count(request('languages', [])) }}</span>
                                     </button>
                                 </h2>
-                                <div id="collapseLang"
-                                    class="accordion-collapse collapse {{ count(request('languages', [])) ? 'show' : '' }}"
-                                    aria-labelledby="headingLang" data-bs-parent="#filterAccordion">
+                                <div id="collapseLangDesktop"
+                                    class="accordion-collapse collapse {{ count(request('languages', [])) ? 'show' : '' }}">
                                     <div class="accordion-body pt-2">
                                         @foreach (['English', 'Tamil', 'Hindi'] as $language)
                                             <div class="form-check mb-2">
                                                 <input class="form-check-input" type="checkbox" name="languages[]"
-                                                    id="lang{{ $loop->index }}" value="{{ $language }}"
+                                                    id="langDesktop{{ $loop->index }}" value="{{ $language }}"
                                                     {{ in_array($language, request('languages', [])) ? 'checked' : '' }}>
                                                 <label class="form-check-label"
-                                                    for="lang{{ $loop->index }}">{{ $language }}</label>
+                                                    for="langDesktop{{ $loop->index }}">{{ $language }}</label>
                                             </div>
                                         @endforeach
                                     </div>
@@ -133,24 +146,25 @@
 
                             <!-- Duration Filter -->
                             <div class="accordion-item border-0 mb-3 shadow-sm">
-                                <h2 class="accordion-header" id="headingDuration">
+                                <h2 class="accordion-header" id="headingDurationDesktop">
                                     <button class="accordion-button collapsed shadow-none" type="button"
-                                        data-bs-toggle="collapse" data-bs-target="#collapseDuration" aria-expanded="false">
+                                        data-bs-toggle="collapse" data-bs-target="#collapseDurationDesktop"
+                                        aria-expanded="false">
                                         <i class="bi bi-clock me-2"></i> Duration
-                                        <span class="badge bg-primary ms-auto">{{ count(request('durations', [])) }}</span>
+                                        <span
+                                            class="badge bg-primary ms-auto">{{ count(request('durations', [])) }}</span>
                                     </button>
                                 </h2>
-                                <div id="collapseDuration"
-                                    class="accordion-collapse collapse {{ count(request('durations', [])) ? 'show' : '' }}"
-                                    aria-labelledby="headingDuration" data-bs-parent="#filterAccordion">
+                                <div id="collapseDurationDesktop"
+                                    class="accordion-collapse collapse {{ count(request('durations', [])) ? 'show' : '' }}">
                                     <div class="accordion-body pt-2">
                                         @foreach (['1-2 Hours', '3+ Hours', '1-2 Weeks', '3+ Weeks'] as $duration)
                                             <div class="form-check mb-2">
                                                 <input class="form-check-input" type="checkbox" name="durations[]"
-                                                    id="dur{{ $loop->index }}" value="{{ $duration }}"
+                                                    id="durDesktop{{ $loop->index }}" value="{{ $duration }}"
                                                     {{ in_array($duration, request('durations', [])) ? 'checked' : '' }}>
                                                 <label class="form-check-label"
-                                                    for="dur{{ $loop->index }}">{{ $duration }}</label>
+                                                    for="durDesktop{{ $loop->index }}">{{ $duration }}</label>
                                             </div>
                                         @endforeach
                                     </div>
@@ -159,28 +173,28 @@
 
                             <!-- Price Filter -->
                             <div class="accordion-item border-0 mb-3 shadow-sm">
-                                <h2 class="accordion-header" id="headingPrice">
+                                <h2 class="accordion-header" id="headingPriceDesktop">
                                     <button class="accordion-button collapsed shadow-none" type="button"
-                                        data-bs-toggle="collapse" data-bs-target="#collapsePrice" aria-expanded="false">
+                                        data-bs-toggle="collapse" data-bs-target="#collapsePriceDesktop"
+                                        aria-expanded="false">
                                         <i class="bi bi-currency-rupee me-2"></i> Price
                                         <span class="badge bg-primary ms-auto">{{ count(request('prices', [])) }}</span>
                                     </button>
                                 </h2>
-                                <div id="collapsePrice"
-                                    class="accordion-collapse collapse {{ count(request('prices', [])) ? 'show' : '' }}"
-                                    aria-labelledby="headingPrice" data-bs-parent="#filterAccordion">
+                                <div id="collapsePriceDesktop"
+                                    class="accordion-collapse collapse {{ count(request('prices', [])) ? 'show' : '' }}">
                                     <div class="accordion-body pt-2">
                                         <div class="form-check mb-2">
                                             <input class="form-check-input" type="checkbox" name="prices[]"
-                                                id="priceFree" value="Free"
+                                                id="priceFreeDesktop" value="Free"
                                                 {{ in_array('Free', request('prices', [])) ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="priceFree">Free</label>
+                                            <label class="form-check-label" for="priceFreeDesktop">Free</label>
                                         </div>
                                         <div class="form-check mb-2">
                                             <input class="form-check-input" type="checkbox" name="prices[]"
-                                                id="pricePaid" value="Paid"
+                                                id="pricePaidDesktop" value="Paid"
                                                 {{ in_array('Paid', request('prices', [])) ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="pricePaid">Paid</label>
+                                            <label class="form-check-label" for="pricePaidDesktop">Paid</label>
                                         </div>
                                         <div class="mt-3">
                                             <label class="form-label small">Price Range</label>
@@ -210,65 +224,69 @@
                         </div>
                     </form>
                 </div>
+
                 <!-- Courses Cards -->
                 <div class="col-md-9">
                     <div class="row g-4">
-                        <div class="row">
-                            @foreach ($courses as $course)
-                                <div class="col-md-6 col-lg-4 mb-4">
-                                    <div class="course-card position-relative bg-white">
-                                        <!-- Course Image -->
-                                        <img src="{{ asset($course->image) }}" class="w-100" alt="{{ $course->name }}">
-
-                                        <!-- Badges -->
-                                        <span class="badge badge-online bg-danger">
-                                            {{ $course->learning_product_type === 'Online' ? 'Online' : 'Offline' }}
-                                        </span>
-                                        <span
-                                            class="badge badge-price {{ $course->paid_type === 'Free' ? 'badge-free' : 'badge-paid' }}">
-                                            {{ $course->paid_type }}
-                                        </span>
-
-                                        <div class="p-3">
-                                            <!-- Course Title -->
-                                            <h6 class="mb-1">{{ $course->name }}</h6>
-
-                                            <!-- Provider -->
-                                            <p class="text-muted small mb-1">{{ $course->provider }}</p>
-
-                                            <!-- Sector -->
-                                            <p class="text-warning small mb-1">
-                                                {{ $course->sector->name ?? 'No Sector' }}
-                                            </p>
-
-                                            <!-- Language and Duration -->
-                                            <div class="d-flex justify-content-between small text-muted">
-                                                <span>{{ $course->language }}</span>
-                                                <span><i class="bi bi-clock"></i> {{ $course->duration }}</span>
-                                            </div>
-
-                                            <!-- Credits and Rating -->
-                                            <div class="d-flex justify-content-between mt-2">
-                                                <span class="text-muted small">
-                                                    {{ $course->credits_assigned ?? 'No Credit' }}
-                                                </span>
-                                                <span class="rating-stars">★ 0.0 (0 review)</span>
-                                            </div>
-
-                                            <!-- Apply Button -->
-                                            <div class="mt-2">
-                                                <a href="{{ route('web.course.show', $course->slug) }}" class="apply-link">
-                                                    Apply →
-                                                </a>
-                                            </div>
+                        @foreach ($courses as $course)
+                            <div class="col-md-6 col-lg-4 mb-4">
+                                <div class="course-card position-relative bg-white">
+                                    <img src="{{ asset($course->image) }}" class="w-100" alt="{{ $course->name }}">
+                                    <span
+                                        class="badge badge-online bg-danger">{{ $course->learning_product_type === 'Online' ? 'Online' : 'Offline' }}</span>
+                                    <span
+                                        class="badge badge-price {{ $course->paid_type === 'Free' ? 'badge-free' : 'badge-paid' }}">{{ $course->paid_type }}</span>
+                                    <div class="p-3">
+                                        <h6 class="mb-1">{{ $course->name }}</h6>
+                                        <p class="text-muted small mb-1">{{ $course->provider }}</p>
+                                        <p class="text-warning small mb-1">{{ $course->sector->name ?? 'No Sector' }}</p>
+                                        <div class="d-flex justify-content-between small text-muted">
+                                            <span>{{ $course->language }}</span>
+                                            <span><i class="bi bi-clock"></i> {{ $course->duration }}</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between mt-2">
+                                            <span
+                                                class="text-muted small">{{ $course->credits_assigned ?? 'No Credit' }}</span>
+                                            <span class="rating-stars">★ 0.0 (0 review)</span>
+                                        </div>
+                                        <div class="mt-2">
+                                            <a href="{{ route('web.course.show', $course->slug) }}"
+                                                class="apply-link">Apply →</a>
                                         </div>
                                     </div>
                                 </div>
-                            @endforeach
-                        </div>
+                            </div>
+                        @endforeach
                     </div>
                 </div>
             </div>
+
+            <!-- Offcanvas Filters (Mobile) -->
+            <div class="offcanvas offcanvas-start" tabindex="-1" id="mobileFilters">
+                <div class="offcanvas-header">
+                    <h5 class="offcanvas-title"><i class="bi bi-funnel"></i> Filters</h5>
+                    <button id="filterBtn" type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+                </div>
+                <div class="offcanvas-body" >
+                    <form action="{{ route('web.course.index') }}" method="GET" id="courseFiltersMobile">
+                        <!-- Keep same filters as desktop -->
+                        {{-- copy all filter accordion content same as above --}}
+                        <div class="accordion" id="filterCanvas" class="filter-canvas">
+                            <div class="filter-content"></div>
+                            {{-- Sector, Language, Duration, Price same code as above but IDs mobile specific --}}
+                        </div>
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-funnel me-1"></i> Apply Filters
+                            </button>
+                            <a href="{{ route('web.course.index') }}" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-counterclockwise me-1"></i> Reset All
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
             <style>
                 .course-card {
                     border: 1px solid #dee2e6;
@@ -368,3 +386,29 @@
 
     <!-- content @e -->
 @endsection
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    // Cache selectors
+    let $mobileFilterContent = $("#courseFiltersMobile .filter-content");
+    let $desktopFilters = $("#courseFiltersDesktop");
+
+    // Use Bootstrap event when offcanvas is about to show
+    $('#mobileFilters').on('show.bs.offcanvas', function () {
+        if ($mobileFilterContent.children().length === 0) {
+            // Clone desktop filters
+            let $clone = $desktopFilters.clone();
+
+            // Remove unwanted desktop buttons (if you want mobile buttons only)
+            $clone.find("button[type='submit']").remove();
+            $clone.find("a.btn").remove();
+
+            // Append only the inner HTML of filters
+            $mobileFilterContent.append($clone.html());
+        }
+    });
+});
+</script>
+@endpush
+

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Course;
 use App\Models\Sector;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class CourseController extends Controller
@@ -39,10 +40,10 @@ class CourseController extends Controller
         // Validate the request data
         $validated = $request->validate([
             'name'                      => 'required|string|max:255',
-            'short_name'                => 'nullable|string|max:100',
+            'short_name'                => 'required|in:Awareness,Foundation,Intermediate,Advanced,Professional',
             'image'                     => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             'duration'                  => 'nullable|string|max:100',
-            'paid_type'                 => 'required|in:Free,Paid',
+            'paid_type'                 => 'required|in:Free,Paid,Nill',
             'sector_id'                 => 'required|exists:sectors,id',
             'short_description'         => 'nullable|string',
             'long_description'          => 'nullable|string',
@@ -50,7 +51,6 @@ class CourseController extends Controller
             'language'                  => 'nullable|string|max:100',
             'certification_type'        => 'nullable|string|max:255',
             'assessment_mode'           => 'nullable|string|max:255',
-            'qp_code'                   => 'nullable|string|max:100',
             'nsqf_level'                => 'nullable|string|max:50',
             'credits_assigned'          => 'nullable|string|max:50',
             'learning_product_type'     => 'nullable|string|max:255',
@@ -73,6 +73,15 @@ class CourseController extends Controller
             'topics.*.description'      => 'nullable|string',
         ]);
 
+        // Generate ISICO Course Code
+        $isicoCourseCode = $this->generateIsicoCourseCode($validated['sector_id'], $validated['short_name']);
+
+        if (!$isicoCourseCode) {
+            notyf()->addError('Failed to generate course code. Please try again.');
+            return back()->withInput();
+        }
+
+        // Handle image upload
         if ($request->hasFile('image')) {
             $image = $request->file('image');
             $filename = time() . '_' . $image->getClientOriginalName();
@@ -92,6 +101,9 @@ class CourseController extends Controller
         // Generate slug
         $validated['slug'] = Str::slug($validated['name']);
 
+        // Add the generated ISICO Course Code
+        $validated['qp_code'] = $isicoCourseCode;
+
         // Convert topics array to JSON if present
         if (isset($validated['topics'])) {
             $validated['topics'] = json_encode($validated['topics']);
@@ -102,6 +114,48 @@ class CourseController extends Controller
         notyf()->addSuccess('Course created successfully!');
         return redirect()->route('admin.course.index')
             ->with('success', 'Course created successfully!');
+    }
+
+    /**
+     * Generate ISICO Course Code
+     * Format: ISICO + Sector Code + Level Code + Sequential Number (001)
+     * Example: ISICOAG01001
+     */
+    private function generateIsicoCourseCode($sectorId, $shortName)
+    {
+        try {
+            // Get sector code (first 2 letters of sector name)
+            $sector = Sector::find($sectorId);
+            if (!$sector) {
+                return null;
+            }
+
+            $sectorCode = $sector->prefix;
+
+            // Map short_name to level codes
+            $levelCodes = [
+                'Awareness' => '01',
+                'Foundation' => '02',
+                'Intermediate' => '03',
+                'Advanced' => '04',
+                'Professional' => '05'
+            ];
+
+            $levelCode = $levelCodes[$shortName] ?? '00';
+
+            // Get the last course ID and increment
+            $lastCourse = Course::orderBy('id', 'desc')->first();
+            $sequentialNumber = $lastCourse ? str_pad($lastCourse->id + 1, 3, '0', STR_PAD_LEFT) : '001';
+
+            // Generate the full code
+            $courseCode = "ISICO{$sectorCode}{$levelCode}{$sequentialNumber}";
+
+            return $courseCode;
+
+        } catch (\Exception $e) {
+            Log::error('Error generating ISICO course code: ' . $e->getMessage());
+            return null;
+        }
     }
 
     /**
@@ -133,7 +187,7 @@ class CourseController extends Controller
             'short_name'                => 'nullable|string|max:100',
             'image'                     => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'duration'                  => 'nullable|string|max:100',
-            'paid_type'                 => 'required|in:Free,Paid',
+            'paid_type'                 => 'required|in:Free,Paid,Nill',
             'sector_id'                 => 'required|exists:sectors,id',
             'short_description'         => 'nullable|string',
             'long_description'          => 'nullable|string',

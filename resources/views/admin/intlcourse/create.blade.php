@@ -58,23 +58,23 @@
                     <h4 class="mb-3">Provider & Affiliation Details</h4>
                     <!-- Name & Short Name -->
                     <div class="col-md-6">
-                        <label for="admissionprovider " class="form-label">Admission Provider  </label>
-                        <input type="text" class="form-control @error('') is-invalid @enderror" name="" value="{{ old('') }}" required>
-                        @error('admissionprovider')
+                        <label for="admin_provider " class="form-label">Admission Provider  </label>
+                        <input type="text" class="form-control @error('') is-invalid @enderror" name="admin_provider" value="{{ old('admin_provider') }}" placeholder="ISICO / overseas partner" required>
+                        @error('admin_provider')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="col-md-6">
-                        <label for="" class="form-label">Overseas Institution / Partner   <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control @error('') is-invalid @enderror" name="" placeholder="Overseas Institution / Partner " value="{{ old('') }}">
-                        @error('')
+                        <label for="Overseas Institution / Partner" class="form-label">Overseas Institution / Partner   <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control @error('') is-invalid @enderror" name="partner" placeholder="e.g., Trent Global College, Singapore" value="{{ old('partner') }}">
+                        @error('partner')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="col-md-6">
                         <label for="" class="form-label">Accreditation / Recognition   </label>
-                        <input type="text" class="form-control @error('') is-invalid @enderror" name="" placeholder="ISICO-recognized, Partner-recognized, International Board, Other " value="{{ old('') }}">
-                        @error('')
+                        <input type="text" class="form-control @error('') is-invalid @enderror" name="accreditation_recognition" placeholder="ISICO-recognized, Partner-recognized, International Board, Other" value="{{ old('accreditation_recognition') }}">
+                        @error('accreditation_recognition')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
@@ -87,16 +87,16 @@
                         <h4 class="mb-3">Course Details</h4>
                           <!-- Name & Short Name -->
                         <div class="col-md-6">
-                            <label for="name" class="form-label">Course Name <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required>
-                            @error('name')
+                            <label for="course_name" class="form-label">Course Name / Title <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control @error('course_name') is-invalid @enderror" name="course_name" value="{{ old('course_name') }}" placeholder="Diploma in Computer Scicence" required>
+                            @error('course_name')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="col-md-6">
-                            <label for="short_name" class="form-label">Level <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control @error('short_name') is-invalid @enderror" name="short_name" value="{{ old('short_name') }}">
-                            @error('short_name')
+                            <label for="level" class="form-label">Level <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control @error('level') is-invalid @enderror" name="level" value="{{ old('level') }}">
+                            @error('level')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
@@ -148,23 +148,13 @@
                             <label class="form-label">Pathway Type <span class="text-danger">*</span></label>
                             <select name="pathway_type" class="form-select @error('pathway_type') is-invalid @enderror">
                                 <option value="">Select Pathway Type</option>
-                                <option value="Online Pathway" {{ old('') == 'Online Pathway' ? 'selected' : '' }}>Online Pathway</option>
-                                <option value="Onsite Abroad" {{ old('') == 'Onsite Abroad' ? 'selected' : '' }}>Onsite Abroad</option>
-                                <option value="Hybrid" {{ old('') == 'Hybrid' ? 'selected' : '' }}>Hybrid</option>
-                                <option value="Dual-credit" {{ old('') == 'Dual-credit' ? 'selected' : '' }}>Dual-credit</option>
-                                <option value="Twinning Program" {{ old('') == 'Twinning Program' ? 'selected' : '' }}>Twinning Program</option>
+                                <option value="online_pathway" {{ old('online_pathway') == 'online_pathway' ? 'selected' : '' }}>Online Pathway</option>
+                                <option value="onsite_abroad" {{ old('onsite_abroad') == 'onsite_abroad' ? 'selected' : '' }}>Onsite Abroad</option>
+                                <option value="hybrid" {{ old('hybrid') == 'hybrid' ? 'selected' : '' }}>Hybrid</option>
+                                <option value="dual_credit" {{ old('dual_credit') == 'dual_credit' ? 'selected' : '' }}>Dual-credit</option>
+                                <option value="twinning_program" {{ old('twinning_program') == 'twinning_program' ? 'selected' : '' }}>Twinning Program</option>
                             </select>
                             @error('pathway_type')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <!-- Destination Country -->
-                        <div class="col-md-6">
-                            <label class="form-label">Destination Country <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control @error('destination_country') is-invalid @enderror"
-                                name="destination_country" value="{{ old('destination_country') }}">
-                            @error('destination_country')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
@@ -186,8 +176,8 @@
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Language of Instruction  <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control @error('language') is-invalid @enderror" name="language" value="">
-                            @error('language')
+                            <input type="text" class="form-control @error('language_instruction') is-invalid @enderror" name="language_instruction" value="">
+                            @error('language_instruction')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
@@ -206,6 +196,7 @@
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
+
                         <div class="col-md-6">
                             <label class="form-label">Paid Type <span class="text-danger">*</span></label>
                             <select name="paid_type" class="form-select @error('paid_type') is-invalid @enderror">
@@ -260,17 +251,7 @@
                             <label class="form-label">International Mapping</label>
                             <input type="text" name="international_mapping" class="form-control" placeholder="e.g., aligned to UK Level 5, Singapore Diploma, Japan Senmon-Gakko level, etc.">
                         </div>
-                          {{-- <!-- Internshipe -->
-                        <div class="col-md-4">
-                            <label class="form-label">Internship? <span class="text-danger">*</span></label>
-                            <select name="internship" class="form-select @error('internship') is-invalid @enderror">
-                                <option value="0" {{ old('internship', 0) == 0 ? 'selected' : '' }}>No</option>
-                                <option value="1" {{ old('internship') == 1 ? 'selected' : '' }}>Yes</option>
-                            </select>
-                            @error('internship')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div> --}}
+
                         <!-- Credits Transferable -->
                         <div class="col-md-6">
                             <label class="form-label">Credits Transferable</label>
@@ -380,7 +361,7 @@
                             @enderror
                         </div>
                         <div class="col-md-4">
-                            <label class="form-label">NSQF Level <span class="text-danger">*</span></label>
+                            <label class="form-label">NSQF-referenced (non-accredited)  <span class="text-danger">*</span></label>
                             <input type="text" class="form-control @error('nsqf_level') is-invalid @enderror" name="nsqf_level" value="{{ old('nsqf_level') }}">
                             @error('nsqf_level')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -417,13 +398,7 @@
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Domain <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control @error('domain') is-invalid @enderror" name="domain" value="{{ old('domain') }}">
-                            @error('domain')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
+
                         <div class="col-md-6">
                             <label class="form-label">Occupations <span class="text-danger">*</span></label>
                             <input type="text" class="form-control @error('occupations') is-invalid @enderror" name="occupations" value="{{ old('occupations') }}">
@@ -482,14 +457,6 @@
                     <div class="card-body row g-3">
                         <h4 class="mb-3 mt-3">Other Details:</h4>
                         <h5 class="mb-3 mt-3">Logistics & Costs</h5>
-                        <!-- Duration & Paid Type -->
-                        {{-- <div class="col-md-6">
-                            <label class="form-label">Duration <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control @error('duration') is-invalid @enderror" name="duration" value="{{ old('duration') }}">
-                            @error('duration')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div> --}}
                         <!-- Duration (Local) -->
                         <div class="col-md-6">
                             <label class="form-label">Duration (Local) </label>
@@ -568,18 +535,25 @@
                             @enderror
                         </div>
 
-                        <!-- Career Outcomes -->
                         <div class="col-md-12">
                             <label class="form-label">Career Outcomes</label>
-                            <textarea class="form-control @error('career_outcomes') is-invalid @enderror"
-                                    name="career_outcomes" rows="3"
-                                    placeholder="e.g.,
-                        - Data Analyst
-                        - Business Intelligence Specialist
-                        - Machine Learning Engineer"></textarea>
-                            @error('career_outcomes')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+                            <div id="careerOutcomesContainer">
+                                <div class="input-group mb-2 outcome-input-group">
+                                    <input type="text" class="form-control career-outcome-input" name="career_outcome[]" placeholder="e.g., Data Analyst">
+                                    <button class="btn btn-outline-danger remove-outcome-btn" type="button" style="display:none;">Remove</button>
+                                </div>
+                            </div>
+
+                            <button id="addOutcomeBtn" class="btn btn-primary btn-sm mb-3" type="button">
+                                + Add Outcome
+                            </button>
+
+                            <input type="hidden" name="career_outcomes_json" id="careerOutcomesJsonInput">
+
+                            <div class="mt-3">
+                                <label>JSON Output (for demo):</label>
+                                <pre id="jsonOutput"></pre>
+                            </div>
                         </div>
 
                         <!-- International Recognition -->
@@ -604,7 +578,7 @@
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
-<!-- Dates -->
+                <!-- Dates -->
                 <div class="col-md-6">
                     <label class="form-label">Start Date <span class="text-danger">*</span></label>
                     <input type="date" class="form-control @error('start_date') is-invalid @enderror" name="start_date" value="{{ old('start_date') }}">
@@ -705,6 +679,82 @@ $(document).ready(function() {
     ],
     placeholder: 'Write your project description here (max 60 words)...'
   });
+});
+$(document).ready(function() {
+
+    /**
+     * Function to generate and update the JSON
+     */
+    function updateJson() {
+        const outcomes = [];
+        // Iterate over all input fields with the class 'career-outcome-input'
+        $('#careerOutcomesContainer').find('.career-outcome-input').each(function() {
+            const value = $(this).val().trim();
+            if (value !== '') {
+                outcomes.push(value);
+            }
+        });
+
+        // Convert the array to a JSON string
+        const jsonString = JSON.stringify(outcomes, null, 2);
+
+        // Store the JSON string in the hidden input field (ready for form submission)
+        $('#careerOutcomesJsonInput').val(jsonString);
+
+        // Update the demo output
+        $('#jsonOutput').text(jsonString);
+    }
+
+    /**
+     * Add Outcome Button Click Handler
+     */
+    $('#addOutcomeBtn').on('click', function() {
+        // Create the new input group HTML
+        const newOutcomeInput = `
+            <div class="input-group mb-2 outcome-input-group">
+                <input type="text" class="form-control career-outcome-input" placeholder="e.g., Business Intelligence Specialist">
+                <button class="btn btn-outline-danger remove-outcome-btn" type="button">Remove</button>
+            </div>
+        `;
+
+        // Append the new input group to the container
+        $('#careerOutcomesContainer').append(newOutcomeInput);
+    });
+
+    /**
+     * Remove Button Click Handler (Event Delegation)
+     * Uses event delegation on the static container parent for dynamic elements.
+     */
+    $('#careerOutcomesContainer').on('click', '.remove-outcome-btn', function() {
+        // Remove the entire input-group
+        $(this).closest('.outcome-input-group').remove();
+        // Update JSON after removal
+        updateJson();
+    });
+
+    /**
+     * Input Change/Keyup Handler (Event Delegation)
+     * Calls updateJson whenever an input changes.
+     */
+    $('#careerOutcomesContainer').on('keyup change', '.career-outcome-input', function() {
+        // Show/Hide the 'Remove' button based on whether it's the first input
+        const isFirstInput = $(this).closest('.outcome-input-group').is(':first-child');
+        const removeBtn = $(this).siblings('.remove-outcome-btn');
+
+        if (isFirstInput && $('#careerOutcomesContainer').children().length === 1) {
+            // Only hide if it's the *only* input and the first one
+            removeBtn.hide();
+        } else {
+            removeBtn.show();
+        }
+
+        // Update JSON after input change
+        updateJson();
+    });
+
+    // Initial setup to show/hide the first remove button and generate initial JSON
+    updateJson(); // Generates JSON on load
+    $('.outcome-input-group:first-child').find('.remove-outcome-btn').hide(); // Hides 'Remove' on the first input initially
 });
     </script>
 

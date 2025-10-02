@@ -31,9 +31,9 @@ class ActivityController extends Controller
      */
     public function create()
     {
-        $organizers = User::where('role', 'organizer')->get();
+        $organizers = User::all();
         $categories = Category::get();
-        
+
         return view('admin.activity.create', compact('organizers', 'categories'));
     }
 
@@ -47,6 +47,9 @@ class ActivityController extends Controller
             'slug'                  => 'required|string|max:255|unique:activities',
             'short_description'     => 'required|string|max:500',
             'description'           => 'required|string',
+            'sponsor_name'          => 'nullable|string|max:255',
+            'sponsor_details'       => 'nullable|string|max:255',
+            'sponsor_logo'          => 'nullable|image|mimes:jpeg,png,jpg,gif|max:1024', // 1MB max
             'start_date'            => 'required|date',
             'end_date'              => 'required|date|after:start_date',
             'registration_deadline' => 'nullable|date|before:start_date',
@@ -79,6 +82,14 @@ class ActivityController extends Controller
             $bannerName = time() . '_banner.' . $banner->getClientOriginalExtension();
             $banner->move(public_path('uploads/activity'), $bannerName);
             $validated['banner_image'] = 'uploads/activity/' . $bannerName;
+        }
+
+        // Handle banner sponcer image upload
+        if ($request->hasFile('sponsor_logo')) {
+            $banner = $request->file('sponsor_logo');
+            $bannerName = time() . 'sponsor_logo.' . $banner->getClientOriginalExtension();
+            $banner->move(public_path('uploads/activity'), $bannerName);
+            $validated['sponsor_logo'] = 'uploads/activity/' . $bannerName;
         }
 
         // Create the activity
@@ -117,9 +128,9 @@ class ActivityController extends Controller
      */
     public function edit(Activity $activity)
     {
-        $organizers = User::where('role', 'organizer')->get();
+        $organizers = User::all();
         $categories = Category::get();
-        
+
         return view('admin.activity.edit', compact('activity', 'organizers', 'categories'));
     }
 
@@ -133,6 +144,9 @@ class ActivityController extends Controller
             'slug'                      => 'required|string|max:255|unique:activities,slug,'.$activity->id,
             'short_description'         => 'required|string|max:500',
             'description'               => 'required|string',
+            'sponsor_name'              => 'nullable|string|max:255',
+            'sponsor_details'           => 'nullable|string|max:255',
+            'sponsor_logo'              => 'nullable|image|mimes:jpeg,png,jpg,gif|max:1024',
             'start_date'                => 'required|date',
             'end_date'                  => 'required|date|after:start_date',
             'registration_deadline'     => 'nullable|date|before:start_date',
@@ -159,9 +173,9 @@ class ActivityController extends Controller
             }
 
             $thumbnailName = time() . '_' . $request->file('thumbnail_image')->getClientOriginalName();
-            $request->file('thumbnail_image')->move(public_path('uploads/activity/thumbnails'), $thumbnailName);
+            $request->file('thumbnail_image')->move(public_path('uploads/activity'), $thumbnailName);
 
-            $validated['thumbnail_image'] = 'uploads/activity/thumbnails/' . $thumbnailName;
+            $validated['thumbnail_image'] = 'uploads/activity/' . $thumbnailName;
         }
 
         if ($request->hasFile('banner_image')) {
@@ -171,9 +185,21 @@ class ActivityController extends Controller
             }
 
             $bannerName = time() . '_' . $request->file('banner_image')->getClientOriginalName();
-            $request->file('banner_image')->move(public_path('uploads/activity/banners'), $bannerName);
+            $request->file('banner_image')->move(public_path('uploads/activity'), $bannerName);
 
-            $validated['banner_image'] = 'uploads/activity/banners/' . $bannerName;
+            $validated['banner_image'] = 'uploads/activity/' . $bannerName;
+        }
+
+        if ($request->hasFile('sponsor_logo')) {
+            // Delete old banner if exists
+            if ($activity->banner_image && file_exists(public_path($activity->banner_image))) {
+                unlink(public_path($activity->banner_image));
+            }
+
+            $bannerName = time() . '_' . $request->file('sponsor_logo')->getClientOriginalName();
+            $request->file('sponsor_logo')->move(public_path('uploads/activity'), $bannerName);
+
+            $validated['sponsor_logo'] = 'uploads/activity/' . $bannerName;
         }
 
         // ✅ Handle gallery images (delete old + upload new)
@@ -197,7 +223,7 @@ class ActivityController extends Controller
                 ]);
             }
         }
-        
+
         $activity->update($validated);
         notyf()->addSuccess('Activity updated successfully!');
         return redirect()->route('admin.activity.index')
@@ -218,6 +244,10 @@ class ActivityController extends Controller
             unlink(public_path($activity->banner_image));
         }
 
+        if ($activity->sponsor_logo && file_exists(public_path($activity->sponsor_logo))) {
+            unlink(public_path($activity->sponsor_logo));
+        }
+
         // Delete the activity record
         $activity->delete();
         notyf()->addSuccess(' deleted successfully!');
@@ -234,7 +264,7 @@ class ActivityController extends Controller
         $request->validate(['title' => 'required|string|max:255']);
 
         $slug = Str::slug($request->title);
-        
+
         // Ensure slug is unique
         $count = 1;
         $originalSlug = $slug;

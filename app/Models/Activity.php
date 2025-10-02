@@ -35,6 +35,9 @@ class Activity extends Model
         'slug',
         'short_description',
         'description',
+        'sponsor_name',
+        'sponsor_details',
+        'sponsor_logo',
         'start_date',
         'end_date',
         'registration_deadline',
@@ -50,7 +53,6 @@ class Activity extends Model
         'rules',
         'highlights' // if stored as JSON
     ];
-
     /**
      * The attributes that should be cast.
      *

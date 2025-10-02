@@ -74,6 +74,17 @@
                                     </div>
                                 </div>
 
+                                 <div class="col-sm-6 col-12">
+                                    <div class="mb-3">
+                                        <label class="form-label">Prefix <span class="text-danger">*</span></label>
+                                        <input type="text" name="prefix" value="{{ old('prefix',$sector->prefix ) }}"
+                                            class="form-control @error('prefix') is-invalid @enderror" id="prefix-name">
+                                        @error('prefix')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
                             <div class="col-sm-6 col-12">
                                 <div class="mb-3">
                                     <label class="form-label">Position <span class="text-danger">*</span></label>

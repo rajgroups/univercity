@@ -1,9 +1,8 @@
 @push('meta')
-    <title>{{ $metaTitle ?? ($course->name ?? 'Default Page Title') }}</title>
-
+    <title>{{ $metaTitle ?? ($course->name ?? 'International Course') }}</title>
     <meta name="description"
         content="{{ $metaDescription ?? Str::limit(strip_tags($course->short_description ?? ''), 150) }}">
-    <meta name="keywords" content="{{ $metaKeywords ?? 'announcement, news, education' }}">
+    <meta name="keywords" content="{{ $metaKeywords ?? 'international course, education, study abroad' }}">
     <meta name="author" content="{{ $metaAuthor ?? 'YourSiteName' }}">
     <meta name="robots" content="{{ $metaRobots ?? 'index, follow' }}">
 
@@ -11,7 +10,7 @@
     <link rel="canonical" href="{{ $metaCanonical ?? url()->current() }}">
 
     <!-- Open Graph -->
-    <meta property="og:title" content="{{ $metaOgTitle ?? ($course->name ?? 'Default OG Title') }}">
+    <meta property="og:title" content="{{ $metaOgTitle ?? ($course->name ?? 'International Course') }}">
     <meta property="og:description"
         content="{{ $metaOgDescription ?? Str::limit(strip_tags($course->short_description ?? ''), 150) }}">
     <meta property="og:type" content="website">
@@ -20,705 +19,636 @@
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="{{ $metaTwitterTitle ?? ($course->name ?? 'Default Twitter Title') }}">
+    <meta name="twitter:title" content="{{ $metaTwitterTitle ?? ($course->name ?? 'International Course') }}">
     <meta name="twitter:description"
         content="{{ $metaTwitterDescription ?? Str::limit(strip_tags($course->short_description ?? ''), 150) }}">
     <meta name="twitter:image" content="{{ $metaTwitterImage ?? asset($course->image ?? 'default.jpg') }}">
 @endpush
+
 @extends('layouts.web.app')
 @section('content')
-    <!-- Yout Content Here -->
-    <section class="title-banner mb-120">
+    <!-- Hero Banner -->
+    <section class="sm-title-banner py-5 py-lg-120 mb-5 mb-lg-120"
+        style="background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('{{ asset($course->image) }}') center/cover no-repeat;">
         <div class="container-fluid">
-            <h2 class="fw-500 mb-24">{{ $course->name }}<br class="d-sm-block d-none">
-                {{ $course->short_name }} <span class="color-primary"> {{ $course->language }}</span></h2>
-            <div class="d-flex align-items-center gap-16 flex-wrap row-gap-4">
-                <div class="d-flex align-items-center gap-8">
-                    <i class="bi bi-folder-fill text-warning"></i>
-                    <p class="light-gray">{{ $course->name }}</p>
+            <div class="row align-items-center">
+                <div class="col-12 col-lg-8 mb-4 mb-lg-0">
+                    <div class="text-white">
+                        <span
+                            class="badge bg-warning text-dark mb-3">{{ $course->pathway_type ? ucfirst(str_replace('_', ' ', $course->pathway_type)) : 'International Course' }}</span>
+                        <h1 class="fw-bold mb-3 display-6 display-lg-5 text-shadow">{{ $course->course_name }}</h1>
+                        <p class="lead mb-4 text-shadow">{{ $course->short_description }}</p>
+
+                        <div class="d-flex flex-wrap align-items-center gap-3 gap-lg-4 text-white">
+                            <div class="d-flex align-items-center gap-2 bg-dark bg-opacity-50 px-2 px-lg-3 py-1 py-lg-2 rounded-pill">
+                                <i class="bi bi-geo-alt-fill text-warning fs-6"></i>
+                                <span class="small fw-medium">{{ $course->country->name ?? 'Multiple Locations' }}</span>
+                            </div>
+                            <div class="d-flex align-items-center gap-2 bg-dark bg-opacity-50 px-2 px-lg-3 py-1 py-lg-2 rounded-pill">
+                                <i class="bi bi-clock-fill text-warning fs-6"></i>
+                                <span class="small fw-medium">{{ $course->total_duration ?? 'Flexible Duration' }}</span>
+                            </div>
+                            <div class="d-flex align-items-center gap-2 bg-dark bg-opacity-50 px-2 px-lg-3 py-1 py-lg-2 rounded-pill">
+                                <i class="bi bi-mortarboard-fill text-warning fs-6"></i>
+                                <span class="small fw-medium">{{ $course->level }}</span>
+                            </div>
+                            @if ($course->partner)
+                                <div class="d-flex align-items-center gap-2 bg-dark bg-opacity-50 px-2 px-lg-3 py-1 py-lg-2 rounded-pill">
+                                    <i class="bi bi-building-fill text-warning fs-6"></i>
+                                    <span class="small fw-medium">{{ $course->partner }}</span>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
                 </div>
-                <div class="d-flex align-items-center gap-8">
-                    <p class="text-muted">
-                        <i class="bi bi-calendar-event me-2 text-primary"></i>
-                        {{ \Carbon\Carbon::parse($course->created_at)->format('F jS, Y') }}
-                    </p>
+                <div class="col-12 col-lg-4">
+                    <div class="bg-white rounded-3 p-3 p-lg-4 shadow-lg">
+                        <h5 class="fw-bold mb-3">Quick Details</h5>
+
+                        @if ($course->isico_course_code)
+                            <div class="d-flex justify-content-between align-items-center mb-2 py-1">
+                                <span class="text-muted small">Course Code:</span>
+                                <span class="fw-bold text-primary small">{{ $course->isico_course_code }}</span>
+                            </div>
+                        @endif
+
+                        <div class="d-flex justify-content-between align-items-center mb-2 py-1">
+                            <span class="text-muted small">Pathway Type:</span>
+                            <span class="fw-bold small">{{ $course->pathway_type ? ucfirst(str_replace('_', ' ', $course->pathway_type)) : 'N/A' }}</span>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center mb-2 py-1">
+                            <span class="text-muted small">Language:</span>
+                            <span class="fw-bold small">{{ $course->language_instruction }}</span>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center mb-2 py-1">
+                            <span class="text-muted small">Study Mode:</span>
+                            <span class="fw-bold small">{{ $course->provider }}</span>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center mb-3 py-1">
+                            <span class="text-muted small">Fee Type:</span>
+                            <span class="badge {{ $course->paid_type == 'Free' ? 'bg-success' : 'bg-warning text-dark' }} small">
+                                {{ $course->paid_type }}
+                            </span>
+                        </div>
+
+                        <button class="btn btn-primary w-100 btn-lg">Enroll Now</button>
+                        <button class="btn btn-outline-primary w-100 mt-2">Download Brochure</button>
+                    </div>
                 </div>
-                {{-- <div class="d-flex align-items-center gap-8">
-                    <p class="light-gray">Emily Watson</p>
-                </div> --}}
             </div>
         </div>
     </section>
-<div class="container mt-5">
-    <div class="row g-4">
-        <!-- Carousel / Image Slider -->
-        <div class="col-lg-6">
-            <div id="prodetailsslider" class="carousel slide" data-bs-ride="carousel">
-                <div class="carousel-inner">
-                    <div class="carousel-item active">
-                        <img src="{{ asset($course->image) }}" class="d-block w-100 rounded" alt="Course Image">
+
+    <!-- Main Content -->
+    <div class="container mt-4 mt-lg-5">
+        <div class="row g-4 g-lg-5">
+            <!-- Left Content -->
+            <div class="col-12 col-lg-8">
+                <!-- Course Overview -->
+                <div class="card shadow-sm border-0 mb-4">
+                    <div class="card-body p-3 p-lg-4">
+                        <h3 class="card-title fw-bold mb-3 mb-lg-4">Course Overview</h3>
+                        <div class="row">
+                            @if ($course->admin_provider)
+                                <div class="col-12 col-sm-6 mb-3">
+                                    <label class="fw-semibold text-muted small">Admission Provider:</label>
+                                    <p class="mb-0">{{ $course->admin_provider }}</p>
+                                </div>
+                            @endif
+
+                            @if ($course->accreditation_recognition)
+                                <div class="col-12 col-sm-6 mb-3">
+                                    <label class="fw-semibold text-muted small">Accreditation:</label>
+                                    <p class="mb-0">{{ $course->accreditation_recognition }}</p>
+                                </div>
+                            @endif
+
+                            @if ($course->learning_product_type)
+                                <div class="col-12 col-sm-6 mb-3">
+                                    <label class="fw-semibold text-muted small">Learning Product:</label>
+                                    <p class="mb-0">{{ $course->learning_product_type }}</p>
+                                </div>
+                            @endif
+
+                            @if ($course->certification_type)
+                                <div class="col-12 col-sm-6 mb-3">
+                                    <label class="fw-semibold text-muted small">Certification:</label>
+                                    <p class="mb-0">{{ $course->certification_type }}</p>
+                                </div>
+                            @endif
+                        </div>
+
+                        <div class="mt-3 mt-lg-4">
+                            {!! $course->long_description !!}
+                        </div>
                     </div>
-                    <!-- Add more carousel items if needed -->
                 </div>
 
-                <button class="carousel-control-prev" type="button" data-bs-target="#prodetailsslider" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon"></span>
-                    <span class="visually-hidden">Previous</span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#prodetailsslider" data-bs-slide="next">
-                    <span class="carousel-control-next-icon"></span>
-                    <span class="visually-hidden">Next</span>
-                </button>
+                <!-- Key Information Tabs -->
+                <div class="card shadow-sm border-0">
+                    <div class="card-body p-3 p-lg-4">
+                        <ul class="nav nav-pills flex-nowrap overflow-auto pb-2 mb-3 mb-lg-4" id="courseTabs" role="tablist" style="scrollbar-width: none; -ms-overflow-style: none;">
+                            <li class="nav-item flex-shrink-0" role="presentation">
+                                <button class="nav-link active small" id="topics-tab" data-bs-toggle="pill"
+                                    data-bs-target="#topics" type="button">Topics</button>
+                            </li>
+                            <li class="nav-item flex-shrink-0" role="presentation">
+                                <button class="nav-link small" id="eligibility-tab" data-bs-toggle="pill"
+                                    data-bs-target="#eligibility" type="button">Eligibility</button>
+                            </li>
+                            <li class="nav-item flex-shrink-0" role="presentation">
+                                <button class="nav-link small" id="logistics-tab" data-bs-toggle="pill"
+                                    data-bs-target="#logistics" type="button">Logistics</button>
+                            </li>
+                            <li class="nav-item flex-shrink-0" role="presentation">
+                                <button class="nav-link small" id="pathway-tab" data-bs-toggle="pill"
+                                    data-bs-target="#pathway" type="button">Career</button>
+                            </li>
+                        </ul>
 
-                <!-- Optional indicators -->
-                <div class="carousel-indicators mt-3">
-                    <button type="button" data-bs-target="#prodetailsslider" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-                    <button type="button" data-bs-target="#prodetailsslider" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                    <button type="button" data-bs-target="#prodetailsslider" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                        <div class="tab-content" id="courseTabsContent">
+                            <!-- Topics Tab -->
+                            <div class="tab-pane fade show active" id="topics" role="tabpanel">
+                                @php
+                                    $topics = json_decode($course->topics, true) ?? [];
+                                @endphp
+
+                                @if (count($topics) > 0)
+                                    <div class="accordion" id="topicsAccordion">
+                                        @foreach ($topics as $index => $topic)
+                                            <div class="accordion-item border-0 mb-2">
+                                                <h2 class="accordion-header">
+                                                    <button class="accordion-button collapsed bg-light py-3" type="button"
+                                                        data-bs-toggle="collapse"
+                                                        data-bs-target="#topic{{ $index }}">
+                                                        <i class="bi bi-bookmark-plus-fill text-primary me-2"></i>
+                                                        <span class="text-start">{{ $topic['title'] ?? 'Topic ' . ($index + 1) }}</span>
+                                                    </button>
+                                                </h2>
+                                                <div id="topic{{ $index }}" class="accordion-collapse collapse"
+                                                    data-bs-parent="#topicsAccordion">
+                                                    <div class="accordion-body py-3">
+                                                        {{ $topic['description'] ?? 'No description available.' }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                @else
+                                    <div class="text-center py-4">
+                                        <i class="bi bi-journal-x display-1 text-muted"></i>
+                                        <p class="text-muted mt-3">No topics available for this course.</p>
+                                    </div>
+                                @endif
+                            </div>
+
+                            <!-- Eligibility Tab -->
+                            <div class="tab-pane fade" id="eligibility" role="tabpanel">
+                                <div class="row">
+                                    <div class="col-12 col-sm-6">
+                                        <div class="info-card mb-3">
+                                            <i class="bi bi-calendar2-check text-primary"></i>
+                                            <div>
+                                                <h6 class="small fw-bold">Required Age</h6>
+                                                <p class="mb-0 small">{{ $course->required_age ?? 'Not specified' }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-6">
+                                        <div class="info-card mb-3">
+                                            <i class="bi bi-mortarboard text-success"></i>
+                                            <div>
+                                                <h6 class="small fw-bold">Minimum Education</h6>
+                                                <p class="mb-0 small">{{ $course->minimum_education ?? 'Not specified' }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-6">
+                                        <div class="info-card mb-3">
+                                            <i class="bi bi-briefcase text-warning"></i>
+                                            <div>
+                                                <h6 class="small fw-bold">Industry Experience</h6>
+                                                <p class="mb-0 small">{{ $course->industry_experience ?? 'Not specified' }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-6">
+                                        <div class="info-card mb-3">
+                                            <i class="bi bi-translate text-info"></i>
+                                            <div>
+                                                <h6 class="small fw-bold">Language Proficiency</h6>
+                                                <p class="mb-0 small">{{ $course->language_proficiency_requirement ?? 'Not specified' }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @if ($course->learning_tools)
+                                    <div class="mt-3">
+                                        <h6 class="fw-bold">Learning Tools</h6>
+                                        <p class="mb-0">{{ $course->learning_tools }}</p>
+                                    </div>
+                                @endif
+                            </div>
+
+                            <!-- Logistics & Costs Tab -->
+                            <div class="tab-pane fade" id="logistics" role="tabpanel">
+                                <div class="row">
+                                    @if ($course->duration_local)
+                                        <div class="col-12 col-sm-6 mb-3">
+                                            <label class="fw-semibold text-muted small">Local Duration:</label>
+                                            <p class="mb-0">{{ $course->duration_local }}</p>
+                                        </div>
+                                    @endif
+
+                                    @if ($course->duration_overseas)
+                                        <div class="col-12 col-sm-6 mb-3">
+                                            <label class="fw-semibold text-muted small">Overseas Duration:</label>
+                                            <p class="mb-0">{{ $course->duration_overseas }}</p>
+                                        </div>
+                                    @endif
+
+                                    @if ($course->fee_structure)
+                                        <div class="col-12 col-sm-6 mb-3">
+                                            <label class="fw-semibold text-muted small">Fee Structure:</label>
+                                            <p class="mb-0">{{ $course->fee_structure }}</p>
+                                        </div>
+                                    @endif
+
+                                    @if ($course->scholarship_funding)
+                                        <div class="col-12 col-sm-6 mb-3">
+                                            <label class="fw-semibold text-muted small">Scholarship:</label>
+                                            <p class="mb-0">{{ $course->scholarship_funding }}</p>
+                                        </div>
+                                    @endif
+
+                                    @if ($course->accommodation_cost)
+                                        <div class="col-12 col-sm-6 mb-3">
+                                            <label class="fw-semibold text-muted small">Accommodation:</label>
+                                            <p class="mb-0">{{ $course->accommodation_cost }}</p>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <!-- Career Pathway Tab -->
+                            <div class="tab-pane fade" id="pathway" role="tabpanel">
+                                @if ($course->next_degree)
+                                    <div class="mb-3">
+                                        <h6 class="fw-bold">Next Degree/Diploma Options</h6>
+                                        <p class="mb-0">{{ $course->next_degree }}</p>
+                                    </div>
+                                @endif
+
+                                @php
+                                    $career_outcomes = json_decode($course->career_outcomes, true) ?? [];
+                                @endphp
+
+                                @if (count($career_outcomes) > 0)
+                                    <div>
+                                        <h6 class="fw-bold">Career Outcomes</h6>
+                                        <div class="row">
+                                            @foreach ($career_outcomes as $outcome)
+                                                <div class="col-12 col-sm-6 mb-2">
+                                                    <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                                    <span class="small">{{ $outcome }}</span>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                @endif
+
+                                @if ($course->international_recognition)
+                                    <div class="mt-3">
+                                        <h6 class="fw-bold">International Recognition</h6>
+                                        <p class="mb-0">{{ $course->international_recognition }}</p>
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Additional Information -->
+                <div class="card shadow-sm border-0 mt-4">
+                    <div class="card-body p-3 p-lg-4">
+                        <h4 class="fw-bold mb-3 mb-lg-4">Additional Information</h4>
+
+                        <div class="row">
+                            @if ($course->visa_proccess)
+                                <div class="col-12 mb-4">
+                                    <h5 class="fw-semibold mb-2 mb-lg-3">Visa Process</h5>
+                                    <div class="bg-light p-3 p-lg-4 rounded">
+                                        {!! $course->visa_proccess !!}
+                                    </div>
+                                </div>
+                            @endif
+
+                            @if ($course->other_info)
+                                <div class="col-12">
+                                    <h5 class="fw-semibold mb-2 mb-lg-3">Important Updates</h5>
+                                    <div class="bg-light p-3 p-lg-4 rounded">
+                                        {!! $course->other_info !!}
+                                    </div>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Course Info Card -->
-        <div class="col-lg-6">
-            <div class="card shadow-sm border-0 h-100">
-                <div class="card-body d-flex flex-column">
-                    <h3 class="card-title mb-3">{{ $course->name ?? '' }}</h3>
-
-                    <div class="d-flex flex-wrap align-items-center gap-3 mb-3">
-                        <span class="badge bg-primary">{{ $course->provider ?? 'Unknown Provider' }}</span>
-
-                        @if ($course->paid_type == 'Free')
-                            <span class="badge bg-success"><i class="fas fa-check-circle me-1"></i>Free</span>
-                        @else
-                            <span class="badge bg-warning text-dark"><i class="fas fa-money-bill-wave me-1"></i>Paid</span>
-                        @endif
-                    </div>
-
-                    <div class="d-flex flex-wrap gap-3 text-muted mb-3">
-                        <small><i class="fa fa-users me-1"></i>{{ $course->enrollment_count ?? 0 }}+ Enrolled</small>
-                        <small><i class="fa fa-clock me-1"></i>{{ $course->duration ?? 0 }} Minutes</small>
-                        <small>{{ $course->program_by ?? 'N/A' }}</small>
-                    </div>
-
-                    <div class="row mb-3">
-                        @if($course->country)
-                        <div class="col-6 d-flex align-items-center mb-2">
-                            <i class="fas fa-flag text-primary me-2"></i>
-                            <span>{{ $course->country->name }}</span>
-                        </div>
-                        @endif
-
-                        @if($course->category)
-                        <div class="col-6 d-flex align-items-center mb-2">
-                            <i class="fas fa-layer-group text-info me-2"></i>
-                            <span>{{ $course->category->name }}</span>
-                        </div>
-                        @endif
-                    </div>
-
-                    <p class="text-secondary">{!! $course->short_description ?? '' !!}</p>
-
-                    <div class="mt-auto">
-                        <a href="#" class="btn btn-primary w-100">Enroll Now</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-    <!-- BLog Detail Section Start -->
-    <section class="blog-detail-sec mt-5">
-        <div class="container-fluid">
-            <div class="row row-gap-4">
-                <div class="col-lg-8">
-                    {!! $course->long_description !!}
-                    <h3 class="p-3">Visa Proccess</h3>
-                    {!! $course->visa_proccess !!}
-                     <h3 class="p-3">Important Updates</h3>
-                    {!! $course->other_info !!}
-                    {{-- <img src="{{ asset($course->image) }}" alt="Course Image" class="img-fluid mb-3" style="width: 100%"> --}}
-                </div>
-                <div class="col-lg-4">
-                    <div class="siderbar">
-                          <h5 class="fw-500 mb-24">Contact Request</h5>
-                          <div class="mb-48">
+            <!-- Sidebar -->
+            <div class="col-12 col-lg-4">
+                <!-- Contact Form -->
+                <div class="card shadow-sm border-0 mb-4">
+                    <div class="card-body p-3 p-lg-4">
+                        <h5 class="card-title fw-bold mb-3">Request Information</h5>
                         <form class="search-form" action="{{ route('web.enquiry') }}" method="POST" novalidate>
                             @csrf
                             <input type="hidden" name="type" value="7">
-                            <input type="hidden" name="course_name" value="{{ $course->name }}"> <!-- Hidden field for course -->
+                            <input type="hidden" name="course_name" value="{{ $course->course_name }}">
 
                             <div class="mb-3">
-                                <input type="text" class="form-control" name="name" placeholder="Your Name"
-                                    required minlength="2" maxlength="255" pattern="[A-Za-z\s]+">
-                                <div class="invalid-feedback">Please enter a valid name (2-255 characters, letters only)
-                                </div>
+                                <input type="text" class="form-control form-control-sm" name="name" placeholder="Your Name"
+                                    required>
                             </div>
 
                             <div class="mb-3">
-                                <input type="email" class="form-control" name="email" placeholder="Your Email"
-                                    pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$">
-                                <div class="invalid-feedback">Please enter a valid email address</div>
+                                <input type="email" class="form-control form-control-sm" name="email" placeholder="Your Email">
                             </div>
 
                             <div class="mb-3">
-                                <input type="tel" class="form-control" name="mobile" placeholder="Phone Number"
-                                    required pattern="[0-9]{10,15}">
-                                <div class="invalid-feedback">Please enter a valid phone number (10-15 digits)</div>
+                                <input type="tel" class="form-control form-control-sm" name="mobile" placeholder="Phone Number"
+                                    required>
                             </div>
 
                             <div class="mb-3">
-                                <textarea class="form-control" name="message" rows="3" placeholder="Your Message" required maxlength="1000"></textarea>
-                                <div class="invalid-feedback">Please enter your message (max 1000 characters)</div>
+                                <textarea class="form-control form-control-sm" name="message" rows="3" placeholder="Your Message" required></textarea>
                             </div>
 
-                            <button type="submit" class="btn btn-primary w-100">Submit Enquiry</button>
+                            <button type="submit" class="btn btn-primary w-100 btn-sm">Submit Enquiry</button>
                         </form>
-                        </div>
-                        <script>
-                            // Client-side validation
-                            document.querySelector('.search-form').addEventListener('submit', function(e) {
-                                const form = e.target;
-                                if (!form.checkValidity()) {
-                                    e.preventDefault();
-                                    e.stopPropagation();
-                                }
-                                form.classList.add('was-validated');
-
-                                // Sanitize mobile number input
-                                const mobileInput = form.querySelector('input[name="mobile"]');
-                                mobileInput.addEventListener('input', function() {
-                                    this.value = this.value.replace(/[^0-9]/g, '');
-                                });
-                            });
-                        </script>
-                        <div class="sidebar-block mb-48">
-                            <h5 class="fw-500 mb-24">Sectors</h5>
-                            <ul>
-                                @forelse ($sectors as $sector)
-                                    <li>
-                                        <a href="{{ route('web.sector') }}"
-                                            class="mb-12 light-gray">{{ $sector->name ?? null }}</a>
-                                    </li>
-                                @empty
-                                    <div class="alert alert-warning mt-3" role="alert">
-                                        No sectors available at the moment.
-                                    </div>
-                                @endforelse
-
-                            </ul>
-                        </div>
-                        {{-- @if ($blogs->count())
-                            <div class="sidebar-block mb-48">
-                                <h5 class="fw-500 mb-24">Similar Blogs</h5>
-                                @foreach ($blogs as $blog)
-                                    <div class="recent-article mb-12">
-                                        <img src="{{ asset('uploads/blogs/' . $blog->image) }}" class="article-img"
-                                            alt="{{ $blog->title }}">
-                                        <div>
-                                            <a href="{{ route('web.blog.show', $blog->slug) }}"
-                                                class="fw-500 black mb-8 hover-content">
-                                                {{ Str::limit($blog->title, 50) }}
-                                            </a>
-                                            <p class="light-gray subtitle">
-                                                {{ \Carbon\Carbon::parse($blog->created_at)->format('d/m/Y') }}</p>
-                                        </div>
-                                    </div>
-                                @endforeach
-                            </div>
-                        @endif --}}
-
-                        <div class="sidebar-block">
-                            <h5 class="fw-500 mb-24">Other Courses</h5>
-                            <div class="tag-block">
-                                @forelse ($otherCourses as $other)
-                                    <a href="{{ route('web.global.course.show', $other->slug) }}">
-                                        {{ $other->name }}
-                                    </a>
-                                @empty
-                                    <div class="alert alert-warning">No other courses found.</div>
-                                @endforelse
-                            </div>
-                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </section>
-    <!-- BLog Detail Section End -->
-        <!-- Our Courses Section Start -->
-    <div class="container mt-5">
-        <ul class="nav nav-tabs justify-content-start" id="myTab" role="tablist">
-            <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="tab1-tab" data-bs-toggle="tab" data-bs-target="#tab1"
-                    type="button" role="tab">Course Details</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="tab2-tab" data-bs-toggle="tab" data-bs-target="#tab2" type="button"
-                    role="tab">Addition details</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="tab3-tab" data-bs-toggle="tab" data-bs-target="#tab3" type="button"
-                    role="tab">Topics</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="tab4-tab" data-bs-toggle="tab" data-bs-target="#tab4" type="button"
-                    role="tab">Elibibility Criteria</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="tab5-tab" data-bs-toggle="tab" data-bs-target="#tab5" type="button"
-                    role="tab">Visa Proccess</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="tab6-tab" data-bs-toggle="tab" data-bs-target="#tab6" type="button"
-                    role="tab">Importent Updates</button>
-            </li>
-        </ul>
 
-        <div class="tab-content" id="myTabContent">
-            <div class="tab-pane fade show active" id="tab1" role="tabpanel">
-                <div class="container mt-4">
-                    <div class="row bg-light p-3 rounded shadow-sm">
-                        @if ($course->provider)
-                            <div class="col-md-3 mb-3">
-                                <div class="d-flex align-items-start">
-                                    <i class="bi bi-person-badge fs-3 me-3 text-primary"></i>
+                <!-- Course Details Sidebar -->
+                <div class="card shadow-sm border-0 mb-4">
+                    <div class="card-body p-3 p-lg-4">
+                        <h5 class="card-title fw-bold mb-3">Course Details</h5>
+
+                        @if ($course->program_by)
+                            <div class="detail-item mb-3 p-2 p-lg-3 bg-light rounded">
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-building text-primary fs-6 me-2 me-lg-3"></i>
                                     <div>
-                                        <h6 class="mb-1">Training Partner</h6>
-                                        <p class="mb-0 text-muted">{{ $course->provider ?? null }}</p>
+                                        <small class="text-muted d-block">Program By</small>
+                                        <p class="mb-0 fw-semibold small">{{ $course->program_by }}</p>
                                     </div>
                                 </div>
                             </div>
                         @endif
-                        @if ($course->language)
-                            <div class="col-md-3 mb-3">
-                                <div class="d-flex align-items-start">
-                                    <i class="bi bi-translate fs-3 me-3 text-success"></i>
+
+                        @if ($course->initiative_of)
+                            <div class="detail-item mb-3 p-2 p-lg-3 bg-light rounded">
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-bullseye text-success fs-6 me-2 me-lg-3"></i>
                                     <div>
-                                        <h6 class="mb-1">Languages</h6>
-                                        <p class="mb-0 text-muted">{{ $course->language ?? null }}</p>
+                                        <small class="text-muted d-block">Initiative Of</small>
+                                        <p class="mb-0 fw-semibold small">{{ $course->initiative_of }}</p>
                                     </div>
                                 </div>
                             </div>
                         @endif
-                        @if ($course->certification_type)
-                            <div class="col-md-3 mb-3">
-                                <div class="d-flex align-items-start">
-                                    <i class="bi bi-award fs-3 me-3 text-warning"></i>
+
+                        @if ($course->program)
+                            <div class="detail-item mb-3 p-2 p-lg-3 bg-light rounded">
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-diagram-3 text-warning fs-6 me-2 me-lg-3"></i>
                                     <div>
-                                        <h6 class="mb-1">Certification Type</h6>
-                                        <p class="mb-0 text-muted">{{ $course->certification_type ?? null }}</p>
+                                        <small class="text-muted d-block">Program</small>
+                                        <p class="mb-0 fw-semibold small">{{ $course->program }}</p>
                                     </div>
                                 </div>
                             </div>
                         @endif
-                        @if ($course->assessment_mode)
-                            <div class="col-md-3 mb-3">
-                                <div class="d-flex align-items-start">
-                                    <i class="bi bi-person-check-fill fs-3 me-3 text-info"></i>
+
+                        @if ($course->occupations)
+                            <div class="detail-item mb-3 p-2 p-lg-3 bg-light rounded">
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-people-fill text-info fs-6 me-2 me-lg-3"></i>
                                     <div>
-                                        <h6 class="mb-1">Assessment Mode</h6>
-                                        <p class="mb-0 text-muted">{{ $course->assessment_mode ?? null }}</p>
+                                        <small class="text-muted d-block">Occupations</small>
+                                        <p class="mb-0 fw-semibold small">{{ $course->occupations }}</p>
                                     </div>
                                 </div>
                             </div>
                         @endif
+
                         @if ($course->qp_code)
-                            <div class="col-md-3 mb-3">
-                                <div class="d-flex align-items-start">
-                                    <i class="bi bi-code-slash fs-3 me-3 text-danger"></i>
+                            <div class="detail-item mb-3 p-2 p-lg-3 bg-light rounded">
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-code-slash text-danger fs-6 me-2 me-lg-3"></i>
                                     <div>
-                                        <h6 class="mb-1">QP Code</h6>
-                                        <p class="mb-0 text-muted">{{ $course->qp_code ?? null }}</p>
+                                        <small class="text-muted d-block">QP Code</small>
+                                        <p class="mb-0 fw-semibold small">{{ $course->qp_code }}</p>
                                     </div>
                                 </div>
                             </div>
                         @endif
+
                         @if ($course->nsqf_level)
-                            <div class="col-md-3 mb-3">
-                                <div class="d-flex align-items-start">
-                                    <i class="bi bi-layers fs-3 me-3 text-secondary"></i>
+                            <div class="detail-item mb-3 p-2 p-lg-3 bg-light rounded">
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-layers text-secondary fs-6 me-2 me-lg-3"></i>
                                     <div>
-                                        <h6 class="mb-1">NSQF Level</h6>
-                                        <p class="mb-0 text-muted">{{ $course->nsqf_level ?? null }}</p>
+                                        <small class="text-muted d-block">NSQF Level</small>
+                                        <p class="mb-0 fw-semibold small">{{ $course->nsqf_level }}</p>
                                     </div>
                                 </div>
                             </div>
                         @endif
+
                         @if ($course->credits_assigned)
-                            <div class="col-md-3 mb-3">
-                                <div class="d-flex align-items-start">
-                                    <i class="bi bi-journal-x fs-3 me-3 text-dark"></i>
+                            <div class="detail-item mb-3 p-2 p-lg-3 bg-light rounded">
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-journal-check text-dark fs-6 me-2 me-lg-3"></i>
                                     <div>
-                                        <h6 class="mb-1">Credits Assigned</h6>
-                                        <p class="mb-0 text-muted">{{ $course->credits_assigned ?? null }}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        @endif
-                        @if ($course->internship)
-                            <div class="col-md-3 mb-3">
-                                <div class="d-flex align-items-start">
-                                    <i class="bi bi-person-workspace fs-3 me-3 text-dark"></i>
-                                    <div>
-                                        <h6 class="mb-1">Internship</h6>
-                                         <p class="mb-0 text-muted">
-                                            @if ($course->internship == 1)
-                                                <span class="badge bg-success">Available</span>
-                                            @else
-                                                <span class="badge bg-danger">Not Available</span>
-                                            @endif
-                                        </p>
+                                        <small class="text-muted d-block">Credits Assigned</small>
+                                        <p class="mb-0 fw-semibold small">{{ $course->credits_assigned }}</p>
                                     </div>
                                 </div>
                             </div>
                         @endif
 
-                    </div>
-                </div>
-
-            </div>
-            <div class="tab-pane fade" id="tab2" role="tabpanel">
-                <div class="row bg-light p-3 rounded shadow-sm">
-                    @if ($course->learning_product_type)
-                        <div class="col-md-3 mb-3">
-                            <div class="d-flex align-items-start">
-                                <i class="bi bi-book fs-3 me-3 text-primary"></i>
-                                <div>
-                                    <h6 class="mb-1">Learning Product Type</h6>
-                                    <p class="mb-0 text-muted">{{ $course->learning_product_type ?? null }}</p>
-                                </div>
-                            </div>
-                        </div>
-                    @endif
-                    @if ($course->program_by)
-                        <div class="col-md-3 mb-3">
-                            <div class="d-flex align-items-start">
-                                <i class="bi bi-award-fill fs-3 me-3 text-success"></i>
-                                <div>
-                                    <h6 class="mb-1">Program By</h6>
-                                    <p class="mb-0 text-muted">{{ $course->program_by ?? null }}</p>
-                                </div>
-                            </div>
-                        </div>
-                    @endif
-                    @if ($course->initiative_of)
-                        <div class="col-md-3 mb-3">
-                            <div class="d-flex align-items-start">
-                                <i class="bi bi-bullseye fs-3 me-3 text-warning"></i>
-                                <div>
-                                    <h6 class="mb-1">Initiative of</h6>
-                                    <p class="mb-0 text-muted">{{ $course->initiative_of ?? null }}</p>
-                                </div>
-                            </div>
-                        </div>
-                    @endif
-                    @if ($course->program)
-                        <div class="col-md-3 mb-3">
-                            <div class="d-flex align-items-start">
-                                <i class="bi bi-building fs-3 me-3 text-danger"></i>
-                                <div>
-                                    <h6 class="mb-1">Program</h6>
-                                    <p class="mb-0 text-muted">{{ $course->program ?? null }}</p>
-                                </div>
-                            </div>
-                        </div>
-                    @endif
-                    @if ($course->domain)
-                        <div class="col-md-3 mb-3">
-                            <div class="d-flex align-items-start">
-                                <i class="bi bi-globe2 fs-3 me-3 text-info"></i>
-                                <div>
-                                    <h6 class="mb-1">Domain</h6>
-                                    <p class="mb-0 text-muted">{{ $course->domain ?? null }}</p>
-                                </div>
-                            </div>
-                        </div>
-                    @endif
-                    @if ($course->occupations)
-                        <div class="col-md-3 mb-3">
-                            <div class="d-flex align-items-start">
-                                <i class="bi bi-people-fill fs-3 me-3 text-secondary"></i>
-                                <div>
-                                    <h6 class="mb-1">Occupations</h6>
-                                    <p class="mb-0 text-muted">{{ $course->occupations ?? null }}</p>
-                                </div>
-                            </div>
-                        </div>
-                    @endif
-
-                </div>
-            </div>
-            <div class="tab-pane fade" id="tab3" role="tabpanel">
-                @php
-                    $topics = json_decode($course->topics, true);
-                @endphp
-
-                <div class="accordion" id="courseTopicsAccordion">
-                    @foreach ($topics as $index => $topic)
-                        @php
-                            $headingId = 'heading' . $index;
-                            $collapseId = 'collapse' . $index;
-                            $show = $index === 0 ? 'show' : '';
-                            $collapsed = $index === 0 ? '' : 'collapsed';
-                        @endphp
-
-                        <div class="accordion-item border-0 bg-transparent">
-                            <h2 class="accordion-header" id="{{ $headingId }}">
-                                <button class="accordion-button {{ $collapsed }} bg-transparent shadow-none"
-                                    type="button" data-bs-toggle="collapse" data-bs-target="#{{ $collapseId }}"
-                                    aria-expanded="{{ $index === 0 ? 'true' : 'false' }}">
-                                    {{ $topic['title'] }}
-                                </button>
-                            </h2>
-                            <div id="{{ $collapseId }}" class="accordion-collapse collapse {{ $show }}"
-                                data-bs-parent="#courseTopicsAccordion">
-                                <div class="accordion-body text-muted">
-                                    {{ $topic['description'] }}
-                                </div>
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
-
-            </div>
-            <div class="tab-pane fade" id="tab4" role="tabpanel">
-                <div class="row bg-light p-3 rounded shadow-sm">
-                    @if ($course->required_age)
-                        <div class="col-md-3 mb-3">
-                            <div class="d-flex align-items-start">
-                                <i class="bi bi-calendar2-week fs-3 me-3 text-primary"></i>
-                                <div>
-                                    <h6 class="mb-1">Required Age</h6>
-                                    <p class="mb-0 text-muted">{{ $course->required_age ?? null }}</p>
-                                </div>
-                            </div>
-                        </div>
-                    @endif
-                    @if ($course->minimum_education)
-                        <div class="col-md-3 mb-3">
-                            <div class="d-flex align-items-start">
-                                <i class="bi bi-mortarboard-fill fs-3 me-3 text-success"></i>
-                                <div>
-                                    <h6 class="mb-1">Minimum Education</h6>
-                                    <p class="mb-0 text-muted">{{ $course->minimum_education ?? null }}</p>
-                                </div>
-                            </div>
-                        </div>
-                    @endif
-                    @if ($course->industry_experience)
-                        <div class="col-md-3 mb-3">
-                            <div class="d-flex align-items-start">
-                                <i class="bi bi-briefcase-fill fs-3 me-3 text-warning"></i>
-                                <div>
-                                    <h6 class="mb-1">Industry Experience</h6>
-                                    <p class="mb-0 text-muted">{{ $course->industry_experience ?? null }}</p>
-                                </div>
-                            </div>
-                        </div>
-                    @endif
-                    @if ($course->learning_tools)
-                        <div class="col-md-3 mb-3">
-                            <div class="d-flex align-items-start">
-                                <i class="bi bi-tools fs-3 me-3 text-danger"></i>
-                                <div>
-                                    <h6 class="mb-1">Learning Tools</h6>
-                                    <p class="mb-0 text-muted">{{ $course->learning_tools ?? null }}</p>
-                                </div>
-                            </div>
-                        </div>
-                    @endif
-                </div>
-
-            </div>
-             <div class="tab-pane fade" id="tab5" role="tabpanel">
-                <p> {!! $course->visa_proccess !!}</p>
-             </div>
-             <div class="tab-pane fade" id="tab6" role="tabpanel">
-                <p> {!! $course->other_info !!}</p>
-             </div>
-        </div>
-    </div>
-    <!-- Our Programmes -->
-    <section class="out-team-sec mt-80 mb-120 wow fadeInUp animated animated" data-wow-delay="540ms"
-        style="visibility: visible; animation-delay: 540ms; animation-name: fadeInUp;">
-        <div class="container-fluid">
-            <div class="heading mb-48">
-                <div class="tagblock mb-16"> <img src="{{ asset('resource/web/assets/media/hero/buld-vec.png') }}"
-                        class="bulb-vec" alt="">
-                    <p class="black">Our Program</p>
-                </div>
-                <div class="text-start mt-2">{{ $settings->program_project_title }}</div>
-                <h3 class="fw-500 text-start mt-2 mb-2">{{ $settings->program_project_main_title }}<span
-                        class="color-primary"> {{ $settings->program_project_main_sub_title }}</span> </h3>
-                <p class="text-start">{{ $settings->program_final_title }}</p>
-            </div>
-            <div class="row align-items-stretch h-100">
-                @if ($programes->isNotEmpty())
-                    <div class="swiper mySwiperstwo p-0 m-0">
-                        <div class="swiper-wrapper">
-                            @foreach ($programes as $program)
-                                <div class="swiper-slide">
-                                    <div class="col-md-*">
-                                        <div class="team-block">
-                                            <div class="img-block">
-                                                <img class="w-100"
-                                                    src="{{ $program->image ? asset($program->image) : asset('resource/web/assets/media/default/default-img.png') }}"
-                                                    alt="{{ $program->title }}">
-                                            </div>
-                                            <div class="team-content">
-                                                <div>
-                                                    <a href="{{ route('web.announcement.program', [$program->category->slug, $program->slug]) }}"
-                                                        class="h6 fw-500 mb-4p">{{ $program->title }}</a>
-                                                    <p class="subtitle">
-                                                        {{ \Illuminate\Support\Str::limit(strip_tags($program->description), 80) }}
-                                                    </p>
-                                                </div>
-                                                @php
-                                                    $currentUrl = urlencode(request()->fullUrl()); // Dynamically get current page URL
-                                                    $shareText = urlencode($scheme->title ?? 'Check this out!');
-                                                @endphp
-
-                                                <div class="d-flex gap-8 align-items-center">
-                                                    {{-- LinkedIn Share --}}
-                                                    <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ $currentUrl }}"
-                                                        target="_blank">
-                                                        <img class="links-icon"
-                                                            src="{{ asset('resource/web/assets/media/vector/linkedin.png') }}"
-                                                            alt="LinkedIn">
-                                                    </a>
-
-                                                    {{-- Facebook Share --}}
-                                                    <a href="https://www.facebook.com/sharer/sharer.php?u={{ $currentUrl }}"
-                                                        target="_blank">
-                                                        <img class="links-icon"
-                                                            src="{{ asset('resource/web/assets/media/vector/facebook.png') }}"
-                                                            alt="Facebook">
-                                                    </a>
-
-                                                    {{-- Twitter (X) Share --}}
-                                                    <a href="https://twitter.com/intent/tweet?url={{ $currentUrl }}&text={{ $shareText }}"
-                                                        target="_blank">
-                                                        <img class="links-icon"
-                                                            src="{{ asset('resource/web/assets/media/vector/twitter.webp') }}"
-                                                            alt="Twitter">
-                                                    </a>
-
-                                                    {{-- Instagram: Not directly shareable via URL --}}
-                                                    <a href="https://www.instagram.com/" target="_blank">
-                                                        <img class="links-icon"
-                                                            src="{{ asset('resource/web/assets/media/vector/instagram.webp') }}"
-                                                            alt="Instagram">
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
+                        @if ($course->assessment_mode)
+                            <div class="detail-item p-2 p-lg-3 bg-light rounded">
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-clipboard-check text-primary fs-6 me-2 me-lg-3"></i>
+                                    <div>
+                                        <small class="text-muted d-block">Assessment Mode</small>
+                                        <p class="mb-0 fw-semibold small">{{ $course->assessment_mode }}</p>
                                     </div>
                                 </div>
-                            @endforeach
-                        </div>
-                        <!-- Swiper Controls -->
-                        <div class="swiper-button-prev"></div>
-                        <div class="swiper-button-next"></div>
-                        <div class="swiper-pagination"></div>
-                    </div>
-                @else
-                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                        <strong>No educational</strong> Programs available at the moment.
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                @endif
-
-            </div>
-    </section>
-    <!-- end of our Programmes -->
-
-    <!-- How We Operate Section End -->
-    <div class="blog-sec mt-80 mb-5">
-        <div class="container-fluid">
-            <div class="heading mb-10 text-start">
-                <div class="tagblock mb-16"> <img src="{{ asset('resource/web/assets/media/hero/buld-vec.png') }}"
-                        class="bulb-vec" alt="">
-                    <p class="black">Ongoing Projects</p>
-                </div>
-                <div class="cds-119 css-1v1mgi3 cds-121 mt-2">{{ $settings->on_going_project_title ?? null }}</div>
-                <h3 class="fw-bold mt-2 mb-2">{{ $settings->on_going_project_main_title ?? null }} <span
-                        class="color-primary"> {{ $settings->on_going_project_main_sub_title ?? null }}</span></h3>
-                <p class="cds-119 css-lg65q1 cds-121">{{ $settings->onging_final_titles ?? null }}</p>
-            </div> <!-- Swiper -->
-            <div class="swiper mySwipers">
-                <div class="swiper-wrapper">
-                    @if ($ongoingProjects->isEmpty())
-                        <div class="w-100">
-                            <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                                <strong>No projects found.</strong> Please check back later.
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                    aria-label="Close"></button>
                             </div>
-                        </div>
-                    @else
-                        @foreach ($ongoingProjects as $project)
-                            <!-- Slide -->
-                            <div class="swiper-slide" data-swiper-autoplay="2000">
-                                <div class="blog-card">
+                        @endif
+                    </div>
+                </div>
 
-                                    <a href="{{ route('web.ongoging.project', [$project->category->slug, $project->slug]) }}"
-                                        class="card-img">
-                                        <img src="{{ asset($project->image) }}" alt="{{ $project->title }}">
-                                        <span class="date-block">
-                                            <span
-                                                class="h6 fw-400 light-black">{{ \Carbon\Carbon::parse($project->created_at)->format('d') }}</span>
-                                            <span
-                                                class="h6 fw-400 light-black">{{ \Carbon\Carbon::parse($project->created_at)->format('M') }}</span>
-                                        </span>
+                <!-- Related Courses -->
+                <div class="card shadow-sm border-0">
+                    <div class="card-body p-3 p-lg-4">
+                        <h5 class="card-title fw-bold mb-3">Related Courses</h5>
+                        @forelse($otherCourses as $relatedCourse)
+                            <div class="related-course-item mb-3">
+                                <img src="{{ asset($relatedCourse->image) }}" alt="{{ $relatedCourse->course_name }}"
+                                    class="related-course-img">
+                                <div class="related-course-info">
+                                    <a href="{{ route('web.global.course.show', $relatedCourse->slug) }}"
+                                        class="fw-semibold text-dark small">
+                                        {{ Str::limit($relatedCourse->course_name, 35) }}
                                     </a>
-                                    <div class="card-content">
-                                        {{-- <div class="d-flex align-items-center gap-8 mb-20">
-                                            <img src="{{ asset('upload/project/' . $project->image) }}" class="card-user"
-                                                alt="">
-                                            <p>By Admin</p>
-                                        </div> --}}
-                                        <a href="{{ route('web.ongoging.project', [$project->category->slug, $project->slug]) }}"
-                                            class="h6 fw-500 mb-8">{{ $project->title }}</a>
-                                        <p class="light-gray mb-24">
-                                            {{ \Illuminate\Support\Str::limit(strip_tags($project->description), 100) }}
-                                        </p>
-                                        <a href="{{ route('web.ongoging.project', [$project->category->slug, $project->slug]) }}"
-                                            class="card-btn"> Read More</a>
-                                    </div>
+                                    <small class="text-muted d-block">{{ $relatedCourse->level }}</small>
                                 </div>
                             </div>
-                        @endforeach
-                    @endif
+                        @empty
+                            <p class="text-muted small">No related courses found.</p>
+                        @endforelse
+                    </div>
                 </div>
-
-                <!-- Pagination -->
-                <div class="swiper-pagination"></div>
             </div>
         </div>
-    </div>
-
-    <section class="title-banner mb-120">
-        <div class="container-fluid">
-            <h2 class="fw-500 mb-24">{{ $course->name }}<br class="d-sm-block d-none">
-                {{ $course->short_name }} <span class="color-primary"> {{ $course->language }}</span></h2>
-            <div class="d-flex align-items-center gap-16 flex-wrap row-gap-4">
-                <div class="d-flex align-items-center gap-8">
-                    <i class="bi bi-folder-fill text-warning"></i>
-                    <p class="light-gray">{{ $course->name }}</p>
-                </div>
-                <div class="d-flex align-items-center gap-8">
-                    <p class="text-muted">
-                        <i class="bi bi-calendar-event me-2 text-primary"></i>
-                        {{ \Carbon\Carbon::parse($course->created_at)->format('F jS, Y') }}
-                    </p>
-                </div>
-                {{-- <div class="d-flex align-items-center gap-8">
-                    <p class="light-gray">Emily Watson</p>
-                </div> --}}
-            </div>
-        </div>
-    </section>
     </div>
 @endsection
+
+@push('styles')
+    <style>
+        /* Mobile First Responsive Design */
+        .title-banner {
+            position: relative;
+        }
+
+        .py-lg-120 {
+            padding-top: 120px !important;
+            padding-bottom: 120px !important;
+        }
+
+        .mb-lg-120 {
+            margin-bottom: 120px !important;
+        }
+
+        @media (max-width: 991.98px) {
+            .title-banner {
+                padding-top: 80px !important;
+                padding-bottom: 80px !important;
+                margin-bottom: 60px !important;
+            }
+
+            .display-lg-5 {
+                font-size: calc(1.375rem + 1.5vw) !important;
+            }
+        }
+
+        @media (max-width: 767.98px) {
+            .title-banner {
+                padding-top: 60px !important;
+                padding-bottom: 60px !important;
+                margin-bottom: 40px !important;
+            }
+        }
+
+        .text-shadow {
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+        }
+
+        /* Hide scrollbar for horizontal tabs */
+        .nav-pills::-webkit-scrollbar {
+            display: none;
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 0;
+        }
+
+        .info-card {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #007bff;
+        }
+
+        .info-card i {
+            font-size: 1.25rem;
+        }
+
+        .related-course-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .related-course-item:hover {
+            background: #f8f9fa;
+        }
+
+        .related-course-img {
+            width: 40px;
+            height: 40px;
+            object-fit: cover;
+            border-radius: 6px;
+        }
+
+        .related-course-info {
+            flex: 1;
+        }
+
+        .accordion-button {
+            border-radius: 8px !important;
+            padding: 12px 16px;
+        }
+
+        .accordion-button:not(.collapsed) {
+            background-color: #e7f1ff;
+            color: #0d6efd;
+        }
+
+        .nav-pills .nav-link.active {
+            background-color: #0d6efd;
+            border-radius: 6px;
+        }
+
+        .nav-pills .nav-link {
+            color: #6c757d;
+            border-radius: 6px;
+            margin-right: 8px;
+            white-space: nowrap;
+        }
+
+        /* Responsive font sizes */
+        @media (max-width: 575.98px) {
+            .display-6 {
+                font-size: 1.5rem !important;
+            }
+
+            .lead {
+                font-size: 0.9rem !important;
+            }
+
+            .btn-lg {
+                padding: 0.5rem 1rem !important;
+                font-size: 0.9rem !important;
+            }
+        }
+    </style>
+@endpush

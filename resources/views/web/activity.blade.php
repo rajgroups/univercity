@@ -7,17 +7,14 @@
     <meta name="author" content="Indian Skill Institute Co-operation (ISICO)">
     <meta name="robots" content="index, follow">
 
-    <!-- Canonical Tag -->
     <link rel="canonical" href="{{ url()->current() }}">
 
-    <!-- Open Graph -->
     <meta property="og:title" content="Events & Competitions - Indian Skill Institute Co-operation (ISICO)">
     <meta property="og:description" content="Discover ISICO’s events and competitions that foster skill development, creativity, and entrepreneurship. Participate in workshops, challenges, and contests shaping India’s future talent.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ url()->current() }}">
     <meta property="og:image" content="{{ asset('default-event.jpg') }}">
 
-    <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Events & Competitions - Indian Skill Institute Co-operation (ISICO)">
     <meta name="twitter:description" content="Be part of ISICO’s national-level events and competitions that drive innovation, entrepreneurship, and skill development across India.">
@@ -25,21 +22,23 @@
 @endpush
 
 @section('content')
-    <!-- Title Banner Section Start -->
     <section class="title-banner mb-80">
         <div class="container-fluid">
             <h1>Events & Competitions</h1>
         </div>
     </section>
-    <!-- Title Banner Section End -->
-    
-    <!-- Events Section Start -->
     <section class="events-sec mb-120">
         <div class="container-fluid">
             <div class="d-flex align-items-center justify-content-sm-between justify-content-center row-gap-4 flex-wrap mb-24">
                 <h4 class="text-center">Upcoming Events & Competitions</h4>
                 <div class="d-flex align-items-center gap-8">
-                    <p class="flex-shrink-0 m-4">Sort By:</p>
+                    {{-- MOBILE FILTER BUTTON: Visible only on devices smaller than md (d-md-none) --}}
+                    <button class="btn btn-outline-primary d-md-none me-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileFilterOffcanvas" aria-controls="mobileFilterOffcanvas">
+                        <i class="bi bi-funnel"></i> Filters
+                    </button>
+                    {{-- END MOBILE FILTER BUTTON --}}
+
+                    {{-- <p class="flex-shrink-0 m-4">Sort By:</p> --}}
                     <div class="w-100 drop-container">
                         <div class="wrapper-dropdown form-control" id="dropdown-l2">
                             <div class="d-flex align-items-center justify-content-between gap-64">
@@ -57,58 +56,55 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="row">
-                <!-- Sidebar Filters -->
-                <div class="col-md-3">
-                    <form action="{{ route('web.activity') }}" method="GET" id="eventFilters">
-                        <!-- Search Bar -->
+                <div class="col-md-3 d-none d-md-block">
+                    <form action="{{ route('web.activity') }}" method="GET" id="eventFiltersDesktop">
                         <div class="mb-4">
+                            <label for="search_desktop" class="form-label small text-muted">Search Events</label>
                             <div class="input-group">
-                                <input type="text" class="form-control" name="search" placeholder="Search events..." value="{{ request('search') }}">
+                                <input type="text" id="search_desktop" class="form-control" name="search" placeholder="Search events..." value="{{ request('search') }}">
                                 <button class="btn btn-primary" type="submit">
                                     <i class="bi bi-search"></i>
                                 </button>
                             </div>
                         </div>
 
-                        <div class="accordion" id="filterAccordion">
-                            <!-- Event Type Filter -->
+                        <div class="accordion" id="filterAccordionDesktop">
                             <div class="accordion-item border-0 mb-3 shadow-sm">
-                                <h2 class="accordion-header" id="headingType">
-                                    <button class="accordion-button collapsed shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#collapseType" aria-expanded="false">
+                                <h2 class="accordion-header" id="headingTypeDesktop">
+                                    <button class="accordion-button collapsed shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTypeDesktop" aria-expanded="false" data-bs-parent="#filterAccordionDesktop">
                                         <i class="bi bi-tag me-2"></i> Event Type
                                         <span class="badge bg-primary ms-auto">{{ count(request('types', [])) }}</span>
                                     </button>
                                 </h2>
-                               <div id="collapseType" class="accordion-collapse collapse {{ count(request('types', [])) ? 'show' : '' }}" aria-labelledby="headingType" data-bs-parent="#filterAccordion">
+                               <div id="collapseTypeDesktop" class="accordion-collapse collapse {{ count(request('types', [])) ? 'show' : '' }}" aria-labelledby="headingTypeDesktop" data-bs-parent="#filterAccordionDesktop">
                                     <div class="accordion-body pt-2">
                                         @foreach ([1 => 'Event', 2 => 'Competition'] as $value => $label)
                                             <div class="form-check mb-2">
-                                                <input 
-                                                    class="form-check-input" 
-                                                    type="checkbox" 
-                                                    name="types[]" 
-                                                    id="type{{ $value }}" 
-                                                    value="{{ $value }}" 
+                                                <input
+                                                    class="form-check-input"
+                                                    type="checkbox"
+                                                    name="types[]"
+                                                    id="typeDesktop{{ $value }}"
+                                                    value="{{ $value }}"
                                                     {{ in_array($value, request('types', [])) ? 'checked' : '' }}>
-                                                <label class="form-check-label" for="type{{ $value }}">
+                                                <label class="form-check-label" for="typeDesktop{{ $value }}">
                                                     {{ $label }}
                                                 </label>
                                             </div>
                                         @endforeach
                                     </div>
-                                </div>  
+                                </div>
                             </div>
 
-                            <!-- Date Filter -->
                             <div class="accordion-item border-0 mb-3 shadow-sm">
-                                <h2 class="accordion-header" id="headingDate">
-                                    <button class="accordion-button collapsed shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDate" aria-expanded="false">
+                                <h2 class="accordion-header" id="headingDateDesktop">
+                                    <button class="accordion-button collapsed shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDateDesktop" aria-expanded="false" data-bs-parent="#filterAccordionDesktop">
                                         <i class="bi bi-calendar me-2"></i> Date Range
                                     </button>
                                 </h2>
-                                <div id="collapseDate" class="accordion-collapse collapse" aria-labelledby="headingDate" data-bs-parent="#filterAccordion">
+                                <div id="collapseDateDesktop" class="accordion-collapse collapse" aria-labelledby="headingDateDesktop" data-bs-parent="#filterAccordionDesktop">
                                     <div class="accordion-body pt-2">
                                         <div class="mb-3">
                                             <label class="form-label small">From</label>
@@ -122,40 +118,19 @@
                                 </div>
                             </div>
 
-                            <!-- Location Filter -->
-                            {{-- <div class="accordion-item border-0 mb-3 shadow-sm">
-                                <h2 class="accordion-header" id="headingLocation">
-                                    <button class="accordion-button collapsed shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#collapseLocation" aria-expanded="false">
-                                        <i class="bi bi-geo-alt me-2"></i> Location
-                                        <span class="badge bg-primary ms-auto">{{ count(request('locations', [])) }}</span>
-                                    </button>
-                                </h2>
-                                <div id="collapseLocation" class="accordion-collapse collapse {{ count(request('locations', [])) ? 'show' : '' }}" aria-labelledby="headingLocation" data-bs-parent="#filterAccordion">
-                                    <div class="accordion-body pt-2">
-                                        @foreach (['Online', 'In-person', 'Hybrid'] as $location)
-                                            <div class="form-check mb-2">
-                                                <input class="form-check-input" type="checkbox" name="locations[]" id="loc{{ $loop->index }}" value="{{ $location }}" {{ in_array($location, request('locations', [])) ? 'checked' : '' }}>
-                                                <label class="form-check-label" for="loc{{ $loop->index }}">{{ $location }}</label>
-                                            </div>
-                                        @endforeach
-                                    </div>
-                                </div>
-                            </div> --}}
-
-                            <!-- Category Filter -->
                             <div class="accordion-item border-0 mb-3 shadow-sm">
-                                <h2 class="accordion-header" id="headingCategory">
-                                    <button class="accordion-button collapsed shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCategory" aria-expanded="false">
+                                <h2 class="accordion-header" id="headingCategoryDesktop">
+                                    <button class="accordion-button collapsed shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCategoryDesktop" aria-expanded="false" data-bs-parent="#filterAccordionDesktop">
                                         <i class="bi bi-collection me-2"></i> Category
                                         <span class="badge bg-primary ms-auto">{{ count(request('categories', [])) }}</span>
                                     </button>
                                 </h2>
-                                <div id="collapseCategory" class="accordion-collapse collapse {{ count(request('categories', [])) ? 'show' : '' }}" aria-labelledby="headingCategory" data-bs-parent="#filterAccordion">
+                                <div id="collapseCategoryDesktop" class="accordion-collapse collapse {{ count(request('categories', [])) ? 'show' : '' }}" aria-labelledby="headingCategoryDesktop" data-bs-parent="#filterAccordionDesktop">
                                     <div class="accordion-body pt-2">
                                         @foreach ($categories as $category)
                                             <div class="form-check mb-2">
-                                                <input class="form-check-input" type="checkbox" name="categories[]" id="cat{{ $category->id }}" value="{{ $category->id }}" {{ in_array($category->id, request('categories', [])) ? 'checked' : '' }}>
-                                                <label class="form-check-label d-flex justify-content-between w-100" for="cat{{ $category->id }}">
+                                                <input class="form-check-input" type="checkbox" name="categories[]" id="catDesktop{{ $category->id }}" value="{{ $category->id }}" {{ in_array($category->id, request('categories', [])) ? 'checked' : '' }}>
+                                                <label class="form-check-label d-flex justify-content-between w-100" for="catDesktop{{ $category->id }}">
                                                     <span>{{ $category->name }}</span>
                                                     <span class="text-muted small">{{ $category->events_count ?? 0 }}</span>
                                                 </label>
@@ -166,7 +141,6 @@
                             </div>
                         </div>
 
-                        <!-- Filter Controls -->
                         <div class="d-grid gap-2 mt-4">
                             <button type="submit" class="btn btn-primary">
                                 <i class="bi bi-funnel me-1"></i> Apply Filters
@@ -177,17 +151,14 @@
                         </div>
                     </form>
                 </div>
-                
-                <!-- Events Cards -->
-                <div class="col-md-9">
+
+                <div class="col-12 col-md-9">
                     <div class="row g-4">
                         @forelse ($events as $event)
-                            <div class="col-md-6 col-lg-4 mb-4">
+                            <div class="col-sm-6 col-lg-4 mb-4">
                                 <div class="event-card position-relative bg-white">
-                                    <!-- Event Image -->
                                     <img src="{{ asset($event->thumbnail_image) }}" class="w-100 event-image" alt="{{ $event->title }}">
-                                    
-                                    <!-- Event Badges -->
+
                                     <span class="badge badge-type bg-primary">
                                         {{ $event->type }}
                                     </span>
@@ -196,39 +167,32 @@
                                             Competition
                                         </span>
                                     @endif
-                                    
-                                    <!-- Event Date -->
+
                                     <div class="event-date">
                                         <span class="event-day">{{ $event->start_date->format('d') }}</span>
                                         <span class="event-month">{{ $event->start_date->format('M') }}</span>
                                     </div>
-                                    
+
                                     <div class="p-3">
-                                        <!-- Event Title -->
                                         <h6 class="mb-1">{{ $event->title }}</h6>
-                                        
-                                        <!-- Organizer -->
+
                                         <p class="text-muted small mb-1">{{ $event->organizer }}</p>
-                                        
-                                        <!-- Location and Type -->
+
                                         <div class="d-flex justify-content-between small text-muted mb-2">
                                             <span><i class="bi bi-geo-alt"></i> {{ $event->location }}</span>
                                             <span><i class="bi bi-people"></i> {{ $event->max_participants ?? 'Unlimited' }}</span>
                                         </div>
-                                        
-                                        <!-- Date and Time -->
+
                                         <div class="d-flex justify-content-between small text-muted mb-2">
                                             <span><i class="bi bi-calendar"></i> {{ $event->start_date->format('M d, Y') }}</span>
                                             <span><i class="bi bi-clock"></i> {{ $event->start_date->format('h:i A') }}</span>
                                         </div>
-                                        
-                                        <!-- Registration Deadline -->
+
                                         <div class="small text-muted mb-2">
                                             <i class="bi bi-alarm"></i> Reg. until: {{ $event->registration_deadline->format('M d, Y') }}
                                         </div>
-                                        
-                                       <!-- Price and Apply Button -->
-                                        <div class="d-flex justify-content-between align-items-center mt-3">
+
+                                       <div class="d-flex justify-content-between align-items-center mt-3">
                                             @if($event->entry_fee > 0)
                                                 <span class="text-primary fw-bold">₹{{ fmod($event->entry_fee, 1) == 0 ? number_format($event->entry_fee, 0) : number_format($event->entry_fee, 2) }}</span>
                                             @else
@@ -253,8 +217,7 @@
                     </div>
                 </div>
             </div>
-            
-            <!-- Pagination -->
+
             <div class="pagination mt-3">
                 <ul id="border-pagination" class="mb-0">
                     {{-- Previous Page Link --}}
@@ -287,7 +250,7 @@
             </div>
         </div>
     </section>
-    
+
     <style>
         .event-card {
             border: 1px solid #dee2e6;
@@ -353,3 +316,88 @@
         }
     </style>
 @endsection
+
+{{-- ---------------------------------------------------------------------------------------------------------------------------------------------------------- --}}
+{{-- MOBILE FILTER OFFCANVAS START --}}
+<div class="offcanvas offcanvas-start" tabindex="-1" id="mobileFilterOffcanvas" aria-labelledby="mobileFilterOffcanvasLabel">
+    <div class="offcanvas-header border-bottom">
+        <h5 class="offcanvas-title" id="mobileFilterOffcanvasLabel"><i class="bi bi-sliders me-2"></i> Filter Events</h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body" id="offcanvasFilterBody">
+        {{-- The content of the desktop form will be cloned and inserted here by jQuery --}}
+    </div>
+</div>
+{{-- MOBILE FILTER OFFCANVAS END --}}
+
+{{-- ---------------------------------------------------------------------------------------------------------------------------------------------------------- --}}
+{{-- JQUERY SCRIPT TO CLONE AND INSERT THE FORM --}}
+@push('scripts')
+<script>
+    $(document).ready(function() {
+        // 1. Target the desktop form
+        var $desktopForm = $('#eventFiltersDesktop');
+
+        if ($desktopForm.length) {
+            // 2. Clone the entire desktop form, including the form tag and its current state/values
+            var $mobileForm = $desktopForm.clone();
+
+            // 3. Update the ID of the cloned form to ensure it's unique
+            $mobileForm.attr('id', 'eventFiltersMobile');
+
+            // 4. Update the IDs of all elements inside the cloned form to maintain HTML validity
+            $mobileForm.find('input, select, button, a, div, h2').each(function() {
+                var currentId = $(this).attr('id');
+                if (currentId) {
+                    $(this).attr('id', 'mobile_' + currentId);
+
+                    // Also update the data-bs-target and aria-labelledby for accordion
+                    if($(this).is('[data-bs-target]')) {
+                        var target = $(this).attr('data-bs-target');
+                        $(this).attr('data-bs-target', '#mobile_' + target.substring(1));
+                    }
+                    if($(this).is('[aria-labelledby]')) {
+                        var labelledby = $(this).attr('aria-labelledby');
+                        $(this).attr('aria-labelledby', 'mobile_' + labelledby);
+                    }
+                }
+            });
+
+            // Special handling for collapse elements to update data-bs-parent attribute
+            $mobileForm.find('.accordion-collapse').each(function() {
+                var parentId = $(this).attr('data-bs-parent');
+                if(parentId) {
+                    $(this).attr('data-bs-parent', '#mobile_' + parentId.substring(1));
+                }
+            });
+
+            // 5. Remove the desktop submit/reset buttons from the cloned form body
+            // We will add them to the offcanvas footer instead for a better mobile experience.
+            $mobileForm.find('.d-grid.gap-2.mt-4').remove();
+
+            // 6. Insert the cleaned, cloned form into the offcanvas body
+            $('#offcanvasFilterBody').append($mobileForm);
+
+            // 7. Add a sticky footer with the controls for the mobile form
+            var $offcanvasFooter = $('<div class="offcanvas-footer p-3 border-top d-grid gap-2"></div>');
+
+            // Recreate the Apply and Reset buttons targeting the cloned form ID
+            var $applyButton = $(`
+                <button type="submit" form="eventFiltersMobile" class="btn btn-primary">
+                    <i class="bi bi-funnel me-1"></i> Apply Filters
+                </button>
+            `);
+            var $resetLink = $(`
+                <a href="{{ route('web.activity') }}" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-counterclockwise me-1"></i> Reset All
+                </a>
+            `);
+
+            $offcanvasFooter.append($applyButton).append($resetLink);
+
+            // Append the new footer container directly to the offcanvas element
+            $('#mobileFilterOffcanvas').append($offcanvasFooter);
+        }
+    });
+</script>
+@endpush

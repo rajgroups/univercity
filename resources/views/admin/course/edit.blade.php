@@ -66,9 +66,15 @@
                     @enderror
                 </div>
                 <div class="col-md-6">
-                    <label for="short_name" class="form-label">Short Name (e.g., M.Sc)</label>
-                    <input type="text" class="form-control @error('short_name') is-invalid @enderror"
-                           name="short_name" value="{{ old('short_name', $course->short_name) }}">
+                    <label for="short_name" class="form-label">Short Name <span class="text-danger">*</span></label>
+                    <select name="short_name" class="form-select @error('short_name') is-invalid @enderror" required>
+                        <option value="">Select Level</option>
+                        <option value="Awareness" {{ old('short_name', $course->short_name) == 'Awareness' ? 'selected' : '' }}>Awareness</option>
+                        <option value="Foundation" {{ old('short_name', $course->short_name) == 'Foundation' ? 'selected' : '' }}>Foundation</option>
+                        <option value="Intermediate" {{ old('short_name', $course->short_name) == 'Intermediate' ? 'selected' : '' }}>Intermediate</option>
+                        <option value="Advanced" {{ old('short_name', $course->short_name) == 'Advanced' ? 'selected' : '' }}>Advanced</option>
+                        <option value="Professional" {{ old('short_name', $course->short_name) == 'Professional' ? 'selected' : '' }}>Professional</option>
+                    </select>
                     @error('short_name')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
@@ -124,6 +130,7 @@
                     <select name="paid_type" class="form-select @error('paid_type') is-invalid @enderror">
                         <option value="Free" {{ old('paid_type', $course->paid_type) == 'Free' ? 'selected' : '' }}>Free</option>
                         <option value="Paid" {{ old('paid_type', $course->paid_type) == 'Paid' ? 'selected' : '' }}>Paid</option>
+                        <option value="Nill" {{ old('paid_type', $course->paid_type) == 'Nill' ? 'selected' : '' }}>N/A</option>
                     </select>
                     @error('paid_type')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -196,7 +203,7 @@
                     @enderror
                 </div>
                 <div class="col-md-4">
-                    <label class="form-label">NSQF Level</label>
+                    <label class="form-label">NSQF-referenced (non-accredited)</label>
                     <input type="text" class="form-control @error('nsqf_level') is-invalid @enderror"
                            name="nsqf_level" value="{{ old('nsqf_level', $course->nsqf_level) }}">
                     @error('nsqf_level')

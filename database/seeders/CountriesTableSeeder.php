@@ -6,7 +6,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class HomeSettingSeeder extends Seeder
+class CountriesTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -14,7 +14,7 @@ class HomeSettingSeeder extends Seeder
     public function run(): void
     {
         // Path to your SQL file
-        $path = database_path('seeders/sql/homesetting.sql');
+        $path = database_path('seeders/sql/countries.sql');
 
         // Read file content
         $sql = file_get_contents($path);

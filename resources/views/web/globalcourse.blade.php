@@ -7,17 +7,14 @@
     <meta name="author" content="Indian Skill Institute Co-operation (ISICO)">
     <meta name="robots" content="index, follow">
 
-    <!-- Canonical Tag -->
     <link rel="canonical" href="{{ url()->current() }}">
 
-    <!-- Open Graph -->
     <meta property="og:title" content="Courses - Indian Skill Institute Co-operation (ISICO)">
     <meta property="og:description" content="Discover ISICO’s skill development and professional courses designed to empower learners with practical knowledge, entrepreneurship, and career opportunities.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ url()->current() }}">
     <meta property="og:image" content="{{ asset('default-courses.jpg') }}">
 
-    <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Courses - Indian Skill Institute Co-operation (ISICO)">
     <meta name="twitter:description" content="Join ISICO’s education and skill development courses to build knowledge, innovation, and entrepreneurial skills for the future.">
@@ -25,21 +22,24 @@
 @endpush
 
 @section('content')
-    <!-- Title Banner Section Start -->
     <section class="title-banner mb-80">
         <div class="container-fluid">
             <h1>All Courses</h1>
         </div>
     </section>
-    <!-- Title Banner Section End -->
-    <!-- Couse Section Start -->
     <section class="couses-sec mb-120">
         <div class="container-fluid">
             <div
-                class="d-flex align-items-center justify-content-sm-between justify-content-center row-gap-4 flex-wrap mb-24">
+                class="d-flex align-items-center justify-content-sm-between justify-content-center row-gap-4 flex-wrap mb-5">
                 <h4 class="text-center">Skill courses</h4>
                 <div class="d-flex align-items-center gap-8">
-                    <p class="flex-shrink-0 m-4">Sort By:</p>
+                    {{-- MOBILE FILTER BUTTON: Visible only on devices smaller than md (d-md-none) --}}
+                    <button class="btn btn-outline-primary d-md-none me-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileFilterOffcanvas" aria-controls="mobileFilterOffcanvas">
+                        <i class="bi bi-funnel"></i> Filters
+                    </button>
+                    {{-- END MOBILE FILTER BUTTON --}}
+
+                    {{-- <p class="flex-shrink-0 m-4">Sort By:</p> --}}
                     <div class="w-100 drop-container">
                         <div class="wrapper-dropdown form-control" id="dropdown-l2">
                             <div class=" d-flex align-items-center justify-content-between gap-64">
@@ -61,10 +61,8 @@
                 </div>
             </div>
             <div class="row">
-                <!-- Sidebar Filters -->
-                <div class="col-md-3">
+                <div class="col-md-3 d-none d-md-block">
                     <form action="{{ route('web.global.course') }}" method="GET" id="courseFilters">
-                        <!-- Search Bar with Functional Input -->
                         <div class="mb-4">
                             <div class="input-group">
                                 <input type="text" class="form-control" name="search"
@@ -76,7 +74,6 @@
                         </div>
 
                         <div class="accordion" id="filterAccordion">
-                            <!-- Sector Filter -->
                             <div class="accordion-item border-0 mb-3 shadow-sm">
                                 <h2 class="accordion-header" id="headingSector">
                                     <button class="accordion-button collapsed shadow-none" type="button"
@@ -105,7 +102,6 @@
                                 </div>
                             </div>
 
-                            <!-- Language Filter -->
                             <div class="accordion-item border-0 mb-3 shadow-sm">
                                 <h2 class="accordion-header" id="headingLang">
                                     <button class="accordion-button collapsed shadow-none" type="button"
@@ -131,7 +127,6 @@
                                 </div>
                             </div>
 
-                            <!-- Duration Filter -->
                             <div class="accordion-item border-0 mb-3 shadow-sm">
                                 <h2 class="accordion-header" id="headingDuration">
                                     <button class="accordion-button collapsed shadow-none" type="button"
@@ -157,7 +152,6 @@
                                 </div>
                             </div>
 
-                            <!-- Price Filter -->
                             <div class="accordion-item border-0 mb-3 shadow-sm">
                                 <h2 class="accordion-header" id="headingPrice">
                                     <button class="accordion-button collapsed shadow-none" type="button"
@@ -198,8 +192,7 @@
                                 </div>
                             </div>
 
-                                <!-- Country Filter -->
-                            <div class="accordion-item border-0 mb-3 shadow-sm">
+                                <div class="accordion-item border-0 mb-3 shadow-sm">
                                 <h2 class="accordion-header" id="headingCountry">
                                     <button class="accordion-button collapsed shadow-none" type="button"
                                         data-bs-toggle="collapse" data-bs-target="#collapseCountry" aria-expanded="false">
@@ -224,7 +217,6 @@
                                 </div>
                             </div>
 
-                            <!-- Category Filter -->
                             <div class="accordion-item border-0 mb-3 shadow-sm">
                                 <h2 class="accordion-header" id="headingCategory">
                                     <button class="accordion-button collapsed shadow-none" type="button"
@@ -252,7 +244,6 @@
 
                         </div>
 
-                        <!-- Filter Controls -->
                         <div class="d-grid gap-2 mt-4">
                             <button type="submit" class="btn btn-primary">
                                 <i class="bi bi-funnel me-1"></i> Apply Filters
@@ -263,17 +254,15 @@
                         </div>
                     </form>
                 </div>
-                <!-- Courses Cards -->
-                <div class="col-md-9">
+                {{-- Use col-12 on mobile, col-md-9 on tablet/desktop --}}
+                <div class="col-12 col-md-9">
                     <div class="row g-4">
                         <div class="row">
                             @foreach ($courses as $course)
                                 <div class="col-md-6 col-lg-4 mb-4">
                                     <div class="course-card position-relative bg-white">
-                                        <!-- Course Image -->
                                         <img src="{{ asset($course->image) }}" class="w-100" alt="{{ $course->name }}">
 
-                                        <!-- Badges -->
                                         <span class="badge badge-online bg-danger">
                                             {{ $course->learning_product_type === 'Online' ? 'Online' : 'Offline' }}
                                         </span>
@@ -283,24 +272,19 @@
                                         </span>
 
                                         <div class="p-3">
-                                            <!-- Course Title -->
                                             <h6 class="mb-1">{{ $course->name }}</h6>
 
-                                            <!-- Provider -->
                                             <p class="text-muted small mb-1">{{ $course->provider }}</p>
 
-                                            <!-- Sector -->
                                             <p class="text-warning small mb-1">
                                                 {{ $course->sector->name ?? 'No Sector' }}
                                             </p>
 
-                                            <!-- Language and Duration -->
                                             <div class="d-flex justify-content-between small text-muted">
                                                 <span>{{ $course->language }}</span>
                                                 <span><i class="bi bi-clock"></i> {{ $course->duration }}</span>
                                             </div>
 
-                                            <!-- Credits and Rating -->
                                             @if($course->credits_assigned)
                                                 <div class="d-flex justify-content-between mt-2">
                                                     <span class="text-muted small">
@@ -310,7 +294,6 @@
                                                 </div>
                                             @endif
 
-                                            <!-- Apply Button -->
                                             <div class="mt-2">
                                                 <a href="{{ route('web.global.course.show', $course->slug) }}" class="apply-link">
                                                     Apply →
@@ -419,7 +402,215 @@
             </div>
         </div>
     </section>
-    <!-- Couse Section End -->
+    @endsection
 
-    <!-- content @e -->
-@endsection
+{{-- ---------------------------------------------------------------------------------------------------------------------------------------------------------- --}}
+{{-- MOBILE FILTER OFFCANVAS START --}}
+{{-- This section is placed outside the @section('content') block, which is standard for modals/offcanvas components. --}}
+{{-- All 'id' attributes here are suffixed with 'Mobile' to avoid conflicts with the desktop filter form. --}}
+{{-- All 'name' attributes (e.g., name="sectors[]") remain the same to ensure data is correctly submitted. --}}
+<div class="offcanvas offcanvas-start" tabindex="-1" id="mobileFilterOffcanvas" aria-labelledby="mobileFilterOffcanvasLabel">
+    <div class="offcanvas-header border-bottom">
+        <h5 class="offcanvas-title" id="mobileFilterOffcanvasLabel"><i class="bi bi-funnel me-2"></i> Filter Courses</h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        <form action="{{ route('web.global.course') }}" method="GET" id="courseFiltersMobile">
+            <div class="mb-4">
+                <div class="input-group">
+                    <input type="text" class="form-control" name="search"
+                        placeholder="Search by course name..." value="{{ request('search') }}">
+                    <button class="btn btn-primary" type="submit">
+                        <i class="bi bi-search"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="accordion" id="filterAccordionMobile">
+                <div class="accordion-item border-0 mb-3 shadow-sm">
+                    <h2 class="accordion-header" id="headingSectorMobile">
+                        <button class="accordion-button collapsed shadow-none" type="button"
+                            data-bs-toggle="collapse" data-bs-target="#collapseSectorMobile" aria-expanded="false"
+                            data-bs-parent="#filterAccordionMobile">
+                            <i class="bi bi-grid me-2"></i> Sector
+                            <span class="badge bg-primary ms-auto">{{ count(request('sectors', [])) }}</span>
+                        </button>
+                    </h2>
+                    <div id="collapseSectorMobile"
+                        class="accordion-collapse collapse {{ count(request('sectors', [])) ? 'show' : '' }}"
+                        aria-labelledby="headingSectorMobile" data-bs-parent="#filterAccordionMobile">
+                        <div class="accordion-body pt-2">
+                            @foreach ($sectors as $sector)
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" name="sectors[]"
+                                        id="mobile_sector{{ $sector->id }}" value="{{ $sector->id }}"
+                                        {{ in_array($sector->id, request('sectors', [])) ? 'checked' : '' }}>
+                                    <label class="form-check-label d-flex justify-content-between w-100"
+                                        for="mobile_sector{{ $sector->id }}">
+                                        <span>{{ $sector->name }}</span>
+                                        <span class="text-muted small">{{ $sector->courses_count ?? 0 }}</span>
+                                    </label>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item border-0 mb-3 shadow-sm">
+                    <h2 class="accordion-header" id="headingLangMobile">
+                        <button class="accordion-button collapsed shadow-none" type="button"
+                            data-bs-toggle="collapse" data-bs-target="#collapseLangMobile" aria-expanded="false"
+                            data-bs-parent="#filterAccordionMobile">
+                            <i class="bi bi-translate me-2"></i> Language
+                            <span class="badge bg-primary ms-auto">{{ count(request('languages', [])) }}</span>
+                        </button>
+                    </h2>
+                    <div id="collapseLangMobile"
+                        class="accordion-collapse collapse {{ count(request('languages', [])) ? 'show' : '' }}"
+                        aria-labelledby="headingLangMobile" data-bs-parent="#filterAccordionMobile">
+                        <div class="accordion-body pt-2">
+                            @foreach (['English', 'Tamil', 'Hindi'] as $language)
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" name="languages[]"
+                                        id="mobile_lang{{ $loop->index }}" value="{{ $language }}"
+                                        {{ in_array($language, request('languages', [])) ? 'checked' : '' }}>
+                                    <label class="form-check-label"
+                                        for="mobile_lang{{ $loop->index }}">{{ $language }}</label>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item border-0 mb-3 shadow-sm">
+                    <h2 class="accordion-header" id="headingDurationMobile">
+                        <button class="accordion-button collapsed shadow-none" type="button"
+                            data-bs-toggle="collapse" data-bs-target="#collapseDurationMobile" aria-expanded="false"
+                            data-bs-parent="#filterAccordionMobile">
+                            <i class="bi bi-clock me-2"></i> Duration
+                            <span class="badge bg-primary ms-auto">{{ count(request('durations', [])) }}</span>
+                        </button>
+                    </h2>
+                    <div id="collapseDurationMobile"
+                        class="accordion-collapse collapse {{ count(request('durations', [])) ? 'show' : '' }}"
+                        aria-labelledby="headingDurationMobile" data-bs-parent="#filterAccordionMobile">
+                        <div class="accordion-body pt-2">
+                            @foreach (['1-2 Hours', '3+ Hours', '1-2 Weeks', '3+ Weeks'] as $duration)
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" name="durations[]"
+                                        id="mobile_dur{{ $loop->index }}" value="{{ $duration }}"
+                                        {{ in_array($duration, request('durations', [])) ? 'checked' : '' }}>
+                                    <label class="form-check-label"
+                                        for="mobile_dur{{ $loop->index }}">{{ $duration }}</label>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item border-0 mb-3 shadow-sm">
+                    <h2 class="accordion-header" id="headingPriceMobile">
+                        <button class="accordion-button collapsed shadow-none" type="button"
+                            data-bs-toggle="collapse" data-bs-target="#collapsePriceMobile" aria-expanded="false"
+                            data-bs-parent="#filterAccordionMobile">
+                            <i class="bi bi-currency-rupee me-2"></i> Price
+                            <span class="badge bg-primary ms-auto">{{ count(request('prices', [])) }}</span>
+                        </button>
+                    </h2>
+                    <div id="collapsePriceMobile"
+                        class="accordion-collapse collapse {{ count(request('prices', [])) ? 'show' : '' }}"
+                        aria-labelledby="headingPriceMobile" data-bs-parent="#filterAccordionMobile">
+                        <div class="accordion-body pt-2">
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" name="prices[]"
+                                    id="mobile_priceFree" value="Free"
+                                    {{ in_array('Free', request('prices', [])) ? 'checked' : '' }}>
+                                <label class="form-check-label" for="mobile_priceFree">Free</label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" name="prices[]"
+                                    id="mobile_pricePaid" value="Paid"
+                                    {{ in_array('Paid', request('prices', [])) ? 'checked' : '' }}>
+                                <label class="form-check-label" for="mobile_pricePaid">Paid</label>
+                            </div>
+                            <div class="mt-3">
+                                <label class="form-label small">Price Range</label>
+                                <div class="d-flex align-items-center">
+                                    <input type="number" name="min_price"
+                                        class="form-control form-control-sm" placeholder="Min"
+                                        value="{{ request('min_price') }}">
+                                    <span class="mx-2">-</span>
+                                    <input type="number" name="max_price"
+                                        class="form-control form-control-sm" placeholder="Max"
+                                        value="{{ request('max_price') }}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item border-0 mb-3 shadow-sm">
+                    <h2 class="accordion-header" id="headingCountryMobile">
+                        <button class="accordion-button collapsed shadow-none" type="button"
+                            data-bs-toggle="collapse" data-bs-target="#collapseCountryMobile" aria-expanded="false"
+                            data-bs-parent="#filterAccordionMobile">
+                            <i class="bi bi-flag me-2"></i> Country
+                            <span class="badge bg-primary ms-auto">{{ count(request('countries', [])) }}</span>
+                        </button>
+                    </h2>
+                    <div id="collapseCountryMobile"
+                        class="accordion-collapse collapse {{ count(request('countries', [])) ? 'show' : '' }}"
+                        aria-labelledby="headingCountryMobile" data-bs-parent="#filterAccordionMobile">
+                        <div class="accordion-body pt-2">
+                            @foreach ($countries as $country)
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" name="countries[]"
+                                        id="mobile_country{{ $country->id }}" value="{{ $country->id }}"
+                                        {{ in_array($country->id, request('countries', [])) ? 'checked' : '' }}>
+                                    <label class="form-check-label"
+                                        for="mobile_country{{ $country->id }}">{{ $country->name }}</label>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item border-0 mb-3 shadow-sm">
+                    <h2 class="accordion-header" id="headingCategoryMobile">
+                        <button class="accordion-button collapsed shadow-none" type="button"
+                            data-bs-toggle="collapse" data-bs-target="#collapseCategoryMobile" aria-expanded="false"
+                            data-bs-parent="#filterAccordionMobile">
+                            <i class="bi bi-folder me-2"></i> Category
+                            <span class="badge bg-primary ms-auto">{{ count(request('categories', [])) }}</span>
+                        </button>
+                    </h2>
+                    <div id="collapseCategoryMobile"
+                        class="accordion-collapse collapse {{ count(request('categories', [])) ? 'show' : '' }}"
+                        aria-labelledby="headingCategoryMobile" data-bs-parent="#filterAccordionMobile">
+                        <div class="accordion-body pt-2">
+                            @foreach ($categories as $category)
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" name="categories[]"
+                                        id="mobile_category{{ $category->id }}" value="{{ $category->id }}"
+                                        {{ in_array($category->id, request('categories', [])) ? 'checked' : '' }}>
+                                    <label class="form-check-label"
+                                        for="mobile_category{{ $category->id }}">{{ $category->name }}</label>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="offcanvas-footer p-3 border-top d-grid gap-2">
+        {{-- Use form="courseFiltersMobile" to link the button to the form in the offcanvas body --}}
+        <button type="submit" form="courseFiltersMobile" class="btn btn-primary">
+            <i class="bi bi-funnel me-1"></i> Apply Filters
+        </button>
+        <a href="{{ route('web.global.course') }}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-counterclockwise me-1"></i> Reset All
+        </a>
+    </div>
+</div>
+{{-- MOBILE FILTER OFFCANVAS END --}}
