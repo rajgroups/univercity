@@ -9,6 +9,7 @@ use App\Models\IntlCourse;
 use App\Models\Sector;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class IntlCourseController extends Controller
 {
@@ -83,7 +84,6 @@ class IntlCourseController extends Controller
             'other_info' => 'required|string',
 
             // QP & NSQF & Credit
-            'qp_code' => 'required|string|max:100',
             'nsqf_level' => 'required|string|max:50',
             'credits_assigned' => 'required|string|max:50',
             'program_by' => 'required|string|max:255',
@@ -158,6 +158,24 @@ class IntlCourseController extends Controller
         if ($request->has('career_outcomes_json') && !empty($request->career_outcomes_json)) {
             $validated['career_outcomes'] = $request->career_outcomes_json;
         }
+
+        // ✅ Auto-generate qp_code
+        $country = DB::table('countries')->where('id', $validated['country_id'])->first();
+        $countryIso = strtoupper($country->iso2 ?? 'XX');
+
+        // Get the latest serial for this country
+        $lastCourse = IntlCourse::where('qp_code', 'like', "ISICO{$countryIso}%")
+            ->orderByDesc('id')
+            ->first();
+
+        if ($lastCourse && preg_match('/(\d+)$/', $lastCourse->qp_code, $matches)) {
+            $nextNumber = intval($matches[1]) + 1;
+        } else {
+            $nextNumber = 1;
+        }
+
+        $formattedNumber = str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
+        $validated['qp_code'] = "ISICO{$countryIso}{$formattedNumber}";
 
         // Clean up the data - remove fields that don't exist in the model
         $modelFields = [

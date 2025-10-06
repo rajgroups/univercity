@@ -207,51 +207,103 @@
 
                             <!-- Eligibility Tab -->
                             <div class="tab-pane fade" id="eligibility" role="tabpanel">
-                                <div class="row">
-                                    <div class="col-12 col-sm-6">
-                                        <div class="info-card mb-3">
-                                            <i class="bi bi-calendar2-check text-primary"></i>
-                                            <div>
-                                                <h6 class="small fw-bold">Required Age</h6>
-                                                <p class="mb-0 small">{{ $course->required_age ?? 'Not specified' }}</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-12 col-sm-6">
-                                        <div class="info-card mb-3">
-                                            <i class="bi bi-mortarboard text-success"></i>
-                                            <div>
-                                                <h6 class="small fw-bold">Minimum Education</h6>
-                                                <p class="mb-0 small">{{ $course->minimum_education ?? 'Not specified' }}</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-12 col-sm-6">
-                                        <div class="info-card mb-3">
-                                            <i class="bi bi-briefcase text-warning"></i>
-                                            <div>
-                                                <h6 class="small fw-bold">Industry Experience</h6>
-                                                <p class="mb-0 small">{{ $course->industry_experience ?? 'Not specified' }}</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-12 col-sm-6">
-                                        <div class="info-card mb-3">
-                                            <i class="bi bi-translate text-info"></i>
-                                            <div>
-                                                <h6 class="small fw-bold">Language Proficiency</h6>
-                                                <p class="mb-0 small">{{ $course->language_proficiency_requirement ?? 'Not specified' }}</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                               <div class="row">
+    <div class="col-12 col-sm-6">
+        <div class="card border-0 bg-light h-100 hover-card">
+            <div class="card-body">
+                <div class="d-flex align-items-start">
+                    <div class="flex-shrink-0 me-3">
+                        <i class="bi bi-calendar2-check text-primary fs-4"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <h6 class="fw-bold mb-1">Required Age</h6>
+                        <p class="mb-0 text-muted">{{ $course->required_age ?? 'Not specified' }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-sm-6">
+        <div class="card border-0 bg-light h-100 hover-card">
+            <div class="card-body">
+                <div class="d-flex align-items-start">
+                    <div class="flex-shrink-0 me-3">
+                        <i class="bi bi-mortarboard text-success fs-4"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <h6 class="fw-bold mb-1">Minimum Education</h6>
+                        <p class="mb-0 text-muted">{{ $course->minimum_education ?? 'Not specified' }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-sm-6">
+        <div class="card border-0 bg-light h-100 hover-card">
+            <div class="card-body">
+                <div class="d-flex align-items-start">
+                    <div class="flex-shrink-0 me-3">
+                        <i class="bi bi-briefcase text-warning fs-4"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <h6 class="fw-bold mb-1">Industry Experience</h6>
+                        <p class="mb-0 text-muted">{{ $course->industry_experience ?? 'Not specified' }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-sm-6">
+        <div class="card border-0 bg-light h-100 hover-card">
+            <div class="card-body">
+                <div class="d-flex align-items-start">
+                    <div class="flex-shrink-0 me-3">
+                        <i class="bi bi-translate text-info fs-4"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <h6 class="fw-bold mb-1">Language Proficiency</h6>
+                        <p class="mb-0 text-muted">{{ $course->language_proficiency_requirement ?? 'Not specified' }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-                                @if ($course->learning_tools)
-                                    <div class="mt-3">
-                                        <h6 class="fw-bold">Learning Tools</h6>
-                                        <p class="mb-0">{{ $course->learning_tools }}</p>
-                                    </div>
-                                @endif
+@if ($course->learning_tools)
+<div class="mt-4">
+    <div class="card border-0 bg-light hover-card">
+        <div class="card-body">
+            <div class="d-flex align-items-start">
+                <div class="flex-shrink-0 me-3">
+                    <i class="bi bi-tools text-purple fs-4"></i>
+                </div>
+                <div class="flex-grow-1">
+                    <h6 class="fw-bold mb-2">Learning Tools</h6>
+                    <p class="mb-0 text-muted">{{ $course->learning_tools }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endif
+
+<style>
+.hover-card {
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+}
+
+.hover-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    border-color: rgba(0, 0, 0, 0.125);
+}
+
+.text-purple {
+    color: #6f42c1 !important;
+}
+</style>
                             </div>
 
                             <!-- Logistics & Costs Tab -->
