@@ -36,8 +36,8 @@
                     <div class="text-white">
                         <span
                             class="badge bg-warning text-dark mb-3">{{ $course->pathway_type ? ucfirst(str_replace('_', ' ', $course->pathway_type)) : 'International Course' }}</span>
-                        <h1 class="fw-bold mb-3 display-6 display-lg-5 text-shadow">{{ $course->course_name }}</h1>
-                        <p class="lead mb-4 text-shadow">{{ $course->short_description }}</p>
+                        <h1 class="fw-bold mb-3 display-6 display-lg-5 text-shadow text-white">{{ $course->course_name }}</h1>
+                        <p class="lead mb-4 text-shadow text-white">{{ $course->short_description }}</p>
 
                         <div class="d-flex flex-wrap align-items-center gap-3 gap-lg-4 text-white">
                             <div class="d-flex align-items-center gap-2 bg-dark bg-opacity-50 px-2 px-lg-3 py-1 py-lg-2 rounded-pill">
@@ -414,39 +414,8 @@
 
             <!-- Sidebar -->
             <div class="col-12 col-lg-4">
-                <!-- Contact Form -->
-                <div class="card shadow-sm border-0 mb-4">
-                    <div class="card-body p-3 p-lg-4">
-                        <h5 class="card-title fw-bold mb-3">Request Information</h5>
-                        <form class="search-form" action="{{ route('web.enquiry') }}" method="POST" novalidate>
-                            @csrf
-                            <input type="hidden" name="type" value="7">
-                            <input type="hidden" name="course_name" value="{{ $course->course_name }}">
 
-                            <div class="mb-3">
-                                <input type="text" class="form-control form-control-sm" name="name" placeholder="Your Name"
-                                    required>
-                            </div>
-
-                            <div class="mb-3">
-                                <input type="email" class="form-control form-control-sm" name="email" placeholder="Your Email">
-                            </div>
-
-                            <div class="mb-3">
-                                <input type="tel" class="form-control form-control-sm" name="mobile" placeholder="Phone Number"
-                                    required>
-                            </div>
-
-                            <div class="mb-3">
-                                <textarea class="form-control form-control-sm" name="message" rows="3" placeholder="Your Message" required></textarea>
-                            </div>
-
-                            <button type="submit" class="btn btn-primary w-100 btn-sm">Submit Enquiry</button>
-                        </form>
-                    </div>
-                </div>
-
-                <!-- Course Details Sidebar -->
+                 <!-- Course Details Sidebar -->
                 <div class="card shadow-sm border-0 mb-4">
                     <div class="card-body p-3 p-lg-4">
                         <h5 class="card-title fw-bold mb-3">Course Details</h5>
@@ -546,6 +515,38 @@
                                 </div>
                             </div>
                         @endif
+                    </div>
+                </div>
+
+                <!-- Contact Form -->
+                <div class="card shadow-sm border-0 mb-4">
+                    <div class="card-body p-3 p-lg-4">
+                        <h5 class="card-title fw-bold mb-3">Request Information</h5>
+                        <form class="search-form" action="{{ route('web.enquiry') }}" method="POST" novalidate>
+                            @csrf
+                            <input type="hidden" name="type" value="7">
+                            <input type="hidden" name="course_name" value="{{ $course->course_name }}">
+
+                            <div class="mb-3">
+                                <input type="text" class="form-control form-control-sm" name="name" placeholder="Your Name"
+                                    required>
+                            </div>
+
+                            <div class="mb-3">
+                                <input type="email" class="form-control form-control-sm" name="email" placeholder="Your Email">
+                            </div>
+
+                            <div class="mb-3">
+                                <input type="tel" class="form-control form-control-sm" name="mobile" placeholder="Phone Number"
+                                    required>
+                            </div>
+
+                            <div class="mb-3">
+                                <textarea class="form-control form-control-sm" name="message" rows="3" placeholder="Your Message" required></textarea>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary w-100 btn-sm">Submit Enquiry</button>
+                        </form>
                     </div>
                 </div>
 

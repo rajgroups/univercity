@@ -292,94 +292,10 @@
                             </div>
                         </div>
                     </div>
-
-                    <!-- Related Programs -->
-                    <div class="card shadow-sm border-0 rounded-4 overflow-hidden">
-                        <div class="card-header bg-primary text-white py-3">
-                            <h4 class="mb-0"><i class="bi bi-collection-play me-2"></i>Related Programs</h4>
-                        </div>
-                        <div class="card-body p-4">
-                            @if($programes->isNotEmpty())
-                                <div class="row g-4">
-                                    @foreach($programes as $program)
-                                        <div class="col-md-6">
-                                            <div class="card border-0 shadow-sm h-100">
-                                                <div class="card-img-top overflow-hidden">
-                                                    <img src="{{ $program->image ? asset($program->image) : asset('resource/web/assets/media/default/default-img.png') }}"
-                                                         alt="{{ $program->title }}" class="img-fluid w-100" style="height: 180px; object-fit: cover;">
-                                                </div>
-                                                <div class="card-body">
-                                                    <h5 class="card-title">{{ Str::limit($program->title, 50) }}</h5>
-                                                    <p class="card-text text-muted small">
-                                                        {{ Str::limit(strip_tags($program->description), 100) }}
-                                                    </p>
-                                                </div>
-                                                <div class="card-footer bg-transparent border-0 pt-0">
-                                                    <a href="{{ route('web.announcement.program', [$program->category->slug, $program->slug]) }}"
-                                                       class="btn btn-outline-primary btn-sm">View Details</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    @endforeach
-                                </div>
-                            @else
-                                <div class="alert alert-info text-center py-4">
-                                    <i class="bi bi-info-circle display-4 text-primary mb-3"></i>
-                                    <h5>No Related Programs</h5>
-                                    <p class="mb-0">Check back later for related programs.</p>
-                                </div>
-                            @endif
-                        </div>
-                    </div>
                 </div>
 
                 <!-- Sidebar -->
                 <div class="col-lg-4">
-                    <!-- Enquiry Form -->
-                    <div class="card shadow-sm border-0 rounded-4 overflow-hidden mb-4">
-                        <div class="card-header bg-primary text-white py-3">
-                            <h5 class="mb-0"><i class="bi bi-info-circle me-2"></i>Request Information</h5>
-                        </div>
-                        <div class="card-body p-4">
-                            <form class="needs-validation" action="{{ route('web.enquiry') }}" method="POST" novalidate>
-                                @csrf
-                                <input type="hidden" name="type" value="7">
-                                <input type="hidden" name="course_name" value="{{ $course->name }}">
-
-                                <div class="mb-3">
-                                    <label for="name" class="form-label">Full Name <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="name" name="name"
-                                           placeholder="Enter your full name" required minlength="2" maxlength="255">
-                                    <div class="invalid-feedback">Please provide a valid name (2-255 characters).</div>
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="email" class="form-label">Email Address</label>
-                                    <input type="email" class="form-control" id="email" name="email"
-                                           placeholder="Enter your email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$">
-                                    <div class="invalid-feedback">Please provide a valid email address.</div>
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="mobile" class="form-label">Phone Number <span class="text-danger">*</span></label>
-                                    <input type="tel" class="form-control" id="mobile" name="mobile"
-                                           placeholder="Enter your phone number" required pattern="[0-9]{10,15}">
-                                    <div class="invalid-feedback">Please provide a valid phone number (10-15 digits).</div>
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="message" class="form-label">Message <span class="text-danger">*</span></label>
-                                    <textarea class="form-control" id="message" name="message" rows="3"
-                                              placeholder="Enter your message" required maxlength="1000"></textarea>
-                                    <div class="invalid-feedback">Please enter your message (max 1000 characters).</div>
-                                </div>
-
-                                <button type="submit" class="btn btn-primary w-100 py-2">
-                                    <i class="bi bi-send me-2"></i>Submit Enquiry
-                                </button>
-                            </form>
-                        </div>
-                    </div>
 
                     <!-- Course Highlights -->
                     <div class="card shadow-sm border-0 rounded-4 overflow-hidden mb-4">
@@ -437,6 +353,52 @@
                         </div>
                     </div>
 
+                    <!-- Enquiry Form -->
+                    <div class="card shadow-sm border-0 rounded-4 overflow-hidden mb-4">
+                        <div class="card-header bg-primary text-white py-3">
+                            <h5 class="mb-0"><i class="bi bi-info-circle me-2 text-white"></i>Request Information</h5>
+                        </div>
+                        <div class="card-body p-4">
+                            <form class="needs-validation" action="{{ route('web.enquiry') }}" method="POST" novalidate>
+                                @csrf
+                                <input type="hidden" name="type" value="7">
+                                <input type="hidden" name="course_name" value="{{ $course->name }}">
+
+                                <div class="mb-3">
+                                    <label for="name" class="form-label">Full Name <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="name" name="name"
+                                           placeholder="Enter your full name" required minlength="2" maxlength="255">
+                                    <div class="invalid-feedback">Please provide a valid name (2-255 characters).</div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="email" class="form-label">Email Address</label>
+                                    <input type="email" class="form-control" id="email" name="email"
+                                           placeholder="Enter your email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$">
+                                    <div class="invalid-feedback">Please provide a valid email address.</div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="mobile" class="form-label">Phone Number <span class="text-danger">*</span></label>
+                                    <input type="tel" class="form-control" id="mobile" name="mobile"
+                                           placeholder="Enter your phone number" required pattern="[0-9]{10,15}">
+                                    <div class="invalid-feedback">Please provide a valid phone number (10-15 digits).</div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="message" class="form-label">Message <span class="text-danger">*</span></label>
+                                    <textarea class="form-control" id="message" name="message" rows="3"
+                                              placeholder="Enter your message" required maxlength="1000"></textarea>
+                                    <div class="invalid-feedback">Please enter your message (max 1000 characters).</div>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary w-100 py-2">
+                                    <i class="bi bi-send me-2"></i>Submit Enquiry
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
                     <!-- Sectors -->
                     <div class="card shadow-sm border-0 rounded-4 overflow-hidden">
                         <div class="card-header bg-light py-3">
@@ -452,6 +414,45 @@
                                     <p class="text-muted mb-0">No sectors available at the moment.</p>
                                 @endforelse
                             </div>
+                        </div>
+                    </div>
+
+                     <!-- Related Programs -->
+                    <div class="card shadow-sm border-0 rounded-4 overflow-hidden">
+                        <div class="card-header bg-primary text-white py-3">
+                            <h4 class="mb-0"><i class="bi bi-collection-play me-2"></i>Related Programs</h4>
+                        </div>
+                        <div class="card-body p-4">
+                            @if($programes->isNotEmpty())
+                                <div class="row g-4">
+                                    @foreach($programes as $program)
+                                        <div class="col-md-12">
+                                            <div class="card border-0 shadow-sm h-100">
+                                                <div class="card-img-top overflow-hidden">
+                                                    <img src="{{ $program->image ? asset($program->image) : asset('resource/web/assets/media/default/default-img.png') }}"
+                                                         alt="{{ $program->title }}" class="img-fluid w-100" style="height: 180px; object-fit: cover;">
+                                                </div>
+                                                <div class="card-body">
+                                                    <h5 class="card-title">{{ Str::limit($program->title, 50) }}</h5>
+                                                    <p class="card-text text-muted small">
+                                                        {{ Str::limit(strip_tags($program->description), 100) }}
+                                                    </p>
+                                                </div>
+                                                <div class="card-footer bg-transparent border-0 pt-0">
+                                                    <a href="{{ route('web.announcement.program', [$program->category->slug, $program->slug]) }}"
+                                                       class="btn btn-outline-primary btn-sm">View Details</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            @else
+                                <div class="alert alert-info text-center py-4">
+                                    <i class="bi bi-info-circle display-4 text-primary mb-3"></i>
+                                    <h5>No Related Programs</h5>
+                                    <p class="mb-0">Check back later for related programs.</p>
+                                </div>
+                            @endif
                         </div>
                     </div>
                 </div>

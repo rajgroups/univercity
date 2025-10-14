@@ -207,7 +207,7 @@ class AnnouncementController extends Controller
 
         $announcement->save();
         notyf()->addSuccess('Announcement updated successfully.');
-        return redirect()->route('admin.announcement.edit', $announcement->id)
+        return redirect()->route('admin.announcement.index')
                         ->with('success', 'Announcement updated successfully.');
     }
 

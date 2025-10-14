@@ -223,8 +223,22 @@
                 <div class="col-md-4">
                     <label class="form-label">Learning Product Type</label>
                      <select name="learning_product_type" class="form-select @error('learning_product_type') is-invalid @enderror">
-                        <option value="Offline" {{ old('learning_product_type',$course->learning_product_type) == 'Offline' ? 'selected' : '' }}>Offline</option>
-                        <option value="Online" {{ old('learning_product_type',$course->learning_product_type) == 'Online' ? 'selected' : '' }}>Online</option>
+                            <option value="">Select Pathway Type</option>
+                                <option value="online_pathway"
+                                    {{ old('pathway_type', $course->learning_product_type) == 'online_pathway' ? 'selected' : '' }}>
+                                    Online Pathway</option>
+                                <option value="onsite_abroad"
+                                    {{ old('pathway_type', $course->learning_product_type) == 'onsite_abroad' ? 'selected' : '' }}>
+                                    Onsite Abroad</option>
+                                <option value="hybrid"
+                                    {{ old('pathway_type', $course->learning_product_type) == 'hybrid' ? 'selected' : '' }}>Hybrid
+                                </option>
+                                <option value="dual_credit"
+                                    {{ old('pathway_type', $course->learning_product_type) == 'dual_credit' ? 'selected' : '' }}>
+                                    Dual-credit</option>
+                                <option value="twinning_program"
+                                    {{ old('pathway_type', $course->learning_product_type) == 'twinning_program' ? 'selected' : '' }}>
+                                    Twinning Program</option>
                     </select>
                     @error('learning_product_type')
                         <div class="invalid-feedback">{{ $message }}</div>

@@ -201,8 +201,12 @@
                 <div class="col-md-4">
                     <label class="form-label">Learning Product Type</label>
                      <select name="learning_product_type" class="form-select @error('learning_product_type') is-invalid @enderror">
-                        <option value="Offline" {{ old('learning_product_type') == 'Offline' ? 'selected' : '' }}>Offline</option>
-                        <option value="Online" {{ old('learning_product_type') == 'Online' ? 'selected' : '' }}>Online</option>
+                                <option value="">Select Pathway Type</option>
+                                <option value="online_pathway" {{ old('online_pathway') == 'online_pathway' ? 'selected' : '' }}>Online Pathway</option>
+                                <option value="onsite_abroad" {{ old('onsite_abroad') == 'onsite_abroad' ? 'selected' : '' }}>Onsite Abroad</option>
+                                <option value="hybrid" {{ old('hybrid') == 'hybrid' ? 'selected' : '' }}>Hybrid</option>
+                                <option value="dual_credit" {{ old('dual_credit') == 'dual_credit' ? 'selected' : '' }}>Dual-credit</option>
+                                <option value="twinning_program" {{ old('twinning_program') == 'twinning_program' ? 'selected' : '' }}>Twinning Program</option>
                     </select>
                     @error('learning_product_type')
                         <div class="invalid-feedback">{{ $message }}</div>
