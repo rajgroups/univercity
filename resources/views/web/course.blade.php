@@ -233,7 +233,7 @@
                                 <div class="course-card position-relative bg-white">
                                     <img src="{{ asset($course->image) }}" class="w-100" alt="{{ $course->name }}">
                                     <span
-                                        class="badge badge-online bg-danger">{{ $course->learning_product_type === 'Online' ? 'Online' : 'Offline' }}</span>
+                                        class="badge badge-online bg-danger">{{ $course->learning_product_type }}</span>
                                     <span
                                         class="badge badge-price {{ $course->paid_type === 'Free' ? 'badge-free' : 'badge-paid' }}">{{ $course->paid_type }}</span>
                                     <div class="p-3">

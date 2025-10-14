@@ -264,7 +264,7 @@
                                         <img src="{{ asset($course->image) }}" class="w-100" alt="{{ $course->name }}">
 
                                         <span class="badge badge-online bg-danger">
-                                            {{ $course->learning_product_type === 'Online' ? 'Online' : 'Offline' }}
+                                            {{ $course->pathway_type }}
                                         </span>
                                         <span
                                             class="badge badge-price {{ $course->paid_type === 'Free' ? 'badge-free' : 'badge-paid' }}">
@@ -285,14 +285,14 @@
                                                 <span><i class="bi bi-clock"></i> {{ $course->duration }}</span>
                                             </div>
 
-                                            @if($course->credits_assigned)
+                                            {{-- @if($course->credits_assigned)
                                                 <div class="d-flex justify-content-between mt-2">
                                                     <span class="text-muted small">
                                                         {{ $course->credits_assigned ?? 'No Credit' }}
                                                     </span>
                                                     <span class="rating-stars">★ 0.0 (0 review)</span>
                                                 </div>
-                                            @endif
+                                            @endif --}}
 
                                             <div class="mt-2">
                                                 <a href="{{ route('web.global.course.show', $course->slug) }}" class="apply-link">
