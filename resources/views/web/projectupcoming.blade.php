@@ -1,8 +1,10 @@
+{{-- @dd($announcement) --}}
 @extends('layouts.web.app')
 @push('meta')
-    <title>{{ $metaTitle ?? ($program->title ?? 'Default Page Title') }}</title>
+    <title>{{ $metaTitle ?? ($announcement->title ?? 'Default Page Title') }}</title>
 
-    <meta name="description" content="{{ $metaDescription ?? Str::limit(strip_tags($program->description ?? ''), 150) }}">
+    <meta name="description"
+        content="{{ $metaDescription ?? Str::limit(strip_tags($announcement->description ?? ''), 150) }}">
     <meta name="keywords" content="{{ $metaKeywords ?? 'announcement, news, education' }}">
     <meta name="author" content="{{ $metaAuthor ?? 'YourSiteName' }}">
     <meta name="robots" content="{{ $metaRobots ?? 'index, follow' }}">
@@ -11,542 +13,1014 @@
     <link rel="canonical" href="{{ $metaCanonical ?? url()->current() }}">
 
     <!-- Open Graph -->
-    <meta property="og:title" content="{{ $metaOgTitle ?? ($program->title ?? 'Default OG Title') }}">
+    <meta property="og:title" content="{{ $metaOgTitle ?? ($announcement->title ?? 'Default OG Title') }}">
     <meta property="og:description"
-        content="{{ $metaOgDescription ?? Str::limit(strip_tags($program->description ?? ''), 150) }}">
+        content="{{ $metaOgDescription ?? Str::limit(strip_tags($announcement->description ?? ''), 150) }}">
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ $metaOgUrl ?? url()->current() }}">
-    <meta property="og:image" content="{{ $metaOgImage ?? asset($program->image ?? 'default.jpg') }}">
+    <meta property="og:image" content="{{ $metaOgImage ?? asset($announcement->image ?? 'default.jpg') }}">
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="{{ $metaTwitterTitle ?? ($program->title ?? 'Default Twitter Title') }}">
+    <meta name="twitter:title" content="{{ $metaTwitterTitle ?? ($announcement->title ?? 'Default Twitter Title') }}">
     <meta name="twitter:description"
-        content="{{ $metaTwitterDescription ?? Str::limit(strip_tags($program->description ?? ''), 150) }}">
-    <meta name="twitter:image" content="{{ $metaTwitterImage ?? asset($program->image ?? 'default.jpg') }}">
+        content="{{ $metaTwitterDescription ?? Str::limit(strip_tags($announcement->description ?? ''), 150) }}">
+    <meta name="twitter:image" content="{{ $metaTwitterImage ?? asset($announcement->image ?? 'default.jpg') }}">
 @endpush
 
 @section('content')
-<style>
-    /* Enhanced Mobile-First Styles */
-    .title-banner {
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-        padding: 4rem 0 2rem;
-        position: relative;
-    }
-
-    .title-banner::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: linear-gradient(135deg, rgba(44, 62, 80, 0.85) 0%, rgba(44, 62, 80, 0.7) 100%);
-    }
-
-    .title-banner .container-fluid {
-        position: relative;
-        z-index: 2;
-    }
-
-    .title-banner h2 {
-        font-size: clamp(1.5rem, 4vw, 2.25rem);
-        line-height: 1.3;
-        text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-    }
-
-    .color-primary {
-        color: #4CAF50 !important;
-    }
-
-    .light-gray {
-        color: #e9ecef !important;
-        margin-bottom: 0;
-    }
-
-    /* Improved Carousel */
-    .carousel-item img {
-        height: min(50vh, 400px);
-        object-fit: cover;
-        border-radius: 0.75rem;
-    }
-
-    .carousel-indicators [data-bs-target] {
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        margin: 0 0.25rem;
-    }
-
-    /* Enhanced Navigation Sidebar */
-    #navbar-example {
-        border-radius: 0.75rem;
-        box-shadow: 0 0.25rem 0.75rem rgba(0,0,0,0.1);
-        border: 1px solid #dee2e6;
-        position: sticky;
-        top: 6rem;
-        max-height: calc(100vh - 8rem);
-        overflow-y: auto;
-    }
-
-    #navbar-example .nav-link {
-        color: #495057;
-        padding: 0.75rem 1rem;
-        border-radius: 0.5rem;
-        margin-bottom: 0.25rem;
-        transition: all 0.2s ease-in-out;
-        border-left: 3px solid transparent;
-        font-size: 0.9rem;
-    }
-
-    #navbar-example .nav-link:hover,
-    #navbar-example .nav-link:focus {
-        background-color: #e9ecef;
-        color: #0d6efd;
-        border-left-color: #0d6efd;
-    }
-
-    /* Enhanced Accordion */
-    .accordion-button {
-        background-color: #f8f9fa;
-        border: 1px solid #dee2e6;
-        font-weight: 500;
-        padding: 1rem 1.25rem;
-    }
-
-    .accordion-button:not(.collapsed) {
-        background-color: #e7f1ff;
-        color: #0d6efd;
-        border-color: #0d6efd;
-    }
-
-    .accordion-button:focus {
-        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
-        border-color: #0d6efd;
-    }
-
-    .accordion-body {
-        padding: 1.25rem;
-        background-color: #fff;
-        border-left: 1px solid #dee2e6;
-        border-right: 1px solid #dee2e6;
-        border-bottom: 1px solid #dee2e6;
-    }
-
-    /* Sidebar Improvements */
-    .siderbar {
-        position: sticky;
-        top: 6rem;
-    }
-
-    .sidebar-block {
-        background: #fff;
-        padding: 1.5rem;
-        border-radius: 0.75rem;
-        box-shadow: 0 0.125rem 0.5rem rgba(0,0,0,0.08);
-        margin-bottom: 1.5rem;
-    }
-
-    .recent-article {
-        display: flex;
-        align-items: flex-start;
-        gap: 0.75rem;
-        padding: 0.75rem 0;
-        border-bottom: 1px solid #e9ecef;
-    }
-
-    .recent-article:last-child {
-        border-bottom: none;
-    }
-
-    .article-img {
-        width: 60px;
-        height: 60px;
-        object-fit: cover;
-        border-radius: 0.5rem;
-        flex-shrink: 0;
-    }
-
-    .recent-article div {
-        flex: 1;
-    }
-
-    .hover-content {
-        color: #212529;
-        text-decoration: none;
-        transition: color 0.2s ease-in-out;
-        display: block;
-        margin-bottom: 0.25rem;
-        font-size: 0.9rem;
-        line-height: 1.4;
-    }
-
-    .hover-content:hover {
-        color: #0d6efd;
-    }
-
-    .subtitle {
-        font-size: 0.8rem;
-        color: #6c757d !important;
-        margin-bottom: 0;
-    }
-
-    .tag-block {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.5rem;
-    }
-
-    .tag-block a {
-        background: #f8f9fa;
-        color: #495057;
-        padding: 0.375rem 0.75rem;
-        border-radius: 2rem;
-        text-decoration: none;
-        font-size: 0.8rem;
-        border: 1px solid #dee2e6;
-        transition: all 0.2s ease-in-out;
-    }
-
-    .tag-block a:hover {
-        background: #0d6efd;
-        color: #fff;
-        border-color: #0d6efd;
-    }
-
-    /* Content Improvements */
-    .overflow-auto {
-        line-height: 1.7;
-        color: #495057;
-    }
-
-    .overflow-auto h1,
-    .overflow-auto h2,
-    .overflow-auto h3,
-    .overflow-auto h4 {
-        color: #2c5aa0;
-        margin-top: 1.5rem;
-        margin-bottom: 1rem;
-    }
-
-    .overflow-auto p {
-        margin-bottom: 1rem;
-    }
-
-    .overflow-auto ul,
-    .overflow-auto ol {
-        padding-left: 1.5rem;
-        margin-bottom: 1rem;
-    }
-
-    .overflow-auto li {
-        margin-bottom: 0.5rem;
-    }
-
-    /* Responsive Design */
-    @media (max-width: 991.98px) {
-        .title-banner {
-            padding: 3rem 0 1.5rem;
+    <style>
+        :root {
+            --primary-color: #1a4f8c;
+            --secondary-color: #2e7d32;
+            --accent-color: #ff6f00;
+            --light-bg: #f8f9fa;
         }
 
-        #navbar-example {
-            position: static;
-            margin-bottom: 2rem;
-            max-height: none;
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
         }
 
-        .siderbar {
-            position: static;
-            margin-top: 2rem;
+        .hero-banner {
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://via.placeholder.com/1920x800') center/cover no-repeat;
+            color: white;
+            padding: 4rem 0;
         }
 
-        .carousel-item img {
-            height: min(45vh, 350px);
-        }
-    }
-
-    @media (max-width: 767.98px) {
-        .title-banner {
-            padding: 2.5rem 0 1.25rem;
+        .text-shadow {
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
         }
 
-        .title-banner h2 {
-            font-size: clamp(1.25rem, 5vw, 1.5rem);
+        .badge-pill {
+            border-radius: 50rem;
+            padding: 0.5rem 1rem;
         }
 
-        .carousel-item img {
-            height: min(40vh, 300px);
-            border-radius: 0.5rem;
+        .info-pill {
+            background-color: rgba(0,0,0,0.5);
+            padding: 0.5rem 1rem;
+            border-radius: 50rem;
+            font-size: 0.875rem;
         }
 
-        .sidebar-block {
-            padding: 1.25rem;
+        .quick-details-card {
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: none;
         }
 
-        .recent-article {
-            padding: 0.5rem 0;
+        .card {
+            border: none;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            margin-bottom: 1.5rem;
+            border-radius: 12px;
         }
 
-        .article-img {
-            width: 50px;
-            height: 50px;
+        .card-body {
+            padding: 1.5rem;
         }
 
-        .title-banner .d-flex {
-            flex-direction: row;
-            align-items: flex-start;
-            gap: 0.75rem !important;
-        }
-    }
-
-    @media (max-width: 575.98px) {
-        .title-banner {
-            padding: 2rem 0 1rem;
+        .section-title {
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--light-bg);
         }
 
-        .carousel-item img {
-            height: min(35vh, 250px);
+        .nav-pills .nav-link {
+            color: #6c757d;
+            border-radius: 6px;
+            margin-right: 0.5rem;
+            white-space: nowrap;
+            font-size: 0.875rem;
+            padding: 0.5rem 1rem;
         }
 
-        .sidebar-block {
-            padding: 1rem;
-        }
-
-        #navbar-example {
-            padding: 1rem !important;
+        .nav-pills .nav-link.active {
+            background-color: var(--primary-color);
+            color: white;
         }
 
         .accordion-button {
-            padding: 0.875rem 1rem;
-            font-size: 0.9rem;
+            border-radius: 8px;
+            padding: 1rem 1.25rem;
+            font-weight: 500;
         }
 
-        .accordion-body {
-            padding: 1rem;
+        .accordion-button:not(.collapsed) {
+            background-color: #e7f1ff;
+            color: var(--primary-color);
+            box-shadow: none;
         }
 
-        .tag-block {
-            gap: 0.375rem;
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 0.75rem;
+            transition: all 0.3s ease;
         }
 
-        .tag-block a {
-            padding: 0.25rem 0.625rem;
-            font-size: 0.75rem;
+        .detail-item:hover {
+            background: #e9ecef;
+            transform: translateY(-2px);
         }
-    }
 
-    /* Utility Classes */
-    .mb-48 {
-        margin-bottom: 3rem !important;
-    }
+        .detail-item i {
+            font-size: 1.25rem;
+            width: 24px;
+            text-align: center;
+        }
 
-    .mb-24 {
-        margin-bottom: 1.5rem !important;
-    }
+        .hover-card {
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
 
-    .mb-12 {
-        margin-bottom: 0.75rem !important;
-    }
+        .hover-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+            border-color: rgba(0, 0, 0, 0.125);
+        }
 
-    .gap-16 {
-        gap: 1rem !important;
-    }
+        .related-project-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            margin-bottom: 0.75rem;
+        }
 
-    .gap-8 {
-        gap: 0.5rem !important;
-    }
+        .related-project-item:hover {
+            background: #f8f9fa;
+        }
 
-    .row-gap-4 {
-        row-gap: 0.25rem !important;
-    }
-</style>
+        .related-project-img {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 6px;
+        }
 
-<!-- Your Content Here -->
-<section class="title-banner mb-5" style="background-image: url({{ asset($program->banner_image) }})">
-    <div class="container-fluid px-3 px-md-4 px-lg-5">
-        <h2 class="fw-semibold mb-3">
-            {{ $program && $program->title ? Str::limit($program->title, 200, '...') : '' }}
-            <br class="d-none d-sm-block">
-            <span class="color-primary d-block mt-2">
-                {{ $program && $program->subtitle ? Str::limit($program->subtitle, 200, '...') : '' }}
-            </span>
-        </h2>
-        <div class="d-flex align-items-center flex-wrap gap-3">
-            <div class="d-flex align-items-center gap-2">
-                <i class="bi bi-folder text-white fw-bold"></i>
-                <p class="light-gray mb-0">Announcement</p>
-            </div>
-            <div class="d-flex align-items-center gap-2">
-                <i class="bi bi-calendar text-white fw-bold"></i>
-                <p class="light-gray mb-0">{{ \Carbon\Carbon::parse($program->created_at)->format('F jS, Y') }}</p>
-            </div>
-        </div>
-    </div>
-</section>
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+        }
 
-<!-- Blog Detail Section Start -->
-<section class="blog-detail-sec mb-5">
-    <div class="container-fluid px-3 px-md-4 px-lg-5">
-        <div class="row g-4">
-            <div class="col-lg-8">
-                @if ($program->images && $program->images->count() > 0)
-                    <div class="mb-4">
-                        <div id="carouselId" class="carousel slide" data-bs-ride="carousel">
-                            <!-- Indicators -->
-                            <div class="carousel-indicators">
-                                @foreach ($program->images as $index => $image)
-                                    <button type="button" data-bs-target="#carouselId"
-                                        data-bs-slide-to="{{ $index }}"
-                                        class="{{ $index === 0 ? 'active' : '' }}"
-                                        aria-label="Slide {{ $index + 1 }}"></button>
-                                @endforeach
+        .btn-primary:hover {
+            background-color: #0d3b6c;
+            border-color: #0d3b6c;
+        }
+
+        .btn-outline-primary {
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+        }
+
+        .btn-outline-primary:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .project-stage-badge {
+            font-size: 0.875rem;
+            padding: 0.5rem 1rem;
+            border-radius: 50rem;
+        }
+
+        .stage-upcoming {
+            background-color: #ffc107;
+            color: #000;
+        }
+
+        .stage-ongoing {
+            background-color: #0d6efd;
+            color: #fff;
+        }
+
+        .stage-completed {
+            background-color: #198754;
+            color: #fff;
+        }
+
+        .progress-container {
+            background-color: #e9ecef;
+            border-radius: 10px;
+            height: 10px;
+            margin-bottom: 1rem;
+        }
+
+        .progress-bar {
+            border-radius: 10px;
+            height: 100%;
+        }
+
+        .sdg-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 0.5rem;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 991.98px) {
+            .hero-banner {
+                padding: 3rem 0;
+            }
+
+            .display-5 {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 767.98px) {
+            .hero-banner {
+                padding: 2rem 0;
+            }
+
+            .display-5 {
+                font-size: 1.75rem;
+            }
+
+            .info-pills-container {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+
+            .info-pill {
+                width: 100%;
+                text-align: center;
+            }
+
+            .nav-pills {
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                padding-bottom: 0.5rem;
+            }
+
+            .nav-pills .nav-link {
+                font-size: 0.8rem;
+                padding: 0.4rem 0.8rem;
+            }
+        }
+
+        @media (max-width: 575.98px) {
+            .hero-banner {
+                padding: 1.5rem 0;
+            }
+
+            .display-5 {
+                font-size: 1.5rem;
+            }
+
+            .card-body {
+                padding: 1rem;
+            }
+
+            .btn-primary, .btn-outline-primary {
+                width: 100%;
+                margin-bottom: 0.5rem;
+            }
+        }
+
+        /* Custom colors for icons */
+        .text-purple {
+            color: #6f42c1 !important;
+        }
+
+        .text-teal {
+            color: #20c997 !important;
+        }
+
+        .text-indigo {
+            color: #6610f2 !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Banner -->
+    <section class="hero-banner">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-12 col-lg-8 mb-4 mb-lg-0">
+                    <div class="text-white">
+                        <span class="badge bg-warning text-dark mb-3 project-stage-badge stage-ongoing">Ongoing Project</span>
+                        <h1 class="fw-bold mb-3 display-5 text-shadow">Smart Digital Board Transformation for Rural Schools</h1>
+                        <p class="lead mb-4 text-shadow">Digitally empowering rural classrooms for 21st century learning with interactive tools and modern teaching methodologies.</p>
+
+                        <div class="d-flex flex-wrap align-items-center gap-3 info-pills-container">
+                            <div class="info-pill d-flex align-items-center gap-2">
+                                <i class="bi bi-geo-alt-fill text-warning"></i>
+                                <span class="fw-medium">Multiple Locations</span>
                             </div>
-
-                            <!-- Slides -->
-                            <div class="carousel-inner">
-                                @foreach ($program->images as $index => $image)
-                                    <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
-                                        <img src="{{ asset($image->file_name) }}" class="w-100 d-block"
-                                            alt="{{ $image->alt_text ?? 'Slide ' . ($index + 1) }}"
-                                            loading="lazy">
-                                    </div>
-                                @endforeach
+                            <div class="info-pill d-flex align-items-center gap-2">
+                                <i class="bi bi-clock-fill text-warning"></i>
+                                <span class="fw-medium">6 Months Duration</span>
                             </div>
-
-                            <!-- Controls -->
-                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselId" data-bs-slide="prev">
-                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                <span class="visually-hidden">Previous</span>
-                            </button>
-                            <button class="carousel-control-next" type="button" data-bs-target="#carouselId" data-bs-slide="next">
-                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                <span class="visually-hidden">Next</span>
-                            </button>
+                            <div class="info-pill d-flex align-items-center gap-2">
+                                <i class="bi bi-people-fill text-warning"></i>
+                                <span class="fw-medium">500+ Beneficiaries</span>
+                            </div>
+                            <div class="info-pill d-flex align-items-center gap-2">
+                                <i class="bi bi-building-fill text-warning"></i>
+                                <span class="fw-medium">ISICO Partners</span>
+                            </div>
                         </div>
                     </div>
-                @endif
+                </div>
+                <div class="col-12 col-lg-4">
+                    <div class="quick-details-card bg-white rounded-3 p-4">
+                        <h5 class="fw-bold mb-3">Project Quick Facts</h5>
 
-                <div class="overflow-auto mb-4">
-                    {!! $program->description !!}
+                        <div class="d-flex justify-content-between align-items-center mb-2 py-1">
+                            <span class="text-muted small">Project Code:</span>
+                            <span class="fw-bold text-primary small">ISC-DB-2024</span>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center mb-2 py-1">
+                            <span class="text-muted small">Project Type:</span>
+                            <span class="fw-bold small">Rural Education Transformation</span>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center mb-2 py-1">
+                            <span class="text-muted small">Funding Type:</span>
+                            <span class="fw-bold small">CSR Partnership</span>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center mb-2 py-1">
+                            <span class="text-muted small">Project Stage:</span>
+                            <span class="badge bg-primary small">Ongoing</span>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center mb-3 py-1">
+                            <span class="text-muted small">Project Cost:</span>
+                            <span class="fw-bold text-success small">₹15,00,000</span>
+                        </div>
+
+                        <div class="progress-container">
+                            <div class="progress-bar bg-success" style="width: 65%"></div>
+                        </div>
+                        <div class="d-flex justify-content-between small mb-3">
+                            <span>Funding Progress</span>
+                            <span>65% (₹9,75,000 raised)</span>
+                        </div>
+
+                        <button class="btn btn-primary w-100 mb-2">Support This Project</button>
+                        <button class="btn btn-outline-primary w-100">Download Project Report</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="container mt-5">
+        <div class="row g-4 g-lg-5">
+            <!-- Left Content -->
+            <div class="col-12 col-lg-8">
+                <!-- Project Overview -->
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="section-title">Project Overview</h3>
+                        <div class="row">
+                            <div class="col-12 col-sm-6 mb-3">
+                                <label class="fw-semibold text-muted small">Implementing Organization:</label>
+                                <p class="mb-0">ISICO Education Foundation</p>
+                            </div>
+                            <div class="col-12 col-sm-6 mb-3">
+                                <label class="fw-semibold text-muted small">Project Lead:</label>
+                                <p class="mb-0">Dr. Priya Sharma</p>
+                            </div>
+                            <div class="col-12 col-sm-6 mb-3">
+                                <label class="fw-semibold text-muted small">Actual Start Date:</label>
+                                <p class="mb-0">March 15, 2024</p>
+                            </div>
+                            <div class="col-12 col-sm-6 mb-3">
+                                <label class="fw-semibold text-muted small">Expected Completion:</label>
+                                <p class="mb-0">September 15, 2024</p>
+                            </div>
+                        </div>
+
+                        <div class="mt-4">
+                            <p>This comprehensive project focuses on transforming traditional classrooms in rural schools into modern digital learning environments. We are installing smart digital boards, training teachers, and creating interactive content to enhance the learning experience for students.</p>
+                            <p>The project combines infrastructure development with capacity building, ensuring that educators can confidently integrate digital tools into their daily teaching practices. Through this transformation, rural schools can provide 21st-century learning experiences to students who would otherwise lack access to such technologies.</p>
+                            <p>By the end of this project, we aim to have equipped 50 rural schools with digital infrastructure and trained over 200 teachers in digital pedagogy.</p>
+                        </div>
+
+                        <div class="mt-4">
+                            <h5 class="fw-semibold mb-3">Key Project Points</h5>
+                            <div class="row">
+                                <div class="col-12 col-sm-6">
+                                    <div class="d-flex align-items-start mb-2">
+                                        <i class="bi bi-check-circle-fill text-success me-2 mt-1"></i>
+                                        <span>Installation of 100 smart digital boards</span>
+                                    </div>
+                                    <div class="d-flex align-items-start mb-2">
+                                        <i class="bi bi-check-circle-fill text-success me-2 mt-1"></i>
+                                        <span>Training for 200+ teachers</span>
+                                    </div>
+                                    <div class="d-flex align-items-start mb-2">
+                                        <i class="bi bi-check-circle-fill text-success me-2 mt-1"></i>
+                                        <span>Development of localized digital content</span>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-sm-6">
+                                    <div class="d-flex align-items-start mb-2">
+                                        <i class="bi bi-check-circle-fill text-success me-2 mt-1"></i>
+                                        <span>Ongoing technical support for 1 year</span>
+                                    </div>
+                                    <div class="d-flex align-items-start mb-2">
+                                        <i class="bi bi-check-circle-fill text-success me-2 mt-1"></i>
+                                        <span>Community engagement programs</span>
+                                    </div>
+                                    <div class="d-flex align-items-start mb-2">
+                                        <i class="bi bi-check-circle-fill text-success me-2 mt-1"></i>
+                                        <span>Impact assessment and reporting</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                @php
-                    $points = [];
-                    if (!empty($program->points)) {
-                        $points = is_string($program->points)
-                            ? json_decode($program->points, true)
-                            : $program->points;
-                    }
-                @endphp
+                <!-- Project Details Tabs -->
+                <div class="card">
+                    <div class="card-body">
+                        <ul class="nav nav-pills flex-nowrap overflow-auto pb-2 mb-4" id="projectTabs" role="tablist">
+                            <li class="nav-item flex-shrink-0" role="presentation">
+                                <button class="nav-link active small" id="progress-tab" data-bs-toggle="pill"
+                                    data-bs-target="#progress" type="button">Progress</button>
+                            </li>
+                            <li class="nav-item flex-shrink-0" role="presentation">
+                                <button class="nav-link small" id="beneficiaries-tab" data-bs-toggle="pill"
+                                    data-bs-target="#beneficiaries" type="button">Beneficiaries</button>
+                            </li>
+                            <li class="nav-item flex-shrink-0" role="presentation">
+                                <button class="nav-link small" id="funding-tab" data-bs-toggle="pill"
+                                    data-bs-target="#funding" type="button">Funding</button>
+                            </li>
+                            <li class="nav-item flex-shrink-0" role="presentation">
+                                <button class="nav-link small" id="impact-tab" data-bs-toggle="pill"
+                                    data-bs-target="#impact" type="button">Impact</button>
+                            </li>
+                        </ul>
 
-                @if(!empty($points))
-                    <div class="container px-0">
-                        <div class="row g-4">
-                            <!-- Sidebar -->
-                            <div class="col-lg-4">
-                                <nav id="navbar-example" class="navbar navbar-light flex-column align-items-stretch p-3 rounded">
-                                    <h5 class="fw-bold mb-3">About Topics</h5>
-                                    <nav class="nav nav-pills flex-column">
-                                        @foreach ($points as $index => $item)
-                                            @php
-                                                $parts = explode(' - ', $item, 2);
-                                                $shortTitle = $parts[0] ?? '';
-                                                $sectionId = 'section' . ($index + 1);
-                                            @endphp
-                                            @if (trim($shortTitle) !== '')
-                                                <a class="nav-link" href="#{{ $sectionId }}">
-                                                    {{ $index + 1 }}. {{ $shortTitle }}
-                                                </a>
-                                            @endif
-                                        @endforeach
-                                    </nav>
-                                </nav>
+                        <div class="tab-content" id="projectTabsContent">
+                            <!-- Progress Tab -->
+                            <div class="tab-pane fade show active" id="progress" role="tabpanel">
+                                <div class="mb-4">
+                                    <h5 class="fw-semibold mb-3">Current Project Status</h5>
+                                    <div class="row">
+                                        <div class="col-12 col-sm-4 mb-3">
+                                            <div class="text-center p-3 bg-light rounded">
+                                                <div class="fs-4 fw-bold text-primary">65%</div>
+                                                <div class="small text-muted">Overall Completion</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-sm-4 mb-3">
+                                            <div class="text-center p-3 bg-light rounded">
+                                                <div class="fs-4 fw-bold text-success">40</div>
+                                                <div class="small text-muted">Schools Equipped</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-sm-4 mb-3">
+                                            <div class="text-center p-3 bg-light rounded">
+                                                <div class="fs-4 fw-bold text-info">150</div>
+                                                <div class="small text-muted">Teachers Trained</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <h5 class="fw-semibold mb-3">Recent Updates</h5>
+                                <div class="accordion" id="progressAccordion">
+                                    <div class="accordion-item border-0 mb-2">
+                                        <h2 class="accordion-header">
+                                            <button class="accordion-button collapsed bg-light py-3" type="button"
+                                                data-bs-toggle="collapse"
+                                                data-bs-target="#update1">
+                                                <i class="bi bi-megaphone-fill text-primary me-2"></i>
+                                                <span class="text-start">June 2024 - Teacher Training Completion</span>
+                                            </button>
+                                        </h2>
+                                        <div id="update1" class="accordion-collapse collapse"
+                                            data-bs-parent="#progressAccordion">
+                                            <div class="accordion-body py-3">
+                                                <p>Completed the second phase of teacher training in the northern region. 75 teachers from 20 schools have been trained in digital pedagogy and smart board operation.</p>
+                                                <div class="d-flex align-items-center text-muted small">
+                                                    <i class="bi bi-calendar me-1"></i>
+                                                    <span>June 15, 2024</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="accordion-item border-0 mb-2">
+                                        <h2 class="accordion-header">
+                                            <button class="accordion-button collapsed bg-light py-3" type="button"
+                                                data-bs-toggle="collapse"
+                                                data-bs-target="#update2">
+                                                <i class="bi bi-megaphone-fill text-primary me-2"></i>
+                                                <span class="text-start">May 2024 - Equipment Installation</span>
+                                            </button>
+                                        </h2>
+                                        <div id="update2" class="accordion-collapse collapse"
+                                            data-bs-parent="#progressAccordion">
+                                            <div class="accordion-body py-3">
+                                                <p>Successfully installed smart digital boards in 15 additional schools across three districts. The installation process included setting up necessary infrastructure and conducting initial orientation for school staff.</p>
+                                                <div class="d-flex align-items-center text-muted small">
+                                                    <i class="bi bi-calendar me-1"></i>
+                                                    <span>May 28, 2024</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="accordion-item border-0 mb-2">
+                                        <h2 class="accordion-header">
+                                            <button class="accordion-button collapsed bg-light py-3" type="button"
+                                                data-bs-toggle="collapse"
+                                                data-bs-target="#update3">
+                                                <i class="bi bi-megaphone-fill text-primary me-2"></i>
+                                                <span class="text-start">April 2024 - Community Engagement</span>
+                                            </button>
+                                        </h2>
+                                        <div id="update3" class="accordion-collapse collapse"
+                                            data-bs-parent="#progressAccordion">
+                                            <div class="accordion-body py-3">
+                                                <p>Conducted community awareness programs in project villages to ensure parental support and student engagement. Received positive feedback and increased community participation.</p>
+                                                <div class="d-flex align-items-center text-muted small">
+                                                    <i class="bi bi-calendar me-1"></i>
+                                                    <span>April 10, 2024</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
-                            <!-- Content -->
-                            <div class="col-lg-8">
-                                <h3 class="fw-bold mb-3">{{ $program->title }} - Highlights</h3>
-                                <p class="mb-4">
-                                    {!! $program->short_description !!}
-                                </p>
-                                <div class="accordion" id="accordionExample">
-                                    @foreach ($points as $index => $item)
-                                        @php
-                                            $parts = explode(' - ', $item, 2);
-                                            $shortTitle = $parts[0] ?? null;
-                                            $content = $parts[1] ?? null;
-                                            $sectionId = 'section' . ($index + 1);
-                                            $collapseId = 'collapse' . ($index + 1);
-                                        @endphp
-
-                                        @if ($shortTitle && $content)
-                                            <div class="accordion-item" id="{{ $sectionId }}">
-                                                <h2 class="accordion-header">
-                                                    <button class="accordion-button {{ $index !== 0 ? 'collapsed' : '' }}"
-                                                        type="button" data-bs-toggle="collapse"
-                                                        data-bs-target="#{{ $collapseId }}"
-                                                        aria-expanded="{{ $index === 0 ? 'true' : 'false' }}">
-                                                        {{ $index + 1 }}. {{ $shortTitle }}
-                                                    </button>
-                                                </h2>
-                                                <div id="{{ $collapseId }}"
-                                                    class="accordion-collapse collapse {{ $index === 0 ? 'show' : '' }}"
-                                                    data-bs-parent="#accordionExample">
-                                                    <div class="accordion-body">
-                                                        {{ $content }}
+                            <!-- Beneficiaries Tab -->
+                            <div class="tab-pane fade" id="beneficiaries" role="tabpanel">
+                                <div class="row">
+                                    <div class="col-12 mb-4">
+                                        <h5 class="fw-semibold mb-3">Direct Beneficiaries</h5>
+                                        <div class="row">
+                                            <div class="col-12 col-sm-6 mb-3">
+                                                <div class="card border-0 bg-light h-100 hover-card">
+                                                    <div class="card-body">
+                                                        <div class="d-flex align-items-start">
+                                                            <div class="flex-shrink-0 me-3">
+                                                                <i class="bi bi-people-fill text-primary fs-4"></i>
+                                                            </div>
+                                                            <div class="flex-grow-1">
+                                                                <h6 class="fw-bold mb-1">Students</h6>
+                                                                <p class="mb-0 text-muted">5,000+ students across 50 rural schools</p>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        @endif
-                                    @endforeach
+                                            <div class="col-12 col-sm-6 mb-3">
+                                                <div class="card border-0 bg-light h-100 hover-card">
+                                                    <div class="card-body">
+                                                        <div class="d-flex align-items-start">
+                                                            <div class="flex-shrink-0 me-3">
+                                                                <i class="bi bi-person-badge text-success fs-4"></i>
+                                                            </div>
+                                                            <div class="flex-grow-1">
+                                                                <h6 class="fw-bold mb-1">Teachers</h6>
+                                                                <p class="mb-0 text-muted">200+ teachers receiving training</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <h5 class="fw-semibold mb-3">Geographical Coverage</h5>
+                                        <div class="bg-light p-4 rounded">
+                                            <div class="row">
+                                                <div class="col-12 col-sm-6">
+                                                    <h6 class="fw-semibold">States Covered</h6>
+                                                    <ul class="mb-0">
+                                                        <li>Rajasthan</li>
+                                                        <li>Madhya Pradesh</li>
+                                                        <li>Uttar Pradesh</li>
+                                                        <li>Bihar</li>
+                                                    </ul>
+                                                </div>
+                                                <div class="col-12 col-sm-6">
+                                                    <h6 class="fw-semibold">School Types</h6>
+                                                    <ul class="mb-0">
+                                                        <li>Government Schools (70%)</li>
+                                                        <li>Rural Private Schools (20%)</li>
+                                                        <li>Tribal Residential Schools (10%)</li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Funding Tab -->
+                            <div class="tab-pane fade" id="funding" role="tabpanel">
+                                <div class="row">
+                                    <div class="col-12 mb-4">
+                                        <h5 class="fw-semibold mb-3">Funding Overview</h5>
+                                        <div class="row">
+                                            <div class="col-12 col-sm-6 mb-3">
+                                                <label class="fw-semibold text-muted small">Total Project Cost:</label>
+                                                <p class="mb-0 fs-5 fw-bold text-success">₹15,00,000</p>
+                                            </div>
+                                            <div class="col-12 col-sm-6 mb-3">
+                                                <label class="fw-semibold text-muted small">Amount Raised:</label>
+                                                <p class="mb-0 fs-5 fw-bold text-primary">₹9,75,000</p>
+                                            </div>
+                                            <div class="col-12 col-sm-6 mb-3">
+                                                <label class="fw-semibold text-muted small">Funding Type:</label>
+                                                <p class="mb-0">CSR Partnership</p>
+                                            </div>
+                                            <div class="col-12 col-sm-6 mb-3">
+                                                <label class="fw-semibold text-muted small">Main Donor:</label>
+                                                <p class="mb-0">TechSolutions India Ltd.</p>
+                                            </div>
+                                        </div>
+
+                                        <div class="progress-container mt-3">
+                                            <div class="progress-bar bg-success" style="width: 65%"></div>
+                                        </div>
+                                        <div class="d-flex justify-content-between small mb-3">
+                                            <span>Funding Progress</span>
+                                            <span>65% (₹9,75,000 raised)</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <h5 class="fw-semibold mb-3">Budget Allocation</h5>
+                                        <div class="row">
+                                            <div class="col-12 col-sm-6 mb-3">
+                                                <div class="card border-0 bg-light h-100">
+                                                    <div class="card-body">
+                                                        <div class="d-flex align-items-start">
+                                                            <div class="flex-shrink-0 me-3">
+                                                                <i class="bi bi-laptop text-primary fs-4"></i>
+                                                            </div>
+                                                            <div class="flex-grow-1">
+                                                                <h6 class="fw-bold mb-1">Equipment</h6>
+                                                                <p class="mb-0 text-muted">₹8,00,000 (53%)</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-sm-6 mb-3">
+                                                <div class="card border-0 bg-light h-100">
+                                                    <div class="card-body">
+                                                        <div class="d-flex align-items-start">
+                                                            <div class="flex-shrink-0 me-3">
+                                                                <i class="bi bi-person-video text-success fs-4"></i>
+                                                            </div>
+                                                            <div class="flex-grow-1">
+                                                                <h6 class="fw-bold mb-1">Training</h6>
+                                                                <p class="mb-0 text-muted">₹4,00,000 (27%)</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-sm-6 mb-3">
+                                                <div class="card border-0 bg-light h-100">
+                                                    <div class="card-body">
+                                                        <div class="d-flex align-items-start">
+                                                            <div class="flex-shrink-0 me-3">
+                                                                <i class="bi bi-tools text-warning fs-4"></i>
+                                                            </div>
+                                                            <div class="flex-grow-1">
+                                                                <h6 class="fw-bold mb-1">Support & Maintenance</h6>
+                                                                <p class="mb-0 text-muted">₹2,00,000 (13%)</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-sm-6 mb-3">
+                                                <div class="card border-0 bg-light h-100">
+                                                    <div class="card-body">
+                                                        <div class="d-flex align-items-start">
+                                                            <div class="flex-shrink-0 me-3">
+                                                                <i class="bi bi-clipboard-data text-info fs-4"></i>
+                                                            </div>
+                                                            <div class="flex-grow-1">
+                                                                <h6 class="fw-bold mb-1">Monitoring & Evaluation</h6>
+                                                                <p class="mb-0 text-muted">₹1,00,000 (7%)</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Impact Tab -->
+                            <div class="tab-pane fade" id="impact" role="tabpanel">
+                                <div class="mb-4">
+                                    <h5 class="fw-semibold mb-3">Expected Outcomes</h5>
+                                    <div class="row">
+                                        <div class="col-12 col-sm-6 mb-3">
+                                            <div class="card border-0 bg-light h-100 hover-card">
+                                                <div class="card-body">
+                                                    <div class="d-flex align-items-start">
+                                                        <div class="flex-shrink-0 me-3">
+                                                            <i class="bi bi-graph-up-arrow text-success fs-4"></i>
+                                                        </div>
+                                                        <div class="flex-grow-1">
+                                                            <h6 class="fw-bold mb-1">Improved Learning Outcomes</h6>
+                                                            <p class="mb-0 text-muted">Expected 25% improvement in student engagement and comprehension</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-sm-6 mb-3">
+                                            <div class="card border-0 bg-light h-100 hover-card">
+                                                <div class="card-body">
+                                                    <div class="d-flex align-items-start">
+                                                        <div class="flex-shrink-0 me-3">
+                                                            <i class="bi bi-award text-primary fs-4"></i>
+                                                        </div>
+                                                        <div class="flex-grow-1">
+                                                            <h6 class="fw-bold mb-1">Teacher Capacity Building</h6>
+                                                            <p class="mb-0 text-muted">200+ teachers trained in digital pedagogy and technology integration</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-sm-6 mb-3">
+                                            <div class="card border-0 bg-light h-100 hover-card">
+                                                <div class="card-body">
+                                                    <div class="d-flex align-items-start">
+                                                        <div class="flex-shrink-0 me-3">
+                                                            <i class="bi bi-building text-warning fs-4"></i>
+                                                        </div>
+                                                        <div class="flex-grow-1">
+                                                            <h6 class="fw-bold mb-1">Infrastructure Enhancement</h6>
+                                                            <p class="mb-0 text-muted">50 schools equipped with modern digital learning tools</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-sm-6 mb-3">
+                                            <div class="card border-0 bg-light h-100 hover-card">
+                                                <div class="card-body">
+                                                    <div class="d-flex align-items-start">
+                                                        <div class="flex-shrink-0 me-3">
+                                                            <i class="bi bi-people text-info fs-4"></i>
+                                                        </div>
+                                                        <div class="flex-grow-1">
+                                                            <h6 class="fw-bold mb-1">Community Engagement</h6>
+                                                            <p class="mb-0 text-muted">Increased parental involvement in children's education</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <h5 class="fw-semibold mb-3">Alignment with Sustainable Development Goals</h5>
+                                    <div class="row text-center">
+                                        <div class="col-6 col-sm-4 col-md-3 mb-3">
+                                            <div class="sdg-icon bg-primary">
+                                                <i class="bi bi-book"></i>
+                                            </div>
+                                            <small class="fw-semibold">Quality Education</small>
+                                        </div>
+                                        <div class="col-6 col-sm-4 col-md-3 mb-3">
+                                            <div class="sdg-icon bg-success">
+                                                <i class="bi bi-gender-ambiguous"></i>
+                                            </div>
+                                            <small class="fw-semibold">Gender Equality</small>
+                                        </div>
+                                        <div class="col-6 col-sm-4 col-md-3 mb-3">
+                                            <div class="sdg-icon bg-warning">
+                                                <i class="bi bi-arrow-left-right"></i>
+                                            </div>
+                                            <small class="fw-semibold">Reduced Inequalities</small>
+                                        </div>
+                                        <div class="col-6 col-sm-4 col-md-3 mb-3">
+                                            <div class="sdg-icon bg-info">
+                                                <i class="bi bi-tools"></i>
+                                            </div>
+                                            <small class="fw-semibold">Industry & Innovation</small>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                @endif
+                </div>
+
+                <!-- Gallery Section -->
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="section-title">Project Gallery</h4>
+                        <div class="row g-3">
+                            <div class="col-12 col-sm-6 col-md-4">
+                                <img src="https://via.placeholder.com/300x200" class="img-fluid rounded" alt="Teacher Training Session">
+                            </div>
+                            <div class="col-12 col-sm-6 col-md-4">
+                                <img src="https://via.placeholder.com/300x200" class="img-fluid rounded" alt="Smart Board Installation">
+                            </div>
+                            <div class="col-12 col-sm-6 col-md-4">
+                                <img src="https://via.placeholder.com/300x200" class="img-fluid rounded" alt="Student Engagement">
+                            </div>
+                            <div class="col-12 col-sm-6 col-md-4">
+                                <img src="https://via.placeholder.com/300x200" class="img-fluid rounded" alt="Community Meeting">
+                            </div>
+                            <div class="col-12 col-sm-6 col-md-4">
+                                <img src="https://via.placeholder.com/300x200" class="img-fluid rounded" alt="Digital Classroom">
+                            </div>
+                            <div class="col-12 col-sm-6 col-md-4">
+                                <img src="https://via.placeholder.com/300x200" class="img-fluid rounded" alt="Before & After">
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div class="col-lg-4">
-                <div class="siderbar">
-                    <div class="sidebar-block mb-4">
-                        <h5 class="fw-semibold mb-3">Similar Programs</h5>
-                        @forelse($similars as $similar)
-                            <div class="recent-article">
-                                <img src="{{ asset($similar->image) }}" class="article-img"
-                                    alt="{{ $similar->title }}" loading="lazy">
-                                <div>
-                                    <a href="{{ route('web.upcoming.project', [$similar->category->slug, $similar->slug]) }}"
-                                        class="hover-content">
-                                        {{ Str::limit($similar->title, 60) }}
-                                    </a>
-                                    <p class="subtitle">
-                                        {{ \Carbon\Carbon::parse($similar->created_at)->format('d/m/Y') }}
-                                    </p>
-                                </div>
-                            </div>
-                        @empty
-                            <p class="text-muted mb-0">No similar programs found.</p>
-                        @endforelse
-                    </div>
+            <!-- Sidebar -->
+            <div class="col-12 col-lg-4">
+                <!-- Project Details Sidebar -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="section-title">Project Details</h5>
 
-                    <div class="sidebar-block">
-                        <h5 class="fw-semibold mb-3">Tags</h5>
-                        <div class="tag-block">
-                            @forelse($similars as $similar)
-                                <a href="{{ route('web.announcement.program', [$similar->category->slug, $similar->slug]) }}">
-                                    {{ Str::limit($similar->title, 25, '...') }}
+                        <div class="detail-item">
+                            <i class="bi bi-building text-primary"></i>
+                            <div>
+                                <small class="text-muted d-block">Implementing Organization</small>
+                                <p class="mb-0 fw-semibold small">ISICO Education Foundation</p>
+                            </div>
+                        </div>
+
+                        <div class="detail-item">
+                            <i class="bi bi-bullseye text-success"></i>
+                            <div>
+                                <small class="text-muted d-block">Initiative Of</small>
+                                <p class="mb-0 fw-semibold small">Digital India Campaign</p>
+                            </div>
+                        </div>
+
+                        <div class="detail-item">
+                            <i class="bi bi-diagram-3 text-warning"></i>
+                            <div>
+                                <small class="text-muted d-block">Project Category</small>
+                                <p class="mb-0 fw-semibold small">Rural Education Transformation</p>
+                            </div>
+                        </div>
+
+                        <div class="detail-item">
+                            <i class="bi bi-people-fill text-info"></i>
+                            <div>
+                                <small class="text-muted d-block">Target Beneficiaries</small>
+                                <p class="mb-0 fw-semibold small">Students & Teachers in Rural Schools</p>
+                            </div>
+                        </div>
+
+                        <div class="detail-item">
+                            <i class="bi bi-code-slash text-danger"></i>
+                            <div>
+                                <small class="text-muted d-block">QP Code</small>
+                                <p class="mb-0 fw-semibold small">SSC/Q0605</p>
+                            </div>
+                        </div>
+
+                        <div class="detail-item">
+                            <i class="bi bi-layers text-secondary"></i>
+                            <div>
+                                <small class="text-muted d-block">NSQF Level</small>
+                                <p class="mb-0 fw-semibold small">Level 5</p>
+                            </div>
+                        </div>
+
+                        <div class="detail-item">
+                            <i class="bi bi-journal-check text-dark"></i>
+                            <div>
+                                <small class="text-muted d-block">Project Duration</small>
+                                <p class="mb-0 fw-semibold small">6 Months (Mar - Sep 2024)</p>
+                            </div>
+                        </div>
+
+                        <div class="detail-item">
+                            <i class="bi bi-clipboard-check text-primary"></i>
+                            <div>
+                                <small class="text-muted d-block">Monitoring</small>
+                                <p class="mb-0 fw-semibold small">Monthly Progress Reports</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact Form -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="section-title">Get Involved</h5>
+                        <form>
+                            <div class="mb-3">
+                                <input type="text" class="form-control" name="name" placeholder="Your Name" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <input type="email" class="form-control" name="email" placeholder="Your Email">
+                            </div>
+
+                            <div class="mb-3">
+                                <input type="tel" class="form-control" name="mobile" placeholder="Phone Number" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <select class="form-control" name="interest">
+                                    <option value="">Select Interest</option>
+                                    <option value="volunteer">Volunteer</option>
+                                    <option value="donor">Potential Donor</option>
+                                    <option value="partner">Partnership</option>
+                                    <option value="info">More Information</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <textarea class="form-control" name="message" rows="3" placeholder="Your Message" required></textarea>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary w-100">Submit Enquiry</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Related Projects -->
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="section-title">Related Projects</h5>
+
+                        <div class="related-project-item">
+                            <img src="https://via.placeholder.com/50" alt="Digital Literacy for Rural Women" class="related-project-img">
+                            <div class="related-project-info">
+                                <a href="#" class="fw-semibold text-dark small">
+                                    Digital Literacy for Rural Women
                                 </a>
-                            @empty
-                                <span class="text-muted">No tags available</span>
-                            @endforelse
+                                <small class="text-muted d-block">Ongoing Project</small>
+                            </div>
+                        </div>
+
+                        <div class="related-project-item">
+                            <img src="https://via.placeholder.com/50" alt="STEM Education in Tribal Areas" class="related-project-img">
+                            <div class="related-project-info">
+                                <a href="#" class="fw-semibold text-dark small">
+                                    STEM Education in Tribal Areas
+                                </a>
+                                <small class="text-muted d-block">Completed Project</small>
+                            </div>
+                        </div>
+
+                        <div class="related-project-item">
+                            <img src="https://via.placeholder.com/50" alt="Mobile Science Labs" class="related-project-img">
+                            <div class="related-project-info">
+                                <a href="#" class="fw-semibold text-dark small">
+                                    Mobile Science Labs
+                                </a>
+                                <small class="text-muted d-block">Upcoming Project</small>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</section>
+
+<!-- End Your Content here -->
 @endsection
+

@@ -23,39 +23,69 @@ use Illuminate\Support\Str;
 class WebController extends Controller
 {
     //
-    public function home(){
-
-
+    public function home()
+    {
         /**
-         * Company Projects
-         * upcoming
-         * ongoing
+         * Company Projects - Three Stages
+         * upcoming, ongoing, completed
          */
-        // 1=>ongoing,2=>upcoming
-        $ongoingProjects = Project::where('status',1)->where('type',1)->latest()->limit(10)->get();
-        $upcomingProjects = Project::where('status',1)->where('type',2)->latest()->limit(10)->get();
+        $upcomingProjects = Project::where('status', 1)
+            ->where('stage', 'upcoming')
+            ->latest()
+            ->limit(10)
+            ->get();
+
+        $ongoingProjects = Project::where('status', 1)
+            ->where('stage', 'ongoing')
+            ->latest()
+            ->limit(10)
+            ->get();
+
+        $completedProjects = Project::where('status', 1)
+            ->where('stage', 'completed')
+            ->latest()
+            ->limit(10)
+            ->get();
 
         // 1=>program,2=>Scheme
-        $programes = Announcement::where('status',1)->where('type',1)->latest()->limit(10)->get();
-        $schemes = Announcement::where('status',1)->where('type',2)->latest()->limit(10)->get();
+        $programes = Announcement::where('status', 1)
+            ->where('type', 1)
+            ->latest()
+            ->limit(10)
+            ->get();
+
+        $schemes = Announcement::where('status', 1)
+            ->where('type', 2)
+            ->latest()
+            ->limit(10)
+            ->get();
 
         // Fetch only active banners with image field
         $banners = Banner::where('status', 1)->select('image')->get();
 
         // User Testimonial
-        $testimonials = Testimonial::where('status',1)->latest()->limit(10)->get();
+        $testimonials = Testimonial::where('status', 1)
+            ->latest()
+            ->limit(10)
+            ->get();
 
         // Brands
-        $brands = Brand::where('status',1)->latest()->limit(10)->get();
+        $brands = Brand::where('status', 1)
+            ->latest()
+            ->limit(10)
+            ->get();
+
         // blog
-        $blogs = Blog::with(['category'])->where('status', 1)
+        $blogs = Blog::with(['category'])
+            ->where('status', 1)
             ->where('type', 2)
             ->latest()
             ->get();
 
-        return view('web.index',compact(
-            'ongoingProjects',
+        return view('web.index', compact(
             'upcomingProjects',
+            'ongoingProjects',
+            'completedProjects',
             'programes',
             'schemes',
             'banners',
@@ -64,7 +94,6 @@ class WebController extends Controller
             'blogs'
         ));
     }
-
     public function program($category, $slug){
         // Get the category by slug
         $category = Category::where('slug', $category)->firstOrFail();
@@ -103,24 +132,33 @@ class WebController extends Controller
         return view('web.scheme', compact('announcement','similars'));
     }
 
-    public function upcoming($category, $slug){
-        // Get the category by slug
-        $category = Category::where('slug', $category)->firstOrFail();
+    public function upcoming($categorySlug, $projectSlug)
+    {
+        // 1️⃣ Find category
+        $category = Category::where('slug', $categorySlug)
+            ->where('status', 1)
+            ->firstOrFail();
 
-        // Get the announcement by category ID and slug
-        $program = Project::where('slug', $slug)
-                    ->where('type',2)
-                    ->where('category_id', $category->id)
-                    ->firstOrFail();
-        $similars = Project::where('type', 2)
-            ->where('id', '!=', $program->id)
+        // 2️⃣ Find the project
+        $project = Project::where('slug', $projectSlug)
+            ->where('type', 2) // 2 = Upcoming
             ->where('category_id', $category->id)
+            ->where('status', 1)
+            ->firstOrFail();
+
+        // 3️⃣ Get similar upcoming projects in same category
+        $similarProjects = Project::where('type', 2)
+            ->where('status', 1)
+            ->where('category_id', $category->id)
+            ->where('id', '!=', $project->id)
             ->latest()
-            ->limit(5)
+            ->take(5)
             ->get();
-        // Return view with data
-        return view('web.projectupcoming', compact('program','similars'));
+
+        // 4️⃣ Return view
+        return view('web.projectupcoming', compact('project', 'similarProjects', 'category'));
     }
+
 
     public function ongoing($category, $slug){
         // Get the category by slug
