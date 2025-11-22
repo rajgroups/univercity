@@ -6,37 +6,36 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-        /**
+    /**
      * Run the migrations.
      */
     public function up(): void
     {
-        Schema::create('intlcourse', function (Blueprint $table) {
+        Schema::create('intlcourses', function (Blueprint $table) {
             $table->id();
 
-            // Provider & Affiliation Details
-            $table->string('admin_provider')->nullable();
-            $table->string('partner')->nullable();
+            // Section 1: Provider and Affiliation
+            $table->enum('admission_provider', ['ISICO', 'Overseas Partner'])->required();
+            $table->string('overseas_partner_institution')->required();
             $table->string('accreditation_recognition')->nullable();
-
-            // Course Details
-            $table->string('course_name');
-            $table->string('slug')->nullable()->unique();
-            $table->string('level');
-            $table->string('image');
-
-            // Sector relationship
-            $table->unsignedBigInteger('sector_id')->nullable();
-            $table->foreign('sector_id')
-                ->references('id')
-                ->on('sectors')
-                ->onDelete('set null');
 
             // Country relationship
             $table->mediumInteger('country_id')->unsigned()->nullable();
             $table->foreign('country_id')
                 ->references('id')
                 ->on('countries')
+                ->onDelete('set null');
+
+            // Section 2: Course Information
+            $table->string('course_code')->unique()->required();
+            $table->string('course_title')->required();
+            $table->string('slug')->unique()->required();
+
+            // Sector relationship
+            $table->unsignedBigInteger('sector_id')->nullable();
+            $table->foreign('sector_id')
+                ->references('id')
+                ->on('sectors')
                 ->onDelete('set null');
 
             // Category relationship
@@ -46,79 +45,67 @@ return new class extends Migration
                 ->on('category')
                 ->onDelete('set null');
 
-            $table->enum('pathway_type', ['online_pathway', 'onsite_abroad', 'hybrid', 'dual_credit', 'twinning_program']);
-            $table->string('language_instruction');
-            $table->string('learning_product_type')->nullable();
-            $table->enum('paid_type', ['Free', 'Paid'])->default('Free');
-            $table->text('short_description');
-            $table->text('long_description');
+            $table->string('certification_type')->required();
+            $table->json('language_of_instruction')->required(); // ['English', 'Japanese']
+            $table->text('course_details')->required();
+            $table->json('topics_syllabus')->required(); // [['module_title' => '', 'outline' => ''], ...]
+            $table->string('pathway_type')->required();
+            $table->json('mode_of_study')->required(); // ['Online', 'In Centre', ...]
+            $table->json('intake_months')->required(); // ['Jan', 'Apr', ...]
 
-            // Additional Course Details
-            $table->string('certification_type')->nullable();
-            $table->string('isico_course_code');
-            $table->string('international_mapping')->nullable();
-            $table->enum('credits_transferable', ['Yes', 'No'])->nullable();
-            $table->integer('max_credits')->nullable();
-            $table->string('internship')->nullable();
+            // Section 2: Eligibility
+            $table->string('minimum_education')->required();
+            $table->integer('minimum_age')->required();
+            $table->boolean('work_experience_required')->default(false);
+            $table->text('work_experience_details')->nullable();
+            $table->string('language_proficiency')->required();
 
-            // Delivery & Assessment
-            $table->string('provider');
-            $table->string('assessment_mode');
-            $table->string('learning_tools');
-            $table->string('bridge_modules')->nullable();
+            // Section 3: Course Duration & Fee Structure
+            $table->string('course_duration_overseas')->required();
+            $table->boolean('internship_included')->default(false);
+            $table->string('internship_duration')->nullable();
+            $table->text('internship_summary')->nullable();
+            $table->boolean('local_training')->default(false);
+            $table->string('local_training_duration')->nullable();
+            $table->string('total_duration')->required();
 
-            // Eligibility Details
-            $table->string('required_age');
-            $table->string('minimum_education');
-            $table->string('industry_experience');
-            $table->string('language_proficiency_requirement')->nullable();
-            $table->text('visa_proccess');
-            $table->text('other_info');
+            // Section 3(A): Fees Details
+            $table->enum('paid_type', ['Paid', 'Free'])->required();
+            $table->json('overseas_fee_breakdown')->nullable(); // [['label' => '', 'amount' => '', 'currency' => ''], ...]
+            $table->json('local_training_fee')->nullable(); // [['label' => '', 'amount' => '', 'currency' => ''], ...]
+            $table->string('total_fees')->nullable();
 
-            // QP & NSQF & Credit
-            $table->string('qp_code');
-            $table->string('nsqf_level');
-            $table->string('credits_assigned');
-            $table->string('program_by');
-            $table->string('initiative_of');
-            $table->string('program');
-            $table->string('occupations');
+            // Section 3(B): Financial Assistance
+            $table->boolean('scholarship_available')->default(false);
+            $table->text('scholarship_notes')->nullable();
+            $table->boolean('bank_loan_assistance')->default(false);
+            $table->text('loan_assistance_notes')->nullable();
 
-            // Topics (stored as JSON)
-            $table->json('topics')->nullable();
+            // Section 4: Learning Outcomes
+            $table->json('career_outcomes')->required(); // ['Junior Software Developer', 'Assistant Chef', ...]
+            $table->json('next_pathways')->nullable(); // ['Degree entry', 'Work progression route', ...]
 
-            // Logistics & Costs
-            $table->string('duration_local')->nullable();
-            $table->string('duration_overseas')->nullable();
-            $table->string('total_duration')->nullable();
-            $table->string('fee_structure')->nullable();
-            $table->string('scholarship_funding')->nullable();
-            $table->string('accommodation_cost')->nullable();
+            // Section 5: Visa / Logistics
+            $table->boolean('visa_support_included')->default(false);
+            $table->text('visa_notes')->nullable();
+            $table->boolean('accommodation_support')->default(false);
+            $table->text('accommodation_notes')->nullable();
+            $table->json('living_costs')->nullable(); // [['label' => '', 'amount' => '', 'currency' => ''], ...]
 
-            // Pathway & Outcomes
-            $table->string('next_degree')->nullable();
-            $table->json('career_outcomes')->nullable();
-            $table->string('international_recognition')->nullable();
-            $table->text('pathway_next_courses')->nullable();
+            // Section 6: FAQ
+            $table->json('faqs')->nullable(); // [['question' => '', 'answer' => ''], ...]
 
-            // Dates & Status
-            $table->date('start_date');
-            $table->date('end_date');
-            $table->boolean('is_featured')->default(false);
-            $table->boolean('status')->default(true);
-            $table->integer('enrollment_count')->default(0);
+            // Section 7: SEO & Media
+            $table->json('gallery_images')->nullable(); // ['image1.jpg', 'image2.jpg', ...]
+            $table->string('thumbnail_image')->nullable();
+            $table->json('course_brochures')->nullable(); // [['document_name' => '', 'file_path' => ''], ...]
+            $table->string('short_description', 200)->required();
+            $table->text('meta_description')->nullable();
+            $table->string('seo_keywords')->nullable();
+            $table->integer('display_order')->default(0);
+            $table->boolean('publish_status')->default(false);
 
-            // Timestamps
             $table->timestamps();
-
-            // Indexes
-            $table->index('sector_id');
-            $table->index('course_name');
-            $table->index('category_id');
-            $table->index('country_id');
-            $table->index('is_featured');
-            $table->index('status');
-            $table->index('created_at');
         });
     }
 

@@ -4,138 +4,147 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class IntlCourse extends Model
 {
     use HasFactory;
 
-    protected $table = 'intlcourse';
+    protected $table = 'intlcourses';
 
     protected $fillable = [
-        // Provider & Affiliation Details
-        'admin_provider',
-        'partner',
+        'admission_provider',
+        'overseas_partner_institution',
         'accreditation_recognition',
-
-        // Course Details
-        'course_name',
-        'level',
+        'country_id',
+        'course_code',
+        'course_title',
         'slug',
-        'image',
         'sector_id',
         'category_id',
-        'pathway_type',
-        'country_id',
-        'language_instruction',
-        'learning_product_type',
-        'paid_type',
-        'short_description',
-        'long_description',
-
-        // Additional Course Details
         'certification_type',
-        'isico_course_code',
-        'international_mapping',
-        'credits_transferable',
-        'max_credits',
-        'internship',
-
-        // Delivery & Assessment
-        'provider',
-        'assessment_mode',
-        'learning_tools',
-        'bridge_modules',
-
-        // Eligibility Details
-        'required_age',
+        'language_of_instruction',
+        'course_details',
+        'topics_syllabus',
+        'pathway_type',
+        'mode_of_study',
+        'intake_months',
         'minimum_education',
-        'industry_experience',
-        'language_proficiency_requirement',
-        'visa_proccess',
-        'other_info',
-
-        // QP & NSQF & Credit
-        'qp_code',
-        'nsqf_level',
-        'credits_assigned',
-        'program_by',
-        'initiative_of',
-        'program',
-        'occupations',
-
-        // Topics
-        'topics',
-
-        // Logistics & Costs
-        'duration_local',
-        'duration_overseas',
+        'minimum_age',
+        'work_experience_required',
+        'work_experience_details',
+        'language_proficiency',
+        'course_duration_overseas',
+        'internship_included',
+        'internship_duration',
+        'internship_summary',
+        'local_training',
+        'local_training_duration',
         'total_duration',
-        'fee_structure',
-        'scholarship_funding',
-        'accommodation_cost',
-
-        // Pathway & Outcomes
-        'next_degree',
+        'paid_type',
+        'overseas_fee_breakdown',
+        'local_training_fee',
+        'total_fees',
+        'scholarship_available',
+        'scholarship_notes',
+        'bank_loan_assistance',
+        'loan_assistance_notes',
         'career_outcomes',
-        'international_recognition',
-        'pathway_next_courses',
-
-        // Dates & Status
-        'start_date',
-        'end_date',
-        'is_featured',
-        'status',
-        'enrollment_count',
+        'next_pathways',
+        'visa_support_included',
+        'visa_notes',
+        'accommodation_support',
+        'accommodation_notes',
+        'living_costs',
+        'faqs',
+        'gallery_images',
+        'thumbnail_image',
+        'course_brochures',
+        'short_description',
+        'meta_description',
+        'seo_keywords',
+        'display_order',
+        'publish_status',
     ];
 
     protected $casts = [
-        'topics' => 'array',
+        'language_of_instruction' => 'array',
+        'topics_syllabus' => 'array',
+        'mode_of_study' => 'array',
+        'intake_months' => 'array',
+        'work_experience_required' => 'boolean',
+        'internship_included' => 'boolean',
+        'local_training' => 'boolean',
+        'overseas_fee_breakdown' => 'array',
+        'local_training_fee' => 'array',
+        'scholarship_available' => 'boolean',
+        'bank_loan_assistance' => 'boolean',
         'career_outcomes' => 'array',
-        'is_featured' => 'boolean',
-        'status' => 'boolean',
-        'start_date' => 'date',
-        'end_date' => 'date',
-        'enrollment_count' => 'integer',
-        'max_credits' => 'integer',
+        'next_pathways' => 'array',
+        'visa_support_included' => 'boolean',
+        'accommodation_support' => 'boolean',
+        'living_costs' => 'array',
+        'faqs' => 'array',
+        'gallery_images' => 'array',
+        'course_brochures' => 'array',
+        'publish_status' => 'boolean',
     ];
 
-    // A course belongs to one sector
+    /**
+     * Relationship with Sector
+     */
     public function sector()
     {
-        return $this->belongsTo(Sector::class, 'sector_id');
+        return $this->belongsTo(Sector::class);
     }
 
-    // A course belongs to one country
+    /**
+     * Relationship with Country
+     */
     public function country()
     {
-        return $this->belongsTo(Country::class, 'country_id');
+        return $this->belongsTo(Country::class);
     }
 
-    // A course belongs to one category
+    /**
+     * Relationship with Category
+     */
     public function category()
     {
-        return $this->belongsTo(Category::class, 'category_id');
+        return $this->belongsTo(Category::class);
     }
 
-    // Scopes
-    public function scopeActive($query)
+    /**
+     * Automatically generate slug when course title is set
+     */
+    public function setCourseTitleAttribute($value)
     {
-        return $query->where('status', true);
+        $this->attributes['course_title'] = $value;
+        if (!array_key_exists('slug', $this->attributes) || empty($this->attributes['slug'])) {
+            $this->attributes['slug'] = Str::slug($value);
+        }
     }
 
-    public function scopeFeatured($query)
+    /**
+     * Automatically generate course code if not provided
+     */
+    protected static function boot()
     {
-        return $query->where('is_featured', true);
-    }
+        parent::boot();
 
-    public function scopeUpcoming($query)
-    {
-        return $query->where('start_date', '>', now());
-    }
+        static::creating(function ($model) {
+            if (empty($model->course_code)) {
+                $countryCode = $model->country ? Str::upper(Str::substr($model->country->name, 0, 2)) : 'IN';
+                $baseCode = $countryCode . '001';
+                $counter = 1;
 
-    public function scopeOngoing($query)
-    {
-        return $query->where('start_date', '<=', now())
-                    ->where('end_date', '>=', now());
+                while (static::where('course_code', $baseCode)->exists()) {
+                    $counter++;
+                    $baseCode = $countryCode . str_pad($counter, 3, '0', STR_PAD_LEFT);
+                }
+
+                $model->course_code = $baseCode;
+            }
+        });
     }
 }

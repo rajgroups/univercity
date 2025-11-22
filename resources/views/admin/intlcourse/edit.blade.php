@@ -1,906 +1,556 @@
 @extends('layouts.admin.app')
 
 @section('content')
-    <div class="container mt-4">
-        <div class="page-header">
-            <div class="add-item d-flex">
-                <div class="page-title">
-                    <h4 class="fw-bold">Edit Course</h4>
-                    <h6>Update Course Details</h6>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Edit International Course</h4>
                 </div>
-            </div>
-            <ul class="table-top-head">
-                <li>
-                    <a data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Refresh"><i class="ti ti-refresh"></i></a>
-                </li>
-                <li>
-                    <a data-bs-toggle="tooltip" data-bs-placement="top" id="collapse-header" aria-label="Collapse">
-                        <i class="ti ti-chevron-up"></i>
-                    </a>
-                </li>
-            </ul>
-            <div class="page-btn mt-0">
-                <a href="{{ route('admin.intlcourse.index') }}" class="btn btn-secondary">
-                    <i class="feather feather-arrow-left me-2"></i>Back to List
-                </a>
-            </div>
-        </div>
+                <div class="card-body">
+                    <form action="{{ route('admin.intlcourse.update', $course->id) }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        @method('PUT')
 
-        {{-- Success Message --}}
-        @if (session('success'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                {{ session('success') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        @endif
+                        <!-- Section 1: Provider and Affiliation -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h5 class="border-bottom pb-2">Provider and Affiliation</h5>
+                            </div>
 
-        {{-- Error Message --}}
-        @if ($errors->any())
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <ul class="mb-0">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        @endif
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Admission Provider <span class="text-danger">*</span></label>
+                                <select name="admission_provider" class="form-select" required>
+                                    <option value="">Select Provider</option>
+                                    <option value="ISICO" {{ $course->admission_provider == 'ISICO' ? 'selected' : '' }}>ISICO</option>
+                                    <option value="Overseas Partner" {{ $course->admission_provider == 'Overseas Partner' ? 'selected' : '' }}>Overseas Partner</option>
+                                </select>
+                            </div>
 
-        <div class="shadow rounded-3 p-3">
-            <form action="{{ route('admin.intlcourse.update', $course->id) }}" method="POST" enctype="multipart/form-data">
-                @csrf
-                @method('PUT')
-                <div class="card">
-                    <div class="card-body row g-3">
-                        <h4 class="mb-3">Provider & Affiliation Details</h4>
-                        <div class="col-md-6">
-                            <label for="admin_provider" class="form-label">Admission Provider</label>
-                            <input type="text" class="form-control @error('admin_provider') is-invalid @enderror"
-                                name="admin_provider" value="{{ old('admin_provider', $course->admin_provider) }}"
-                                placeholder="ISICO / overseas partner">
-                            @error('admin_provider')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <div class="col-md-6">
-                            <label for="partner" class="form-label">Overseas Institution / Partner <span
-                                    class="text-danger">*</span></label>
-                            <input type="text" class="form-control @error('partner') is-invalid @enderror" name="partner"
-                                placeholder="e.g., Trent Global College, Singapore"
-                                value="{{ old('partner', $course->partner) }}">
-                            @error('partner')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <div class="col-md-6">
-                            <label for="accreditation_recognition" class="form-label">Accreditation / Recognition</label>
-                            <input type="text"
-                                class="form-control @error('accreditation_recognition') is-invalid @enderror"
-                                name="accreditation_recognition"
-                                placeholder="ISICO-recognized, Partner-recognized, International Board, Other"
-                                value="{{ old('accreditation_recognition', $course->accreditation_recognition) }}">
-                            @error('accreditation_recognition')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
-                </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Overseas Partner Institution <span class="text-danger">*</span></label>
+                                <input type="text" name="overseas_partner_institution" class="form-control" required
+                                       value="{{ old('overseas_partner_institution', $course->overseas_partner_institution) }}">
+                            </div>
 
-                <div class="card mt-3">
-                    <div class="card-body row g-3">
-                        <h4 class="mb-3">Course Details</h4>
-                        <div class="col-md-6">
-                            <label for="course_name" class="form-label">Course Name / Title <span
-                                    class="text-danger">*</span></label>
-                            <input type="text" class="form-control @error('course_name') is-invalid @enderror"
-                                name="course_name" value="{{ old('course_name', $course->course_name) }}"
-                                placeholder="Diploma in Computer Science" required>
-                            @error('course_name')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <div class="col-md-6">
-                            <label for="level" class="form-label">Level <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control @error('level') is-invalid @enderror" name="level"
-                                value="{{ old('level', $course->level) }}">
-                            @error('level')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Accreditation / Recognition</label>
+                                <input type="text" name="accreditation_recognition" class="form-control"
+                                       value="{{ old('accreditation_recognition', $course->accreditation_recognition) }}">
+                            </div>
 
-                        <div class="col-md-6">
-                            <label class="form-label">Image</label>
-                            <input type="file" class="form-control @error('image') is-invalid @enderror" name="image">
-                            @error('image')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                            @if ($course->image)
-                                <div class="mt-2">
-                                    <img src="{{ asset($course->image) }}" alt="Course Image" style="max-height: 100px;"
-                                        class="img-thumbnail">
-                                    <small class="text-muted d-block">Current Image</small>
-                                </div>
-                            @endif
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="form-label">Domain / Sector <span class="text-danger">*</span></label>
-                            <select name="sector_id" class="form-select @error('sector_id') is-invalid @enderror">
-                                <option value="">Select Sector</option>
-                                @foreach ($sectors as $sector)
-                                    <option value="{{ $sector->id }}"
-                                        {{ old('sector_id', $course->sector_id) == $sector->id ? 'selected' : '' }}>
-                                        {{ $sector->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            @error('sector_id')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="form-label">Category <span class="text-danger">*</span></label>
-                            <select name="category_id" class="form-select @error('category_id') is-invalid @enderror">
-                                <option value="">Select Category</option>
-                                @foreach ($categories as $category)
-                                    <option value="{{ $category->id }}"
-                                        {{ old('category_id', $course->category_id) == $category->id ? 'selected' : '' }}>
-                                        {{ $category->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            @error('category_id')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="form-label">Pathway Type <span class="text-danger">*</span></label>
-                            <select name="pathway_type" class="form-select @error('pathway_type') is-invalid @enderror">
-                                <option value="">Select Pathway Type</option>
-                                <option value="online_pathway"
-                                    {{ old('pathway_type', $course->pathway_type) == 'online_pathway' ? 'selected' : '' }}>
-                                    Online Pathway</option>
-                                <option value="onsite_abroad"
-                                    {{ old('pathway_type', $course->pathway_type) == 'onsite_abroad' ? 'selected' : '' }}>
-                                    Onsite Abroad</option>
-                                <option value="hybrid"
-                                    {{ old('pathway_type', $course->pathway_type) == 'hybrid' ? 'selected' : '' }}>Hybrid
-                                </option>
-                                <option value="dual_credit"
-                                    {{ old('pathway_type', $course->pathway_type) == 'dual_credit' ? 'selected' : '' }}>
-                                    Dual-credit</option>
-                                <option value="twinning_program"
-                                    {{ old('pathway_type', $course->pathway_type) == 'twinning_program' ? 'selected' : '' }}>
-                                    Twinning Program</option>
-                            </select>
-                            @error('pathway_type')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="form-label">Country <span class="text-danger">*</span></label>
-                            <select name="country_id" class="form-select @error('country_id') is-invalid @enderror">
-                                <option value="">Select Country</option>
-                                @foreach ($countrys as $country)
-                                    <option value="{{ $country->id }}"
-                                        {{ old('country_id', $course->country_id) == $country->id ? 'selected' : '' }}>
-                                        {{ $country->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            @error('country_id')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="form-label">Language of Instruction <span class="text-danger">*</span></label>
-                            <input type="text"
-                                class="form-control @error('language_instruction') is-invalid @enderror"
-                                name="language_instruction"
-                                value="{{ old('language_instruction', $course->language_instruction) }}">
-                            @error('language_instruction')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="form-label">Learning Product Type</label>
-                            <input type="text"
-                                class="form-control @error('learning_product_type') is-invalid @enderror"
-                                name="learning_product_type"
-                                value="{{ old('learning_product_type', $course->learning_product_type) }}">
-                            @error('learning_product_type')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="form-label">Paid Type <span class="text-danger">*</span></label>
-                            <select name="paid_type" class="form-select @error('paid_type') is-invalid @enderror">
-                                <option value="Free"
-                                    {{ old('paid_type', $course->paid_type) == 'Free' ? 'selected' : '' }}>Free</option>
-                                <option value="Paid"
-                                    {{ old('paid_type', $course->paid_type) == 'Paid' ? 'selected' : '' }}>Paid</option>
-                            </select>
-                            @error('paid_type')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="col-md-12">
-                            <label class="form-label">Short Description <span class="text-danger">*</span></label>
-                            <textarea class="form-control @error('short_description') is-invalid @enderror" name="short_description"
-                                rows="2">{{ old('short_description', $course->short_description) }}</textarea>
-                            @error('short_description')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="col-md-12">
-                            <label class="form-label">Long Description <span class="text-danger">*</span></label>
-                            <textarea class="form-control @error('long_description') is-invalid @enderror" name="long_description"
-                                rows="4" id="long_description">{{ old('long_description', $course->long_description) }}</textarea>
-                            @error('long_description')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card mt-3">
-                    <div class="card-body row g-3">
-                        <h4 class="mb-3">Additional Course Details</h4>
-
-                        <div class="col-md-6">
-                            <label class="form-label">Certification Type</label>
-                            <input type="text" class="form-control @error('certification_type') is-invalid @enderror"
-                                name="certification_type"
-                                value="{{ old('certification_type', $course->certification_type) }}">
-                            @error('certification_type')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="form-label">ISICO Course Code <span class="text-danger">*</span></label>
-                            <input type="text" name="isico_course_code"
-                                class="form-control @error('isico_course_code') is-invalid @enderror"
-                                placeholder="e.g., SG001"
-                                value="{{ old('isico_course_code', $course->isico_course_code) }}" required>
-                            @error('isico_course_code')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="form-label">International Mapping</label>
-                            <input type="text" name="international_mapping"
-                                class="form-control @error('international_mapping') is-invalid @enderror"
-                                placeholder="e.g., aligned to UK Level 5, Singapore Diploma, Japan Senmon-Gakko level, etc."
-                                value="{{ old('international_mapping', $course->international_mapping) }}">
-                            @error('international_mapping')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="form-label">Credits Transferable</label>
-                            <select name="credits_transferable"
-                                class="form-select @error('credits_transferable') is-invalid @enderror"
-                                onchange="toggleMaxCredits(this)">
-                                <option value="">Select Option</option>
-                                <option value="Yes"
-                                    {{ old('credits_transferable', $course->credits_transferable) == 'Yes' ? 'selected' : '' }}>
-                                    Yes</option>
-                                <option value="No"
-                                    {{ old('credits_transferable', $course->credits_transferable) == 'No' ? 'selected' : '' }}>
-                                    No</option>
-                            </select>
-                            @error('credits_transferable')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="col-md-6" id="maxCreditsField"
-                            style="{{ old('credits_transferable', $course->credits_transferable) == 'Yes' ? 'display:block;' : 'display:none;' }}">
-                            <label class="form-label">Max Credits Transferrable</label>
-                            <input type="number" name="max_credits"
-                                class="form-control @error('max_credits') is-invalid @enderror"
-                                placeholder="Enter max credits" value="{{ old('max_credits', $course->max_credits) }}">
-                            @error('max_credits')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="form-label">Internship</label>
-                            <input type="text" name="internship"
-                                class="form-control @error('internship') is-invalid @enderror"
-                                placeholder="Enter internship details"
-                                value="{{ old('internship', $course->internship) }}">
-                            @error('internship')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <h5 class="mb-3 mt-3">Delivery & Assessment</h5>
-
-                        <div class="col-md-6">
-                            <label class="form-label">Mode of Training <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control @error('provider') is-invalid @enderror"
-                                name="provider" value="{{ old('provider', $course->provider) }}">
-                            @error('provider')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="form-label">Assessment Mode <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control @error('assessment_mode') is-invalid @enderror"
-                                name="assessment_mode" value="{{ old('assessment_mode', $course->assessment_mode) }}">
-                            @error('assessment_mode')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="col-md-12">
-                            <label class="form-label">Learning Tools <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control @error('learning_tools') is-invalid @enderror"
-                                name="learning_tools" value="{{ old('learning_tools', $course->learning_tools) }}">
-                            @error('learning_tools')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="form-label">Bridge Modules</label>
-                            <input type="text" name="bridge_modules"
-                                class="form-control @error('bridge_modules') is-invalid @enderror"
-                                placeholder="Enter bridge modules"
-                                value="{{ old('bridge_modules', $course->bridge_modules) }}">
-                            @error('bridge_modules')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <h5 class="mb-3 mt-3">Eligibility Details</h5>
-
-                        <div class="col-md-4">
-                            <label class="form-label">Required Age <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control @error('required_age') is-invalid @enderror"
-                                name="required_age" value="{{ old('required_age', $course->required_age) }}">
-                            @error('required_age')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="col-md-4">
-                            <label class="form-label">Minimum Education <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control @error('minimum_education') is-invalid @enderror"
-                                name="minimum_education"
-                                value="{{ old('minimum_education', $course->minimum_education) }}">
-                            @error('minimum_education')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="col-md-4">
-                            <label class="form-label">Industry Experience <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control @error('industry_experience') is-invalid @enderror"
-                                name="industry_experience"
-                                value="{{ old('industry_experience', $course->industry_experience) }}">
-                            @error('industry_experience')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="form-label">Language Proficiency Requirement</label>
-                            <input type="text" name="language_proficiency_requirement"
-                                class="form-control @error('language_proficiency_requirement') is-invalid @enderror"
-                                placeholder="e.g., IELTS 6.0, TOEFL 80, CEFR B2"
-                                value="{{ old('language_proficiency_requirement', $course->language_proficiency_requirement) }}">
-                            @error('language_proficiency_requirement')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="col-md-12">
-                            <label class="form-label">Visa Process <span class="text-danger">*</span></label>
-                            <textarea class="form-control @error('visa_proccess') is-invalid @enderror" name="visa_proccess" rows="4"
-                                id="visa_proccess">{{ old('visa_proccess', $course->visa_proccess) }}</textarea>
-                            @error('visa_proccess')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="col-md-12">
-                            <label class="form-label">Other Important Info <span class="text-danger">*</span></label>
-                            <textarea class="form-control @error('other_info') is-invalid @enderror" name="other_info" rows="4"
-                                id="other_info">{{ old('other_info', $course->other_info) }}</textarea>
-                            @error('other_info')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="col-md-4">
-                            <label class="form-label">QP Code <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control @error('qp_code') is-invalid @enderror"
-                                name="qp_code" value="{{ old('qp_code', $course->qp_code) }}">
-                            @error('qp_code')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="col-md-4">
-                            <label class="form-label">NSQF-referenced (non-accredited) <span
-                                    class="text-danger">*</span></label>
-                            <input type="text" class="form-control @error('nsqf_level') is-invalid @enderror"
-                                name="nsqf_level" value="{{ old('nsqf_level', $course->nsqf_level) }}">
-                            @error('nsqf_level')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="col-md-4">
-                            <label class="form-label">Credits Assigned <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control @error('credits_assigned') is-invalid @enderror"
-                                name="credits_assigned" value="{{ old('credits_assigned', $course->credits_assigned) }}">
-                            @error('credits_assigned')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="col-md-4">
-                            <label class="form-label">Program By <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control @error('program_by') is-invalid @enderror"
-                                name="program_by" value="{{ old('program_by', $course->program_by) }}">
-                            @error('program_by')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="col-md-4">
-                            <label class="form-label">Initiative of <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control @error('initiative_of') is-invalid @enderror"
-                                name="initiative_of" value="{{ old('initiative_of', $course->initiative_of) }}">
-                            @error('initiative_of')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="form-label">Program <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control @error('program') is-invalid @enderror"
-                                name="program" value="{{ old('program', $course->program) }}">
-                            @error('program')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="form-label">Occupations <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control @error('occupations') is-invalid @enderror"
-                                name="occupations" value="{{ old('occupations', $course->occupations) }}">
-                            @error('occupations')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="col-md-12">
-                            <label class="form-label">Topics (Title & Description) <span
-                                    class="text-danger">*</span></label>
-                            <div id="topics-wrapper">
-                                @php
-                                    $topics = old('topics', $course->topics ? json_decode($course->topics, true) : []);
-                                    $topicIndex = 0;
-                                @endphp
-                                @if (count($topics) > 0)
-                                    @foreach ($topics as $index => $topic)
-                                        <div class="row g-2 topic-row mb-2">
-                                            <div class="col-md-5">
-                                                <input type="text" name="topics[{{ $index }}][title]"
-                                                    class="form-control @error('topics.' . $index . '.title') is-invalid @enderror"
-                                                    placeholder="Topic Title" value="{{ $topic['title'] ?? '' }}">
-                                                @error('topics.' . $index . '.title')
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
-                                            </div>
-                                            <div class="col-md-5">
-                                                <input type="text" name="topics[{{ $index }}][description]"
-                                                    class="form-control @error('topics.' . $index . '.description') is-invalid @enderror"
-                                                    placeholder="Topic Description"
-                                                    value="{{ $topic['description'] ?? '' }}">
-                                                @error('topics.' . $index . '.description')
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
-                                            </div>
-                                            <div class="col-md-2">
-                                                <button type="button"
-                                                    class="btn btn-danger remove-topic w-100">Remove</button>
-                                            </div>
-                                        </div>
-                                        @php $topicIndex++; @endphp
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Destination Country <span class="text-danger">*</span></label>
+                                <select name="country_id" class="form-select" required>
+                                    <option value="">Select Country</option>
+                                    @foreach($countrys as $country)
+                                        <option value="{{ $country->id }}" {{ $course->country_id == $country->id ? 'selected' : '' }}>
+                                            {{ $country->name }}
+                                        </option>
                                     @endforeach
-                                @else
-                                    <div class="row g-2 topic-row mb-2">
-                                        <div class="col-md-5">
-                                            <input type="text" name="topics[0][title]" class="form-control"
-                                                placeholder="Topic Title">
-                                        </div>
-                                        <div class="col-md-5">
-                                            <input type="text" name="topics[0][description]" class="form-control"
-                                                placeholder="Topic Description">
-                                        </div>
-                                        <div class="col-md-2">
-                                            <button type="button"
-                                                class="btn btn-danger remove-topic w-100">Remove</button>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Section 2: Course Information -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h5 class="border-bottom pb-2">Course Information</h5>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Course Code <span class="text-danger">*</span></label>
+                                <input type="text" name="course_code" class="form-control" required
+                                       value="{{ old('course_code', $course->course_code) }}">
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Course Title <span class="text-danger">*</span></label>
+                                <input type="text" name="course_title" class="form-control" required
+                                       value="{{ old('course_title', $course->course_title) }}">
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Domain / Sector <span class="text-danger">*</span></label>
+                                <select name="sector_id" class="form-select" required>
+                                    <option value="">Select Sector</option>
+                                    @foreach($sectors as $sector)
+                                        <option value="{{ $sector->id }}" {{ $course->sector_id == $sector->id ? 'selected' : '' }}>
+                                            {{ $sector->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Course Level <span class="text-danger">*</span></label>
+                                <select name="category_id" class="form-select" required>
+                                    <option value="">Select Level</option>
+                                    @foreach($categories as $category)
+                                        <option value="{{ $category->id }}" {{ $course->category_id == $category->id ? 'selected' : '' }}>
+                                            {{ $category->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Certification Type <span class="text-danger">*</span></label>
+                                <input type="text" name="certification_type" class="form-control" required
+                                       value="{{ old('certification_type', $course->certification_type) }}">
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Language of Instruction <span class="text-danger">*</span></label>
+                                <select name="language_of_instruction[]" class="form-select" multiple required>
+                                    @php
+                                        $selectedLanguages = $course->language_of_instruction ?? [];
+                                    @endphp
+                                    <option value="English" {{ in_array('English', $selectedLanguages) ? 'selected' : '' }}>English</option>
+                                    <option value="Japanese" {{ in_array('Japanese', $selectedLanguages) ? 'selected' : '' }}>Japanese</option>
+                                    <option value="Chinese" {{ in_array('Chinese', $selectedLanguages) ? 'selected' : '' }}>Chinese</option>
+                                    <option value="French" {{ in_array('French', $selectedLanguages) ? 'selected' : '' }}>French</option>
+                                    <option value="German" {{ in_array('German', $selectedLanguages) ? 'selected' : '' }}>German</option>
+                                    <option value="Spanish" {{ in_array('Spanish', $selectedLanguages) ? 'selected' : '' }}>Spanish</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Pathway Type <span class="text-danger">*</span></label>
+                                <select name="pathway_type" class="form-select" required>
+                                    <option value="">Select Pathway Type</option>
+                                    <option value="Online" {{ $course->pathway_type == 'Online' ? 'selected' : '' }}>Online</option>
+                                    <option value="Onsite Abroad" {{ $course->pathway_type == 'Onsite Abroad' ? 'selected' : '' }}>Onsite Abroad</option>
+                                    <option value="Hybrid" {{ $course->pathway_type == 'Hybrid' ? 'selected' : '' }}>Hybrid</option>
+                                    <option value="Twinning" {{ $course->pathway_type == 'Twinning' ? 'selected' : '' }}>Twinning</option>
+                                    <option value="Dual Credit" {{ $course->pathway_type == 'Dual Credit' ? 'selected' : '' }}>Dual Credit</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Mode of Study <span class="text-danger">*</span></label>
+                                <div class="border p-3 rounded">
+                                    @php
+                                        $selectedModes = $course->mode_of_study ?? [];
+                                    @endphp
+                                    @foreach(['Online', 'In Centre', 'Hybrid', 'On-demand Site'] as $mode)
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="mode_of_study[]"
+                                               value="{{ $mode }}" id="mode_{{ Str::slug($mode) }}"
+                                               {{ in_array($mode, $selectedModes) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="mode_{{ Str::slug($mode) }}">
+                                            {{ $mode }}
+                                        </label>
+                                    </div>
+                                    @endforeach
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Intake Months <span class="text-danger">*</span></label>
+                                <div class="border p-3 rounded">
+                                    @php
+                                        $selectedMonths = $course->intake_months ?? [];
+                                    @endphp
+                                    @foreach(['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'] as $month)
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" name="intake_months[]"
+                                               value="{{ $month }}" id="month_{{ $month }}"
+                                               {{ in_array($month, $selectedMonths) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="month_{{ $month }}">{{ $month }}</label>
+                                    </div>
+                                    @endforeach
+                                </div>
+                            </div>
+
+                            <div class="col-12 mb-3">
+                                <label class="form-label">Course Details <span class="text-danger">*</span></label>
+                                <textarea name="course_details" class="form-control" rows="6" required>{{ old('course_details', $course->course_details) }}</textarea>
+                            </div>
+
+                            <!-- Topics/Syllabus Repeater -->
+                            <div class="col-12 mb-3">
+                                <label class="form-label">Topics / Syllabus Covered <span class="text-danger">*</span></label>
+                                <div id="topics-container">
+                                    @php
+                                        $topics = $course->topics_syllabus ?? [['module_title' => '', 'outline' => '']];
+                                        $topicCount = count($topics);
+                                    @endphp
+                                    @foreach($topics as $index => $topic)
+                                    <div class="topic-item border p-3 mb-2 rounded">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <input type="text" name="topics[{{ $index }}][module_title]"
+                                                       class="form-control mb-2" placeholder="Module Title" required
+                                                       value="{{ $topic['module_title'] ?? '' }}">
+                                            </div>
+                                            <div class="col-md-5">
+                                                <input type="text" name="topics[{{ $index }}][outline]"
+                                                       class="form-control mb-2" placeholder="Module Outline" required
+                                                       value="{{ $topic['outline'] ?? '' }}">
+                                            </div>
+                                            <div class="col-md-1">
+                                                @if($topicCount > 1)
+                                                <button type="button" class="btn btn-danger remove-topic">×</button>
+                                                @endif
+                                            </div>
                                         </div>
                                     </div>
-                                    @php $topicIndex++; @endphp
-                                @endif
-                            </div>
-                            <button type="button" id="add-topic" class="btn btn-primary mt-2">Add More Topic</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-body row g-3">
-                        <h4 class="mb-3 mt-3">Other Details:</h4>
-                        <h5 class="mb-3 mt-3">Logistics & Costs</h5>
-                        <!-- Duration (Local) -->
-                        <div class="col-md-6">
-                            <label class="form-label">Duration (Local)</label>
-                            <input type="text" class="form-control @error('duration_local') is-invalid @enderror"
-                                name="duration_local" value="{{ old('duration_local', $course->duration_local) }}"
-                                placeholder="e.g., 6 months ISICO module">
-                            @error('duration_local')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <!-- Duration (Overseas) -->
-                        <div class="col-md-6">
-                            <label class="form-label">Duration (Overseas)</label>
-                            <input type="text" class="form-control @error('duration_overseas') is-invalid @enderror"
-                                name="duration_overseas"
-                                value="{{ old('duration_overseas', $course->duration_overseas) }}"
-                                placeholder="e.g., 1 year diploma in Singapore">
-                            @error('duration_overseas')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <!-- Total Pathway Duration -->
-                        <div class="col-md-6">
-                            <label class="form-label">Total Pathway Duration</label>
-                            <input type="text" class="form-control @error('total_duration') is-invalid @enderror"
-                                name="total_duration" value="{{ old('total_duration', $course->total_duration) }}"
-                                placeholder="e.g., 1.5 years total">
-                            @error('total_duration')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <!-- Fee Structure -->
-                        <div class="col-md-6">
-                            <label class="form-label">Fee Structure</label>
-                            <input type="text" class="form-control @error('fee_structure') is-invalid @enderror"
-                                name="fee_structure" value="{{ old('fee_structure', $course->fee_structure) }}"
-                                placeholder="Enter fee structure details">
-                            @error('fee_structure')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <!-- Scholarship / Funding -->
-                        <div class="col-md-6">
-                            <label class="form-label">Scholarship / Funding</label>
-                            <input type="text" class="form-control @error('scholarship_funding') is-invalid @enderror"
-                                name="scholarship_funding"
-                                value="{{ old('scholarship_funding', $course->scholarship_funding) }}"
-                                placeholder="Enter scholarship or funding details">
-                            @error('scholarship_funding')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <!-- Accommodation / Living Cost Info -->
-                        <div class="col-md-6">
-                            <label class="form-label">Accommodation / Living Cost Info (Optional)</label>
-                            <input type="text" class="form-control @error('accommodation_cost') is-invalid @enderror"
-                                name="accommodation_cost"
-                                value="{{ old('accommodation_cost', $course->accommodation_cost) }}"
-                                placeholder="Enter accommodation and living cost info">
-                            @error('accommodation_cost')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <h5 class="mb-3 mt-3">Pathway & Outcomes</h5>
-                        <!-- Next Degree / Diploma Option -->
-                        <div class="col-md-6">
-                            <label class="form-label">Next Degree / Diploma Option</label>
-                            <input type="text" class="form-control @error('next_degree') is-invalid @enderror"
-                                name="next_degree" value="{{ old('next_degree', $course->next_degree) }}"
-                                placeholder="e.g., BSc in Data Science, Singapore">
-                            @error('next_degree')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="col-md-12">
-                            <label class="form-label">Career Outcomes</label>
-                            <div id="careerOutcomesContainer">
-                                <!-- Career outcomes will be populated by jQuery -->
-                            </div>
-
-                            <button id="addOutcomeBtn" class="btn btn-primary btn-sm mb-3" type="button">
-                                + Add Outcome
-                            </button>
-
-                            <input type="hidden" name="career_outcomes_json" id="careerOutcomesJsonInput"
-                                value="{{ old('career_outcomes_json', $course->career_outcomes) }}">
-
-                            <div class="mt-3">
-                                <label>JSON Output (for demo):</label>
-                                <pre id="jsonOutput"></pre>
+                                    @endforeach
+                                </div>
+                                <button type="button" class="btn btn-sm btn-outline-primary" id="add-topic">
+                                    + Add Another Topic
+                                </button>
                             </div>
                         </div>
 
-                        <!-- International Recognition -->
-                        <div class="col-md-6">
-                            <label class="form-label">International Recognition</label>
-                            <input type="text"
-                                class="form-control @error('international_recognition') is-invalid @enderror"
-                                name="international_recognition"
-                                value="{{ old('international_recognition', $course->international_recognition) }}"
-                                placeholder="e.g., Recognized in ASEAN countries">
-                            @error('international_recognition')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
+                        <!-- Section 3: Eligibility -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h5 class="border-bottom pb-2">Eligibility Criteria</h5>
+                            </div>
 
-                        <!-- Pathway Next Courses -->
-                        <div class="col-md-12">
-                            <label class="form-label">Pathway Next Courses (Links)</label>
-                            <textarea class="form-control @error('pathway_next_courses') is-invalid @enderror" name="pathway_next_courses"
-                                rows="2" placeholder="e.g., https://isico.edu/course1
-        https://partner.edu/course2">{{ old('pathway_next_courses', $course->pathway_next_courses) }}</textarea>
-                            @error('pathway_next_courses')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <!-- Dates -->
-                        <div class="col-md-6">
-                            <label class="form-label">Start Date <span class="text-danger">*</span></label>
-                            <input type="date" class="form-control @error('start_date') is-invalid @enderror"
-                                name="start_date"
-                                value="{{ old('start_date', $course->start_date ? $course->start_date->format('Y-m-d') : '') }}">
-                            @error('start_date')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">End Date <span class="text-danger">*</span></label>
-                            <input type="date" class="form-control @error('end_date') is-invalid @enderror"
-                                name="end_date"
-                                value="{{ old('end_date', $course->end_date ? $course->end_date->format('Y-m-d') : '') }}">
-                            @error('end_date')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <!-- Featured + Status -->
-                        <div class="col-md-4">
-                            <label class="form-label">Is Featured? <span class="text-danger">*</span></label>
-                            <select name="is_featured" class="form-select @error('is_featured') is-invalid @enderror">
-                                <option value="0"
-                                    {{ old('is_featured', $course->is_featured) == 0 ? 'selected' : '' }}>No</option>
-                                <option value="1"
-                                    {{ old('is_featured', $course->is_featured) == 1 ? 'selected' : '' }}>Yes</option>
-                            </select>
-                            @error('is_featured')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="col-md-4">
-                            <div class="mb-3">
-                                <label class="form-label">Status <span class="text-danger">*</span></label>
-                                <select name="status" class="form-select @error('status') is-invalid @enderror">
-                                    <option value="">Select</option>
-                                    <option value="1" {{ old('status', $course->status) == 1 ? 'selected' : '' }}>
-                                        Active</option>
-                                    <option value="0" {{ old('status', $course->status) == 0 ? 'selected' : '' }}>
-                                        Inactive</option>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Minimum Education <span class="text-danger">*</span></label>
+                                <select name="minimum_education" class="form-select" required>
+                                    <option value="">Select Education Level</option>
+                                    <option value="10th" {{ $course->minimum_education == '10th' ? 'selected' : '' }}>10th Grade</option>
+                                    <option value="12th" {{ $course->minimum_education == '12th' ? 'selected' : '' }}>12th Grade</option>
+                                    <option value="UG" {{ $course->minimum_education == 'UG' ? 'selected' : '' }}>Undergraduate</option>
+                                    <option value="PG" {{ $course->minimum_education == 'PG' ? 'selected' : '' }}>Postgraduate</option>
+                                    <option value="Diploma" {{ $course->minimum_education == 'Diploma' ? 'selected' : '' }}>Diploma</option>
                                 </select>
-                                @error('status')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Minimum Age <span class="text-danger">*</span></label>
+                                <input type="number" name="minimum_age" class="form-control" required
+                                       min="16" max="50" value="{{ old('minimum_age', $course->minimum_age) }}">
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Work Experience Required</label>
+                                <div class="form-check form-switch mt-2">
+                                    <input class="form-check-input" type="checkbox" name="work_experience_required"
+                                           id="work_exp_switch" value="1" {{ $course->work_experience_required ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="work_exp_switch">Work Experience Required</label>
+                                </div>
+                            </div>
+
+                            <div class="col-12 mb-3" id="work_exp_details" style="display: {{ $course->work_experience_required ? 'block' : 'none' }};">
+                                <label class="form-label">Work Experience Details</label>
+                                <textarea name="work_experience_details" class="form-control" rows="3">{{ old('work_experience_details', $course->work_experience_details) }}</textarea>
+                            </div>
+
+                            <div class="col-12 mb-3">
+                                <label class="form-label">Language Proficiency <span class="text-danger">*</span></label>
+                                <input type="text" name="language_proficiency" class="form-control" required
+                                       value="{{ old('language_proficiency', $course->language_proficiency) }}">
                             </div>
                         </div>
 
-                        <div class="col-md-4">
-                            <label class="form-label">Enrollment Count <span class="text-danger">*</span></label>
-                            <input type="number" class="form-control @error('enrollment_count') is-invalid @enderror"
-                                name="enrollment_count"
-                                value="{{ old('enrollment_count', $course->enrollment_count) }}">
-                            @error('enrollment_count')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
-                </div>
+                        <!-- Section 4: Course Duration & Fees -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h5 class="border-bottom pb-2">Course Duration & Fee Structure</h5>
+                            </div>
 
-                <div class="card-footer text-end mt-3">
-                    <button type="submit" class="btn btn-success">Update Course</button>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Overseas Duration <span class="text-danger">*</span></label>
+                                <input type="text" name="course_duration_overseas" class="form-control" required
+                                       value="{{ old('course_duration_overseas', $course->course_duration_overseas) }}">
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Internship Included</label>
+                                <div class="form-check form-switch mt-2">
+                                    <input class="form-check-input" type="checkbox" name="internship_included"
+                                           id="internship_switch" value="1" {{ $course->internship_included ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="internship_switch">Internship Included</label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Local Training</label>
+                                <div class="form-check form-switch mt-2">
+                                    <input class="form-check-input" type="checkbox" name="local_training"
+                                           id="local_training_switch" value="1" {{ $course->local_training ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="local_training_switch">Local Training Included</label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-3" id="internship_duration" style="display: {{ $course->internship_included ? 'block' : 'none' }};">
+                                <label class="form-label">Internship Duration</label>
+                                <input type="text" name="internship_duration" class="form-control"
+                                       value="{{ old('internship_duration', $course->internship_duration) }}">
+                            </div>
+
+                            <div class="col-md-6 mb-3" id="local_training_duration" style="display: {{ $course->local_training ? 'block' : 'none' }};">
+                                <label class="form-label">Local Training Duration</label>
+                                <input type="text" name="local_training_duration" class="form-control"
+                                       value="{{ old('local_training_duration', $course->local_training_duration) }}">
+                            </div>
+
+                            <div class="col-12 mb-3">
+                                <label class="form-label">Total Duration <span class="text-danger">*</span></label>
+                                <input type="text" name="total_duration" class="form-control" required
+                                       value="{{ old('total_duration', $course->total_duration) }}">
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Paid Type <span class="text-danger">*</span></label>
+                                <select name="paid_type" class="form-select" required>
+                                    <option value="">Select Type</option>
+                                    <option value="Paid" {{ $course->paid_type == 'Paid' ? 'selected' : '' }}>Paid</option>
+                                    <option value="Free" {{ $course->paid_type == 'Free' ? 'selected' : '' }}>Free</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Total Fees (Approx.)</label>
+                                <input type="text" name="total_fees" class="form-control"
+                                       value="{{ old('total_fees', $course->total_fees) }}">
+                            </div>
+
+                            <!-- Financial Assistance -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Financial Assistance</label>
+                                <div class="border p-3 rounded">
+                                    <div class="form-check form-switch mb-2">
+                                        <input class="form-check-input" type="checkbox" name="scholarship_available"
+                                               id="scholarship_switch" value="1" {{ $course->scholarship_available ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="scholarship_switch">Scholarship Available</label>
+                                    </div>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" name="bank_loan_assistance"
+                                               id="loan_switch" value="1" {{ $course->bank_loan_assistance ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="loan_switch">Bank Loan Assistance</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Section 5: Learning Outcomes -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h5 class="border-bottom pb-2">Learning Outcomes</h5>
+                            </div>
+
+                            <div class="col-12 mb-3">
+                                <label class="form-label">Career Outcomes / Job Roles <span class="text-danger">*</span></label>
+                                <textarea name="career_outcomes" class="form-control" rows="4" required>@foreach($course->career_outcomes as $outcome){{ $outcome }}{{ !$loop->last ? "\n" : '' }}@endforeach</textarea>
+                            </div>
+
+                            <div class="col-12 mb-3">
+                                <label class="form-label">Next Pathways / Progression</label>
+                                <textarea name="next_pathways" class="form-control" rows="3">@if($course->next_pathways)@foreach($course->next_pathways as $pathway){{ $pathway }}{{ !$loop->last ? "\n" : '' }}@endforeach @endif</textarea>
+                            </div>
+                        </div>
+
+                        <!-- Section 6: Visa & Logistics -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h5 class="border-bottom pb-2">Visa & Logistics</h5>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Visa Support</label>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" name="visa_support_included"
+                                           id="visa_switch" value="1" {{ $course->visa_support_included ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="visa_switch">Visa Support Included</label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Accommodation Support</label>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" name="accommodation_support"
+                                           id="accommodation_switch" value="1" {{ $course->accommodation_support ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="accommodation_switch">Accommodation Support</label>
+                                </div>
+                            </div>
+
+                            <div class="col-12 mb-3">
+                                <label class="form-label">Visa Notes</label>
+                                <textarea name="visa_notes" class="form-control" rows="3">{{ old('visa_notes', $course->visa_notes) }}</textarea>
+                            </div>
+
+                            <div class="col-12 mb-3">
+                                <label class="form-label">Accommodation Notes</label>
+                                <textarea name="accommodation_notes" class="form-control" rows="3">{{ old('accommodation_notes', $course->accommodation_notes) }}</textarea>
+                            </div>
+                        </div>
+
+                        <!-- Section 7: Media & SEO -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h5 class="border-bottom pb-2">Media & SEO</h5>
+                            </div>
+
+                            <!-- Current Thumbnail Preview -->
+                            @if($course->thumbnail_image)
+                            <div class="col-12 mb-3">
+                                <label class="form-label">Current Thumbnail</label>
+                                <div>
+                                    <img src="{{ asset($course->thumbnail_image) }}" alt="Current Thumbnail" class="img-thumbnail" style="max-height: 150px;">
+                                </div>
+                            </div>
+                            @endif
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Update Thumbnail Image</label>
+                                <input type="file" name="thumbnail_image" class="form-control" accept="image/*">
+                            </div>
+
+                            <!-- Current Gallery Images -->
+                            @if($course->gallery_images && count($course->gallery_images) > 0)
+                            <div class="col-12 mb-3">
+                                <label class="form-label">Current Gallery Images</label>
+                                <div class="d-flex flex-wrap gap-2">
+                                    @foreach($course->gallery_images as $image)
+                                    <img src="{{ asset($image) }}" alt="Gallery Image" class="img-thumbnail" style="max-height: 100px;">
+                                    @endforeach
+                                </div>
+                            </div>
+                            @endif
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Add Gallery Images</label>
+                                <input type="file" name="gallery_images[]" class="form-control" multiple accept="image/*">
+                            </div>
+
+                            <div class="col-12 mb-3">
+                                <label class="form-label">Short Description <span class="text-danger">*</span></label>
+                                <textarea name="short_description" class="form-control" rows="3" maxlength="200" required>{{ old('short_description', $course->short_description) }}</textarea>
+                                <div class="form-text"><span id="char-count">{{ strlen($course->short_description) }}</span>/200 characters</div>
+                            </div>
+
+                            <div class="col-12 mb-3">
+                                <label class="form-label">Meta Description</label>
+                                <textarea name="meta_description" class="form-control" rows="3">{{ old('meta_description', $course->meta_description) }}</textarea>
+                            </div>
+
+                            <div class="col-12 mb-3">
+                                <label class="form-label">SEO Keywords</label>
+                                <input type="text" name="seo_keywords" class="form-control"
+                                       value="{{ old('seo_keywords', $course->seo_keywords) }}">
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Display Order</label>
+                                <input type="number" name="display_order" class="form-control" value="{{ old('display_order', $course->display_order) }}" min="0">
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Publish Status</label>
+                                <div class="form-check form-switch mt-2">
+                                    <input class="form-check-input" type="checkbox" name="publish_status"
+                                           id="publish_switch" value="1" {{ $course->publish_status ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="publish_switch">Publish Course</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Submit Buttons -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="d-flex gap-2">
+                                    <button type="submit" class="btn btn-primary">Update Course</button>
+                                    <button type="reset" class="btn btn-secondary">Reset Changes</button>
+                                    <a href="{{ route('admin.intlcourse.index') }}" class="btn btn-outline-danger">Cancel</a>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
-@endsection
+</div>
+<!-- JavaScript for dynamic behavior -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Character counter for short description
+    const shortDesc = document.querySelector('textarea[name="short_description"]');
+    const charCount = document.getElementById('char-count');
 
-@push('scripts')
-    <script>
-        $(document).ready(function() {
-            // Initialize career outcomes from existing data
-            function initializeCareerOutcomes() {
-                const careerOutcomesJson = $('#careerOutcomesJsonInput').val();
-                let outcomes = [];
+    shortDesc.addEventListener('input', function() {
+        charCount.textContent = this.value.length;
+    });
 
-                if (careerOutcomesJson) {
-                    try {
-                        outcomes = JSON.parse(careerOutcomesJson);
-                    } catch (e) {
-                        console.error('Error parsing career outcomes JSON:', e);
-                    }
-                }
+    // Toggle work experience details
+    const workExpSwitch = document.getElementById('work_exp_switch');
+    const workExpDetails = document.getElementById('work_exp_details');
 
-                // Clear existing inputs
-                $('#careerOutcomesContainer').empty();
+    workExpSwitch.addEventListener('change', function() {
+        workExpDetails.style.display = this.checked ? 'block' : 'none';
+    });
 
-                // Add inputs for each outcome
-                if (outcomes.length > 0) {
-                    outcomes.forEach((outcome, index) => {
-                        addCareerOutcomeInput(outcome);
-                    });
-                } else {
-                    // Add one empty input if no outcomes exist
-                    addCareerOutcomeInput('');
-                }
+    // Toggle internship duration
+    const internshipSwitch = document.getElementById('internship_switch');
+    const internshipDuration = document.getElementById('internship_duration');
 
-                updateJsonOutput();
-            }
+    internshipSwitch.addEventListener('change', function() {
+        internshipDuration.style.display = this.checked ? 'block' : 'none';
+    });
 
-            // Add a new career outcome input
-            function addCareerOutcomeInput(value = '') {
-                const index = $('#careerOutcomesContainer .outcome-input-group').length;
-                const newOutcomeInput = `
-            <div class="input-group mb-2 outcome-input-group">
-                <input type="text" class="form-control career-outcome-input"
-                       placeholder="e.g., Data Analyst" value="${value}">
-                <button class="btn btn-outline-danger remove-outcome-btn" type="button">
-                    Remove
-                </button>
+    // Toggle local training duration
+    const localTrainingSwitch = document.getElementById('local_training_switch');
+    const localTrainingDuration = document.getElementById('local_training_duration');
+
+    localTrainingSwitch.addEventListener('change', function() {
+        localTrainingDuration.style.display = this.checked ? 'block' : 'none';
+    });
+
+    // Topics/Syllabus repeater
+    let topicCount = {{ $topicCount }};
+    const topicsContainer = document.getElementById('topics-container');
+    const addTopicBtn = document.getElementById('add-topic');
+
+    addTopicBtn.addEventListener('click', function() {
+        const newTopic = document.createElement('div');
+        newTopic.className = 'topic-item border p-3 mb-2 rounded';
+        newTopic.innerHTML = `
+            <div class="row">
+                <div class="col-md-6">
+                    <input type="text" name="topics[${topicCount}][module_title]"
+                           class="form-control mb-2" placeholder="Module Title" required>
+                </div>
+                <div class="col-md-5">
+                    <input type="text" name="topics[${topicCount}][outline]"
+                           class="form-control mb-2" placeholder="Module Outline" required>
+                </div>
+                <div class="col-md-1">
+                    <button type="button" class="btn btn-danger remove-topic">×</button>
+                </div>
             </div>
         `;
-                $('#careerOutcomesContainer').append(newOutcomeInput);
-                updateRemoveButtons();
+        topicsContainer.appendChild(newTopic);
+        topicCount++;
+    });
+
+    // Remove topic
+    topicsContainer.addEventListener('click', function(e) {
+        if (e.target.classList.contains('remove-topic')) {
+            if (document.querySelectorAll('.topic-item').length > 1) {
+                e.target.closest('.topic-item').remove();
             }
-
-            // Update remove buttons visibility
-            function updateRemoveButtons() {
-                const outcomeGroups = $('#careerOutcomesContainer .outcome-input-group');
-                outcomeGroups.each(function(index) {
-                    const removeBtn = $(this).find('.remove-outcome-btn');
-                    if (outcomeGroups.length === 1) {
-                        removeBtn.hide();
-                    } else {
-                        removeBtn.show();
-                    }
-                });
-            }
-
-            // Update JSON output and hidden input
-            function updateJsonOutput() {
-                const outcomes = [];
-                $('.career-outcome-input').each(function() {
-                    const value = $(this).val().trim();
-                    if (value) {
-                        outcomes.push(value);
-                    }
-                });
-
-                const jsonString = JSON.stringify(outcomes, null, 2);
-                $('#careerOutcomesJsonInput').val(jsonString);
-                $('#jsonOutput').text(jsonString);
-            }
-
-            // Add outcome button click handler
-            $('#addOutcomeBtn').on('click', function() {
-                addCareerOutcomeInput();
-                updateJsonOutput();
-            });
-
-            // Remove outcome button click handler (event delegation)
-            $('#careerOutcomesContainer').on('click', '.remove-outcome-btn', function() {
-                $(this).closest('.outcome-input-group').remove();
-                updateRemoveButtons();
-                updateJsonOutput();
-            });
-
-            // Input change handler for career outcomes
-            $('#careerOutcomesContainer').on('input', '.career-outcome-input', function() {
-                updateJsonOutput();
-            });
-
-            // Initialize date fields with proper format
-            function initializeDateFields() {
-                const startDate = $('input[name="start_date"]');
-                const endDate = $('input[name="end_date"]');
-
-                // If dates are empty, set default values or leave empty
-                if (!startDate.val() && '{{ $course->start_date }}') {
-                    startDate.val('{{ $course->start_date ? $course->start_date->format('Y-m-d') : '' }}');
-                }
-
-                if (!endDate.val() && '{{ $course->end_date }}') {
-                    endDate.val('{{ $course->end_date ? $course->end_date->format('Y-m-d') : '' }}');
-                }
-            }
-
-            // Initialize everything when document is ready
-            initializeCareerOutcomes();
-            initializeDateFields();
-        });
-    </script>
-    <script>
-        let topicIndex = {{ $topicIndex }};
-
-        $('#add-topic').on('click', function() {
-            $('#topics-wrapper').append(`
-        <div class="row g-2 topic-row mb-2">
-            <div class="col-md-5">
-                <input type="text" name="topics[${topicIndex}][title]" class="form-control" placeholder="Topic Title">
-            </div>
-            <div class="col-md-5">
-                <input type="text" name="topics[${topicIndex}][description]" class="form-control" placeholder="Topic Description">
-            </div>
-            <div class="col-md-2">
-                <button type="button" class="btn btn-danger remove-topic w-100">Remove</button>
-            </div>
-        </div>
-    `);
-            topicIndex++;
-        });
-
-        $(document).on('click', '.remove-topic', function() {
-            $(this).closest('.topic-row').remove();
-        });
-
-        function toggleMaxCredits(select) {
-            document.getElementById('maxCreditsField').style.display =
-                select.value === 'Yes' ? 'block' : 'none';
         }
+    });
+});
+</script>
 
-        // Initialize Summernote for textareas
-        $(document).ready(function() {
-            $('#long_description, #other_info, #visa_proccess').summernote({
-                height: 200,
-                toolbar: [
-                    ['style', ['bold', 'italic', 'underline', 'clear']],
-                    ['para', ['ul', 'ol', 'paragraph']],
-                    ['insert', ['link', 'picture']],
-                    ['view', ['fullscreen', 'codeview']]
-                ]
-            });
-        });
-    </script>
-@endpush
+<style>
+.topic-item {
+    background-color: #f8f9fa;
+}
+.form-section {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+</style>
+@endsection

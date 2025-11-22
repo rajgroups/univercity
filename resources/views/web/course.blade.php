@@ -15,7 +15,7 @@
     <!-- Open Graph -->
     <meta property="og:title" content="Courses - Indian Skill Institute Co-operation (ISICO)">
     <meta property="og:description"
-        content="Discover ISICO’s skill development and professional courses designed to empower learners with practical knowledge, entrepreneurship, and career opportunities.">
+        content="Discover ISICO's skill development and professional courses designed to empower learners with practical knowledge, entrepreneurship, and career opportunities.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ url()->current() }}">
     <meta property="og:image" content="{{ asset('default-courses.jpg') }}">
@@ -24,7 +24,7 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Courses - Indian Skill Institute Co-operation (ISICO)">
     <meta name="twitter:description"
-        content="Join ISICO’s education and skill development courses to build knowledge, innovation, and entrepreneurial skills for the future.">
+        content="Join ISICO's education and skill development courses to build knowledge, innovation, and entrepreneurial skills for the future.">
     <meta name="twitter:image" content="{{ asset('default-courses.jpg') }}">
 @endpush
 
@@ -32,383 +32,584 @@
     <!-- Title Banner Section Start -->
     <section class="title-banner mb-80">
         <div class="container-fluid">
-            <h1>All Courses</h1>
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1 class="display-5 fw-bold text-primary">Explore Our Courses</h1>
+                    <p class="lead text-muted">Discover skill development programs designed for your career growth</p>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <div class="breadcrumb">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb justify-content-md-end">
+                                <li class="breadcrumb-item"><a href="">Home</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Courses</li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
     <!-- Title Banner Section End -->
-    <!-- Couse Section Start -->
-    <section class="couses-sec mb-120">
+
+    <!-- Courses Section Start -->
+    <section class="courses-sec mb-120">
         <div class="container-fluid">
-            <div
-                class="d-flex align-items-center justify-content-sm-between justify-content-center row-gap-4 flex-wrap mb-24">
-                <h4 class="text-center">Skill courses</h4>
-                <div class="d-flex align-items-center gap-8">
-                    {{-- <p class="flex-shrink-0 m-4">Sort By:</p> --}}
-                    <div class="w-100 drop-container">
-                        <div class="wrapper-dropdown form-control" id="dropdown-l2">
-                            <div class=" d-flex align-items-center justify-content-between gap-64">
-                                <span class="selected-display black" id="desation112">Newest First</span>
-                                <svg id="drop-down2" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                                    viewBox="0 0 20 20" fill="none">
-                                    <path
-                                        d="M19.7337 4.81165C19.3788 4.45668 18.8031 4.45662 18.4481 4.81171L10.0002 13.2598L1.55191 4.81165C1.19694 4.45668 0.621303 4.45662 0.266273 4.81171C-0.0887576 5.16674 -0.0887576 5.74232 0.266273 6.09735L9.35742 15.1883C9.52791 15.3587 9.75912 15.4545 10.0002 15.4545C10.2413 15.4545 10.4726 15.3587 10.643 15.1882L19.7337 6.09729C20.0888 5.74232 20.0888 5.16668 19.7337 4.81165Z"
-                                        fill="#92949F" />
-                                </svg>
-                            </div>
-                            <ul class="topbar-dropdown">
-                                <li class="item">Newest First</li>
-                                <li class="item">Newest Last</li>
-                                <li class="item">End</li>
+            <!-- Header Section -->
+            <div class="row align-items-center mb-4">
+                <div class="col-md-6">
+                    <h4 class="text-primary mb-2">Skill Development Courses</h4>
+                    <p class="text-muted mb-0">Showing {{ $courses->total() }} courses</p>
+                </div>
+                <div class="col-md-6">
+                    <div class="d-flex align-items-center justify-content-md-end gap-3">
+                        <!-- Mobile Filter Button -->
+                        <button class="btn btn-outline-primary d-md-none" type="button" data-bs-toggle="offcanvas"
+                            data-bs-target="#mobileFilters">
+                            <i class="bi bi-funnel me-2"></i>Filters
+                            @if (request()->anyFilled(['search', 'sectors', 'languages', 'durations', 'prices']))
+                                <span class="badge bg-primary ms-1">!</span>
+                            @endif
+                        </button>
+
+                        <!-- Sort Dropdown -->
+                        <div class="dropdown">
+                            <button class="btn btn-outline-secondary dropdown-toggle" type="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-sort-down me-2"></i>Sort By
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item"
+                                        href="{{ request()->fullUrlWithQuery(['sort' => 'newest']) }}">Newest First</a></li>
+                                <li><a class="dropdown-item"
+                                        href="{{ request()->fullUrlWithQuery(['sort' => 'oldest']) }}">Oldest First</a></li>
+                                <li><a class="dropdown-item"
+                                        href="{{ request()->fullUrlWithQuery(['sort' => 'name']) }}">Name A-Z</a></li>
+                                <li><a class="dropdown-item"
+                                        href="{{ request()->fullUrlWithQuery(['sort' => 'name_desc']) }}">Name Z-A</a></li>
                             </ul>
                         </div>
                     </div>
                 </div>
             </div>
+
             <div class="row">
-                <!-- Filter Button (Mobile only) -->
-                <div class="col-12 d-md-none mb-3 text-end">
-                    <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas"
-                        data-bs-target="#mobileFilters">
-                        <i class="bi bi-funnel"></i> Filters
-                    </button>
-                </div>
-
                 <!-- Sidebar Filters (Desktop) -->
-                <div class="col-md-3 d-none d-md-block">
-                    <form action="{{ route('web.course.index') }}" method="GET" id="courseFiltersDesktop">
-                        <!-- Search -->
-                        <div class="mb-4">
-                            <div class="input-group">
-                                <input type="text" class="form-control" name="search"
-                                    placeholder="Search by course name..." value="{{ request('search') }}">
-                                <button class="btn btn-primary" type="submit">
-                                    <i class="bi bi-search"></i>
-                                </button>
-                            </div>
+                <div class="col-lg-3 d-none d-lg-block">
+                    <div class="filter-sidebar card border-0 shadow-sm sticky-top" style="top: 100px;">
+                        <div class="card-header bg-white border-bottom">
+                            <h5 class="mb-0">
+                                <i class="bi bi-funnel me-2 text-primary"></i>Filters
+                                @if (request()->anyFilled(['search', 'sectors', 'languages', 'durations', 'prices']))
+                                    <a href="{{ route('web.course.index') }}"
+                                        class="btn btn-sm btn-outline-danger float-end">
+                                        Clear All
+                                    </a>
+                                @endif
+                            </h5>
                         </div>
+                        <div class="card-body">
+                            <form action="{{ route('web.course.index') }}" method="GET" id="courseFiltersDesktop">
+                                <!-- Search -->
+                                <div class="mb-4">
+                                    <label class="form-label fw-semibold">Search Courses</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control border-end-0" name="search"
+                                            placeholder="Course name, description..." value="{{ request('search') }}">
+                                        <button class="btn btn-outline-primary border-start-0" type="submit">
+                                            <i class="bi bi-search"></i>
+                                        </button>
+                                    </div>
+                                </div>
 
-                        <div class="accordion" id="filterAccordionDesktop">
-                            <!-- Sector Filter -->
-                            <div class="accordion-item border-0 mb-3 shadow-sm">
-                                <h2 class="accordion-header" id="headingSectorDesktop">
-                                    <button class="accordion-button collapsed shadow-none" type="button"
-                                        data-bs-toggle="collapse" data-bs-target="#collapseSectorDesktop"
-                                        aria-expanded="false">
-                                        <i class="bi bi-grid me-2"></i> Sector
-                                        <span class="badge bg-primary ms-auto">{{ count(request('sectors', [])) }}</span>
-                                    </button>
-                                </h2>
-                                <div id="collapseSectorDesktop"
-                                    class="accordion-collapse collapse {{ count(request('sectors', [])) ? 'show' : '' }}">
-                                    <div class="accordion-body pt-2">
+                                <!-- Active Filters -->
+                                @if (request()->anyFilled(['sectors', 'languages', 'durations', 'prices']))
+                                    <div class="mb-4">
+                                        <label class="form-label fw-semibold">Active Filters</label>
+                                        <div class="d-flex flex-wrap gap-2">
+                                            @foreach (request('sectors', []) as $sectorId)
+                                                @php $sector = $sectors->firstWhere('id', $sectorId); @endphp
+                                                @if ($sector)
+                                                    <span class="badge bg-primary">
+                                                        {{ $sector->name }}
+                                                        <a href="{{ request()->fullUrlWithQuery(['sectors' => array_diff(request('sectors', []), [$sectorId])]) }}"
+                                                            class="text-white ms-1">×</a>
+                                                    </span>
+                                                @endif
+                                            @endforeach
+                                            @foreach (request('languages', []) as $language)
+                                                <span class="badge bg-info">
+                                                    {{ $language }}
+                                                    <a href="{{ request()->fullUrlWithQuery(['languages' => array_diff(request('languages', []), [$language])]) }}"
+                                                        class="text-white ms-1">×</a>
+                                                </span>
+                                            @endforeach
+                                            @foreach (request('durations', []) as $duration)
+                                                <span class="badge bg-warning text-dark">
+                                                    {{ $duration }}
+                                                    <a href="{{ request()->fullUrlWithQuery(['durations' => array_diff(request('durations', []), [$duration])]) }}"
+                                                        class="text-dark ms-1">×</a>
+                                                </span>
+                                            @endforeach
+                                            @foreach (request('prices', []) as $price)
+                                                <span class="badge bg-success">
+                                                    {{ $price }}
+                                                    <a href="{{ request()->fullUrlWithQuery(['prices' => array_diff(request('prices', []), [$price])]) }}"
+                                                        class="text-white ms-1">×</a>
+                                                </span>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                @endif
+
+                                <!-- Sector Filter -->
+                                <div class="mb-4">
+                                    <label class="form-label fw-semibold d-flex justify-content-between">
+                                        <span>Sector</span>
+                                        <span class="badge bg-primary">{{ count(request('sectors', [])) }}</span>
+                                    </label>
+                                    <div class="filter-options">
                                         @foreach ($sectors as $sector)
-                                            <div class="form-check mb-2">
+                                            <div class="form-check">
                                                 <input class="form-check-input" type="checkbox" name="sectors[]"
                                                     id="sectorDesktop{{ $sector->id }}" value="{{ $sector->id }}"
                                                     {{ in_array($sector->id, request('sectors', [])) ? 'checked' : '' }}>
                                                 <label class="form-check-label d-flex justify-content-between w-100"
                                                     for="sectorDesktop{{ $sector->id }}">
                                                     <span>{{ $sector->name }}</span>
-                                                    <span class="text-muted small">{{ $sector->courses_count ?? 0 }}</span>
+                                                    <span
+                                                        class="text-muted small">{{ $sector->courses_count ?? 0 }}</span>
                                                 </label>
                                             </div>
                                         @endforeach
                                     </div>
                                 </div>
-                            </div>
 
-                            <!-- Language Filter -->
-                            <div class="accordion-item border-0 mb-3 shadow-sm">
-                                <h2 class="accordion-header" id="headingLangDesktop">
-                                    <button class="accordion-button collapsed shadow-none" type="button"
-                                        data-bs-toggle="collapse" data-bs-target="#collapseLangDesktop"
-                                        aria-expanded="false">
-                                        <i class="bi bi-translate me-2"></i> Language
-                                        <span
-                                            class="badge bg-primary ms-auto">{{ count(request('languages', [])) }}</span>
-                                    </button>
-                                </h2>
-                                <div id="collapseLangDesktop"
-                                    class="accordion-collapse collapse {{ count(request('languages', [])) ? 'show' : '' }}">
-                                    <div class="accordion-body pt-2">
-                                        @foreach (['English', 'Tamil', 'Hindi'] as $language)
-                                            <div class="form-check mb-2">
+                                <!-- Language Filter -->
+                                <div class="mb-4">
+                                    <label class="form-label fw-semibold d-flex justify-content-between">
+                                        <span>Language</span>
+                                        <span class="badge bg-primary">{{ count(request('languages', [])) }}</span>
+                                    </label>
+                                    <div class="filter-options">
+                                        @foreach (['English', 'Hindi', 'Tamil', 'Telugu', 'Kannada', 'Malayalam', 'Marathi', 'Bengali'] as $language)
+                                            <div class="form-check">
                                                 <input class="form-check-input" type="checkbox" name="languages[]"
                                                     id="langDesktop{{ $loop->index }}" value="{{ $language }}"
                                                     {{ in_array($language, request('languages', [])) ? 'checked' : '' }}>
-                                                <label class="form-check-label"
-                                                    for="langDesktop{{ $loop->index }}">{{ $language }}</label>
+                                                <label class="form-check-label" for="langDesktop{{ $loop->index }}">
+                                                    {{ $language }}
+                                                </label>
                                             </div>
                                         @endforeach
                                     </div>
                                 </div>
-                            </div>
 
-                            <!-- Duration Filter -->
-                            <div class="accordion-item border-0 mb-3 shadow-sm">
-                                <h2 class="accordion-header" id="headingDurationDesktop">
-                                    <button class="accordion-button collapsed shadow-none" type="button"
-                                        data-bs-toggle="collapse" data-bs-target="#collapseDurationDesktop"
-                                        aria-expanded="false">
-                                        <i class="bi bi-clock me-2"></i> Duration
-                                        <span
-                                            class="badge bg-primary ms-auto">{{ count(request('durations', [])) }}</span>
-                                    </button>
-                                </h2>
-                                <div id="collapseDurationDesktop"
-                                    class="accordion-collapse collapse {{ count(request('durations', [])) ? 'show' : '' }}">
-                                    <div class="accordion-body pt-2">
-                                        @foreach (['1-2 Hours', '3+ Hours', '1-2 Weeks', '3+ Weeks'] as $duration)
-                                            <div class="form-check mb-2">
+                                <!-- Duration Filter -->
+                                <div class="mb-4">
+                                    <label class="form-label fw-semibold d-flex justify-content-between">
+                                        <span>Duration</span>
+                                        <span class="badge bg-primary">{{ count(request('durations', [])) }}</span>
+                                    </label>
+                                    <div class="filter-options">
+                                        @foreach (['1-3 months', '3-6 months', '6-12 months', '1+ years'] as $duration)
+                                            <div class="form-check">
                                                 <input class="form-check-input" type="checkbox" name="durations[]"
                                                     id="durDesktop{{ $loop->index }}" value="{{ $duration }}"
                                                     {{ in_array($duration, request('durations', [])) ? 'checked' : '' }}>
-                                                <label class="form-check-label"
-                                                    for="durDesktop{{ $loop->index }}">{{ $duration }}</label>
+                                                <label class="form-check-label" for="durDesktop{{ $loop->index }}">
+                                                    {{ $duration }}
+                                                </label>
                                             </div>
                                         @endforeach
                                     </div>
                                 </div>
-                            </div>
 
-                            <!-- Price Filter -->
-                            <div class="accordion-item border-0 mb-3 shadow-sm">
-                                <h2 class="accordion-header" id="headingPriceDesktop">
-                                    <button class="accordion-button collapsed shadow-none" type="button"
-                                        data-bs-toggle="collapse" data-bs-target="#collapsePriceDesktop"
-                                        aria-expanded="false">
-                                        <i class="bi bi-currency-rupee me-2"></i> Price
-                                        <span class="badge bg-primary ms-auto">{{ count(request('prices', [])) }}</span>
+                                <!-- Price Filter -->
+                                <div class="mb-4">
+                                    <label class="form-label fw-semibold d-flex justify-content-between">
+                                        <span>Price Type</span>
+                                        <span class="badge bg-primary">{{ count(request('prices', [])) }}</span>
+                                    </label>
+                                    <div class="filter-options">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="prices[]"
+                                                id="priceFreeDesktop" value="free"
+                                                {{ in_array('free', request('prices', [])) ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="priceFreeDesktop">
+                                                Free Courses
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="prices[]"
+                                                id="pricePaidDesktop" value="paid"
+                                                {{ in_array('paid', request('prices', [])) ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="pricePaidDesktop">
+                                                Paid Courses
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Mode of Study Filter -->
+                                <div class="mb-4">
+                                    <label class="form-label fw-semibold">Mode of Study</label>
+                                    <div class="filter-options">
+                                        @foreach ([1 => 'Online', 2 => 'In-Centre', 3 => 'Hybrid', 4 => 'On-Demand'] as $value => $label)
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" name="modes[]"
+                                                    id="modeDesktop{{ $value }}" value="{{ $value }}"
+                                                    {{ in_array($value, request('modes', [])) ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="modeDesktop{{ $value }}">
+                                                    {{ $label }}
+                                                </label>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+
+                                <!-- Filter Actions -->
+                                <div class="d-grid gap-2">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="bi bi-check-lg me-2"></i>Apply Filters
                                     </button>
-                                </h2>
-                                <div id="collapsePriceDesktop"
-                                    class="accordion-collapse collapse {{ count(request('prices', [])) ? 'show' : '' }}">
-                                    <div class="accordion-body pt-2">
-                                        <div class="form-check mb-2">
-                                            <input class="form-check-input" type="checkbox" name="prices[]"
-                                                id="priceFreeDesktop" value="Free"
-                                                {{ in_array('Free', request('prices', [])) ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="priceFreeDesktop">Free</label>
+                                    <a href="{{ route('web.course.index') }}" class="btn btn-outline-secondary">
+                                        <i class="bi bi-arrow-clockwise me-2"></i>Reset All
+                                    </a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Courses Grid -->
+                <div class="col-lg-9">
+                    @if ($courses->count() > 0)
+                        <div class="row g-4">
+                            @foreach ($courses as $course)
+                                <div class="col-md-6 col-xl-4">
+                                    <div class="course-card card h-100 border-0 shadow-sm hover-lift">
+                                        <div class="position-relative">
+                                            <img src="{{ asset($course->image ?? 'default-course.jpg') }}"
+                                                class="card-img-top" alt="{{ $course->name }}"
+                                                style="height: 200px; object-fit: cover;">
+                                            <div
+                                                class="card-img-overlay d-flex justify-content-between align-items-start p-3">
+                                                <span
+                                                    class="badge bg-{{ $course->mode_of_study == 1 ? 'primary' : 'secondary' }}">
+                                                    {{ $learningTypes[$course->mode_of_study] ?? 'N/A' }}
+                                                </span>
+                                                <span
+                                                    class="badge bg-{{ $course->paid_type == 'free' ? 'success' : 'warning' }}">
+                                                    {{ $course->paid_type == 'free' ? 'FREE' : 'PAID' }}
+                                                </span>
+                                            </div>
                                         </div>
-                                        <div class="form-check mb-2">
-                                            <input class="form-check-input" type="checkbox" name="prices[]"
-                                                id="pricePaidDesktop" value="Paid"
-                                                {{ in_array('Paid', request('prices', [])) ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="pricePaidDesktop">Paid</label>
-                                        </div>
-                                        <div class="mt-3">
-                                            <label class="form-label small">Price Range</label>
-                                            <div class="d-flex align-items-center">
-                                                <input type="number" name="min_price"
-                                                    class="form-control form-control-sm" placeholder="Min"
-                                                    value="{{ request('min_price') }}">
-                                                <span class="mx-2">-</span>
-                                                <input type="number" name="max_price"
-                                                    class="form-control form-control-sm" placeholder="Max"
-                                                    value="{{ request('max_price') }}">
+                                        <div class="card-body d-flex flex-column">
+                                            <h6 class="card-title text-primary mb-2 line-clamp-2"
+                                                style="min-height: 3rem;">
+                                                {{ $course->name }}
+                                            </h6>
+                                            <p class="text-muted small mb-2">
+                                                <i class="bi bi-building me-1"></i>{{ $course->provider ?? 'ISICO' }}
+                                            </p>
+                                            <p class="text-warning small mb-2">
+                                                <i class="bi bi-tags me-1"></i>{{ $course->sector->name ?? 'General' }}
+                                            </p>
+                                            <div class="course-meta d-flex justify-content-between text-muted small mb-3">
+                                                <span class="d-flex align-items-center">
+                                                    <i class="bi bi-translate me-1"></i>
+                                                    @php
+                                                        $languages = is_array($course->language)
+                                                            ? $course->language
+                                                            : (is_string($course->language)
+                                                                ? json_decode($course->language, true)
+                                                                : []);
+                                                    @endphp
+
+                                                    @if (count($languages) > 0)
+                                                        <span class="language-trigger text-primary cursor-pointer"
+                                                            data-bs-toggle="popover" data-bs-placement="top"
+                                                            data-bs-content="
+                    <div class='p-2'>
+                        <strong>Available in:</strong>
+                        <ul class='mb-0 mt-1 ps-3'>
+                            @foreach ($languages as $lang)
+<li>{{ $lang }}</li>
+@endforeach
+                        </ul>
+                    </div>
+                  "
+                                                            data-bs-html="true">
+                                                            {{ count($languages) }} Languages
+                                                        </span>
+                                                    @else
+                                                        <span class="text-muted">Multiple Languages</span>
+                                                    @endif
+                                                </span>
+                                              <span class="d-flex align-items-center">
+    <i class="bi bi-clock me-1"></i>
+
+    {{ $course->duration_number && $course->duration_unit
+        ? $course->duration_number . ' ' . $course->duration_unit->label()
+        : 'Flexible'
+    }}
+</span>
+
+                                            </div>
+                                            <div class="mt-auto">
+                                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                                    <div class="rating">
+                                                        <i class="bi bi-star-fill text-warning"></i>
+                                                        <small class="text-muted">4.5 (120 reviews)</small>
+                                                    </div>
+                                                    <div class="enrollment">
+                                                        <small class="text-muted">
+                                                            <i class="bi bi-people me-1"></i>
+                                                            {{ $course->enrollment_count }} enrolled
+                                                        </small>
+                                                    </div>
+                                                </div>
+                                                <a href="{{ route('web.course.show', $course->slug) }}"
+                                                    class="btn btn-primary w-100">
+                                                    View Details <i class="bi bi-arrow-right ms-2"></i>
+                                                </a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                            @endforeach
+                        </div>
+
+                        <!-- Pagination -->
+                        <div class="mt-5">
+                            <nav aria-label="Course pagination">
+                                <ul class="pagination justify-content-center">
+                                    <li class="page-item {{ $courses->onFirstPage() ? 'disabled' : '' }}">
+                                        <a class="page-link" href="{{ $courses->previousPageUrl() }}">
+                                            <i class="bi bi-chevron-left"></i> Previous
+                                        </a>
+                                    </li>
+
+                                    @foreach ($courses->getUrlRange(1, $courses->lastPage()) as $page => $url)
+                                        @if ($page == $courses->currentPage())
+                                            <li class="page-item active">
+                                                <span class="page-link">{{ $page }}</span>
+                                            </li>
+                                        @else
+                                            <li class="page-item">
+                                                <a class="page-link" href="{{ $url }}">{{ $page }}</a>
+                                            </li>
+                                        @endif
+                                    @endforeach
+
+                                    <li class="page-item {{ !$courses->hasMorePages() ? 'disabled' : '' }}">
+                                        <a class="page-link" href="{{ $courses->nextPageUrl() }}">
+                                            Next <i class="bi bi-chevron-right"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    @else
+                        <!-- No Courses Found -->
+                        <div class="text-center py-5">
+                            <div class="empty-state">
+                                <i class="bi bi-search display-1 text-muted"></i>
+                                <h3 class="mt-4 text-muted">No courses found</h3>
+                                <p class="text-muted mb-4">Try adjusting your search criteria or browse all courses.</p>
+                                <a href="{{ route('web.course.index') }}" class="btn btn-primary">
+                                    <i class="bi bi-arrow-clockwise me-2"></i>Reset Filters
+                                </a>
                             </div>
                         </div>
-
-                        <!-- Filter Controls -->
-                        <div class="d-grid gap-2 mt-4">
-                            <button type="submit" class="btn btn-primary">
-                                <i class="bi bi-funnel me-1"></i> Apply Filters
-                            </button>
-                            <a href="{{ route('web.course.index') }}" class="btn btn-outline-secondary">
-                                <i class="bi bi-arrow-counterclockwise me-1"></i> Reset All
-                            </a>
-                        </div>
-                    </form>
+                    @endif
                 </div>
-
-                <!-- Courses Cards -->
-                <div class="col-md-9">
-                    <div class="row g-4">
-                        @foreach ($courses as $course)
-                            <div class="col-md-6 col-lg-4 mb-4">
-                                <div class="course-card position-relative bg-white">
-                                    <img src="{{ asset($course->image) }}" class="w-100" alt="{{ $course->name }}">
-                                    <span
-                                        class="badge badge-online bg-danger">{{ $course->learning_product_type }}</span>
-                                    <span
-                                        class="badge badge-price {{ $course->paid_type === 'Free' ? 'badge-free' : 'badge-paid' }}">{{ $course->paid_type }}</span>
-                                    <div class="p-3">
-                                        <h6 class="mb-1">{{ $course->name }}</h6>
-                                        <p class="text-muted small mb-1">{{ $course->provider }}</p>
-                                        <p class="text-warning small mb-1">{{ $course->sector->name ?? 'No Sector' }}</p>
-                                        <div class="d-flex justify-content-between small text-muted">
-                                            <span>{{ $course->language }}</span>
-                                            <span><i class="bi bi-clock"></i> {{ $course->duration }}</span>
-                                        </div>
-                                        <div class="d-flex justify-content-between mt-2">
-                                            <span
-                                                class="text-muted small">{{ $course->credits_assigned ?? 'No Credit' }}</span>
-                                            <span class="rating-stars">★ 0.0 (0 review)</span>
-                                        </div>
-                                        <div class="mt-2">
-                                            <a href="{{ route('web.course.show', $course->slug) }}"
-                                                class="apply-link">Apply →</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
-                </div>
-            </div>
-
-            <!-- Offcanvas Filters (Mobile) -->
-            <div class="offcanvas offcanvas-start" tabindex="-1" id="mobileFilters">
-                <div class="offcanvas-header">
-                    <h5 class="offcanvas-title"><i class="bi bi-funnel"></i> Filters</h5>
-                    <button id="filterBtn" type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
-                </div>
-                <div class="offcanvas-body" >
-                    <form action="{{ route('web.course.index') }}" method="GET" id="courseFiltersMobile">
-                        <!-- Keep same filters as desktop -->
-                        {{-- copy all filter accordion content same as above --}}
-                        <div class="accordion" id="filterCanvas" class="filter-canvas">
-                            <div class="filter-content"></div>
-                            {{-- Sector, Language, Duration, Price same code as above but IDs mobile specific --}}
-                        </div>
-                        <div class="d-grid gap-2 mt-4">
-                            <button type="submit" class="btn btn-primary">
-                                <i class="bi bi-funnel me-1"></i> Apply Filters
-                            </button>
-                            <a href="{{ route('web.course.index') }}" class="btn btn-outline-secondary">
-                                <i class="bi bi-arrow-counterclockwise me-1"></i> Reset All
-                            </a>
-                        </div>
-                    </form>
-                </div>
-            </div>
-
-            <style>
-                .course-card {
-                    border: 1px solid #dee2e6;
-                    border-radius: 10px;
-                    overflow: hidden;
-                    transition: 0.3s;
-                }
-
-                .course-card:hover {
-                    transform: translateY(-5px);
-                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-                }
-
-                .badge-online {
-                    position: absolute;
-                    top: 10px;
-                    left: 10px;
-                    background: white;
-                    font-size: 0.75rem;
-                    border-radius: 20px;
-                    padding: 3px 10px;
-                    font-weight: 500;
-                }
-
-                .badge-price {
-                    position: absolute;
-                    top: 10px;
-                    right: 10px;
-                    font-size: 0.75rem;
-                    border-radius: 20px;
-                    padding: 3px 10px;
-                    font-weight: 500;
-                }
-
-                .badge-free {
-                    background-color: #28a745;
-                    color: #fff;
-                }
-
-                .badge-paid {
-                    background-color: #0039a6;
-                    color: #fff;
-                }
-
-                .apply-link {
-                    color: #f27e00;
-                    font-weight: 600;
-                    font-size: 0.875rem;
-                }
-
-                .rating-stars {
-                    font-size: 0.875rem;
-                    color: #007bff;
-                }
-            </style>
-            <div class="pagination mt-3">
-                <ul id="border-pagination" class="mb-0">
-                    {{-- Previous Page Link --}}
-                    <li>
-                        <a href="{{ $courses->previousPageUrl() }}"
-                            class="{{ $courses->onFirstPage() ? 'disabled' : '' }}">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="19" height="14" viewBox="0 0 19 14"
-                                fill="none">
-                                <path
-                                    d="M0.876656 6.61218L6.70999 0.778849C6.86716 0.62705 7.07766 0.543055 7.29616 0.544953C7.51465 0.546852 7.72366 0.634493 7.87817 0.789C8.03268 0.943507 8.12032 1.15252 8.12222 1.37101C8.12412 1.58951 8.04012 1.80001 7.88832 1.95718L3.47749 6.36801H18.1325C18.3535 6.36801 18.5655 6.45581 18.7217 6.61209C18.878 6.76837 18.9658 6.98033 18.9658 7.20135C18.9658 7.42236 18.878 7.63432 18.7217 7.7906C18.5655 7.94688 18.3535 8.03468 18.1325 8.03468H3.47749L7.88832 12.4455C7.96791 12.5224 8.0314 12.6143 8.07507 12.716C8.11875 12.8177 8.14174 12.927 8.1427 13.0377C8.14366 13.1483 8.12257 13.2581 8.08067 13.3605C8.03877 13.4629 7.9769 13.5559 7.89865 13.6342C7.82041 13.7124 7.72736 13.7743 7.62495 13.8162C7.52254 13.8581 7.4128 13.8792 7.30215 13.8782C7.19151 13.8773 7.08216 13.8543 6.98048 13.8106C6.87882 13.7669 6.78686 13.7034 6.70999 13.6238L0.876656 7.79051C0.72043 7.63424 0.632668 7.42232 0.632668 7.20135C0.632668 6.98038 0.72043 6.76845 0.876656 6.61218Z"
-                                    fill="{{ $courses->onFirstPage() ? '#CCCCCC' : '#F59300' }}" />
-                            </svg>
-                        </a>
-                    </li>
-
-                    {{-- Pagination Elements --}}
-                    @foreach ($courses->getUrlRange(1, $courses->lastPage()) as $page => $url)
-                        @if ($page == $courses->currentPage())
-                            <li><a href="#" class="active">{{ $page }}</a></li>
-                        @else
-                            <li><a href="{{ $url }}">{{ $page }}</a></li>
-                        @endif
-                    @endforeach
-
-                    {{-- Next Page Link --}}
-                    <li>
-                        <a href="{{ $courses->nextPageUrl() }}"
-                            class="{{ !$courses->hasMorePages() ? 'disabled' : '' }}">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 21 21"
-                                fill="none">
-                                <path
-                                    d="M19.1233 9.61218L13.29 3.77885C13.1328 3.62705 12.9223 3.54305 12.7038 3.54495C12.4853 3.54685 12.2763 3.63449 12.1218 3.789C11.9673 3.94351 11.8797 4.15252 11.8778 4.37101C11.8759 4.58951 11.9599 4.80001 12.1117 4.95718L16.5225 9.36801H1.86751C1.6465 9.36801 1.43454 9.45581 1.27826 9.61209C1.12198 9.76837 1.03418 9.98033 1.03418 10.2013C1.03418 10.4224 1.12198 10.6343 1.27826 10.7906C1.43454 10.9469 1.6465 11.0347 1.86751 11.0347H16.5225L12.1117 15.4455C12.0321 15.5224 11.9686 15.6143 11.9249 15.716C11.8813 15.8177 11.8583 15.927 11.8573 16.0377C11.8563 16.1483 11.8774 16.2581 11.9193 16.3605C11.9612 16.4629 12.0231 16.5559 12.1013 16.6342C12.1796 16.7124 12.2726 16.7743 12.375 16.8162C12.4775 16.8581 12.5872 16.8792 12.6978 16.8782C12.8085 16.8773 12.9178 16.8543 13.0195 16.8106C13.1212 16.7669 13.2131 16.7034 13.29 16.6238L19.1233 10.7905C19.2796 10.6342 19.3673 10.4223 19.3673 10.2013C19.3673 9.98038 19.2796 9.76845 19.1233 9.61218Z"
-                                    fill="{{ !$courses->hasMorePages() ? '#CCCCCC' : '#F59300' }}" />
-                            </svg>
-                        </a>
-                    </li>
-                </ul>
             </div>
         </div>
     </section>
-    <!-- Couse Section End -->
 
-    <!-- content @e -->
-@endsection
-@push('scripts')
-<script>
-document.addEventListener('DOMContentLoaded', function () {
+    <!-- Mobile Filters Offcanvas -->
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="mobileFilters">
+        <div class="offcanvas-header border-bottom">
+            <h5 class="offcanvas-title">
+                <i class="bi bi-funnel me-2 text-primary"></i>Filters
+            </h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+        </div>
+        <div class="offcanvas-body">
+            <!-- Mobile filter content will be loaded here via JavaScript -->
+            <div id="mobileFilterContent"></div>
+        </div>
+    </div>
 
-    // Cache selectors
-    let $mobileFilterContent = $("#courseFiltersMobile .filter-content");
-    let $desktopFilters = $("#courseFiltersDesktop");
-
-    // Use Bootstrap event when offcanvas is about to show
-    $('#mobileFilters').on('show.bs.offcanvas', function () {
-        if ($mobileFilterContent.children().length === 0) {
-            // Clone desktop filters
-            let $clone = $desktopFilters.clone();
-
-            // Remove unwanted desktop buttons (if you want mobile buttons only)
-            $clone.find("button[type='submit']").remove();
-            $clone.find("a.btn").remove();
-
-            // Append only the inner HTML of filters
-            $mobileFilterContent.append($clone.html());
+    <style>
+        .language-display {
+            cursor: help;
         }
-    });
-});
-</script>
-@endpush
 
+        .cursor-pointer {
+            cursor: pointer;
+        }
+
+        .language-trigger:hover {
+            text-decoration: underline;
+        }
+
+        /* Badge styling for Option 2 */
+        .badge.bg-light {
+            font-size: 0.65rem;
+            padding: 0.2rem 0.4rem;
+        }
+
+        /* Ensure tooltips and popovers work well on mobile */
+        @media (max-width: 768px) {
+
+            .language-display,
+            .language-trigger {
+                font-size: 0.8rem;
+            }
+        }
+
+        .hover-lift {
+            transition: all 0.3s ease;
+        }
+
+        .hover-lift:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+        }
+
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .filter-sidebar {
+            z-index: 100;
+        }
+
+        .filter-options {
+            max-height: 200px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .filter-options::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .filter-options::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .filter-options::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 10px;
+        }
+
+        .empty-state {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .course-meta {
+            font-size: 0.875rem;
+        }
+
+        .card-img-overlay .badge {
+            backdrop-filter: blur(10px);
+            background-color: rgba(255, 255, 255, 0.9);
+            color: #000;
+        }
+    </style>
+@endsection
+
+@push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Auto-submit form when filters change (desktop)
+            const desktopForm = document.getElementById('courseFiltersDesktop');
+            if (desktopForm) {
+                const inputs = desktopForm.querySelectorAll('input[type="checkbox"], input[type="text"]');
+                inputs.forEach(input => {
+                    if (input.type === 'text') {
+                        input.addEventListener('keypress', function(e) {
+                            if (e.key === 'Enter') {
+                                desktopForm.submit();
+                            }
+                        });
+                    } else {
+                        input.addEventListener('change', function() {
+                            desktopForm.submit();
+                        });
+                    }
+                });
+            }
+
+            // Load mobile filters
+            const mobileFilters = document.getElementById('mobileFilters');
+            const mobileFilterContent = document.getElementById('mobileFilterContent');
+
+            mobileFilters.addEventListener('show.bs.offcanvas', function() {
+                if (!mobileFilterContent.innerHTML) {
+                    // Clone desktop form content for mobile
+                    const desktopForm = document.getElementById('courseFiltersDesktop');
+                    if (desktopForm) {
+                        mobileFilterContent.innerHTML = desktopForm.innerHTML;
+
+                        // Add auto-submit for mobile filters too
+                        const mobileInputs = mobileFilterContent.querySelectorAll('input[type="checkbox"]');
+                        mobileInputs.forEach(input => {
+                            input.addEventListener('change', function() {
+                                document.getElementById('courseFiltersDesktop').submit();
+                            });
+                        });
+                    }
+                }
+            });
+
+            // Show loading state on form submit
+            const forms = document.querySelectorAll('form[id*="Filters"]');
+            forms.forEach(form => {
+                form.addEventListener('submit', function() {
+                    const submitBtn = this.querySelector('button[type="submit"]');
+                    if (submitBtn) {
+                        submitBtn.innerHTML =
+                        '<i class="bi bi-hourglass-split me-2"></i>Loading...';
+                        submitBtn.disabled = true;
+                    }
+                });
+            });
+        });
+
+        // Initialize tooltips and popovers
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tooltip initialization
+            const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            const tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+
+            // Popover initialization
+            const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
+            const popoverList = popoverTriggerList.map(function(popoverTriggerEl) {
+                return new bootstrap.Popover(popoverTriggerEl);
+            });
+
+            // Read more functionality for Option 4
+            const readMoreLinks = document.querySelectorAll('.read-more');
+            readMoreLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const parent = this.closest('.language-truncate');
+                    const fullText = parent.getAttribute('data-full-text');
+                    parent.innerHTML = fullText;
+                });
+            });
+        });
+    </script>
+@endpush

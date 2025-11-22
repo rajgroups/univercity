@@ -83,7 +83,7 @@
 
                              <div class="col-sm-6 col-12">
                                 <div class="mb-3">
-                                    <label class="form-label">Prefix <span class="text-danger">*</span></label>
+                                    <label class="form-label">Sector Code <span class="text-danger">*</span></label>
                                     <input type="text" name="prefix" value="{{ old('prefix') }}"
                                         class="form-control @error('prefix') is-invalid @enderror" id="prefix-name">
                                     @error('prefix')

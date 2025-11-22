@@ -215,88 +215,77 @@ class WebController extends Controller
     }
 
     public function globalcourse(Request $request)
-    {
+{
+    $query = IntlCourse::query();
 
-        $query = IntlCourse::query();
+    // ✅ Must Active Course Only (using publish_status instead of status)
+    $query->where('publish_status', 1);
 
-        // ✅ Must Active Course Only
-        $query->where('status', 1);
-
-        // 🔍 Search filter (by title or description)
-        if ($request->has('search') && !empty($request->search)) {
-            $search = $request->search;
-            $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%$search%")
-                    ->orWhere('short_description', 'like', "%$search%");
-            });
-        }
-
-        // 🌐 Language filter
-        if ($request->has('languages')) {
-            $query->whereIn('language', $request->input('languages'));
-        }
-
-        // ⏱️ Duration filter
-        if ($request->has('durations')) {
-            $durationConditions = [];
-            foreach ($request->input('durations') as $duration) {
-                if ($duration === '1-2 Hours') {
-                    $durationConditions[] = ['duration', 'like', '%1-2%'];
-                } elseif ($duration === '3+ Hours') {
-                    $durationConditions[] = ['duration', 'like', '%3+%'];
-                }
-            }
-            $query->where(function ($q) use ($durationConditions) {
-                foreach ($durationConditions as $condition) {
-                    $q->orWhere([$condition]);
-                }
-            });
-        }
-
-        // 🎓 Learning Product Type filter
-        if ($request->has('product_types')) {
-            $query->whereIn('learning_product_type', $request->input('product_types'));
-        }
-
-        // 💰 Price filter
-        if ($request->has('prices')) {
-            $query->where(function ($q) use ($request) {
-                if (in_array('Free', $request->input('prices'))) {
-                    $q->orWhere('paid_type', 'Free');
-                }
-                if (in_array('Paid', $request->input('prices'))) {
-                    $q->orWhere('paid_type', 'Paid');
-                }
-            });
-        }
-
-        // 🏭 Sector filter
-        if ($request->has('sectors')) {
-            $query->whereIn('sector_id', $request->input('sectors'));
-        }
-
-        // 🌍 Country filter
-        if ($request->has('country')) {
-            $query->whereIn('country_id', $request->input('country'));
-        }
-
-        // 📂 Category filter
-        if ($request->has('categories')) {
-            $query->whereIn('category_id', $request->input('categories'));
-        }
-
-        // 📊 Get results with pagination
-        $courses = $query->paginate(10);
-
-        // Dropdown filter options
-        $sectors = Sector::where('type',2)->get();
-        $countries = Country::where('status', 1)->get();
-        $categories = Category::where('type', 6)->get();
-
-        return view('web.globalcourse', compact('courses', 'sectors', 'countries', 'categories'));
+    // 🔍 Search filter (by course_title or short_description)
+    if ($request->has('search') && !empty($request->search)) {
+        $search = $request->search;
+        $query->where(function ($q) use ($search) {
+            $q->where('course_title', 'like', "%$search%")
+              ->orWhere('short_description', 'like', "%$search%");
+        });
     }
 
+    // 🌐 Language filter (using JSON field)
+    if ($request->has('languages') && !empty($request->languages)) {
+        $query->where(function ($q) use ($request) {
+            foreach ($request->languages as $language) {
+                $q->orWhereJsonContains('language_of_instruction', $language);
+            }
+        });
+    }
 
+    // ⏱️ Duration filter (using course_duration_overseas)
+    if ($request->has('durations') && !empty($request->durations)) {
+        $query->where(function ($q) use ($request) {
+            foreach ($request->durations as $duration) {
+                $q->orWhere('course_duration_overseas', 'like', "%$duration%");
+            }
+        });
+    }
+
+    // 💰 Price filter (using paid_type)
+    if ($request->has('prices') && !empty($request->prices)) {
+        $query->whereIn('paid_type', $request->prices);
+    }
+
+    // 🏭 Sector filter
+    if ($request->has('sectors') && !empty($request->sectors)) {
+        $query->whereIn('sector_id', $request->sectors);
+    }
+
+    // 🌍 Country filter
+    if ($request->has('countries') && !empty($request->countries)) {
+        $query->whereIn('country_id', $request->countries);
+    }
+
+    // 📂 Category filter
+    if ($request->has('categories') && !empty($request->categories)) {
+        $query->whereIn('category_id', $request->categories);
+    }
+
+    // 🎓 Pathway Type filter
+    if ($request->has('pathways') && !empty($request->pathways)) {
+        $query->whereIn('pathway_type', $request->pathways);
+    }
+
+    // 📊 Get results with pagination and relationships
+    $courses = $query->with(['sector', 'country', 'category'])
+                    ->orderBy('display_order', 'asc')
+                    ->orderBy('created_at', 'desc')
+                    ->paginate(12);
+
+    // Dropdown filter options
+    $sectors = Sector::where('status', 1)->where('type', 2)->get();
+    $countries = Country::where('status', 1)->get();
+    $categories = Category::where('type', 6)->get();
+
+    return view('web.globalcourse', compact('courses', 'sectors', 'countries', 'categories'));
+}
     public function course(Request $request)
     {
         $query = Course::query();
@@ -311,133 +300,190 @@ class WebController extends Controller
         }
 
         // Language filter
-        if ($request->has('languages')) {
-            $query->whereIn('language', $request->input('languages'));
+        if ($request->has('languages') && !empty($request->languages)) {
+            $query->where(function($q) use ($request) {
+                foreach ($request->languages as $language) {
+                    $q->orWhereJsonContains('language', $language);
+                }
+            });
         }
 
-        // Duration filter
-        if ($request->has('durations')) {
-            $durationConditions = [];
-            foreach ($request->input('durations') as $duration) {
-                if ($duration === '1-2 Hours') {
-                    $durationConditions[] = ['duration', 'like', '%1-2%'];
-                } elseif ($duration === '3+ Hours') {
-                    $durationConditions[] = ['duration', 'like', '%3+%'];
-                }
-            }
-            $query->where(function($q) use ($durationConditions) {
-                foreach ($durationConditions as $condition) {
-                    $q->orWhere([$condition]);
+        // Duration filter - Based on your filter options
+        if ($request->has('durations') && !empty($request->durations)) {
+            $query->where(function($q) use ($request) {
+                foreach ($request->durations as $duration) {
+                    switch ($duration) {
+                        case '1-3 months':
+                            $q->orWhere(function($subQ) {
+                                $subQ->where('duration_unit', 'months')
+                                    ->whereBetween('duration_number', [1, 3]);
+                            });
+                            break;
+
+                        case '3-6 months':
+                            $q->orWhere(function($subQ) {
+                                $subQ->where('duration_unit', 'months')
+                                    ->whereBetween('duration_number', [3, 6]);
+                            });
+                            break;
+
+                        case '6-12 months':
+                            $q->orWhere(function($subQ) {
+                                $subQ->where('duration_unit', 'months')
+                                    ->whereBetween('duration_number', [6, 12]);
+                            });
+                            break;
+
+                        case '1+ years':
+                            $q->orWhere(function($subQ) {
+                                $subQ->where(function($q1) {
+                                    $q1->where('duration_unit', 'years')
+                                    ->where('duration_number', '>=', 1);
+                                })->orWhere(function($q2) {
+                                    $q2->where('duration_unit', 'months')
+                                    ->where('duration_number', '>=', 12);
+                                });
+                            });
+                            break;
+                    }
                 }
             });
         }
 
         // Learning Product Type filter
-        if ($request->has('product_types')) {
-            $query->whereIn('learning_product_type', $request->input('product_types'));
+        if ($request->has('product_types') && !empty($request->product_types)) {
+            $query->whereIn('learning_product_type', $request->product_types);
         }
 
         // Price filter
-        if ($request->has('prices')) {
-            if (in_array('Free', $request->input('prices'))) {
-                $query->where('paid_type', 'Free');
-            }
-            if (in_array('Paid', $request->input('prices'))) {
-                $query->orWhere('paid_type', 'Paid');
-            }
+        if ($request->has('prices') && !empty($request->prices)) {
+            $query->where(function($q) use ($request) {
+                if (in_array('free', $request->prices)) {
+                    $q->orWhere('paid_type', 'free');
+                }
+                if (in_array('paid', $request->prices)) {
+                    $q->orWhere('paid_type', 'paid');
+                }
+            });
         }
 
         // Sector filter
-        if ($request->has('sectors')) {
-            $query->whereIn('sector_id', $request->input('sectors'));
+        if ($request->has('sectors') && !empty($request->sectors)) {
+            $query->whereIn('sector_id', $request->sectors);
         }
 
         $courses = $query->paginate(10);
-        $sectors = Sector::where('type',1)->get(); // For sector filter options
+        $sectors = Sector::where('type', 1)->get();
 
         return view('web.course', compact('courses', 'sectors'));
     }
 
-    public function globalcourseDetails(Request $request,$slug){
+    public function globalcourseDetails(Request $request, $slug)
+{
+    // Find Course Record From IntlCourse table with relationships
+    $course = IntlCourse::with([
+            'country' => function ($q) {
+                $q->select('id', 'name');
+            },
+            'sector' => function ($q) {
+                $q->select('id', 'name');
+            },
+            'category' => function ($q) {
+                $q->select('id', 'name');
+            }
+        ])
+        ->where('slug', $slug)
+        ->where('publish_status', 1)
+        ->firstOrFail();
+
+    // Get other related courses (same sector or category)
+    $otherCourses = IntlCourse::where('slug', '!=', $slug)
+        ->where('publish_status', 1)
+        ->where(function($query) use ($course) {
+            $query->where('sector_id', $course->sector_id)
+                  ->orWhere('category_id', $course->category_id)
+                  ->orWhere('country_id', $course->country_id);
+        })
+        ->latest()
+        ->limit(6)
+        ->get();
+
+    // Get all sectors for sidebar (if needed)
+    $sectors = Sector::where('status', 1)->get();
+
+    // Fetch banners
+    $banners = Banner::where('status', 1)->select('image')->get();
+
+    return view('web.globalcoursedetails', compact(
+        'banners',
+        'course',
+        'sectors',
+        'otherCourses'
+    ));
+}
+
+    public function courseDetails(Request $request, $slug)
+    {
         // Find Course Record From Course table
-        $course = IntlCourse::with([
-                'country' => function ($q) {
-                    $q->select('id', 'name'); // ✅ load only id + name
-                },
-                'category' => function ($q) {
-                    $q->select('id', 'name'); // ✅ load only id + name
+        $course = Course::where('slug', $slug)->first();
+
+        if (!$course) {
+            abort(404);
+        }
+
+        // Decode JSON fields for frontend with proper error handling
+        $jsonFields = ['language', 'location', 'occupations', 'minimum_education', 'learning_tools', 'topics', 'other_specifications', 'gallery'];
+
+        foreach ($jsonFields as $field) {
+            if (!empty($course->$field)) {
+                if (is_string($course->$field)) {
+                    try {
+                        $decoded = json_decode($course->$field, true);
+                        $course->$field = (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) ? $decoded : [];
+                    } catch (\Exception $e) {
+                        $course->$field = [];
+                    }
                 }
-            ])->where('slug',$slug)->first();
+            } else {
+                $course->$field = [];
+            }
+        }
 
-        // get All Sectors
-        $sectors = Sector::where('status',1)->get();
+        // Ensure gallery is always an array
+        if (empty($course->gallery) || !is_array($course->gallery)) {
+            $course->gallery = [];
+        }
 
+        // Get related courses (same sector, exclude current course)
+        $relatedCourses = Course::where('sector_id', $course->sector_id)
+            ->where('id', '!=', $course->id)
+            ->where('status', 1)
+            ->latest()
+            ->limit(10)
+            ->get();
 
-        // Get other courses except current one
-        $otherCourses = IntlCourse::where('slug', '!=', $slug)->latest()->limit(6)->get();
-
-        // ✅ Fetch latest 2-3 blogss
-        // $blogs = Blog::where('status', 1)->latest()->limit(3)->get();
-
-        // 1=>ongoing,2=>upcoming
-        $ongoingProjects = Project::where('status',1)->where('type',1)->latest()->limit(10)->get();
-        $upcomingProjects = Project::where('status',1)->where('type',2)->latest()->limit(10)->get();
-
-        // 1=>program,2=>Scheme
-        $programes = Announcement::where('status',1)->where('type',1)->latest()->limit(10)->get();
-        $schemes = Announcement::where('status',1)->where('type',2)->latest()->limit(10)->get();
-
-        // Fetch only active banners with image field
-        $banners = Banner::where('status', 1)->select('image')->get();
-                // dd($course);
-        return view('web.globalcoursedetails',compact(
-            'ongoingProjects',
-            'upcomingProjects',
-            'programes',
-            'schemes',
-            'banners',
-            'course',
-            'sectors',
-            'otherCourses',
-            // 'blogs',
-        ));
-    }
-    public function courseDetails(Request $request,$slug){
-        // Find Course Record From Course table
-        $course = Course::where('slug',$slug)->first();
-
-        // get All Sectors
-        $sectors = Sector::where('status',1)->get();
-
-
-        // Get other courses except current one
-        $otherCourses = Course::where('slug', '!=', $slug)->latest()->limit(6)->get();
-
-        // ✅ Fetch latest 2-3 blogs
-        // $blogs = Blog::where('status', 1)->latest()->limit(3)->get();
-
-        // 1=>ongoing,2=>upcoming
-        $ongoingProjects = Project::where('status',1)->where('type',1)->latest()->limit(10)->get();
-        $upcomingProjects = Project::where('status',1)->where('type',2)->latest()->limit(10)->get();
-
-        // 1=>program,2=>Scheme
-        $programes = Announcement::where('status',1)->where('type',1)->latest()->limit(10)->get();
-        $schemes = Announcement::where('status',1)->where('type',2)->latest()->limit(10)->get();
+        // Decode JSON fields for related courses
+        foreach ($relatedCourses as $relatedCourse) {
+            foreach ($jsonFields as $field) {
+                if (!empty($relatedCourse->$field)) {
+                    if (is_string($relatedCourse->$field)) {
+                        try {
+                            $decoded = json_decode($relatedCourse->$field, true);
+                            $relatedCourse->$field = (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) ? $decoded : [];
+                        } catch (\Exception $e) {
+                            $relatedCourse->$field = [];
+                        }
+                    }
+                } else {
+                    $relatedCourse->$field = [];
+                }
+            }
+        }
 
         // Fetch only active banners with image field
         $banners = Banner::where('status', 1)->select('image')->get();
 
-        return view('web.coursedetail',compact(
-            'ongoingProjects',
-            'upcomingProjects',
-            'programes',
-            'schemes',
-            'banners',
-            'course',
-            'sectors',
-            'otherCourses',
-            // 'blogs',
-        ));
+        return view('web.coursedetail', compact('course', 'banners', 'relatedCourses'));
     }
 
     public function catalog(Request $request)

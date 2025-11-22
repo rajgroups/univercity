@@ -8,6 +8,7 @@ use App\Models\Sector;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 class CourseController extends Controller
 {
@@ -16,8 +17,7 @@ class CourseController extends Controller
      */
     public function index()
     {
-        // List of Course
-        $courses = Course::all();
+        $courses = Course::with('sector')->latest()->get();
         return view('admin.course.list', compact('courses'));
     }
 
@@ -26,9 +26,7 @@ class CourseController extends Controller
      */
     public function create()
     {
-        // Create Course
-        $sectors = Sector::where('status',1)->where('type',1)->get();
-        // dd($sectors);
+        $sectors = Sector::where('status', 1)->where('type', 1)->get();
         return view('admin.course.create', compact('sectors'));
     }
 
@@ -37,102 +35,120 @@ class CourseController extends Controller
      */
     public function store(Request $request)
     {
+
         // Validate the request data
         $validated = $request->validate([
             'name'                      => 'required|string|max:255',
-            'short_name'                => 'required|in:Awareness,Foundation,Intermediate,Advanced,Professional',
-            'image'                     => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'duration'                  => 'nullable|string|max:100',
-            'paid_type'                 => 'required|in:Free,Paid,Nill',
+            'level'                     => 'required|in:Awareness,Foundation,Intermediate,Advanced,Professional',
+            'image'                     => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'gallery'                   => 'nullable|array',
+            'gallery.*'                 => 'image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'duration_number'           => 'nullable|integer|min:1',
+            'duration_unit'             => 'nullable|in:days,weeks,months,years',
+            'paid_type'                 => 'required|in:free,paid,na',
             'sector_id'                 => 'required|exists:sectors,id',
             'short_description'         => 'nullable|string',
             'long_description'          => 'nullable|string',
             'provider'                  => 'nullable|string|max:255',
-            'language'                  => 'nullable|string|max:100',
+            'language'                  => 'nullable|array',
             'certification_type'        => 'nullable|string|max:255',
             'assessment_mode'           => 'nullable|string|max:255',
-            'nsqf_level'                => 'nullable|string|max:50',
-            'credits_assigned'          => 'nullable|string|max:50',
-            'learning_product_type'     => 'nullable|string|max:255',
+            'course_code'               => 'nullable|string|max:50',
+            'nsqf_level'                => 'nullable|string|max:10',
+            'location'                  => 'nullable|array',
+            'mode_of_study'             => 'required|in:1,2,3,4',
             'program_by'                => 'nullable|string|max:255',
             'initiative_of'             => 'nullable|string|max:255',
-            'program'                   => 'nullable|string|max:255',
-            'domain'                    => 'nullable|string|max:255',
-            'occupations'               => 'nullable|string|max:255',
+            'internship'                => 'nullable|boolean',
+            'domain'                    => 'nullable|string|max:100',
+            'occupations'               => 'nullable|array',
             'required_age'              => 'nullable|string|max:50',
-            'minimum_education'         => 'nullable|string|max:255',
-            'industry_experience'       => 'nullable|string|max:255',
-            'learning_tools'            => 'nullable|string|max:255',
+            'minimum_education'         => 'nullable|array',
+            'industry_experience_years' => 'nullable|integer|min:0|max:50',
+            'industry_experience_desc'  => 'nullable|string|max:500',
+            'learning_tools'            => 'nullable|array',
             'start_date'                => 'nullable|date',
             'end_date'                  => 'nullable|date|after_or_equal:start_date',
             'is_featured'               => 'required|boolean',
-            'status'                    => 'required|in:0,1',
+            'status'                    => 'required|boolean',
             'enrollment_count'          => 'nullable|integer|min:0',
             'topics'                    => 'nullable|array',
             'topics.*.title'            => 'nullable|string|max:255',
             'topics.*.description'      => 'nullable|string',
+            'other_specifications'      => 'nullable|array',
+            'other_specifications.*.label' => 'nullable|string|max:255',
+            'other_specifications.*.description' => 'nullable|string',
         ]);
 
-        // Generate ISICO Course Code
-        $isicoCourseCode = $this->generateIsicoCourseCode($validated['sector_id'], $validated['short_name']);
 
-        if (!$isicoCourseCode) {
-            notyf()->addError('Failed to generate course code. Please try again.');
-            return back()->withInput();
-        }
-
-        // Handle image upload
-        if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $filename = time() . '_' . $image->getClientOriginalName();
-            $destinationPath = public_path('uploads/course');
-
-            // Create directory if not exists
-            if (!file_exists($destinationPath)) {
-                mkdir($destinationPath, 0777, true);
+        try {
+            // Handle main image upload
+            if ($request->hasFile('image')) {
+                $validated['image'] = $this->uploadImage($request->file('image'), 'courses');
             }
 
-            $image->move($destinationPath, $filename);
+            // Handle gallery images upload
+            if ($request->hasFile('gallery')) {
+                $galleryPaths = [];
+                foreach ($request->file('gallery') as $galleryImage) {
+                    $galleryPaths[] = $this->uploadImage($galleryImage, 'courses/gallery');
+                }
+                $validated['gallery'] = $galleryPaths;
+            }
 
-            // Store full path in DB
-            $validated['image'] = 'uploads/course/' . $filename;
+            // Generate slug
+            $validated['slug'] = Str::slug($validated['name']);
+
+            // Generate course code if not provided
+            if (empty($validated['course_code'])) {
+                $validated['course_code'] = $this->generateCourseCode($validated['sector_id'], $validated['level']);
+            }
+
+            // Convert JSON fields
+            $jsonFields = ['language', 'location', 'occupations', 'minimum_education', 'learning_tools', 'topics', 'other_specifications'];
+            foreach ($jsonFields as $field) {
+                if (isset($validated[$field])) {
+                    $validated[$field] = json_encode($validated[$field]);
+                }
+            }
+
+            // Handle duration combination
+            if ($validated['duration_number'] && $validated['duration_unit']) {
+                $validated['duration'] = $validated['duration_number'] . ' ' . $validated['duration_unit'];
+            }
+
+            // Set default values
+            $validated['internship'] = $request->boolean('internship');
+            $validated['is_featured'] = $request->boolean('is_featured');
+            $validated['status'] = $request->boolean('status');
+
+            // Create the course
+            Course::create($validated);
+
+            notyf()->addSuccess('Course created successfully!');
+            return redirect()->route('admin.course.index');
+
+        } catch (\Exception $e) {
+            Log::error('Course creation failed: ' . $e->getMessage());
+            notyf()->addError('Failed to create course. Please try again.');
+            // return back()->withInput();
+              return redirect()->route('admin.course.create')->withInput();
         }
-
-        // Generate slug
-        $validated['slug'] = Str::slug($validated['name']);
-
-        // Add the generated ISICO Course Code
-        $validated['qp_code'] = $isicoCourseCode;
-
-        // Convert topics array to JSON if present
-        if (isset($validated['topics'])) {
-            $validated['topics'] = json_encode($validated['topics']);
-        }
-
-        // Create the course
-        $course = Course::create($validated);
-        notyf()->addSuccess('Course created successfully!');
-        return redirect()->route('admin.course.index')
-            ->with('success', 'Course created successfully!');
     }
 
     /**
-     * Generate ISICO Course Code
-     * Format: ISICO + Sector Code + Level Code + Sequential Number (001)
-     * Example: ISICOAG01001
+     * Generate Course Code
      */
-    private function generateIsicoCourseCode($sectorId, $shortName)
+    private function generateCourseCode($sectorId, $level)
     {
         try {
-            // Get sector code (first 2 letters of sector name)
             $sector = Sector::find($sectorId);
             if (!$sector) {
                 return null;
             }
 
-            $sectorCode = $sector->prefix;
+            $sectorCode = $sector->prefix ?? substr(strtoupper($sector->name), 0, 2);
 
-            // Map short_name to level codes
             $levelCodes = [
                 'Awareness' => '01',
                 'Foundation' => '02',
@@ -141,21 +157,46 @@ class CourseController extends Controller
                 'Professional' => '05'
             ];
 
-            $levelCode = $levelCodes[$shortName] ?? '00';
+            $levelCode = $levelCodes[$level] ?? '00';
 
-            // Get the last course ID and increment
             $lastCourse = Course::orderBy('id', 'desc')->first();
             $sequentialNumber = $lastCourse ? str_pad($lastCourse->id + 1, 3, '0', STR_PAD_LEFT) : '001';
 
-            // Generate the full code
-            $courseCode = "ISICO{$sectorCode}{$levelCode}{$sequentialNumber}";
-
-            return $courseCode;
+            return "CRS{$sectorCode}{$levelCode}{$sequentialNumber}";
 
         } catch (\Exception $e) {
-            Log::error('Error generating ISICO course code: ' . $e->getMessage());
+            Log::error('Error generating course code: ' . $e->getMessage());
             return null;
         }
+    }
+
+    /**
+     * Upload Image
+     */
+    private function uploadImage($image, $folder = 'courses')
+    {
+        $filename = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+        $path = "uploads/{$folder}/{$filename}";
+
+        $destinationPath = public_path("uploads/{$folder}");
+        if (!file_exists($destinationPath)) {
+            mkdir($destinationPath, 0777, true);
+        }
+
+        $image->move($destinationPath, $filename);
+        return $path;
+    }
+
+    /**
+     * Delete Image
+     */
+    private function deleteImage($imagePath)
+    {
+        if ($imagePath && file_exists(public_path($imagePath))) {
+            unlink(public_path($imagePath));
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -163,104 +204,158 @@ class CourseController extends Controller
      */
     public function show(Course $course)
     {
-        //
+        return view('admin.course.show', compact('course'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit($id)
-    {
-        $course = Course::findOrFail($id); // This will throw 404 if not found
-        $sectors = Sector::where('type',1)->where('status',1)->get();
-        return view('admin.course.edit', compact('course', 'sectors'));
+public function edit($id)
+{
+    $course = Course::findOrFail($id);
+    $sectors = Sector::where('status', 1)->where('type', 1)->get();
+
+    // Decode JSON fields for editing
+    $jsonFields = ['language', 'location', 'occupations', 'minimum_education', 'learning_tools', 'topics', 'other_specifications', 'gallery'];
+    foreach ($jsonFields as $field) {
+        $value = $course->$field;
+        if ($value && is_string($value)) {
+            $decoded = json_decode($value, true);
+            $course->$field = json_last_error() === JSON_ERROR_NONE ? $decoded : [];
+        } elseif (empty($value)) {
+            $course->$field = [];
+        }
+        // If it's already an array, leave it as is
     }
+
+    return view('admin.course.edit', compact('course', 'sectors'));
+}
 
     /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, $id)
     {
+        $course = Course::findOrFail($id);
+
         // Validate the request data
         $validated = $request->validate([
             'name'                      => 'required|string|max:255',
-            'short_name'                => 'nullable|string|max:100',
-            'image'                     => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'duration'                  => 'nullable|string|max:100',
-            'paid_type'                 => 'required|in:Free,Paid,Nill',
+            'level'                     => 'required|in:Awareness,Foundation,Intermediate,Advanced,Professional',
+            'image'                     => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'gallery'                   => 'nullable|array',
+            'gallery.*'                 => 'image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'duration_number'           => 'nullable|integer|min:1',
+            'duration_unit'             => 'nullable|in:days,weeks,months,years',
+            'paid_type'                 => 'required|in:free,paid,na',
             'sector_id'                 => 'required|exists:sectors,id',
             'short_description'         => 'nullable|string',
             'long_description'          => 'nullable|string',
             'provider'                  => 'nullable|string|max:255',
-            'language'                  => 'nullable|string|max:100',
+            'language'                  => 'nullable|array',
             'certification_type'        => 'nullable|string|max:255',
             'assessment_mode'           => 'nullable|string|max:255',
-            'qp_code'                   => 'nullable|string|max:100',
-            'nsqf_level'                => 'nullable|string|max:50',
-            'credits_assigned'          => 'nullable|string|max:50',
-            'learning_product_type'     => 'nullable|string|max:255',
+            'course_code'               => 'nullable|string|max:50',
+            'nsqf_level'                => 'nullable|string|max:10',
+            'location'                  => 'nullable|array',
+            'mode_of_study'             => 'required|in:1,2,3,4',
             'program_by'                => 'nullable|string|max:255',
             'initiative_of'             => 'nullable|string|max:255',
-            'program'                   => 'nullable|string|max:255',
-            'domain'                    => 'nullable|string|max:255',
-            'occupations'               => 'nullable|string|max:255',
+            'internship'                => 'nullable|boolean',
+            'domain'                    => 'nullable|string|max:100',
+            'occupations'               => 'nullable|array',
             'required_age'              => 'nullable|string|max:50',
-            'minimum_education'         => 'nullable|string|max:255',
-            'industry_experience'       => 'nullable|string|max:255',
-            'learning_tools'            => 'nullable|string|max:255',
+            'minimum_education'         => 'nullable|array',
+            'industry_experience_years' => 'nullable|integer|min:0|max:50',
+            'industry_experience_desc'  => 'nullable|string|max:500',
+            'learning_tools'            => 'nullable|array',
             'start_date'                => 'nullable|date',
             'end_date'                  => 'nullable|date|after_or_equal:start_date',
             'is_featured'               => 'required|boolean',
-            'status'                    => 'required|in:0,1',
+            'status'                    => 'required|boolean',
             'enrollment_count'          => 'nullable|integer|min:0',
             'topics'                    => 'nullable|array',
             'topics.*.title'            => 'nullable|string|max:255',
             'topics.*.description'      => 'nullable|string',
+            'other_specifications'      => 'nullable|array',
+            'other_specifications.*.label' => 'nullable|string|max:255',
+            'other_specifications.*.description' => 'nullable|string',
         ]);
 
-        // Find the course
-        $course = Course::findOrFail($id);
-
-        // Handle image upload
-        if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $filename = time() . '_' . $image->getClientOriginalName();
-            $destinationPath = public_path('uploads/course');
-
-            // Create directory if not exists
-            if (!file_exists($destinationPath)) {
-                mkdir($destinationPath, 0777, true);
+        try {
+            // Handle main image upload
+            if ($request->hasFile('image')) {
+                // Delete old image
+                $this->deleteImage($course->image);
+                $validated['image'] = $this->uploadImage($request->file('image'), 'courses');
+            } elseif ($request->boolean('remove_image')) {
+                $this->deleteImage($course->image);
+                $validated['image'] = null;
             }
 
-            // Delete old image if exists
-            if ($course->image && file_exists(public_path($course->image))) {
-                unlink(public_path($course->image));
+            // Handle gallery images upload
+            if ($request->hasFile('gallery')) {
+                // Delete old gallery images
+                if ($course->gallery) {
+                    $oldGallery = json_decode($course->gallery, true);
+                    foreach ($oldGallery as $oldImage) {
+                        $this->deleteImage($oldImage);
+                    }
+                }
+
+                $galleryPaths = [];
+                foreach ($request->file('gallery') as $galleryImage) {
+                    $galleryPaths[] = $this->uploadImage($galleryImage, 'courses/gallery');
+                }
+                $validated['gallery'] = $galleryPaths;
+            } elseif ($request->boolean('remove_gallery')) {
+                if ($course->gallery) {
+                    $oldGallery = json_decode($course->gallery, true);
+                    foreach ($oldGallery as $oldImage) {
+                        $this->deleteImage($oldImage);
+                    }
+                }
+                $validated['gallery'] = null;
             }
 
-            $image->move($destinationPath, $filename);
-
-            // Store relative path in DB
-            $validated['image'] = 'uploads/course/' . $filename;
-        } elseif ($request->remove_image) {
-            // Remove current image if requested
-            if ($course->image && file_exists(public_path($course->image))) {
-                unlink(public_path($course->image));
+            // Generate slug if name changed
+            if ($course->name !== $validated['name']) {
+                $validated['slug'] = Str::slug($validated['name']);
             }
-            $validated['image'] = null;
+
+            // Convert JSON fields
+            $jsonFields = ['language', 'location', 'occupations', 'minimum_education', 'learning_tools', 'topics', 'other_specifications'];
+            foreach ($jsonFields as $field) {
+                if (isset($validated[$field])) {
+                    $validated[$field] = json_encode($validated[$field]);
+                } else {
+                    $validated[$field] = null;
+                }
+            }
+
+            // Handle duration combination
+            if ($validated['duration_number'] && $validated['duration_unit']) {
+                $validated['duration'] = $validated['duration_number'] . ' ' . $validated['duration_unit'];
+            } else {
+                $validated['duration'] = null;
+            }
+
+            // Set boolean values
+            $validated['internship'] = $request->boolean('internship');
+            $validated['is_featured'] = $request->boolean('is_featured');
+            $validated['status'] = $request->boolean('status');
+
+            // Update the course
+            $course->update($validated);
+
+            notyf()->addSuccess('Course updated successfully!');
+            return redirect()->route('admin.course.index');
+
+        } catch (\Exception $e) {
+            Log::error('Course update failed: ' . $e->getMessage());
+            notyf()->addError('Failed to update course. Please try again.');
+            // return back()->withInput();
         }
-
-        // Convert topics array to JSON if present
-        if (isset($validated['topics'])) {
-            $validated['topics'] = json_encode($validated['topics']);
-        } else {
-            $validated['topics'] = null;
-        }
-
-        // Update the course
-        $course->update($validated);
-        notyf()->addSuccess('Course updated successfully!');
-        return redirect()->route('admin.course.index')
-            ->with('success', 'Course updated successfully!');
     }
 
     /**
@@ -268,24 +363,30 @@ class CourseController extends Controller
      */
     public function destroy($id)
     {
-        // Find the course
         $course = Course::findOrFail($id);
 
-        // Delete associated image if exists
-        if ($course->image) {
-            // For Storage facade approach:
-            // Storage::delete('public/'.$course->image);
+        try {
+            // Delete main image
+            $this->deleteImage($course->image);
 
-            // For direct filesystem approach (matches your update method):
-            if (file_exists(public_path($course->image))) {
-                unlink(public_path($course->image));
+            // Delete gallery images
+            if ($course->gallery) {
+                $galleryImages = json_decode($course->gallery, true);
+                foreach ($galleryImages as $image) {
+                    $this->deleteImage($image);
+                }
             }
-        }
 
-        // Delete the course
-        $course->delete();
-        notyf()->addSuccess('Course deleted successfully!');
-        return redirect()->route('admin.course.index')
-            ->with('success', 'Course deleted successfully!');
+            // Delete the course
+            $course->delete();
+
+            notyf()->addSuccess('Course deleted successfully!');
+            return redirect()->route('admin.course.index');
+
+        } catch (\Exception $e) {
+            Log::error('Course deletion failed: ' . $e->getMessage());
+            notyf()->addError('Failed to delete course. Please try again.');
+            return back();
+        }
     }
 }

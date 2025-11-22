@@ -35,170 +35,318 @@ class IntlCourseController extends Controller
         return view('admin.intlcourse.create', compact('sectors','countrys','categories'));
     }
 
-    /**
+        /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
-        // Validate the request data
+        // Validate the request
         $validated = $request->validate([
-            // Provider & Affiliation Details
-            'admin_provider' => 'nullable|string|max:255',
-            'partner' => 'required|string|max:255',
+            // Section 1: Provider and Affiliation
+            'admission_provider' => 'required|in:ISICO,Overseas Partner',
+            'overseas_partner_institution' => 'required|string|max:255',
             'accreditation_recognition' => 'nullable|string|max:255',
+            'country_id' => 'required|exists:countries,id',
 
-            // Course Details
-            'course_name' => 'required|string|max:255',
-            'level' => 'required|string|max:100',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            // Section 2: Course Information
+            'course_code' => 'nullable|string|max:255|unique:intlcourses,course_code',
+            'course_title' => 'required|string|max:255',
             'sector_id' => 'required|exists:sectors,id',
             'category_id' => 'required|exists:category,id',
-            'pathway_type' => 'required|in:online_pathway,onsite_abroad,hybrid,dual_credit,twinning_program',
-            'country_id' => 'required|exists:countries,id',
-            'language_instruction' => 'required|string|max:100',
-            'learning_product_type' => 'nullable|string|max:255',
-            'paid_type' => 'required|in:Free,Paid',
-            'short_description' => 'required|string',
-            'long_description' => 'required|string',
+            'certification_type' => 'required|string|max:255',
+            'language_of_instruction' => 'required|array',
+            'language_of_instruction.*' => 'string',
+            'course_details' => 'required|string',
+            'pathway_type' => 'required|string|max:255',
+            'mode_of_study' => 'required|array',
+            'mode_of_study.*' => 'string',
+            'intake_months' => 'required|array',
+            'intake_months.*' => 'string',
 
-            // Additional Course Details
-            'certification_type' => 'nullable|string|max:255',
-            'isico_course_code' => 'required|string|max:100',
-            'international_mapping' => 'nullable|string|max:255',
-            'credits_transferable' => 'nullable|in:Yes,No',
-            'max_credits' => 'nullable|integer|min:0',
-            'internship' => 'nullable|string|max:255',
-
-            // Delivery & Assessment
-            'provider' => 'required|string|max:255',
-            'assessment_mode' => 'required|string|max:255',
-            'learning_tools' => 'required|string|max:255',
-            'bridge_modules' => 'nullable|string|max:255',
-
-            // Eligibility Details
-            'required_age' => 'required|string|max:50',
+            // Section 2: Eligibility
             'minimum_education' => 'required|string|max:255',
-            'industry_experience' => 'required|string|max:255',
-            'language_proficiency_requirement' => 'nullable|string|max:255',
-            'visa_proccess' => 'required|string',
-            'other_info' => 'required|string',
+            'minimum_age' => 'required|integer|min:16|max:50',
+            'work_experience_required' => 'boolean',
+            'work_experience_details' => 'nullable|string',
+            'language_proficiency' => 'required|string|max:255',
 
-            // QP & NSQF & Credit
-            'nsqf_level' => 'required|string|max:50',
-            'credits_assigned' => 'required|string|max:50',
-            'program_by' => 'required|string|max:255',
-            'initiative_of' => 'required|string|max:255',
-            'program' => 'required|string|max:255',
-            'occupations' => 'required|string|max:255',
+            // Section 3: Course Duration & Fee Structure
+            'course_duration_overseas' => 'required|string|max:255',
+            'internship_included' => 'boolean',
+            'internship_duration' => 'nullable|string|max:255',
+            'internship_summary' => 'nullable|string',
+            'local_training' => 'boolean',
+            'local_training_duration' => 'nullable|string|max:255',
+            'total_duration' => 'required|string|max:255',
+            'paid_type' => 'required|in:Paid,Free',
+            'total_fees' => 'nullable|string|max:255',
 
-            // Topics
-            'topics' => 'nullable|array',
-            'topics.*.title' => 'nullable|string|max:255',
-            'topics.*.description' => 'nullable|string',
+            // Section 3(B): Financial Assistance
+            'scholarship_available' => 'boolean',
+            'scholarship_notes' => 'nullable|string',
+            'bank_loan_assistance' => 'boolean',
+            'loan_assistance_notes' => 'nullable|string',
 
-            // Logistics & Costs
-            'duration_local' => 'nullable|string|max:255',
-            'duration_overseas' => 'nullable|string|max:255',
-            'total_duration' => 'nullable|string|max:255',
-            'fee_structure' => 'nullable|string|max:255',
-            'scholarship_funding' => 'nullable|string|max:255',
-            'accommodation_cost' => 'nullable|string|max:255',
+            // Section 4: Learning Outcomes
+            'career_outcomes' => 'required|string',
+            'next_pathways' => 'nullable|string',
 
-            // Pathway & Outcomes
-            'next_degree' => 'nullable|string|max:255',
-            'career_outcomes_json' => 'nullable|string',
-            'international_recognition' => 'nullable|string|max:255',
-            'pathway_next_courses' => 'nullable|string',
+            // Section 5: Visa / Logistics
+            'visa_support_included' => 'boolean',
+            'visa_notes' => 'nullable|string',
+            'accommodation_support' => 'boolean',
+            'accommodation_notes' => 'nullable|string',
 
-            // Dates & Status
-            'start_date' => 'required|date',
-            'end_date' => 'required|date|after_or_equal:start_date',
-            'is_featured' => 'required|boolean',
-            'status' => 'required|in:0,1',
-            'enrollment_count' => 'required|integer|min:0',
+            // Section 7: SEO & Media
+            'thumbnail_image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'gallery_images' => 'nullable|array',
+            'gallery_images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            'course_brochures' => 'nullable|array',
+            'course_brochures.*' => 'file|mimes:pdf,doc,docx|max:5120',
+            'short_description' => 'required|string|max:200',
+            'meta_description' => 'nullable|string',
+            'seo_keywords' => 'nullable|string|max:255',
+            'display_order' => 'nullable|integer|min:0',
+            'publish_status' => 'boolean',
         ]);
 
-        // Generate slug from course_name
-        $slug = Str::slug($validated['course_name']);
+        try {
+            DB::beginTransaction();
 
-        // ✅ Check if slug already exists
-        if (IntlCourse::where('slug', $slug)->exists()) {
-            notyf()->addError('A course with a similar name already exists. Please choose a different name');
-            return back()
-                ->withErrors(['course_name' => 'A course with a similar name already exists. Please choose a different name.'])
-                ->withInput();
-        }
+            // Initialize data array
+            $courseData = $validated;
 
-        // Handle image upload
-        if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $filename = time() . '_' . $image->getClientOriginalName();
-            $destinationPath = public_path('uploads/intlcourse');
+            // Process JSON data for arrays
+            $courseData['language_of_instruction'] = $validated['language_of_instruction'];
+            $courseData['mode_of_study'] = $validated['mode_of_study'];
+            $courseData['intake_months'] = $validated['intake_months'];
 
-            // Create directory if not exists
-            if (!file_exists($destinationPath)) {
-                mkdir($destinationPath, 0777, true);
+            // Process topics/syllabus
+            if ($request->has('topics')) {
+                $topics = [];
+                foreach ($request->topics as $topic) {
+                    if (!empty($topic['module_title']) && !empty($topic['outline'])) {
+                        $topics[] = [
+                            'module_title' => $topic['module_title'],
+                            'outline' => $topic['outline']
+                        ];
+                    }
+                }
+                $courseData['topics_syllabus'] = $topics;
             }
 
-            $image->move($destinationPath, $filename);
+            // Process career outcomes using helper
+            $courseData['career_outcomes'] = $this->processMultiLineText($validated['career_outcomes']);
 
-            // Store full path in DB
-            $validated['image'] = 'uploads/intlcourse/' . $filename;
-        }
+            // Process next pathways using helper
+            if (!empty($validated['next_pathways'])) {
+                $courseData['next_pathways'] = $this->processMultiLineText($validated['next_pathways']);
+            }
 
-        // Add slug to validated data
-        $validated['slug'] = $slug;
+            // Handle thumbnail image upload using helper
+            if ($request->hasFile('thumbnail_image')) {
+                $courseData['thumbnail_image'] = $this->handleFileUpload(
+                    $request->file('thumbnail_image'),
+                    'uploads/intlcourse'
+                );
+            }
 
-        // Convert topics array to JSON if present
-        if (isset($validated['topics'])) {
-            $validated['topics'] = json_encode($validated['topics']);
-        }
+            // Handle gallery images upload using helper
+            if ($request->hasFile('gallery_images')) {
+                $galleryImages = [];
+                foreach ($request->file('gallery_images') as $galleryImage) {
+                    $galleryImages[] = $this->handleFileUpload(
+                        $galleryImage,
+                        'uploads/intlcourse/gallery'
+                    );
+                }
+                $courseData['gallery_images'] = $galleryImages;
+            }
 
-        // Handle career outcomes JSON
-        if ($request->has('career_outcomes_json') && !empty($request->career_outcomes_json)) {
-            $validated['career_outcomes'] = $request->career_outcomes_json;
-        }
+            // Handle course brochures upload using helper
+            if ($request->hasFile('course_brochures')) {
+                $brochures = [];
+                foreach ($request->file('course_brochures') as $brochure) {
+                    $filePath = $this->handleFileUpload(
+                        $brochure,
+                        'uploads/intlcourse/brochures'
+                    );
+                    $brochures[] = [
+                        'document_name' => $brochure->getClientOriginalName(),
+                        'file_path' => $filePath
+                    ];
+                }
+                $courseData['course_brochures'] = $brochures;
+            }
 
-        // ✅ Auto-generate qp_code
-        $country = DB::table('countries')->where('id', $validated['country_id'])->first();
-        $countryIso = strtoupper($country->iso2 ?? 'XX');
+            // Process overseas fee breakdown
+            if ($request->has('overseas_fee_breakdown')) {
+                $overseasFees = [];
+                foreach ($request->overseas_fee_breakdown as $fee) {
+                    if (!empty($fee['label']) && !empty($fee['amount'])) {
+                        $overseasFees[] = [
+                            'label' => $fee['label'],
+                            'amount' => floatval($fee['amount']),
+                            'currency' => $fee['currency'] ?? 'USD'
+                        ];
+                    }
+                }
+                if (!empty($overseasFees)) {
+                    $courseData['overseas_fee_breakdown'] = $overseasFees;
+                }
+            }
 
-        // Get the latest serial for this country
-        $lastCourse = IntlCourse::where('qp_code', 'like', "ISICO{$countryIso}%")
-            ->orderByDesc('id')
-            ->first();
+            // Process local training fees
+            if ($request->has('local_training_fee')) {
+                $localFees = [];
+                foreach ($request->local_training_fee as $fee) {
+                    if (!empty($fee['label']) && !empty($fee['amount'])) {
+                        $localFees[] = [
+                            'label' => $fee['label'],
+                            'amount' => floatval($fee['amount']),
+                            'currency' => $fee['currency'] ?? 'USD'
+                        ];
+                    }
+                }
+                if (!empty($localFees)) {
+                    $courseData['local_training_fee'] = $localFees;
+                }
+            }
 
-        if ($lastCourse && preg_match('/(\d+)$/', $lastCourse->qp_code, $matches)) {
-            $nextNumber = intval($matches[1]) + 1;
-        } else {
-            $nextNumber = 1;
-        }
+            // Process living costs
+            if ($request->has('living_costs')) {
+                $livingCosts = [];
+                foreach ($request->living_costs as $cost) {
+                    if (!empty($cost['label']) && !empty($cost['amount'])) {
+                        $livingCosts[] = [
+                            'label' => $cost['label'],
+                            'amount' => floatval($cost['amount']),
+                            'currency' => $cost['currency'] ?? 'USD'
+                        ];
+                    }
+                }
+                if (!empty($livingCosts)) {
+                    $courseData['living_costs'] = $livingCosts;
+                }
+            }
 
-        $formattedNumber = str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
-        $validated['qp_code'] = "ISICO{$countryIso}{$formattedNumber}";
+            // Process FAQs
+            if ($request->has('faqs')) {
+                $faqs = [];
+                foreach ($request->faqs as $faq) {
+                    if (!empty($faq['question']) && !empty($faq['answer'])) {
+                        $faqs[] = [
+                            'question' => $faq['question'],
+                            'answer' => $faq['answer']
+                        ];
+                    }
+                }
+                if (!empty($faqs)) {
+                    $courseData['faqs'] = $faqs;
+                }
+            }
 
-        // Clean up the data - remove fields that don't exist in the model
-        $modelFields = [
-            'admin_provider', 'partner', 'accreditation_recognition', 'course_name', 'level',
-            'image', 'sector_id', 'category_id', 'pathway_type', 'country_id', 'language_instruction',
-            'learning_product_type', 'paid_type', 'short_description', 'long_description', 'certification_type',
-            'isico_course_code', 'international_mapping', 'credits_transferable', 'max_credits', 'internship',
-            'provider', 'assessment_mode', 'learning_tools', 'bridge_modules', 'required_age', 'minimum_education',
-            'industry_experience', 'language_proficiency_requirement', 'visa_proccess', 'other_info', 'qp_code',
-            'nsqf_level', 'credits_assigned', 'program_by', 'initiative_of', 'program', 'occupations', 'topics',
-            'duration_local', 'duration_overseas', 'total_duration', 'fee_structure', 'scholarship_funding',
-            'accommodation_cost', 'next_degree', 'career_outcomes', 'international_recognition', 'pathway_next_courses',
-            'start_date', 'end_date', 'is_featured', 'status', 'enrollment_count', 'slug'
-        ];
+            // Generate unique slug using helper
+            $courseData['slug'] = $this->generateUniqueSlug($validated['course_title']);
 
-        $createData = array_intersect_key($validated, array_flip($modelFields));
+            // Set default values for boolean fields
+            $courseData['work_experience_required'] = $request->boolean('work_experience_required');
+            $courseData['internship_included'] = $request->boolean('internship_included');
+            $courseData['local_training'] = $request->boolean('local_training');
+            $courseData['scholarship_available'] = $request->boolean('scholarship_available');
+            $courseData['bank_loan_assistance'] = $request->boolean('bank_loan_assistance');
+            $courseData['visa_support_included'] = $request->boolean('visa_support_included');
+            $courseData['accommodation_support'] = $request->boolean('accommodation_support');
+            $courseData['publish_status'] = $request->boolean('publish_status');
 
-        // Create the course
-        $course = IntlCourse::create($createData);
+            // Set default display order
+            if (empty($courseData['display_order'])) {
+                $courseData['display_order'] = 0;
+            }
 
-        notyf()->addSuccess('International Course created successfully!');
+            // Create the course
+            $course = IntlCourse::create($courseData);
+
+            DB::commit();
+
+            notyf()->addSuccess('International course created successfully!');
         return redirect()->route('admin.intlcourse.index')
-            ->with('success', 'International Course created successfully!');
+            ->with('success', 'International course created successfully!');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            // Clean up uploaded files if error occurs
+            $this->cleanupUploadedFiles($courseData);
+
+            return redirect()->back()
+                ->with('error', 'Error creating course: ' . $e->getMessage())
+                ->withInput();
+        }
+    }
+
+    /**
+     * Process multi-line text to array for JSON storage
+     */
+    private function processMultiLineText($text)
+    {
+        return array_filter(array_map('trim', explode("\n", $text)));
+    }
+
+    /**
+     * Handle file upload with directory creation
+     */
+    private function handleFileUpload($file, $directory)
+    {
+        $filename = time() . '_' . uniqid() . '_' . $file->getClientOriginalName();
+        $destinationPath = public_path($directory);
+
+        // Create directory if not exists
+        if (!file_exists($destinationPath)) {
+            mkdir($destinationPath, 0777, true);
+        }
+
+        $file->move($destinationPath, $filename);
+        return $directory . '/' . $filename;
+    }
+
+    /**
+     * Ensure unique slug
+     */
+    private function generateUniqueSlug($title, $existingSlug = null)
+    {
+        $slug = $existingSlug ?: Str::slug($title);
+        $counter = 1;
+        $originalSlug = $slug;
+
+        while (IntlCourse::where('slug', $slug)->exists()) {
+            $slug = $originalSlug . '-' . $counter;
+            $counter++;
+        }
+
+        return $slug;
+    }
+
+    /**
+     * Cleanup uploaded files in case of error
+     */
+    private function cleanupUploadedFiles($courseData)
+    {
+        if (isset($courseData['thumbnail_image'])) {
+            @unlink(public_path($courseData['thumbnail_image']));
+        }
+
+        if (isset($courseData['gallery_images'])) {
+            foreach ($courseData['gallery_images'] as $image) {
+                @unlink(public_path($image));
+            }
+        }
+
+        if (isset($courseData['course_brochures'])) {
+            foreach ($courseData['course_brochures'] as $brochure) {
+                @unlink(public_path($brochure['file_path']));
+            }
+        }
     }
     /**
      * Display the specified resource.
@@ -213,179 +361,265 @@ class IntlCourseController extends Controller
      */
     public function edit($id)
     {
-        $course = IntlCourse::findOrFail($id); // This will throw 404 if not found
-        $countrys = Country::where('status',1)->get();
-        $categories = Category::where('type',6)->get();
-        $sectors = Sector::where('status', 1)->where('type',2)->get();
-        return view('admin.intlcourse.edit', compact('course', 'sectors','countrys','categories'));
+        // Fetch the course with relationships
+        $course = IntlCourse::with(['sector', 'country', 'category'])->findOrFail($id);
+
+        // Get dropdown data
+        $sectors = Sector::where('status', 1)->where('type', 2)->get();
+        $countrys = Country::where('status', 1)->get();
+        $categories = Category::where('type', 6)->get();
+
+        return view('admin.intlcourse.edit', compact('course', 'sectors', 'countrys', 'categories'));
     }
 
-    /**
+        /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, $id)
     {
-        // Validate the request data
-        $validated = $request->validate([
-            // Provider & Affiliation Details
-            'admin_provider' => 'nullable|string|max:255',
-            'partner' => 'required|string|max:255',
-            'accreditation_recognition' => 'nullable|string|max:255',
-
-            // Course Details
-            'course_name' => 'required|string|max:255',
-            'level' => 'required|string|max:100',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'sector_id' => 'required|exists:sectors,id',
-            'category_id' => 'required|exists:category,id',
-            'pathway_type' => 'required|in:online_pathway,onsite_abroad,hybrid,dual_credit,twinning_program',
-            'country_id' => 'required|exists:countries,id',
-            'language_instruction' => 'required|string|max:100',
-            'learning_product_type' => 'nullable|string|max:255',
-            'paid_type' => 'required|in:Free,Paid',
-            'short_description' => 'required|string',
-            'long_description' => 'required|string',
-
-            // Additional Course Details
-            'certification_type' => 'nullable|string|max:255',
-            'isico_course_code' => 'required|string|max:100',
-            'international_mapping' => 'nullable|string|max:255',
-            'credits_transferable' => 'nullable|in:Yes,No',
-            'max_credits' => 'nullable|integer|min:0',
-            'internship' => 'nullable|string|max:255',
-
-            // Delivery & Assessment
-            'provider' => 'required|string|max:255',
-            'assessment_mode' => 'required|string|max:255',
-            'learning_tools' => 'required|string|max:255',
-            'bridge_modules' => 'nullable|string|max:255',
-
-            // Eligibility Details
-            'required_age' => 'required|string|max:50',
-            'minimum_education' => 'required|string|max:255',
-            'industry_experience' => 'required|string|max:255',
-            'language_proficiency_requirement' => 'nullable|string|max:255',
-            'visa_proccess' => 'required|string',
-            'other_info' => 'required|string',
-
-            // QP & NSQF & Credit
-            'qp_code' => 'required|string|max:100',
-            'nsqf_level' => 'required|string|max:50',
-            'credits_assigned' => 'required|string|max:50',
-            'program_by' => 'required|string|max:255',
-            'initiative_of' => 'required|string|max:255',
-            'program' => 'required|string|max:255',
-            'occupations' => 'required|string|max:255',
-
-            // Topics
-            'topics' => 'nullable|array',
-            'topics.*.title' => 'nullable|string|max:255',
-            'topics.*.description' => 'nullable|string',
-
-            // Logistics & Costs
-            'duration_local' => 'nullable|string|max:255',
-            'duration_overseas' => 'nullable|string|max:255',
-            'total_duration' => 'nullable|string|max:255',
-            'fee_structure' => 'nullable|string|max:255',
-            'scholarship_funding' => 'nullable|string|max:255',
-            'accommodation_cost' => 'nullable|string|max:255',
-
-            // Pathway & Outcomes
-            'next_degree' => 'nullable|string|max:255',
-            'career_outcomes_json' => 'nullable|string',
-            'international_recognition' => 'nullable|string|max:255',
-            'pathway_next_courses' => 'nullable|string',
-
-            // Dates & Status
-            'start_date' => 'required|date',
-            'end_date' => 'required|date|after_or_equal:start_date',
-            'is_featured' => 'required|boolean',
-            'status' => 'required|in:0,1',
-            'enrollment_count' => 'required|integer|min:0',
-        ]);
-
-        // Find the course
         $course = IntlCourse::findOrFail($id);
 
-        // Handle image upload
-        if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $filename = time() . '_' . $image->getClientOriginalName();
-            $destinationPath = public_path('uploads/intlcourse');
+        // Validate the request
+        $validated = $request->validate([
+            // Section 1: Provider and Affiliation
+            'admission_provider' => 'required|in:ISICO,Overseas Partner',
+            'overseas_partner_institution' => 'required|string|max:255',
+            'accreditation_recognition' => 'nullable|string|max:255',
+            'country_id' => 'required|exists:countries,id',
 
-            // Create directory if not exists
-            if (!file_exists($destinationPath)) {
-                mkdir($destinationPath, 0777, true);
+            // Section 2: Course Information
+            'course_code' => 'required|string|max:255|unique:intlcourses,course_code,' . $id,
+            'course_title' => 'required|string|max:255',
+            'sector_id' => 'required|exists:sectors,id',
+            'category_id' => 'required|exists:category,id',
+            'certification_type' => 'required|string|max:255',
+            'language_of_instruction' => 'required|array',
+            'language_of_instruction.*' => 'string',
+            'course_details' => 'required|string',
+            'pathway_type' => 'required|string|max:255',
+            'mode_of_study' => 'required|array',
+            'mode_of_study.*' => 'string',
+            'intake_months' => 'required|array',
+            'intake_months.*' => 'string',
+
+            // Section 2: Eligibility
+            'minimum_education' => 'required|string|max:255',
+            'minimum_age' => 'required|integer|min:16|max:50',
+            'work_experience_required' => 'boolean',
+            'work_experience_details' => 'nullable|string',
+            'language_proficiency' => 'required|string|max:255',
+
+            // Section 3: Course Duration & Fee Structure
+            'course_duration_overseas' => 'required|string|max:255',
+            'internship_included' => 'boolean',
+            'internship_duration' => 'nullable|string|max:255',
+            'internship_summary' => 'nullable|string',
+            'local_training' => 'boolean',
+            'local_training_duration' => 'nullable|string|max:255',
+            'total_duration' => 'required|string|max:255',
+            'paid_type' => 'required|in:Paid,Free',
+            'total_fees' => 'nullable|string|max:255',
+
+            // Section 3(B): Financial Assistance
+            'scholarship_available' => 'boolean',
+            'scholarship_notes' => 'nullable|string',
+            'bank_loan_assistance' => 'boolean',
+            'loan_assistance_notes' => 'nullable|string',
+
+            // Section 4: Learning Outcomes
+            'career_outcomes' => 'required|string',
+            'next_pathways' => 'nullable|string',
+
+            // Section 5: Visa / Logistics
+            'visa_support_included' => 'boolean',
+            'visa_notes' => 'nullable|string',
+            'accommodation_support' => 'boolean',
+            'accommodation_notes' => 'nullable|string',
+
+            // Section 7: SEO & Media
+            'thumbnail_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'gallery_images' => 'nullable|array',
+            'gallery_images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            'course_brochures' => 'nullable|array',
+            'course_brochures.*' => 'file|mimes:pdf,doc,docx|max:5120',
+            'short_description' => 'required|string|max:200',
+            'meta_description' => 'nullable|string',
+            'seo_keywords' => 'nullable|string|max:255',
+            'display_order' => 'nullable|integer|min:0',
+            'publish_status' => 'boolean',
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            // Initialize data array
+            $courseData = $validated;
+
+            // Process JSON data for arrays
+            $courseData['language_of_instruction'] = $validated['language_of_instruction'];
+            $courseData['mode_of_study'] = $validated['mode_of_study'];
+            $courseData['intake_months'] = $validated['intake_months'];
+
+            // Process topics/syllabus
+            if ($request->has('topics')) {
+                $topics = [];
+                foreach ($request->topics as $topic) {
+                    if (!empty($topic['module_title']) && !empty($topic['outline'])) {
+                        $topics[] = [
+                            'module_title' => $topic['module_title'],
+                            'outline' => $topic['outline']
+                        ];
+                    }
+                }
+                $courseData['topics_syllabus'] = $topics;
             }
 
-            // Delete old image if exists
-            if ($course->image && file_exists(public_path($course->image))) {
-                unlink(public_path($course->image));
+            // Process career outcomes using helper
+            $courseData['career_outcomes'] = $this->processMultiLineText($validated['career_outcomes']);
+
+            // Process next pathways using helper
+            if (!empty($validated['next_pathways'])) {
+                $courseData['next_pathways'] = $this->processMultiLineText($validated['next_pathways']);
             }
 
-            $image->move($destinationPath, $filename);
-
-            // Store relative path in DB
-            $validated['image'] = 'uploads/intlcourse/' . $filename;
-        } elseif ($request->remove_image) {
-            // Remove current image if requested
-            if ($course->image && file_exists(public_path($course->image))) {
-                unlink(public_path($course->image));
-            }
-            $validated['image'] = null;
-        }
-
-        // Generate slug if course name changed
-        if ($course->course_name !== $validated['course_name']) {
-            $slug = Str::slug($validated['course_name']);
-
-            // Check if slug already exists (excluding current course)
-            if (IntlCourse::where('slug', $slug)->where('id', '!=', $id)->exists()) {
-                notyf()->addError('A course with a similar name already exists. Please choose a different name');
-                return back()
-                    ->withErrors(['course_name' => 'A course with a similar name already exists. Please choose a different name.'])
-                    ->withInput();
+            // Handle thumbnail image upload using helper
+            if ($request->hasFile('thumbnail_image')) {
+                // Delete old thumbnail
+                if ($course->thumbnail_image) {
+                    @unlink(public_path($course->thumbnail_image));
+                }
+                $courseData['thumbnail_image'] = $this->handleFileUpload(
+                    $request->file('thumbnail_image'),
+                    'uploads/intlcourse'
+                );
             }
 
-            $validated['slug'] = $slug;
-        }
+            // Handle gallery images upload using helper
+            if ($request->hasFile('gallery_images')) {
+                $galleryImages = $course->gallery_images ?? [];
+                foreach ($request->file('gallery_images') as $galleryImage) {
+                    $galleryImages[] = $this->handleFileUpload(
+                        $galleryImage,
+                        'uploads/intlcourse/gallery'
+                    );
+                }
+                $courseData['gallery_images'] = $galleryImages;
+            }
 
-        // Convert topics array to JSON if present
-        if (isset($validated['topics'])) {
-            $validated['topics'] = json_encode($validated['topics']);
-        } else {
-            $validated['topics'] = null;
-        }
+            // Handle course brochures upload using helper
+            if ($request->hasFile('course_brochures')) {
+                $brochures = $course->course_brochures ?? [];
+                foreach ($request->file('course_brochures') as $brochure) {
+                    $filePath = $this->handleFileUpload(
+                        $brochure,
+                        'uploads/intlcourse/brochures'
+                    );
+                    $brochures[] = [
+                        'document_name' => $brochure->getClientOriginalName(),
+                        'file_path' => $filePath
+                    ];
+                }
+                $courseData['course_brochures'] = $brochures;
+            }
 
-        // Handle career outcomes JSON
-        if ($request->has('career_outcomes_json') && !empty($request->career_outcomes_json)) {
-            $validated['career_outcomes'] = $request->career_outcomes_json;
-        } else {
-            $validated['career_outcomes'] = null;
-        }
+            // Process overseas fee breakdown
+            if ($request->has('overseas_fee_breakdown')) {
+                $overseasFees = [];
+                foreach ($request->overseas_fee_breakdown as $fee) {
+                    if (!empty($fee['label']) && !empty($fee['amount'])) {
+                        $overseasFees[] = [
+                            'label' => $fee['label'],
+                            'amount' => floatval($fee['amount']),
+                            'currency' => $fee['currency'] ?? 'USD'
+                        ];
+                    }
+                }
+                if (!empty($overseasFees)) {
+                    $courseData['overseas_fee_breakdown'] = $overseasFees;
+                }
+            }
 
-        // Clean up the data - remove fields that don't exist in the model
-        $modelFields = [
-            'admin_provider', 'partner', 'accreditation_recognition', 'course_name', 'level',
-            'image', 'sector_id', 'category_id', 'pathway_type', 'country_id', 'language_instruction',
-            'learning_product_type', 'paid_type', 'short_description', 'long_description', 'certification_type',
-            'isico_course_code', 'international_mapping', 'credits_transferable', 'max_credits', 'internship',
-            'provider', 'assessment_mode', 'learning_tools', 'bridge_modules', 'required_age', 'minimum_education',
-            'industry_experience', 'language_proficiency_requirement', 'visa_proccess', 'other_info', 'qp_code',
-            'nsqf_level', 'credits_assigned', 'program_by', 'initiative_of', 'program', 'occupations', 'topics',
-            'duration_local', 'duration_overseas', 'total_duration', 'fee_structure', 'scholarship_funding',
-            'accommodation_cost', 'next_degree', 'career_outcomes', 'international_recognition', 'pathway_next_courses',
-            'start_date', 'end_date', 'is_featured', 'status', 'enrollment_count', 'slug'
-        ];
+            // Process local training fees
+            if ($request->has('local_training_fee')) {
+                $localFees = [];
+                foreach ($request->local_training_fee as $fee) {
+                    if (!empty($fee['label']) && !empty($fee['amount'])) {
+                        $localFees[] = [
+                            'label' => $fee['label'],
+                            'amount' => floatval($fee['amount']),
+                            'currency' => $fee['currency'] ?? 'USD'
+                        ];
+                    }
+                }
+                if (!empty($localFees)) {
+                    $courseData['local_training_fee'] = $localFees;
+                }
+            }
 
-        $updateData = array_intersect_key($validated, array_flip($modelFields));
+            // Process living costs
+            if ($request->has('living_costs')) {
+                $livingCosts = [];
+                foreach ($request->living_costs as $cost) {
+                    if (!empty($cost['label']) && !empty($cost['amount'])) {
+                        $livingCosts[] = [
+                            'label' => $cost['label'],
+                            'amount' => floatval($cost['amount']),
+                            'currency' => $cost['currency'] ?? 'USD'
+                        ];
+                    }
+                }
+                if (!empty($livingCosts)) {
+                    $courseData['living_costs'] = $livingCosts;
+                }
+            }
 
-        // Update the course
-        $course->update($updateData);
+            // Process FAQs
+            if ($request->has('faqs')) {
+                $faqs = [];
+                foreach ($request->faqs as $faq) {
+                    if (!empty($faq['question']) && !empty($faq['answer'])) {
+                        $faqs[] = [
+                            'question' => $faq['question'],
+                            'answer' => $faq['answer']
+                        ];
+                    }
+                }
+                if (!empty($faqs)) {
+                    $courseData['faqs'] = $faqs;
+                }
+            }
 
-        notyf()->addSuccess('International Course updated successfully!');
+            // Generate unique slug if course title changed
+            if ($course->course_title !== $validated['course_title']) {
+                $courseData['slug'] = $this->generateUniqueSlug($validated['course_title']);
+            }
+
+            // Set boolean fields
+            $courseData['work_experience_required'] = $request->boolean('work_experience_required');
+            $courseData['internship_included'] = $request->boolean('internship_included');
+            $courseData['local_training'] = $request->boolean('local_training');
+            $courseData['scholarship_available'] = $request->boolean('scholarship_available');
+            $courseData['bank_loan_assistance'] = $request->boolean('bank_loan_assistance');
+            $courseData['visa_support_included'] = $request->boolean('visa_support_included');
+            $courseData['accommodation_support'] = $request->boolean('accommodation_support');
+            $courseData['publish_status'] = $request->boolean('publish_status');
+
+            // Update the course
+            $course->update($courseData);
+
+            DB::commit();
+
+            notyf()->addSuccess('International course Updated successfully!');
         return redirect()->route('admin.intlcourse.index')
-            ->with('success', 'International Course updated successfully!');
+            ->with('success', 'International course Updated successfully!');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return redirect()->back()
+                ->with('error', 'Error updating course: ' . $e->getMessage())
+                ->withInput();
+        }
     }
     /**
      * Remove the specified resource from storage.
@@ -412,4 +646,6 @@ class IntlCourseController extends Controller
         return redirect()->route('admin.intlcourse.index')
             ->with('success', 'Course deleted successfully!');
     }
+
+
 }

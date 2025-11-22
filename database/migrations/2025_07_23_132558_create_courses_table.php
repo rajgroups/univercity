@@ -22,45 +22,64 @@ return new class extends Migration
                   ->onDelete('set null');
 
             $table->string('name');
-            $table->string('slug')->unique(); // SEO-friendly URL
-            $table->string('short_name')->nullable(); // e.g., "M.Sc", "AI/ML"
-            $table->string('image')->nullable(); // Store image path
-            $table->string('duration')->nullable();
-            $table->string('paid_type')->comment('Free / Paid');
+            $table->string('slug')->unique();
+            $table->string('level', 50)->nullable();
+            $table->string('image')->nullable();
+            $table->unsignedSmallInteger('duration_number')->nullable()->comment('Duration numeric value');
+            $table->enum('duration_unit', ['days', 'weeks', 'months', 'years'])->nullable()->comment('Duration unit');
+
+            // Use enum for predefined values
+            $table->enum('paid_type', ['free', 'paid', 'na'])->default('na');
 
             $table->text('short_description')->nullable();
-            $table->longText('long_description')->nullable(); // For detailed course info
+            $table->longText('long_description')->nullable();
 
-            $table->string('provider')->nullable(); // Training Partner
-            $table->string('language')->default('English');
-            $table->string('certification_type')->nullable(); // e.g. Certificate of Completion
-            $table->string('assessment_mode')->nullable(); // e.g. Proctor Assessment
+            $table->string('provider')->nullable();
+            $table->string('certification_type')->nullable();
+            $table->string('assessment_mode', 100)->nullable();
 
-            $table->string('qp_code')->nullable(); // e.g. Non QP Aligned
-            $table->string('nsqf_level')->nullable(); // e.g. Non QP Aligned
-            $table->string('credits_assigned')->nullable(); // e.g. No Credit Available
-            $table->string('learning_product_type')->nullable(); // e.g. Skill Course
+            $table->string('course_code', 50)->nullable();
+            $table->string('nsqf_level', 10)->nullable();
+            $table->string('location')->nullable();
 
-            $table->string('program_by')->nullable(); // e.g. Skill India CSR
-            $table->string('initiative_of')->nullable(); // e.g. Reliance Foundation
+            // Use tinyInteger for mode_of_study with number codes
+            $table->unsignedTinyInteger('mode_of_study')->nullable()->comment('1=>Online, 2=>In-Centre, 3=>Hybrid, 4=>On-Demand');
 
-            $table->string('program')->nullable(); // e.g. Reliance Foundation Skilling Academy
-            $table->string('domain')->nullable(); // e.g. Airline
-            $table->string('occupations')->nullable(); // e.g. Customer Service
+            $table->string('program_by')->nullable();
+            $table->string('initiative_of')->nullable();
 
-            $table->string('required_age')->nullable(); // e.g. Any
-            $table->string('minimum_education')->nullable(); // e.g. 12th Pass, ITI, Diploma
-            $table->string('industry_experience')->nullable(); // e.g. 0
-            $table->string('learning_tools')->nullable(); // e.g. NA
+            $table->boolean('internship')->nullable()->default(false);
+            $table->string('domain', 100)->nullable();
+            $table->string('occupations')->nullable();
 
-            $table->json('topics')->nullable(); // Dynamic inputs as JSON
-            $table->boolean('is_featured')->default(0); // For home page highlighting
-            $table->boolean('status')->default(1)->comment('1 => Active, 0 => Inactive');
-            $table->date('start_date')->nullable(); // Optional
-            $table->date('end_date')->nullable(); // Optional
-            $table->unsignedInteger('enrollment_count')->default(0); // For analytics
+            $table->string('required_age', 50)->nullable();
+            $table->string('minimum_education')->nullable();
+
+            $table->unsignedTinyInteger('industry_experience_years')->nullable()->default(0);
+            $table->text('industry_experience_desc')->nullable();
+            $table->text('learning_tools')->nullable();
+
+            $table->json('topics')->nullable();
+            $table->json('other_specifications')->nullable();
+            $table->json('language')->nullable();
+            $table->json('gallery')->nullable();
+
+            $table->boolean('is_featured')->default(false);
+            $table->boolean('status')->default(true);
+
+            $table->date('start_date')->nullable();
+            $table->date('end_date')->nullable();
+
+            $table->unsignedInteger('enrollment_count')->default(0);
 
             $table->timestamps();
+
+            // Add indexes for better performance
+            $table->index('sector_id');
+            $table->index('status');
+            $table->index('is_featured');
+            $table->index('paid_type');
+            $table->index('mode_of_study');
         });
     }
 

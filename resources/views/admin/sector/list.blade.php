@@ -80,11 +80,10 @@
                                 <td>{{ $sector->name }}</td>
                                 <td>{{ $sector->position ?? NULL }}</td>
                                 <td>
-                                    @if($sector->type == 0)
+                                    @if($sector->type == 1)
                                         Normal
                                     @else
-                                                        INTL
-
+                                        INTL
                                     @endif
                                 </td>
                                 <td>{{ $sector->slug }}</td>

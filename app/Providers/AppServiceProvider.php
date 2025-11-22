@@ -27,7 +27,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Paginator::useBootstrap();
-        Schema::defaultStringLength(191); 
+        Schema::defaultStringLength(191);
         // Load the first HomeSetting record
         $settings = HomeSetting::first();
         $defaultSettings = Settings::first();
