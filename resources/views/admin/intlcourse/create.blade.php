@@ -159,7 +159,7 @@
 
                             <div class="col-12 mb-3">
                                 <label class="form-label">Course Details <span class="text-danger">*</span></label>
-                                <textarea name="course_details" class="form-control" rows="6" required
+                                <textarea name="course_details" class="form-control" rows="6" id="long_description" required
                                           placeholder="Full course description and details..."></textarea>
                                 <div class="form-text">Detailed course description for the course page</div>
                             </div>
@@ -523,8 +523,26 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
-</script>
 
+</script>
+@push('scripts')
+<script>
+    $(document).ready(function() {
+    // Summernote for long description
+        $('#long_description').summernote({
+            height: 200,
+            toolbar: [
+                ['style', ['bold', 'italic', 'underline', 'clear']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['insert', ['link', 'picture']],
+                ['view', ['fullscreen', 'codeview']]
+            ],
+            placeholder: 'Write detailed course description here...'
+        });
+    });
+
+</script>
+@endpush
 <style>
 .topic-item {
     background-color: #f8f9fa;

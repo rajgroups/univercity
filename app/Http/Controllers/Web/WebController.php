@@ -379,49 +379,41 @@ class WebController extends Controller
     }
 
     public function globalcourseDetails(Request $request, $slug)
-{
-    // Find Course Record From IntlCourse table with relationships
-    $course = IntlCourse::with([
-            'country' => function ($q) {
-                $q->select('id', 'name');
-            },
-            'sector' => function ($q) {
-                $q->select('id', 'name');
-            },
-            'category' => function ($q) {
-                $q->select('id', 'name');
-            }
-        ])
-        ->where('slug', $slug)
-        ->where('publish_status', 1)
-        ->firstOrFail();
+    {
+        // Find Course Record From IntlCourse table with relationships
+        $course = IntlCourse::with([
+                'country' => function ($q) {
+                    $q->select('id', 'name');
+                },
+                'sector' => function ($q) {
+                    $q->select('id', 'name');
+                },
+                'category' => function ($q) {
+                    $q->select('id', 'name');
+                }
+            ])
+            ->where('slug', $slug)
+            ->where('publish_status', 1)
+            ->firstOrFail();
 
-    // Get other related courses (same sector or category)
-    $otherCourses = IntlCourse::where('slug', '!=', $slug)
-        ->where('publish_status', 1)
-        ->where(function($query) use ($course) {
-            $query->where('sector_id', $course->sector_id)
-                  ->orWhere('category_id', $course->category_id)
-                  ->orWhere('country_id', $course->country_id);
-        })
-        ->latest()
-        ->limit(6)
-        ->get();
+        // Get other related courses (same sector or category)
+        $otherCourses = IntlCourse::where('slug', '!=', $slug)
+            ->where('publish_status', 1)
+            ->where(function($query) use ($course) {
+                $query->where('sector_id', $course->sector_id)
+                    ->orWhere('category_id', $course->category_id)
+                    ->orWhere('country_id', $course->country_id);
+            })
+            ->with(['country', 'sector'])
+            ->latest()
+            ->limit(8)
+            ->get();
 
-    // Get all sectors for sidebar (if needed)
-    $sectors = Sector::where('status', 1)->get();
-
-    // Fetch banners
-    $banners = Banner::where('status', 1)->select('image')->get();
-
-    return view('web.globalcoursedetails', compact(
-        'banners',
-        'course',
-        'sectors',
-        'otherCourses'
-    ));
-}
-
+        return view('web.globalcoursedetails', compact(
+            'course',
+            'otherCourses'
+        ));
+    }
     public function courseDetails(Request $request, $slug)
     {
         // Find Course Record From Course table

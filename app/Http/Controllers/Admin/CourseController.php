@@ -127,12 +127,11 @@ class CourseController extends Controller
 
             notyf()->addSuccess('Course created successfully!');
             return redirect()->route('admin.course.index');
-
         } catch (\Exception $e) {
             Log::error('Course creation failed: ' . $e->getMessage());
             notyf()->addError('Failed to create course. Please try again.');
             // return back()->withInput();
-              return redirect()->route('admin.course.create')->withInput();
+            return redirect()->route('admin.course.create')->withInput();
         }
     }
 
@@ -163,7 +162,6 @@ class CourseController extends Controller
             $sequentialNumber = $lastCourse ? str_pad($lastCourse->id + 1, 3, '0', STR_PAD_LEFT) : '001';
 
             return "CRS{$sectorCode}{$levelCode}{$sequentialNumber}";
-
         } catch (\Exception $e) {
             Log::error('Error generating course code: ' . $e->getMessage());
             return null;
@@ -210,26 +208,26 @@ class CourseController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-public function edit($id)
-{
-    $course = Course::findOrFail($id);
-    $sectors = Sector::where('status', 1)->where('type', 1)->get();
+    public function edit($id)
+    {
+        $course = Course::findOrFail($id);
+        $sectors = Sector::where('status', 1)->where('type', 1)->get();
 
-    // Decode JSON fields for editing
-    $jsonFields = ['language', 'location', 'occupations', 'minimum_education', 'learning_tools', 'topics', 'other_specifications', 'gallery'];
-    foreach ($jsonFields as $field) {
-        $value = $course->$field;
-        if ($value && is_string($value)) {
-            $decoded = json_decode($value, true);
-            $course->$field = json_last_error() === JSON_ERROR_NONE ? $decoded : [];
-        } elseif (empty($value)) {
-            $course->$field = [];
+        // Decode JSON fields for editing
+        $jsonFields = ['language', 'location', 'occupations', 'minimum_education', 'learning_tools', 'topics', 'other_specifications', 'gallery'];
+        foreach ($jsonFields as $field) {
+            $value = $course->$field;
+            if ($value && is_string($value)) {
+                $decoded = json_decode($value, true);
+                $course->$field = json_last_error() === JSON_ERROR_NONE ? $decoded : [];
+            } elseif (empty($value)) {
+                $course->$field = [];
+            }
+            // If it's already an array, leave it as is
         }
-        // If it's already an array, leave it as is
-    }
 
-    return view('admin.course.edit', compact('course', 'sectors'));
-}
+        return view('admin.course.edit', compact('course', 'sectors'));
+    }
 
     /**
      * Update the specified resource in storage.
@@ -350,14 +348,12 @@ public function edit($id)
 
             notyf()->addSuccess('Course updated successfully!');
             return redirect()->route('admin.course.index');
-
         } catch (\Exception $e) {
             Log::error('Course update failed: ' . $e->getMessage());
             notyf()->addError('Failed to update course. Please try again.');
             // return back()->withInput();
         }
     }
-
     /**
      * Remove the specified resource from storage.
      */
@@ -367,13 +363,17 @@ public function edit($id)
 
         try {
             // Delete main image
-            $this->deleteImage($course->image);
+            if ($course->image) {
+                $this->deleteImage($course->image);
+            }
 
             // Delete gallery images
             if ($course->gallery) {
                 $galleryImages = json_decode($course->gallery, true);
-                foreach ($galleryImages as $image) {
-                    $this->deleteImage($image);
+                if (is_array($galleryImages)) {
+                    foreach ($galleryImages as $image) {
+                        $this->deleteImage($image);
+                    }
                 }
             }
 
@@ -382,11 +382,26 @@ public function edit($id)
 
             notyf()->addSuccess('Course deleted successfully!');
             return redirect()->route('admin.course.index');
-
         } catch (\Exception $e) {
             Log::error('Course deletion failed: ' . $e->getMessage());
             notyf()->addError('Failed to delete course. Please try again.');
             return back();
         }
     }
+
+    // /**
+    //  * Delete Image from storage
+    //  */
+    // private function deleteImage($imagePath)
+    // {
+    //     if ($imagePath && file_exists(public_path($imagePath))) {
+    //         unlink(public_path($imagePath));
+
+    //         // Optional: Remove empty directory if needed
+    //         $directory = dirname(public_path($imagePath));
+    //         if (is_dir($directory) && count(scandir($directory)) == 2) { // Only . and .. remain
+    //             rmdir($directory);
+    //         }
+    //     }
+    // }
 }

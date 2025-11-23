@@ -29,13 +29,13 @@ class IntlCourseController extends Controller
     public function create()
     {
         // Create Course
-        $sectors = Sector::where('status', 1)->where('type',2)->get();
-        $countrys = Country::where('status',1)->get();
-        $categories = Category::where('type',6)->get();
-        return view('admin.intlcourse.create', compact('sectors','countrys','categories'));
+        $sectors = Sector::where('status', 1)->where('type', 2)->get();
+        $countrys = Country::where('status', 1)->get();
+        $categories = Category::where('type', 6)->get();
+        return view('admin.intlcourse.create', compact('sectors', 'countrys', 'categories'));
     }
 
-        /**
+    /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
@@ -270,9 +270,8 @@ class IntlCourseController extends Controller
             DB::commit();
 
             notyf()->addSuccess('International course created successfully!');
-        return redirect()->route('admin.intlcourse.index')
-            ->with('success', 'International course created successfully!');
-
+            return redirect()->route('admin.intlcourse.index')
+                ->with('success', 'International course created successfully!');
         } catch (\Exception $e) {
             DB::rollBack();
 
@@ -372,7 +371,7 @@ class IntlCourseController extends Controller
         return view('admin.intlcourse.edit', compact('course', 'sectors', 'countrys', 'categories'));
     }
 
-        /**
+    /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, $id)
@@ -610,9 +609,8 @@ class IntlCourseController extends Controller
             DB::commit();
 
             notyf()->addSuccess('International course Updated successfully!');
-        return redirect()->route('admin.intlcourse.index')
-            ->with('success', 'International course Updated successfully!');
-
+            return redirect()->route('admin.intlcourse.index')
+                ->with('success', 'International course Updated successfully!');
         } catch (\Exception $e) {
             DB::rollBack();
 
@@ -626,26 +624,80 @@ class IntlCourseController extends Controller
      */
     public function destroy($id)
     {
-        // Find the course
-        $course = IntlCourse::findOrFail($id);
+        try {
+            DB::beginTransaction();
 
-        // Delete associated image if exists
-        if ($course->image) {
-            // For Storage facade approach:
-            // Storage::delete('public/'.$course->image);
+            // Find the course
+            $course = IntlCourse::findOrFail($id);
 
-            // For direct filesystem approach (matches your update method):
-            if (file_exists(public_path($course->image))) {
-                unlink(public_path($course->image));
+            // Delete thumbnail image if exists
+            if ($course->thumbnail_image && file_exists(public_path($course->thumbnail_image))) {
+                unlink(public_path($course->thumbnail_image));
             }
-        }
 
-        // Delete the course
-        $course->delete();
-        notyf()->addSuccess('Course deleted successfully!');
-        return redirect()->route('admin.intlcourse.index')
-            ->with('success', 'Course deleted successfully!');
+            // Delete gallery images if exist
+            if ($course->gallery_images && is_array($course->gallery_images)) {
+                foreach ($course->gallery_images as $galleryImage) {
+                    if (file_exists(public_path($galleryImage))) {
+                        unlink(public_path($galleryImage));
+                    }
+                }
+            }
+
+            // Delete course brochures if exist
+            if ($course->course_brochures && is_array($course->course_brochures)) {
+                foreach ($course->course_brochures as $brochure) {
+                    if (isset($brochure['file_path']) && file_exists(public_path($brochure['file_path']))) {
+                        unlink(public_path($brochure['file_path']));
+                    }
+                }
+            }
+
+            // Delete the course record
+            $course->delete();
+
+            DB::commit();
+
+            notyf()->addSuccess('International course deleted successfully!');
+            return redirect()->route('admin.intlcourse.index')
+                ->with('success', 'International course deleted successfully!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            notyf()->addError('Error deleting course: ' . $e->getMessage());
+            return redirect()->back()
+                ->with('error', 'Error deleting course: ' . $e->getMessage());
+        }
     }
+
+    /**
+     * Cleanup uploaded files in case of error
+     */
+    // private function cleanupUploadedFiles($courseData)
+    // {
+    //     // Cleanup thumbnail image
+    //     if (isset($courseData['thumbnail_image']) && file_exists(public_path($courseData['thumbnail_image']))) {
+    //         @unlink(public_path($courseData['thumbnail_image']));
+    //     }
+
+    //     // Cleanup gallery images
+    //     if (isset($courseData['gallery_images'])) {
+    //         foreach ($courseData['gallery_images'] as $image) {
+    //             if (file_exists(public_path($image))) {
+    //                 @unlink(public_path($image));
+    //             }
+    //         }
+    //     }
+
+    //     // Cleanup course brochures
+    //     if (isset($courseData['course_brochures'])) {
+    //         foreach ($courseData['course_brochures'] as $brochure) {
+    //             if (isset($brochure['file_path']) && file_exists(public_path($brochure['file_path']))) {
+    //                 @unlink(public_path($brochure['file_path']));
+    //             }
+    //         }
+    //     }
+    // }
 
 
 }
