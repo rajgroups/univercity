@@ -290,6 +290,8 @@ class WebController extends Controller
     {
         $query = Course::query();
 
+        $query = $query->where('status',1);
+
         // 🔍 Search filter (by title or description)
         if ($request->has('search') && !empty($request->search)) {
             $search = $request->search;

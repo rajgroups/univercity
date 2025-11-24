@@ -1,3 +1,4 @@
+{{-- @dd($course->duration_unit); --}}
 @extends('layouts.admin.app')
 
 @section('content')
@@ -170,9 +171,9 @@
     <label class="form-label">Paid Type <span class="text-danger">*</span></label>
     <select name="paid_type" class="form-select @error('paid_type') is-invalid @enderror" required>
         <option value="">Select Paid Type</option>
-        <option value="free" {{ old('paid_type', $course->paid_type) == 'free' ? 'selected' : '' }}>Free</option>
-        <option value="paid" {{ old('paid_type', $course->paid_type) == 'paid' ? 'selected' : '' }}>Paid</option>
-        <option value="na" {{ old('paid_type', $course->paid_type) == 'na' ? 'selected' : '' }}>Not Applicable</option>
+        <option value="free" {{ old('paid_type', $course->paid_type->value) == 'free' ? 'selected' : '' }}>Free</option>
+        <option value="paid" {{ old('paid_type', $course->paid_type->value) == 'paid' ? 'selected' : '' }}>Paid</option>
+        <option value="na" {{ old('paid_type', $course->paid_type->value) == 'na' ? 'selected' : '' }}>Not Applicable</option>
     </select>
     @error('paid_type')
         <div class="invalid-feedback">{{ $message }}</div>
@@ -296,10 +297,10 @@
                         <label class="form-label">Mode of Study <span class="text-danger">*</span></label>
                         <select name="mode_of_study" class="form-select @error('mode_of_study') is-invalid @enderror" required>
                             <option value="">Select Mode</option>
-                            <option value="1" {{ old('mode_of_study', $course->mode_of_study) == '1' ? 'selected' : '' }}>Online</option>
-                            <option value="2" {{ old('mode_of_study', $course->mode_of_study) == '2' ? 'selected' : '' }}>In-Centre</option>
-                            <option value="3" {{ old('mode_of_study', $course->mode_of_study) == '3' ? 'selected' : '' }}>Hybrid</option>
-                            <option value="4" {{ old('mode_of_study', $course->mode_of_study) == '4' ? 'selected' : '' }}>On-Demand</option>
+                            <option value="1" {{ old('mode_of_study', $course->mode_of_study->value) == 1 ? 'selected' : '' }}>Online</option>
+                            <option value="2" {{ old('mode_of_study', $course->mode_of_study->value) == 2 ? 'selected' : '' }}>In-Centre</option>
+                            <option value="3" {{ old('mode_of_study', $course->mode_of_study->value) == 3 ? 'selected' : '' }}>Hybrid</option>
+                            <option value="4" {{ old('mode_of_study', $course->mode_of_study->value) == 4 ? 'selected' : '' }}>On-Demand</option>
                         </select>
                         @error('mode_of_study')
                             <div class="invalid-feedback">{{ $message }}</div>

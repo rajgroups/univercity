@@ -73,12 +73,12 @@
                             <tr>
                                 {{-- <td><input type="checkbox" class="select-item" value="{{ $item->id }}"></td> --}}
                                 <td>{{ $loop->index + 1 }}</td>
-                                <td><span class="text-gray-9">{{ $item->course_name }}</span></td>
+                                <td><span class="text-gray-9">{{ $item->course_title }}</span></td>
                                 <td>{{ $item->slug }}</td>
                                 <td>{{ $item->created_at->format('d M Y') }}</td>
 
                                 <td>
-                                    @if ($item->status == '1')
+                                    @if ($item->publish_status == '1')
                                         <span class="badge bg-success fw-medium fs-10">Active</span>
                                     @else
                                         <span class="badge bg-danger fw-medium fs-10">Inactive</span>
