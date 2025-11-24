@@ -294,16 +294,16 @@
                                             </div>
 
                                             {{-- Course Level --}}
-                                            <div class="mb-2">
+                                            {{-- <div class="mb-2">
                                                 <span class="badge bg-light text-dark small">
                                                     {{ $course->category->name ?? 'General' }}
                                                 </span>
-                                            </div>
+                                            </div> --}}
 
                                             {{-- Short Description --}}
-                                            <p class="small text-muted mb-3 flex-grow-1">
+                                            {{-- <p class="small text-muted mb-3 flex-grow-1">
                                                 {{ Str::limit($course->short_description, 100) }}
-                                            </p>
+                                            </p> --}}
 
                                             {{-- Apply Button --}}
                                             <div class="mt-auto">
