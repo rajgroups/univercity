@@ -301,7 +301,7 @@
                                                     <div class="list-group-item d-flex justify-content-between align-items-center px-0">
                                                         <span>Mode of Study</span>
                                                         <span class="fw-medium">
-                                                            @switch($course->mode_of_study)
+                                                            @switch($course->mode_of_study->value)
                                                                 @case('1') Online @break
                                                                 @case('2') Offline @break
                                                                 @case('3') Hybrid @break
@@ -517,13 +517,13 @@
 
                                 @if ($course->paid_type)
                                     <div class="list-group-item d-flex align-items-center">
-                                        <i class="bi bi-currency-dollar text-primary me-3 fs-5"></i>
+                                        <i class="bi bi-currency-rupee text-primary me-3 fs-5"></i>
                                         <div>
                                             <h6 class="mb-0">Pricing</h6>
                                             <small class="text-muted">
-                                                @if ($course->paid_type == 'free')
+                                                @if ($course->paid_type->value == 'free')
                                                     Free Course
-                                                @elseif($course->paid_type == 'paid')
+                                                @elseif($course->paid_type->value == 'paid')
                                                     Paid Course
                                                 @else
                                                     Not Applicable
@@ -579,7 +579,7 @@
                                 </div>
 
                                 <div class="mb-3">
-                                    <label for="message" class="form-label">Message <span class="text-danger">*</span></label>
+                                    <label for="message" class="form-label">Message</label>
                                     <textarea class="form-control" id="message" name="message" rows="3" placeholder="Enter your message"
                                         required maxlength="1000"></textarea>
                                     <div class="invalid-feedback">Please enter your message (max 1000 characters).</div>
@@ -664,7 +664,7 @@
                                          onerror="this.src='{{ asset('resource/web/assets/media/default/default-img.png') }}'">
                                     <span class="date-block">
                                         <span class="h6 fw-400 light-black">
-                                            @if($course->paid_type == 'free')
+                                            @if($course->paid_type->value == 'free')
                                                 FREE
                                             @else
                                                 PAID

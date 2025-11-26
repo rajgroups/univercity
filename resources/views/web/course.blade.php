@@ -295,13 +295,18 @@
                                                 style="height: 200px; object-fit: cover;">
                                             <div
                                                 class="card-img-overlay d-flex justify-content-between align-items-start p-3">
-                                                <span
-                                                    class="badge bg-{{ $course->mode_of_study == 1 ? 'primary' : 'secondary' }}">
-                                                    {{ $learningTypes[$course->mode_of_study] ?? 'N/A' }}
+                                               <span class="badge bg-{{ $course->mode_of_study->value == 1 ? 'primary' : 'secondary' }}">
+                                                    @switch($course->mode_of_study->value)
+                                                        @case(1) {{ $learningTypes[1] ?? 'Online' }} @break
+                                                        @case(2) {{ $learningTypes[2] ?? 'Offline' }} @break
+                                                        @case(3) {{ $learningTypes[3] ?? 'Hybrid' }} @break
+                                                        @case(4) {{ $learningTypes[4] ?? 'Flexible' }} @break
+                                                        @default {{ $learningTypes[$course->mode_of_study->value] ?? 'N/A' }}
+                                                    @endswitch
                                                 </span>
                                                 <span
-                                                    class="badge bg-{{ $course->paid_type == 'free' ? 'success' : 'warning' }}">
-                                                    {{ $course->paid_type == 'free' ? 'FREE' : 'PAID' }}
+                                                    class="badge bg-{{ $course->paid_type->value == 'free' ? 'success' : 'warning' }}">
+                                                    {{ $course->paid_type->value == 'free' ? 'FREE' : 'PAID' }}
                                                 </span>
                                             </div>
                                         </div>

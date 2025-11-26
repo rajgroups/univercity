@@ -231,100 +231,109 @@
                 </div>
 
                 {{-- Course Grid --}}
-                <div class="col-12 col-md-9">
-                    @if($courses->count() > 0)
-                        <div class="row g-4">
-                            @foreach ($courses as $course)
-                                <div class="col-md-6 col-lg-4 mb-4">
-                                    <div class="course-card position-relative bg-white h-100">
-                                        {{-- Course Image --}}
-                                        @if($course->thumbnail_image)
-                                            <img src="{{ asset($course->thumbnail_image) }}" class="w-100 course-thumbnail" alt="{{ $course->course_title }}" style="height: 200px; object-fit: cover;">
-                                        @else
-                                            <div class="w-100 course-thumbnail-placeholder d-flex align-items-center justify-content-center bg-light" style="height: 200px;">
-                                                <i class="bi bi-book text-muted" style="font-size: 3rem;"></i>
-                                            </div>
-                                        @endif
+{{-- Course Grid --}}
+<div class="col-12 col-md-9">
+    @if($courses->count() > 0)
+        <div class="row g-4">
+            @foreach ($courses as $course)
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="course-card card h-100 border-0 shadow-sm">
+                        {{-- Course Image with Badges --}}
+                        <div class="position-relative">
+                            @if($course->thumbnail_image)
+                                <img src="{{ asset($course->thumbnail_image) }}" class="card-img-top" alt="{{ $course->course_title }}" style="height: 160px; object-fit: cover;">
+                            @else
+                                <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 160px;">
+                                    <i class="bi bi-book text-muted" style="font-size: 2.5rem;"></i>
+                                </div>
+                            @endif
 
-                                        {{-- Badges --}}
-                                        <span class="badge badge-pathway bg-primary">
-                                            {{ $course->pathway_type }}
+                            {{-- Badges --}}
+                            <div class="position-absolute top-0 start-0 end-0 p-2 d-flex justify-content-between">
+                                <span class="badge bg-primary">
+                                    {{ $course->pathway_type }}
+                                </span>
+                                <span class="badge {{ $course->paid_type === 'Free' ? 'bg-success' : 'bg-warning' }}">
+                                    {{ $course->paid_type }}
+                                </span>
+                            </div>
+                        </div>
+
+                        {{-- Card Content --}}
+                        <div class="card-body d-flex flex-column p-3">
+                            {{-- Course Title --}}
+                            <h6 class="card-title mb-3 fw-bold text-dark line-clamp-2" style="min-height: 2.5rem;">
+                                {{ $course->course_title }}
+                            </h6>
+
+                            {{-- Institution & Location --}}
+                            <div class="mb-3">
+                                <div class="d-flex align-items-start mb-2">
+                                    <i class="bi bi-building text-muted me-2 mt-1 flex-shrink-0"></i>
+                                    <span class="small text-muted">{{ Str::limit($course->overseas_partner_institution, 35) }}</span>
+                                </div>
+                                <div class="d-flex align-items-start mb-2">
+                                    <i class="bi bi-geo-alt text-primary me-2 mt-1 flex-shrink-0"></i>
+                                    <span class="small text-primary">{{ $course->country->name ?? 'International' }}</span>
+                                </div>
+                            </div>
+
+                            {{-- Sector --}}
+                            @if($course->sector)
+                            <div class="mb-3">
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-tags text-warning me-2 flex-shrink-0"></i>
+                                    <span class="small text-dark">{{ $course->sector->name }}</span>
+                                </div>
+                            </div>
+                            @endif
+
+                            {{-- Course Details - Split left & right --}}
+                            <div class="mt-auto">
+                                <div class="d-flex justify-content-between align-items-center small text-muted mb-3">
+                                    {{-- Left Side: Language --}}
+                                    <div class="d-flex align-items-center">
+                                        <i class="bi bi-translate me-1"></i>
+                                        <span>
+                                            @if($course->language_of_instruction)
+                                                {{ implode(', ', array_slice($course->language_of_instruction, 0, 2)) }}
+                                                @if(count($course->language_of_instruction) > 2)+@endif
+                                            @else
+                                                English
+                                            @endif
                                         </span>
-                                        <span class="badge badge-price {{ $course->paid_type === 'Free' ? 'badge-free' : 'badge-paid' }}">
-                                            {{ $course->paid_type }}
-                                        </span>
+                                    </div>
 
-                                        <div class="p-3 d-flex flex-column h-100">
-                                            {{-- Course Title --}}
-                                            <h6 class="mb-2 course-title">{{ Str::limit($course->course_title, 60) }}</h6>
-
-                                            {{-- Partner Institution --}}
-                                            <p class="text-muted small mb-2">
-                                                <i class="bi bi-building me-1"></i>
-                                                {{ Str::limit($course->overseas_partner_institution, 40) }}
-                                            </p>
-
-                                            {{-- Country --}}
-                                            <p class="text-primary small mb-2">
-                                                <i class="bi bi-geo-alt me-1"></i>
-                                                {{ $course->country->name ?? 'International' }}
-                                            </p>
-
-                                            {{-- Sector --}}
-                                            <p class="text-warning small mb-2">
-                                                <i class="bi bi-tags me-1"></i>
-                                                {{ $course->sector->name ?? 'General' }}
-                                            </p>
-
-                                            {{-- Course Details --}}
-                                            <div class="d-flex justify-content-between small text-muted mb-2">
-                                                <span>
-                                                    <i class="bi bi-translate me-1"></i>
-                                                    @if($course->language_of_instruction)
-                                                        {{ implode(', ', array_slice($course->language_of_instruction, 0, 2)) }}
-                                                        @if(count($course->language_of_instruction) > 2)+@endif
-                                                    @else
-                                                        English
-                                                    @endif
-                                                </span>
-                                                <span>
-                                                    <i class="bi bi-clock me-1"></i>
-                                                    {{ $course->course_duration_overseas }}
-                                                </span>
-                                            </div>
-
-                                            {{-- Course Level --}}
-                                            {{-- <div class="mb-2">
-                                                <span class="badge bg-light text-dark small">
-                                                    {{ $course->category->name ?? 'General' }}
-                                                </span>
-                                            </div> --}}
-
-                                            {{-- Short Description --}}
-                                            {{-- <p class="small text-muted mb-3 flex-grow-1">
-                                                {{ Str::limit($course->short_description, 100) }}
-                                            </p> --}}
-
-                                            {{-- Apply Button --}}
-                                            <div class="mt-auto">
-                                                <a href="{{ route('web.global.course.show', $course->slug) }}" class="apply-link w-100 text-center d-block">
-                                                    View Details & Apply →
-                                                </a>
-                                            </div>
-                                        </div>
+                                    {{-- Right Side: Duration --}}
+                                    <div class="d-flex align-items-center">
+                                        <i class="bi bi-clock me-1"></i>
+                                        <span>{{ $course->course_duration_overseas }}</span>
                                     </div>
                                 </div>
-                            @endforeach
+
+                                {{-- Apply Button --}}
+                                <a href="{{ route('web.global.course.show', $course->slug) }}" class="btn btn-outline-primary w-100 btn-sm d-flex align-items-center justify-content-center">
+                                    View Details & Apply
+                                    <i class="bi bi-arrow-right ms-2"></i>
+                                </a>
+                            </div>
                         </div>
-                    @else
-                        <div class="text-center py-5">
-                            <i class="bi bi-search display-1 text-muted"></i>
-                            <h4 class="mt-3">No courses found</h4>
-                            <p class="text-muted">Try adjusting your search criteria or browse all courses.</p>
-                            <a href="{{ route('web.global.course') }}" class="btn btn-primary">Browse All Courses</a>
-                        </div>
-                    @endif
+                    </div>
                 </div>
+            @endforeach
+        </div>
+    @else
+        <div class="text-center py-5">
+            <i class="bi bi-search display-1 text-muted opacity-50"></i>
+            <h4 class="mt-3 text-dark">No courses found</h4>
+            <p class="text-muted mb-4">Try adjusting your search criteria or browse all courses.</p>
+            <a href="{{ route('web.global.course') }}" class="btn btn-primary px-4">
+                <i class="bi bi-grid me-2"></i>
+                Browse All Courses
+            </a>
+        </div>
+    @endif
+</div>
             </div>
 
             {{-- Pagination --}}

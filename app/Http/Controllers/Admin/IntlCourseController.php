@@ -249,6 +249,13 @@ class IntlCourseController extends Controller
             // Generate unique slug using helper
             $courseData['slug'] = $this->generateUniqueSlug($validated['course_title']);
 
+            // Generate course code if not provided
+            if (empty($courseData['course_code'])) {
+                $courseData['course_code'] = $this->generateCourseCode(
+                    $courseData['sector_id'],
+                    $courseData['country_id']
+                );
+            }
             // Set default values for boolean fields
             $courseData['work_experience_required'] = $request->boolean('work_experience_required');
             $courseData['internship_included'] = $request->boolean('internship_included');
@@ -698,6 +705,43 @@ class IntlCourseController extends Controller
     //         }
     //     }
     // }
+
+    /**
+     * Generate course code based on sector and country
+     */
+    private function generateCourseCode($sectorId, $countryId)
+    {
+        $sector = Sector::find($sectorId);
+        $country = Country::find($countryId);
+
+        if (!$sector || !$country) {
+            throw new \Exception('Sector and Country are required to generate course code');
+        }
+
+        // Get first 2 letters of sector name
+        $sectorCode = strtoupper(substr($sector->name, 0, 2));
+
+        // Get first 2 letters of country name
+        $countryCode = strtoupper(substr($country->name, 0, 2));
+
+        // Find the next available number
+        $lastCourse = \App\Models\IntlCourse::where('course_code', 'LIKE', $sectorCode . $countryCode . '%')
+            ->orderBy('course_code', 'desc')
+            ->first();
+
+        if ($lastCourse) {
+            // Extract the number part and increment
+            $lastNumber = intval(substr($lastCourse->course_code, 4));
+            $nextNumber = $lastNumber + 1;
+        } else {
+            $nextNumber = 1;
+        }
+
+        // Format as SECTORCODE + COUNTRYCODE + 3-digit number
+        $courseCode = $sectorCode . $countryCode . str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
+
+        return $courseCode;
+    }
 
 
 }

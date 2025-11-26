@@ -63,7 +63,7 @@
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Course Code</label>
                                 <input type="text" name="course_code" class="form-control"
-                                       placeholder="e.g., SG001, MY001">
+                                       placeholder="e.g., SG001, MY001" readonly>
                                 <div class="form-text">Auto-generated code (Country + Number)</div>
                             </div>
 
