@@ -515,4 +515,16 @@ class ProjectController extends Controller
 
         return response()->json(['success' => true, 'message' => 'Image removed successfully.']);
     }
+
+    public function createMilestone(Request $request){
+        return view('admin.project.milestone');
+    }
+
+    public function createEstmator(Request $request){
+        return view('admin.project.estmator');
+    }
+
+    public function fieldLog (Request $request){
+        return view('admin.project.estmator');
+    }
 }

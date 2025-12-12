@@ -45,12 +45,18 @@ Route::prefix('admin')->as('admin.')->group(function() {
         })->name('home');
         // Category Routes
         Route::resource('category', CategoryController::class);
-       
-        
+
+
         // Sectors Routes
         Route::resource('sectors', SectorController::class);
 
         // Project Routes
+        // 7-Phase Milestone Progress Tracker
+        Route::get('projects/milestone', [ProjectController::class,'createMilestone']);
+        // Estimator
+        Route::get('projects/estmator', [ProjectController::class,'createEstmator']);
+        // field Log
+        Route::get('/projets/fieldlog', [ProjectController::class,'createMilestone']);
         Route::resource('project', ProjectController::class);
 
         // Banner Routes
@@ -73,28 +79,28 @@ Route::prefix('admin')->as('admin.')->group(function() {
 
         // Activities Routes
         Route::resource('activity', ActivityController::class);
-        
+
         // Enquiry Routes
         Route::resource('enquiry',EnquiryController::class);
 
         // Student Routes
         Route::resource('student',StudentController::class);
-       
+
         // organization Routes
         Route::resource('organization',OrganizationController::class);
-        
+
         // organization Routes
         Route::resource('volunteer',VolunteerController::class);
-        
+
         // Country Routes
         Route::resource('country',CountryController::class);
 
         // Country Routes
         Route::resource('intlcourse',IntlCourseController::class);
-    
+
         // Onrginzation Routes
         // Route::resource('organization',Or::class);
-        
+
         // Setting Home Page Settings Route
         Route::get('settings/home/edit',[SettingController::class,'editHomePage'])->name('setting.home.edit');
         Route::post('settings/home/update/{id}', [SettingController::class, 'homeUpdate'])->name('setting.home.update');
