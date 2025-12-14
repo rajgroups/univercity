@@ -95,6 +95,9 @@ Route::middleware(['maintenance'])->group(function () {
     Route::get('/scheme/{category}/{slug}', [WebController::class, 'scheme'])->name('web.announcement.scheme');
 
     // upcoming-project  Route
+    Route::get('/upcoming-project/test', function(){
+        return view('web.projectupcoming');
+    });
     Route::get('/upcoming-project/{category}/{slug}', [WebController::class, 'upcoming'])->name('web.upcoming.project');
 
     // ongoing-project  Route
