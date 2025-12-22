@@ -50,14 +50,8 @@ Route::prefix('admin')->as('admin.')->group(function() {
         // Sectors Routes
         Route::resource('sectors', SectorController::class);
 
-        // Project Routes
-        // 7-Phase Milestone Progress Tracker
-        Route::get('projects/milestone', [ProjectController::class,'createMilestone']);
-        // Estimator
-        Route::get('projects/estmator', [ProjectController::class,'createEstmator']);
-        // field Log
-        Route::get('/projets/fieldlog', [ProjectController::class,'createMilestone']);
-        Route::resource('project', ProjectController::class);
+
+        // Route::resource('project', ProjectController::class);
 
         // Banner Routes
         Route::resource('banner',BannerController::class);
@@ -109,13 +103,16 @@ Route::prefix('admin')->as('admin.')->group(function() {
         Route::get('/settings/general/edit',[SettingController::class,'generalEdit'])->name('setting.general.edit');
         Route::post('/settings/general/update',[SettingController::class,'generalUpdate'])->name('setting.general.update');
 
-        // For storing a new project
-        Route::post('/projects', [ProjectController::class, 'store'])->name('project.store');
-        // For updating an existing project (assuming you have a route model binding)
-        Route::put('/projects/{project}', [ProjectController::class, 'update'])->name('project.update');
-        // You'll also need routes for 'create' and 'edit' to display the form
-        Route::get('/projects/create', [ProjectController::class, 'create'])->name('project.create');
-        Route::get('/projects/{project}/edit', [ProjectController::class, 'edit'])->name('project.edit');
+        Route::post('project/bulk-action', [ProjectController::class, 'bulkAction'])->name('project.bulk-action');
+        Route::get('project/stats', [ProjectController::class, 'getStats'])->name('project.stats');
+        Route::get('projects/milestone', [ProjectController::class,'createMilestone']);
+        // Estimator
+        Route::get('projects/estmator', [ProjectController::class,'createEstmator']);
+        // field Log
+        Route::get('/projets/fieldlog', [ProjectController::class,'createMilestone']);
+        Route::resource('project', ProjectController::class);
+        Route::get('project/{project}/toggle-status', [ProjectController::class, 'toggleStatus'])->name('project.toggle-status');
+        Route::get('project/export', [ProjectController::class, 'export'])->name('project.export');
 
         Route::get('/dashboard/stats', [DashboardController::class, 'getStats'])->name('dashboard.stats');
         Route::get('/empty', function () {

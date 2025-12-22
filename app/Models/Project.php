@@ -4,47 +4,53 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Project extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'project_code', 'title', 'slug', 'subtitle', 'category_id', 'short_description',
-        'description', 'image', 'banner_image', 'stage', 'status', 'type', 'cost',
-        'start_date', 'end_date', 'beneficiaries', 'funding_type', 'csr_partner_type',
-        'csr_invitation', 'crowdfunding_status', 'cta_button_text', 'interest_link',
-        'project_lead', 'actual_start_date', 'expected_end_date', 'ongoing_beneficiaries',
-        'project_cost', 'funding_target', 'amount_raised', 'ongoing_crowdfunding_status',
-        'main_donor', 'isico_message', 'progress_updates', 'completed_project_lead',
-        'completed_start_date', 'completed_end_date', 'final_cost', 'completed_beneficiaries',
-        'completed_csr_partner', 'impact_summary', 'outcome_metrics', 'testimonials',
-        'sustainability_plan', 'lessons_learned', 'completion_report', 'utilization_certificate',
-        'impact_stories', 'points', 'sdgs', 'gallery', 'before_after_images'
+        'project_code', 'location_type', 'title', 'subtitle', 'slug', 'category_id',
+        'short_description', 'description', 'banner_images', 'thumbnail_image',
+        'planned_start_date', 'planned_end_date', 'stage', 'status',
+
+        // Location Details
+        'target_location_type', 'pincode', 'state', 'district', 'taluk', 'panchayat',
+        'building_name', 'gps_coordinates', 'multiple_locations', 'location_summary',
+        'show_map_preview',
+
+        // Strategic Goals
+        'problem_statement', 'baseline_survey', 'donut_metrics', 'target_groups',
+        'objectives', 'expected_outcomes', 'impact_image', 'scalability_notes',
+        'alignment_categories', 'sdg_goals', 'govt_schemes', 'alignment_notes',
+        'sustainability_plan',
+
+        // CSR & Stakeholders
+        'csr_invitation', 'cta_button_text', 'stakeholders',
+
+        // Resources & Risks
+        'resources_needed', 'compliance_requirements', 'risks',
+
+        // Ongoing Stage
+        'last_update_summary', 'project_progress', 'actual_beneficiary_count',
+        'challenges_identified', 'resources_needed_ongoing', 'operational_risks_ongoing',
+        'compliance_requirement_status', 'solutions_actions_taken',
+        'completion_readiness', 'handover_sustainability_note',
+        'actual_start_date', 'actual_end_date',
+
+        // Media and Documents
+        'gallery_images', 'before_photo', 'expected_photo', 'documents', 'links'
     ];
 
     protected $casts = [
-        'status' => 'boolean',
-        'cost' => 'decimal:2',
-        'project_cost' => 'decimal:2',
-        'funding_target' => 'decimal:2',
-        'amount_raised' => 'decimal:2',
-        'final_cost' => 'decimal:2',
-        'start_date' => 'date',
-        'end_date' => 'date',
+        'planned_start_date' => 'date',
+        'planned_end_date' => 'date',
         'actual_start_date' => 'date',
-        'expected_end_date' => 'date',
-        'completed_start_date' => 'date',
-        'completed_end_date' => 'date',
-        'beneficiaries' => 'array',
-        'points' => 'array',
-        'sdgs' => 'array',
-        'gallery' => 'array',
-        'before_after_images' => 'array',
-        'progress_updates' => 'array',
-        'outcome_metrics' => 'array',
-        'testimonials' => 'array',
-        'impact_stories' => 'array',
+        'actual_end_date' => 'date',
+        'show_map_preview' => 'boolean',
+        'project_progress' => 'decimal:2',
+        'completion_readiness' => 'decimal:2',
     ];
 
     public function category()

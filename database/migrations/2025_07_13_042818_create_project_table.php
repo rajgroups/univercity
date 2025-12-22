@@ -6,123 +6,99 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
-    public function up(): void
+    public function up()
     {
         Schema::create('projects', function (Blueprint $table) {
             $table->id();
 
-            // Basic Info
-            $table->string('project_code')->unique()->nullable();
+            // Section 0 & 1: Basic Project Details
+            $table->string('project_code')->unique();
+            $table->string('location_type'); // RUR, URB, MET, MIX
             $table->string('title');
-            $table->string('slug')->unique();
             $table->string('subtitle')->nullable();
-            $table->unsignedBigInteger('category_id')->nullable()->index();
-
-            // Type and Stage
-            $table->enum('type', ['1', '2'])->nullable()->comment('1=On Going, 2=Up Coming');
-            $table->enum('stage', ['upcoming', 'ongoing', 'completed'])->default('upcoming');
-
-            // Descriptions
+            $table->string('slug')->unique();
+            $table->foreignId('category_id')->constrained('category')->onDelete('cascade');
             $table->text('short_description');
             $table->longText('description');
+            $table->json('banner_images')->nullable();
+            $table->string('thumbnail_image')->nullable();
+            $table->date('planned_start_date');
+            $table->date('planned_end_date')->nullable();
+            $table->enum('stage', ['upcoming', 'ongoing', 'completed'])->default('upcoming');
 
-            // Media
-            $table->string('image')->nullable();
-            $table->string('banner_image')->nullable();
-            $table->json('gallery')->nullable();
-            $table->json('before_after_images')->nullable();
+            // Section 2: Target Location Details
+            $table->enum('target_location_type', ['single', 'multiple'])->default('single');
+            $table->string('pincode')->nullable();
+            $table->string('state')->nullable();
+            $table->string('district')->nullable();
+            $table->string('taluk')->nullable();
+            $table->string('panchayat')->nullable();
+            $table->string('building_name')->nullable();
+            $table->string('gps_coordinates')->nullable();
+            $table->json('multiple_locations')->nullable();
+            $table->text('location_summary')->nullable();
+            $table->boolean('show_map_preview')->default(false);
 
-            // Bullet Points (stored as JSON array)
-            $table->json('points')->nullable();
+            // Section 3: Strategic Goals, Objective & Impact Alignment
+            $table->text('problem_statement');
+            $table->text('baseline_survey')->nullable();
+            $table->json('donut_metrics')->nullable();
+            $table->json('target_groups')->nullable();
+            $table->json('objectives')->nullable();
+            $table->text('expected_outcomes')->nullable();
+            $table->string('impact_image')->nullable();
+            $table->text('scalability_notes')->nullable();
+            $table->json('alignment_categories')->nullable();
+            $table->json('sdg_goals')->nullable();
+            $table->json('govt_schemes')->nullable();
+            $table->text('alignment_notes')->nullable();
+            $table->text('sustainability_plan');
 
-            // ========== UPCOMING STAGE FIELDS ==========
-            $table->decimal('cost', 15, 2)->nullable()->comment('Estimated cost for upcoming projects');
-            $table->date('start_date')->nullable();
-            $table->date('end_date')->nullable();
+            // Section 5: CSR & Stakeholders Engagement
+            $table->text('csr_invitation');
+            $table->string('cta_button_text')->default('Register Your Interest');
+            $table->json('stakeholders')->nullable();
 
-            // Beneficiaries (JSON object/array)
-            $table->json('beneficiaries')->nullable()->comment('Example: [{"name":"Student","count":100,"description":"desc"}]');
+            // Section 6: Resource & Operation Compliance Risks (Upcoming Stage)
+            $table->text('resources_needed')->nullable();
+            $table->text('compliance_requirements')->nullable();
+            $table->json('risks')->nullable();
 
-            // Funding
-            $table->enum('funding_type', ['csr', 'crowdfunding', 'self-funded', 'donation'])->nullable();
-            $table->enum('csr_partner_type', ['corporate', 'ngo', 'government', 'individual'])->nullable();
-            $table->text('csr_invitation')->nullable();
+            // Section 6: Update of Execution – Ongoing Stage (NEW)
+            $table->text('last_update_summary')->nullable();
+            $table->decimal('project_progress', 5, 2)->default(0);
+            $table->integer('actual_beneficiary_count')->default(0);
+            $table->text('challenges_identified')->nullable();
+            $table->json('resources_needed_ongoing')->nullable();
+            $table->json('operational_risks_ongoing')->nullable();
+            $table->text('compliance_requirement_status')->nullable();
+            $table->text('solutions_actions_taken')->nullable();
+            $table->decimal('completion_readiness', 5, 2)->nullable();
+            $table->text('handover_sustainability_note')->nullable();
+            $table->boolean('status')->default(true);
 
-            // Crowdfunding / CTA
-            $table->enum('crowdfunding_status', ['opening_soon', 'not_started'])->nullable();
-            $table->string('cta_button_text')->nullable()->default('Register Your Interest →');
-            $table->string('interest_link')->nullable();
+            // Section 7: Media and Documents
+            $table->json('gallery_images')->nullable();
+            $table->string('before_photo')->nullable();
+            $table->string('expected_photo')->nullable();
+            $table->json('documents')->nullable();
+            $table->json('links')->nullable();
 
-            // ========== ONGOING STAGE FIELDS ==========
-            $table->string('project_lead')->nullable();
-            $table->date('actual_start_date')->nullable();
-            $table->date('expected_end_date')->nullable();
-            $table->integer('ongoing_beneficiaries')->nullable();
-            $table->decimal('project_cost', 15, 2)->nullable();
-            $table->string('level')->nullable()->default(1);
-            $table->decimal('funding_target', 15, 2)->nullable();
-            $table->decimal('amount_raised', 15, 2)->nullable()->default(0);
-            $table->enum('ongoing_crowdfunding_status', ['active', 'on_hold', 'closed'])->nullable();
-            $table->string('main_donor')->nullable();
-            $table->text('isico_message')->nullable();
-            $table->json('progress_updates')->nullable()->comment('JSON array of milestone updates [{"date":"","title":"","description":"","image":"","status":""}]');
-
-            // ========== COMPLETED STAGE FIELDS ==========
-            $table->string('completed_project_lead')->nullable();
-            $table->date('completed_start_date')->nullable();
-            $table->date('completed_end_date')->nullable();
-            $table->decimal('final_cost', 15, 2)->nullable();
-            $table->integer('completed_beneficiaries')->nullable();
-            $table->string('completed_csr_partner')->nullable();
-            $table->text('impact_summary')->nullable();
-            $table->json('outcome_metrics')->nullable()->comment('JSON array of outcome metrics [{"metric":"","value":""}]');
-            $table->json('testimonials')->nullable()->comment('JSON array of testimonials [{"name":"","quote":""}]');
-            $table->text('sustainability_plan')->nullable();
-            $table->text('lessons_learned')->nullable();
-            $table->string('completion_report')->nullable();
-            $table->string('utilization_certificate')->nullable();
-            $table->json('impact_stories')->nullable()->comment('JSON array of impact stories [{"title":"","description":"","image":""}]');
-
-            // SDGs (store as JSON array of IDs)
-            $table->json('sdgs')->nullable();
-
-            // Common
-            $table->boolean('status')->default(1)->comment('1=Active, 0=Inactive');
-
+            // Timestamps
             $table->timestamps();
+            $table->softDeletes();
 
-            // Foreign key constraint
-            $table->foreign('category_id')
-                ->references('id')
-                ->on('category')
-                ->onDelete('set null');
-        });
-
-        // Status Logs
-        Schema::create('project_status_logs', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('project_id');
-            $table->string('old_status')->nullable();
-            $table->string('new_status');
-            $table->unsignedBigInteger('changed_by')->nullable();
-            $table->timestamp('changed_at')->useCurrent();
-
-            $table->foreign('project_id')
-                ->references('id')
-                ->on('projects')
-                ->onDelete('cascade');
+            // Indexes for better performance
+            $table->index('project_code');
+            $table->index('stage');
+            $table->index('category_id');
+            $table->index('location_type');
+            $table->index('created_at');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    public function down()
     {
-        Schema::dropIfExists('project_status_logs');
         Schema::dropIfExists('projects');
     }
 };

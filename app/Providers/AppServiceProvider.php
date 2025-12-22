@@ -26,12 +26,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Paginator::useBootstrap();
-        Schema::defaultStringLength(191);
-        // Load the first HomeSetting record
-        $settings = HomeSetting::first();
-        $defaultSettings = Settings::first();
-        // Share it with all views
-        View::share(['settings' => $settings,'defaultSettings'=>$defaultSettings]);
+        // Paginator::useBootstrap();
+        // Schema::defaultStringLength(191);
+        // // Load the first HomeSetting record
+        // $settings = HomeSetting::first();
+        // $defaultSettings = Settings::first();
+        // // Share it with all views
+        // View::share(['settings' => $settings,'defaultSettings'=>$defaultSettings]);
     }
 }
