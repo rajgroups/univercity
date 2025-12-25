@@ -31,6 +31,9 @@
 	<link rel="stylesheet" href="{{ asset('resource/admin/assets/plugins/fontawesome/css/fontawesome.min.css')}}">
 	<link rel="stylesheet" href="{{ asset('resource/admin/assets/plugins/fontawesome/css/all.min.css')}}">
 
+	<!-- Feather CSS -->
+	<link rel="stylesheet" href="{{ asset('resource/admin/assets/plugins/icons/feather/feather.css')}}">
+
 	<!-- Color Picker Css -->
 	<link rel="stylesheet" href="{{ asset('resource/admin/assets/plugins/%40simonwep/pickr/themes/nano.min.css')}}">
 

@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Project;
 use App\Models\Category;
+use App\Models\ProjectMilestone;
+use App\Models\Stakeholder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
@@ -495,7 +497,7 @@ class ProjectController extends Controller
     {
         $filePaths = [];
 
-        // Handle single file uploads
+        // 1. Handle Single File Uploads (Thumbnail, Before/Expected/Impact Photos)
         $singleFiles = [
             'thumbnail_image',
             'before_photo',
@@ -504,119 +506,161 @@ class ProjectController extends Controller
         ];
 
         foreach ($singleFiles as $field) {
-            if ($request->hasFile($field)) {
-                // Delete old file if exists
+            // Check for explicit removal request from frontend
+            if ($request->has("removed_{$field}") && $request->input("removed_{$field}")) {
                 if ($project && $project->$field) {
-                    File::delete(public_path($project->$field));
+                    $absolutePath = public_path($project->$field);
+                    if (File::exists($absolutePath)) {
+                        File::delete($absolutePath);
+                    }
+                }
+                $filePaths[$field] = null; // Explicitly set to null in DB
+            }
+
+            // Handle New File Upload
+            if ($request->hasFile($field)) {
+                // Delete old file if exists (and wasn't just removed above)
+                if ($project && $project->$field && !isset($filePaths[$field])) {
+                    $absolutePath = public_path($project->$field);
+                    if (File::exists($absolutePath)) {
+                        File::delete($absolutePath);
+                    }
                 }
 
                 $file = $request->file($field);
                 $filename = time() . '_' . $file->getClientOriginalName();
                 $relativePath = 'projects/' . $field;
                 $absolutePath = public_path($relativePath);
-                
+
                 if (!File::exists($absolutePath)) {
                     File::makeDirectory($absolutePath, 0755, true);
                 }
-                
+
                 $file->move($absolutePath, $filename);
                 $filePaths[$field] = $relativePath . '/' . $filename;
             }
         }
 
-        // Handle multiple file uploads (banner images)
-        if ($request->hasFile('banner_images')) {
-            $bannerPaths = [];
+        // 2. Handle Multiple Files: Banner Images
+        $currentBanners = ($project && $project->banner_images) ? json_decode($project->banner_images, true) : [];
+        if (!is_array($currentBanners)) $currentBanners = [];
 
-            // Delete old banner images if updating
-            if ($project && $project->banner_images) {
-                $oldBanners = json_decode($project->banner_images, true);
-                foreach ($oldBanners as $oldBanner) {
-                    File::delete(public_path($oldBanner));
+        // Process Removals for Banners
+        if ($request->has('removed_banner_image')) {
+            $bannersToRemove = $request->input('removed_banner_image');
+            // Ensure array
+            if (!is_array($bannersToRemove)) $bannersToRemove = [$bannersToRemove];
+
+            // Remove from array
+            $currentBanners = array_diff($currentBanners, $bannersToRemove);
+
+            // Delete actual files
+            foreach ($bannersToRemove as $path) {
+                $absolutePath = public_path($path);
+                if (File::exists($absolutePath)) {
+                    File::delete($absolutePath);
                 }
             }
+        }
 
+        // Add New Banners
+        if ($request->hasFile('banner_images')) {
             foreach ($request->file('banner_images') as $banner) {
                 $filename = time() . '_' . $banner->getClientOriginalName();
                 $relativePath = 'projects/banners';
                 $absolutePath = public_path($relativePath);
-                
+
                 if (!File::exists($absolutePath)) {
                     File::makeDirectory($absolutePath, 0755, true);
                 }
 
                 $banner->move($absolutePath, $filename);
                 $finalPath = $relativePath . '/' . $filename;
-                $bannerPaths[] = $finalPath;
-                Log::info('Banner moved to:', ['path' => $finalPath]);
+                $currentBanners[] = $finalPath;
             }
+        }
+        $filePaths['banner_images'] = array_values($currentBanners);
 
-            $filePaths['banner_images'] = $bannerPaths;
+
+        // 3. Handle Multiple Files: Gallery Images
+        $currentGallery = ($project && $project->gallery_images) ? json_decode($project->gallery_images, true) : [];
+        if (!is_array($currentGallery)) $currentGallery = [];
+
+        // Process Removals for Gallery
+        if ($request->has('removed_gallery_image')) {
+             $galleryToRemove = $request->input('removed_gallery_image');
+             if (!is_array($galleryToRemove)) $galleryToRemove = [$galleryToRemove];
+
+             $currentGallery = array_diff($currentGallery, $galleryToRemove);
+
+             foreach ($galleryToRemove as $path) {
+                 $absolutePath = public_path($path);
+                 if (File::exists($absolutePath)) {
+                     File::delete($absolutePath);
+                 }
+             }
         }
 
-        // Handle multiple file uploads (gallery images)
+        // Add New Gallery Images
         if ($request->hasFile('gallery_images')) {
-            $galleryPaths = [];
-
-            // Get existing gallery images if updating
-            if ($project && $project->gallery_images) {
-                $existingGallery = json_decode($project->gallery_images, true);
-                $galleryPaths = $existingGallery;
-            }
-
             foreach ($request->file('gallery_images') as $galleryImage) {
                 $filename = time() . '_' . $galleryImage->getClientOriginalName();
                 $relativePath = 'projects/gallery';
                 $absolutePath = public_path($relativePath);
-                
+
                 if (!File::exists($absolutePath)) {
                     File::makeDirectory($absolutePath, 0755, true);
                 }
 
                 $galleryImage->move($absolutePath, $filename);
-                $galleryPaths[] = $relativePath . '/' . $filename;
+                $currentGallery[] = $relativePath . '/' . $filename;
             }
-
-            $filePaths['gallery_images'] = $galleryPaths;
         }
+        $filePaths['gallery_images'] = array_values($currentGallery);
 
-        // Handle document uploads
+
+        // 4. Handle Documents (Mix of Existing and New)
+        // We use the 'documents' array from POST which contains labels and potentially files.
+        // AND we check 'existing_documents' which maps index -> file path.
         if ($request->has('documents')) {
-            $documents = [];
+            $finalDocuments = [];
+            $inputDocs = $request->input('documents'); // Array of [label => ..., file => ...] (file here is missing in input if file upload)
 
-            // Get existing documents if updating
-            if ($project && $project->documents) {
-                $existingDocuments = json_decode($project->documents, true);
-                $documents = $existingDocuments;
-            }
+            foreach ($inputDocs as $index => $docData) {
+                $docPath = null;
+                $docLabel = $docData['label'] ?? '';
+                $docNotes = $docData['notes'] ?? '';
 
-            foreach ($request->input('documents') as $index => $documentData) {
+                // Case A: New File Uploaded for this row
                 if ($request->hasFile("documents.{$index}.file")) {
                     $file = $request->file("documents.{$index}.file");
                     $filename = time() . '_' . $file->getClientOriginalName();
                     $relativePath = 'projects/documents';
                     $absolutePath = public_path($relativePath);
-                    
+
                     if (!File::exists($absolutePath)) {
                         File::makeDirectory($absolutePath, 0755, true);
                     }
 
                     $file->move($absolutePath, $filename);
-                    
-                    $documents[] = [
-                        'label' => $documentData['label'] ?? '',
-                        'file' => $relativePath . '/' . $filename,
-                        'notes' => $documentData['notes'] ?? ''
+                    $docPath = $relativePath . '/' . $filename;
+                }
+                // Case B: No New File, Check if it's an Existing Document
+                // We check the hidden input `existing_documents[$index][file]`
+                elseif ($request->has("existing_documents.{$index}.file")) {
+                    $docPath = $request->input("existing_documents.{$index}.file");
+                }
+
+                // Only add if we have a file path
+                if ($docPath) {
+                    $finalDocuments[] = [
+                        'label' => $docLabel,
+                        'file' => $docPath,
+                        'notes' => $docNotes
                     ];
-                } elseif (isset($documentData['label'])) {
-                    // Keep existing document if no new file uploaded
-                    if ($project && isset($existingDocuments[$index])) {
-                        $documents[] = $existingDocuments[$index];
-                    }
                 }
             }
-
-            $filePaths['documents'] = $documents;
+            $filePaths['documents'] = $finalDocuments;
         }
 
         return $filePaths;
@@ -943,5 +987,105 @@ if (isset($data[$field])) {
                 'message' => 'Error performing bulk action: ' . $e->getMessage()
             ], 500);
         }
+    }
+
+public function createMilestone($projectid){
+    $project = Project::findOrFail($projectid);
+    $stakeholders = Stakeholder::where('status', 'active')->get();
+    $milestones = ProjectMilestone::where('project_id', $projectid)->get();
+
+    return view('admin.project.milestone', compact('project', 'stakeholders', 'milestones'));
+}
+
+public function storeMilestones(Request $request)
+{
+    $request->validate([
+        'project_id' => 'required|exists:projects,id',
+        'tasks' => 'array',
+        'tasks.*.stakeholder_id' => 'required|exists:stakeholders,id',
+        'tasks.*.phase' => 'required|string',
+        'tasks.*.task_name' => 'required|string',
+        'delete_tasks' => 'array'
+    ]);
+
+    try {
+        DB::beginTransaction();
+
+        $projectId = $request->project_id;
+        $updatedTasks = [];
+
+        // Handle deletions
+        if ($request->has('delete_tasks')) {
+            ProjectMilestone::whereIn('id', $request->delete_tasks)->delete();
+        }
+
+        // Handle updates and creations
+        if ($request->has('tasks')) {
+            foreach ($request->tasks as $taskData) {
+                $task = ProjectMilestone::updateOrCreate(
+                    [
+                        'id' => $taskData['id'] ?? null,
+                        'project_id' => $projectId
+                    ],
+                    [
+                        'stakeholder_id' => $taskData['stakeholder_id'],
+                        'phase' => $taskData['phase'],
+                        'task_name' => $taskData['task_name'],
+                        'planned_start_date' => $taskData['start_date'] ?: null,
+                        'planned_end_date' => $taskData['end_date'] ?: null,
+                        'in_charge' => $taskData['in_charge'],
+                        'priority' => $taskData['priority'],
+                        'status' => $taskData['status'],
+                        'progress' => $taskData['progress'],
+                        'notes' => $taskData['notes']
+                    ]
+                );
+
+                $updatedTasks[] = [
+                    'client_id' => $taskData['client_id'] ?? null,
+                    'id' => $task->id
+                ];
+            }
+        }
+
+        DB::commit();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Milestones saved successfully',
+            'updated_tasks' => $updatedTasks
+        ]);
+
+    } catch (\Exception $e) {
+        DB::rollBack();
+        return response()->json([
+            'success' => false,
+            'message' => 'Error saving milestones: ' . $e->getMessage()
+        ], 500);
+    }
+}
+
+public function getMilestones($projectId)
+{
+    try {
+        $milestones = ProjectMilestone::where('project_id', $projectId)
+            ->with('stakeholder')
+            ->orderBy('phase')
+            ->get();
+
+        return response()->json([
+            'success' => true,
+            'milestones' => $milestones
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Error fetching milestones: ' . $e->getMessage()
+        ], 500);
+    }
+}
+    public function createEstmator($projectid){
+        $projects = Project::findOrFail($projectid);
+        return view('admin.project.estmator',compact('projects'));
     }
 }

@@ -105,11 +105,28 @@ Route::prefix('admin')->as('admin.')->group(function() {
 
         Route::post('project/bulk-action', [ProjectController::class, 'bulkAction'])->name('project.bulk-action');
         Route::get('project/stats', [ProjectController::class, 'getStats'])->name('project.stats');
-        Route::get('projects/milestone', [ProjectController::class,'createMilestone']);
+        // Display milestone creation page
+        Route::get('/projects/{project}/milestones/create', [ProjectController::class, 'createMilestone'])->name('project.milestones.create');
+
+        // Save milestones
+        Route::post('/projects/milestones/store', [ProjectController::class, 'storeMilestones'])->name('project.milestones.store');
+        // Get milestones (JSON)
+        Route::get('/projects/{project}/milestones/list', [ProjectController::class, 'getMilestones'])->name('project.milestones.list');
         // Estimator
-        Route::get('projects/estmator', [ProjectController::class,'createEstmator']);
+        Route::controller(App\Http\Controllers\Admin\ProjectEstimatorController::class)->group(function () {
+             Route::get('project/estmator/{project_id}', 'index')->name('project.estmator.index');
+             Route::post('project/estimator/item', 'storeEstimationItem')->name('project.estmator.item.store');
+             Route::delete('project/estimator/item/{id}', 'deleteEstimationItem')->name('project.estmator.item.delete');
+             Route::post('project/estimator/donor', 'storeDonor')->name('project.estmator.donor.store');
+             Route::delete('project/estimator/donor/{id}', 'deleteDonor')->name('project.estmator.donor.delete');
+             Route::post('project/estimator/funding', 'storeFunding')->name('project.estmator.funding.store');
+             Route::delete('project/estimator/funding/{id}', 'deleteFunding')->name('project.estmator.funding.delete');
+             Route::post('project/estimator/import', 'importFromEstimation')->name('project.estmator.import');
+             Route::post('project/estimator/utilization', 'storeUtilization')->name('project.estmator.utilization.store');
+             Route::delete('project/estimator/utilization/{id}', 'deleteUtilization')->name('project.estmator.utilization.delete');
+        });
         // field Log
-        Route::get('/projets/fieldlog', [ProjectController::class,'createMilestone']);
+        Route::get('/projet/fieldlog', [ProjectController::class,'createMilestone']);
         Route::resource('project', ProjectController::class);
         Route::get('project/{project}/toggle-status', [ProjectController::class, 'toggleStatus'])->name('project.toggle-status');
         Route::get('project/export', [ProjectController::class, 'export'])->name('project.export');

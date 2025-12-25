@@ -224,7 +224,7 @@
                                     <div class="d-flex align-items-center">
                                         @if($project->thumbnail_image)
                                             <div class="flex-shrink-0 me-3">
-                                                <img src="{{ asset('storage/' . $project->thumbnail_image) }}"
+                                                <img src="{{ asset($project->thumbnail_image) }}"
                                                      alt="{{ $project->title }}"
                                                      class="avatar-md rounded">
                                             </div>
@@ -311,29 +311,50 @@
                                     </div>
                                 </td>
                                 <td class="text-center">
-                                    <div class="btn-group" role="group">
-                                        <a href="{{ route('admin.project.show', $project->id) }}"
-                                           class="btn btn-sm btn-outline-primary"
-                                           data-bs-toggle="tooltip"
-                                           title="View">
-                                            <i class="feather feather-eye"></i>
-                                        </a>
-                                        <a href="{{ route('admin.project.edit', $project->id) }}"
-                                           class="btn btn-sm btn-outline-info"
-                                           data-bs-toggle="tooltip"
-                                           title="Edit">
-                                            <i class="feather feather-edit"></i>
-                                        </a>
-                                        <button type="button"
-                                                class="btn btn-sm btn-outline-danger delete-btn"
-                                                data-id="{{ $project->id }}"
-                                                data-title="{{ $project->title }}"
-                                                data-bs-toggle="tooltip"
-                                                title="Delete">
-                                            <i class="feather feather-trash-2"></i>
-                                        </button>
-                                    </div>
-                                </td>
+    <div class="btn-group" role="group">
+        <!-- View button -->
+        <a href="{{ route('admin.project.show', $project->id) }}"
+           class="btn btn-sm btn-outline-primary"
+           data-bs-toggle="tooltip"
+           title="View">
+            <i class="feather feather-eye"></i>
+        </a>
+
+        <!-- Edit button -->
+        <a href="{{ route('admin.project.edit', $project->id) }}"
+           class="btn btn-sm btn-outline-info"
+           data-bs-toggle="tooltip"
+           title="Edit">
+            <i class="feather feather-edit"></i>
+        </a>
+
+        <!-- Estimation button -->
+        <a href="{{ route('admin.project.estmator.index', $project->id) }}"
+           class="btn btn-sm btn-outline-warning"
+           data-bs-toggle="tooltip"
+           title="Estimation">
+            <i class="feather feather-dollar-sign"></i>
+        </a>
+
+        <!-- Milestones button -->
+        <a href="{{ route('admin.project.milestones.create', $project->id) }}"
+           class="btn btn-sm btn-outline-success"
+           data-bs-toggle="tooltip"
+           title="Milestones">
+            <i class="feather feather-target"></i>
+        </a>
+
+        <!-- Delete button -->
+        <button type="button"
+                class="btn btn-sm btn-outline-danger delete-btn"
+                data-id="{{ $project->id }}"
+                data-title="{{ $project->title }}"
+                data-bs-toggle="tooltip"
+                title="Delete">
+            <i class="feather feather-trash-2"></i>
+        </button>
+    </div>
+</td>
                             </tr>
                         @empty
                             <tr>

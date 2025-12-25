@@ -2172,7 +2172,13 @@
                 // Create a hidden input to track removed images
                 const hiddenInput = document.createElement('input');
                 hiddenInput.type = 'hidden';
-                hiddenInput.name = `removed_${type}_image`;
+                // Use array syntax for multiple removals
+                if (type === 'banner' || type === 'gallery') {
+                     hiddenInput.name = `removed_${type}_image[]`;
+                } else {
+                     hiddenInput.name = `removed_${type}`;
+                }
+                
                 hiddenInput.value = path;
                 document.getElementById('projectForm').appendChild(hiddenInput);
 
