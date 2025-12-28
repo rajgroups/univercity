@@ -1,5 +1,5 @@
+{{-- @dd($project->sdg_goals); --}}
 @extends('layouts.web.app')
-
 @section('content')
 
 <!-- Hero Section - Modernized -->
@@ -1408,7 +1408,7 @@
                     @if($surveys->count() > 0)
                     <span class="badge bg-success bg-opacity-10 text-success px-3 py-2 rounded-pill">
                         <i class="bi bi-calendar-check me-1"></i>
-                        {{ $surveys->min('survey_date') ? \Carbon\Carbon::parse($surveys->min('survey_date'))->format('M Y') : 'N/A' }} - 
+                        {{ $surveys->min('survey_date') ? \Carbon\Carbon::parse($surveys->min('survey_date'))->format('M Y') : 'N/A' }} -
                         {{ $surveys->max('survey_date') ? \Carbon\Carbon::parse($surveys->max('survey_date'))->format('M Y') : 'N/A' }}
                     </span>
                     @endif
@@ -1519,13 +1519,13 @@
                                 <div class="btn-group btn-group-sm" role="group">
                                     <input type="radio" class="btn-check" name="surveyFilter" id="filter-all-surveys" autocomplete="off" checked onclick="filterSurveys('all')">
                                     <label class="btn btn-outline-primary" for="filter-all-surveys">All</label>
-                                    
+
                                     <input type="radio" class="btn-check" name="surveyFilter" id="filter-satisfied" autocomplete="off" onclick="filterSurveys('satisfied')">
                                     <label class="btn btn-outline-success" for="filter-satisfied">Satisfied</label>
-                                    
+
                                     <input type="radio" class="btn-check" name="surveyFilter" id="filter-neutral" autocomplete="off" onclick="filterSurveys('neutral')">
                                     <label class="btn btn-outline-secondary" for="filter-neutral">Neutral</label>
-                                    
+
                                     <input type="radio" class="btn-check" name="surveyFilter" id="filter-dissatisfied" autocomplete="off" onclick="filterSurveys('dissatisfied')">
                                     <label class="btn btn-outline-danger" for="filter-dissatisfied">Dissatisfied</label>
                                 </div>
@@ -1536,7 +1536,7 @@
                     <!-- Survey Cards Grid -->
                     <div class="row g-3" id="surveyCardsGrid">
                         @foreach($surveys->sortByDesc('survey_date') as $survey)
-                        <div class="col-md-12 survey-card-item" 
+                        <div class="col-md-12 survey-card-item"
                              data-satisfaction="{{ strtolower(str_replace(' ', '-', $survey->satisfaction)) }}"
                              data-role="{{ strtolower(str_replace(' ', '-', $survey->role)) }}">
                             <div class="card border-0 shadow-sm h-100 survey-feedback-card">
@@ -1649,6 +1649,7 @@
         <!-- SDG & Alignment Tab -->
         <div class="tab-pane fade" id="alignment" role="tabpanel">
             <!-- SDG Alignment -->
+            {{-- @dd($project->sdg_goals); --}}
             @if(isset($project->sdg_goals) && count($project->sdg_goals) > 0)
             <div class="mb-5">
                 <div class="d-flex align-items-center mb-4">
@@ -1974,7 +1975,7 @@
         z-index: 9999 !important;
         background: rgba(0,0,0,0.85) !important;
     }
-    
+
     .lightbox {
         position: fixed !important;
         top: 50% !important;
@@ -1983,13 +1984,13 @@
         z-index: 10000 !important;
         margin: 0 !important;
     }
-    
+
     .lb-outerContainer {
         background-color: #fff;
         border-radius: 8px;
         overflow: hidden;
     }
-    
+
     .lb-dataContainer {
         padding: 10px 0;
     }
@@ -2160,69 +2161,69 @@
     /* ========================================
        SURVEY FEEDBACK SECTION STYLES
        ======================================== */
-    
+
     .btn-outline-teal {
         color: #20c997;
         border-color: #20c997;
     }
-    
+
     .btn-outline-teal:hover,
     .btn-outline-teal.active {
         background-color: #20c997;
         border-color: #20c997;
         color: white;
     }
-    
+
     .text-teal {
         color: #20c997 !important;
     }
-    
+
     .survey-feedback-card {
         transition: all 0.3s ease;
         border-radius: 12px !important;
     }
-    
+
     .survey-feedback-card:hover {
         transform: translateY(-5px);
         box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1) !important;
     }
-    
+
     .survey-avatar > div {
         transition: transform 0.3s ease;
     }
-    
+
     .survey-feedback-card:hover .survey-avatar > div {
         transform: scale(1.1);
     }
-    
+
     .survey-comment {
         position: relative;
     }
-    
+
     .survey-comment .bi-quote {
         position: absolute;
         top: -5px;
         left: 10px;
         opacity: 0.3;
     }
-    
+
     .expand-comment {
         font-size: 0.85rem;
         text-decoration: none;
     }
-    
+
     .expand-comment:hover {
         text-decoration: underline;
     }
-    
+
     #satisfactionChart {
         max-height: 200px;
     }
-    
+
     .circular-chart-success .circle {
         animation: progress-success 1s ease-out forwards;
     }
-    
+
     @keyframes progress-success {
         0% {
             stroke-dasharray: 0 100;
@@ -2612,7 +2613,7 @@ function filterSurveys(filter) {
     cards.forEach(card => {
         const satisfaction = card.dataset.satisfaction;
         let show = false;
-        
+
         switch(filter) {
             case 'all':
                 show = true;
@@ -2627,7 +2628,7 @@ function filterSurveys(filter) {
                 show = satisfaction === 'dissatisfied';
                 break;
         }
-        
+
         if (show) {
             card.style.display = 'block';
             card.classList.add('animate__animated', 'animate__fadeIn');

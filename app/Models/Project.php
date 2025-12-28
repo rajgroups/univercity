@@ -168,22 +168,27 @@ class Project extends Model
 
     public function getAlignmentCategoriesAttribute($value)
     {
-        // Already an array → return as is
+        if ($value === null) {
+            return [];
+        }
+
+        // Step 1 — if already array, return
         if (is_array($value)) {
             return $value;
         }
 
-        // Try JSON decode
+        // Step 2 — first decode
         $decoded = json_decode($value, true);
 
-        // If decode works → return array
-        if (is_array($decoded)) {
-            return $decoded;
+        // Step 3 — handle double-encoded JSON
+        if (is_string($decoded)) {
+            $decoded = json_decode($decoded, true);
         }
 
-        // If value is "[]" or null → return empty array
-        return [];
+        // Step 4 — final validation
+        return is_array($decoded) ? $decoded : [];
     }
+
 
     public function getGovtSchemesAttribute($value)
     {
@@ -203,6 +208,52 @@ class Project extends Model
         // If value is "[]" or null → return empty array
         return [];
     }
+
+    public function getDonutMetricsAttribute($value)
+    {
+        if ($value === null) {
+            return [];
+        }
+
+        // Already array → return
+        if (is_array($value)) {
+            return $value;
+        }
+
+        // 1st decode
+        $decoded = json_decode($value, true);
+
+        // Handle double-encoded case
+        if (is_string($decoded)) {
+            $decoded = json_decode($decoded, true);
+        }
+
+        // Ensure final output is array
+        return is_array($decoded) ? $decoded : [];
+    }
+
+    public function getTargetGroupsAttribute($value)
+    {
+        if ($value === null) {
+            return [];
+        }
+
+        // If already array, return as-is
+        if (is_array($value)) {
+            return $value;
+        }
+
+        // First decode
+        $decoded = json_decode($value, true);
+
+        // Handle cases like "\"[{...}]\""
+        if (is_string($decoded)) {
+            $decoded = json_decode($decoded, true);
+        }
+
+        return is_array($decoded) ? $decoded : [];
+    }
+
 
     public function getGalleryImagesAttribute($value)
     {
@@ -240,28 +291,19 @@ class Project extends Model
 
     public function getSdgGoalsAttribute($value)
     {
-        // Normalize null / empty / weird values
-        if ($value === null || $value === '' || $value === '[]' || $value === '"[]"') {
+        if ($value === null) {
             return [];
         }
 
-        // If already an array
-        if (is_array($value)) {
-            return array_values(array_filter($value, fn($v) => $this->isValidSdgValue($v)));
+        // First decode
+        $decoded = is_array($value) ? $value : json_decode($value, true);
+
+        // Handle double-encoded case like "\"[1,2,3,4]\""
+        if (is_string($decoded)) {
+            $decoded = json_decode($decoded, true);
         }
 
-        // Try to decode JSON → only accept array output
-        $decoded = json_decode($value, true);
-        if (is_array($decoded)) {
-            return array_values(array_filter($decoded, fn($v) => $this->isValidSdgValue($v)));
-        }
-
-        // If single value string → wrap it
-        if ($this->isValidSdgValue($value)) {
-            return [$value];
-        }
-
-        return [];
+        return is_array($decoded) ? $decoded : [];
     }
 
     /**

@@ -1,3 +1,4 @@
+{{-- @dd($project->alignment_categories) --}}
 @extends('layouts.admin.app')
 @section('content')
     <div class="page-header">
@@ -1063,7 +1064,7 @@
                                             class="form-select select2-multiple @error('alignment_categories') is-invalid @enderror"
                                             multiple>
                                             <option value="sdg"
-                                                {{ in_array('sdg', old('alignment_categories', $project->alignment_categories ?? [])) ? 'selected' : '' }}>
+                                                {{ in_array('sdg', old('alignment_categories', $project->alignment_categories ?? [])) ? 'selected' : 'selected' }}>
                                                 SDG Goals</option>
                                             <option value="nep2020"
                                                 {{ in_array('nep2020', old('alignment_categories', $project->alignment_categories ?? [])) ? 'selected' : '' }}>
