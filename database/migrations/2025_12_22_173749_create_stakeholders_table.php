@@ -195,7 +195,7 @@ return new class extends Migration
 
             // Indexes
             // Laravel will automatically generate a shorter name
-            $table->index(['stakeholder_id', 'communication_type']);
+            $table->index(['stakeholder_id', 'communication_type', 'stakeholder_comm_type_idx']);
             $table->index(['project_id', 'status']);
             $table->index('response_due_date');
         });
