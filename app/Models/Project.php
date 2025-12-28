@@ -113,20 +113,27 @@ class Project extends Model
 
     public function getBannerImagesAttribute($value)
     {
-        // Return null if empty
-        if ($value === null || trim($value) === '' || $value === '[]' || $value === '"[]"') {
+        // If value is null, empty, or blank JSON → return null
+        if ($value === null || $value === '' || $value === '[]' || $value === '"[]"') {
             return null;
         }
 
-        // If JSON accidentally stored earlier, extract first value
-        $decoded = json_decode($value, true);
-        if (is_array($decoded) && isset($decoded[0])) {
-            return $decoded[0];
+        // If value is already an array (coming from cast / mutation)
+        if (is_array($value)) {
+            return $value[0] ?? null;
         }
 
-        // Always return a single string path
-        return trim($value);
+        // Try to decode JSON values
+        $decoded = json_decode($value, true);
+
+        if (is_array($decoded)) {
+            return $decoded[0] ?? null;
+        }
+
+        // Otherwise assume it's a single string path
+        return trim((string) $value);
     }
+
 
 
     public function getLinksAttribute($value)
