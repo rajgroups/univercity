@@ -1,4 +1,3 @@
-{{-- @dd($project->alignment_categories) --}}
 @extends('layouts.admin.app')
 @section('content')
     <div class="page-header">
@@ -258,7 +257,7 @@
                                         <label class="form-label">Banner Images</label>
                                         <input type="file"
                                             class="form-control @error('banner_images') is-invalid @enderror"
-                                            name="banner_images[]" accept="image/*" multiple>
+                                            name="banner_images" accept="image/*" multiple>
                                         @error('banner_images')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -1269,39 +1268,72 @@
                                 </div>
                             </div>
 
-                            <!-- Govt Schemes (conditional) -->
-                            <div id="govt_schemes_section" style="display: {{ in_array('govt_schemes', old('alignment_categories', $project->alignment_categories ?? [])) ? 'block' : 'none' }};">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="mb-3">
-                                            <label class="form-label">Government Schemes / Policies</label>
-                                            <select name="govt_schemes[]"
-                                                class="form-select select2-multiple @error('govt_schemes') is-invalid @enderror"
-                                                multiple>
-                                                <option value="skill_india_mission"
-                                                    {{ in_array('skill_india_mission', old('govt_schemes', $project->govt_schemes ?? [])) ? 'selected' : '' }}>
-                                                    Skill India Mission</option>
-                                                <option value="nsp"
-                                                    {{ in_array('nsp', old('govt_schemes', $project->govt_schemes ?? [])) ? 'selected' : '' }}>
-                                                    National Skill Development Policy</option>
-                                                <option value="pmkvy"
-                                                    {{ in_array('pmkvy', old('govt_schemes', $project->govt_schemes ?? [])) ? 'selected' : '' }}>
-                                                    Pradhan Mantri Kaushal Vikas Yojana</option>
-                                                <option value="nlm"
-                                                    {{ in_array('nlm', old('govt_schemes', $project->govt_schemes ?? [])) ? 'selected' : '' }}>
-                                                    National Livelihood Mission</option>
-                                                <option value="beti_bachao"
-                                                    {{ in_array('beti_bachao', old('govt_schemes', $project->govt_schemes ?? [])) ? 'selected' : '' }}>
-                                                    Beti Bachao Beti Padhao</option>
-                                            </select>
-                                            @error('govt_schemes')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                            <div class="form-text">Select government schemes aligned with this project</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                           @php
+    // Normalize alignment_categories
+    $alignmentCategories = old('alignment_categories', $project->alignment_categories ?? []);
+    $alignmentCategories = is_array($alignmentCategories)
+        ? $alignmentCategories
+        : (array) json_decode($alignmentCategories ?: '[]', true);
+
+    // Normalize govt_schemes
+    $govtSchemes = old('govt_schemes', $project->govt_schemes ?? []);
+    $govtSchemes = is_array($govtSchemes)
+        ? $govtSchemes
+        : (array) json_decode($govtSchemes ?: '[]', true);
+@endphp
+
+
+<!-- Govt Schemes (conditional) -->
+<div id="govt_schemes_section"
+     style="display: {{ in_array('govt_schemes', $alignmentCategories ?? []) ? 'block' : 'none' }};">
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="mb-3">
+                <label class="form-label">Government Schemes / Policies</label>
+
+                <select name="govt_schemes[]"
+                        class="form-select select2-multiple @error('govt_schemes') is-invalid @enderror"
+                        multiple>
+
+                    <option value="skill_india_mission"
+                        @selected(in_array('skill_india_mission', $govtSchemes ?? []))>
+                        Skill India Mission
+                    </option>
+
+                    <option value="nsp"
+                        @selected(in_array('nsp', $govtSchemes ?? []))>
+                        National Skill Development Policy
+                    </option>
+
+                    <option value="pmkvy"
+                        @selected(in_array('pmkvy', $govtSchemes ?? []))>
+                        Pradhan Mantri Kaushal Vikas Yojana
+                    </option>
+
+                    <option value="nlm"
+                        @selected(in_array('nlm', $govtSchemes ?? []))>
+                        National Livelihood Mission
+                    </option>
+
+                    <option value="beti_bachao"
+                        @selected(in_array('beti_bachao', $govtSchemes ?? []))>
+                        Beti Bachao Beti Padhao
+                    </option>
+                </select>
+
+                @error('govt_schemes')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+
+                <div class="form-text">
+                    Select government schemes aligned with this project
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 
                             <div class="row">
                                 <div class="col-md-12">

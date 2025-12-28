@@ -113,18 +113,21 @@ class Project extends Model
 
     public function getBannerImagesAttribute($value)
     {
-        // If null or empty → return null (not an array, since it's a single image field)
-        if ($value === null || $value === '' || $value === '[]' || $value === '"[]"') {
+        // Return null if empty
+        if ($value === null || trim($value) === '' || $value === '[]' || $value === '"[]"') {
             return null;
         }
 
-        // If it's a valid image path string
-        if (is_string($value) && strlen(trim($value)) > 2) {
-            return $value;
+        // If JSON accidentally stored earlier, extract first value
+        $decoded = json_decode($value, true);
+        if (is_array($decoded) && isset($decoded[0])) {
+            return $decoded[0];
         }
 
-        return null;
+        // Always return a single string path
+        return trim($value);
     }
+
 
     public function getLinksAttribute($value)
     {
@@ -247,7 +250,46 @@ class Project extends Model
         return [];
     }
 
+    public function getSdgGoalsAttribute($value)
+    {
+        // Normalize null / empty / weird values
+        if ($value === null || $value === '' || $value === '[]' || $value === '"[]"') {
+            return [];
+        }
 
+        // If already an array
+        if (is_array($value)) {
+            return array_values(array_filter($value, fn($v) => $this->isValidSdgValue($v)));
+        }
 
+        // Try to decode JSON → only accept array output
+        $decoded = json_decode($value, true);
+        if (is_array($decoded)) {
+            return array_values(array_filter($decoded, fn($v) => $this->isValidSdgValue($v)));
+        }
+
+        // If single value string → wrap it
+        if ($this->isValidSdgValue($value)) {
+            return [$value];
+        }
+
+        return [];
+    }
+
+    /**
+     * Validate an SDG value entry
+     */
+    protected function isValidSdgValue($value): bool
+    {
+        if (!is_string($value)) {
+            return false;
+        }
+
+        $value = trim($value);
+
+        return $value !== ''
+            && $value !== '[]'
+            && $value !== '"[]"';
+    }
 
 }

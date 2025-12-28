@@ -542,14 +542,15 @@ class ProjectController extends Controller
     /**
      * Handle file uploads
      */
-    /**
-     * Handle file uploads
-     */
     private function handleFileUploads(Request $request, $project = null)
     {
         $filePaths = [];
 
-        // 1. Handle Single File Uploads (Thumbnail, Before/Expected/Impact Photos)
+        /*
+        |--------------------------------------------------------------------------
+        | 1) Single File Uploads (thumbnail, before, expected, impact)
+        |--------------------------------------------------------------------------
+        */
         $singleFiles = [
             'thumbnail_image',
             'before_photo',
@@ -558,7 +559,8 @@ class ProjectController extends Controller
         ];
 
         foreach ($singleFiles as $field) {
-            // Check for explicit removal request from frontend
+
+            // Remove existing file if user explicitly removed it
             if ($request->has("removed_{$field}") && $request->input("removed_{$field}")) {
                 if ($project && $project->$field) {
                     $absolutePath = public_path($project->$field);
@@ -566,12 +568,13 @@ class ProjectController extends Controller
                         File::delete($absolutePath);
                     }
                 }
-                $filePaths[$field] = null; // Explicitly set to null in DB
+                $filePaths[$field] = null;
             }
 
-            // Handle New File Upload
+            // Upload new file
             if ($request->hasFile($field)) {
-                // Delete old file if exists (and wasn't just removed above)
+
+                // Delete previous file
                 if ($project && $project->$field && !isset($filePaths[$field])) {
                     $absolutePath = public_path($project->$field);
                     if (File::exists($absolutePath)) {
@@ -580,7 +583,8 @@ class ProjectController extends Controller
                 }
 
                 $file = $request->file($field);
-                $filename = time() . '_' . $file->getClientOriginalName();
+                $filename = time().'_'.$file->getClientOriginalName();
+
                 $relativePath = 'projects';
                 $absolutePath = public_path($relativePath);
 
@@ -589,38 +593,30 @@ class ProjectController extends Controller
                 }
 
                 $file->move($absolutePath, $filename);
-                $filePaths[$field] = $relativePath . '/' . $filename;
+
+                $filePaths[$field] = $relativePath.'/'.$filename;
             }
         }
 
-        // 2. Handle Multiple Files: Banner Images
-        $currentBanners = ($project && $project->banner_images) ? $project->banner_images : [];
-        if (!is_array($currentBanners)) $currentBanners = [];
 
-        // Process Removals for Banners
-        if ($request->has('removed_banner_image')) {
-            $bannersToRemove = $request->input('removed_banner_image');
-            // Ensure array
-            if (!is_array($bannersToRemove)) $bannersToRemove = [$bannersToRemove];
+        /*
+        |--------------------------------------------------------------------------
+        | 2) Banner Image (SINGLE file — not array)
+        |--------------------------------------------------------------------------
+        */
+        if ($request->hasFile('banner_images')) {
 
-            // Remove from array
-            $currentBanners = array_diff($currentBanners, $bannersToRemove);
-
-            // Delete actual files
-            foreach ($bannersToRemove as $path) {
-                $absolutePath = public_path($path);
+            // Delete old banner if exists
+            if ($project && $project->banner_images) {
+                $absolutePath = public_path($project->banner_images);
                 if (File::exists($absolutePath)) {
                     File::delete($absolutePath);
                 }
             }
-        }
 
-        // Add New Banner (single file)
-        if ($request->hasFile('banner_images')) {
-
-            $banner = $request->file('banner_images'); // single file
-
+            $banner = $request->file('banner_images');
             $filename = time().'_'.$banner->getClientOriginalName();
+
             $relativePath = 'projects';
             $absolutePath = public_path($relativePath);
 
@@ -630,32 +626,51 @@ class ProjectController extends Controller
 
             $banner->move($absolutePath, $filename);
 
-            $filePaths['banner_images'] = $relativePath.'/'.$filename; // <-- single value
+            // Store as SINGLE string
+            $filePaths['banner_images'] = $relativePath.'/'.$filename;
         }
 
-        // 3. Handle Multiple Files: Gallery Images
+        // User removed banner
+        if ($request->has('removed_banner_image') && $request->input('removed_banner_image')) {
+            if ($project && $project->banner_images) {
+                $absolutePath = public_path($project->banner_images);
+                if (File::exists($absolutePath)) {
+                    File::delete($absolutePath);
+                }
+            }
+
+            $filePaths['banner_images'] = null;
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | 3) Gallery Images (MULTIPLE)
+        |--------------------------------------------------------------------------
+        */
         $currentGallery = ($project && $project->gallery_images) ? $project->gallery_images : [];
         if (!is_array($currentGallery)) $currentGallery = [];
 
-        // Process Removals for Gallery
+        // Remove gallery images
         if ($request->has('removed_gallery_image')) {
-             $galleryToRemove = $request->input('removed_gallery_image');
-             if (!is_array($galleryToRemove)) $galleryToRemove = [$galleryToRemove];
+            $galleryToRemove = $request->input('removed_gallery_image');
+            if (!is_array($galleryToRemove)) $galleryToRemove = [$galleryToRemove];
 
-             $currentGallery = array_diff($currentGallery, $galleryToRemove);
+            $currentGallery = array_diff($currentGallery, $galleryToRemove);
 
-             foreach ($galleryToRemove as $path) {
-                 $absolutePath = public_path($path);
-                 if (File::exists($absolutePath)) {
-                     File::delete($absolutePath);
-                 }
-             }
+            foreach ($galleryToRemove as $path) {
+                $absolutePath = public_path($path);
+                if (File::exists($absolutePath)) {
+                    File::delete($absolutePath);
+                }
+            }
         }
 
-        // Add New Gallery Images
+        // Upload new gallery images
         if ($request->hasFile('gallery_images')) {
             foreach ($request->file('gallery_images') as $galleryImage) {
-                $filename = time() . '_' . $galleryImage->getClientOriginalName();
+
+                $filename = time().'_'.$galleryImage->getClientOriginalName();
                 $relativePath = 'projects';
                 $absolutePath = public_path($relativePath);
 
@@ -664,28 +679,36 @@ class ProjectController extends Controller
                 }
 
                 $galleryImage->move($absolutePath, $filename);
-                $currentGallery[] = $relativePath . '/' . $filename;
+
+                $currentGallery[] = $relativePath.'/'.$filename;
             }
         }
+
         $filePaths['gallery_images'] = array_values($currentGallery);
 
 
-        // 4. Handle Documents (Mix of Existing and New)
-        // We use the 'documents' array from POST which contains labels and potentially files.
-        // AND we check 'existing_documents' which maps index -> file path.
+        /*
+        |--------------------------------------------------------------------------
+        | 4) Documents (existing + new)
+        |--------------------------------------------------------------------------
+        */
         if ($request->has('documents')) {
+
             $finalDocuments = [];
-            $inputDocs = $request->input('documents'); // Array of [label => ..., file => ...] (file here is missing in input if file upload)
+            $inputDocs = $request->input('documents');
 
             foreach ($inputDocs as $index => $docData) {
-                $docPath = null;
+
+                $docPath  = null;
                 $docLabel = $docData['label'] ?? '';
                 $docNotes = $docData['notes'] ?? '';
 
-                // Case A: New File Uploaded for this row
+                // New uploaded file
                 if ($request->hasFile("documents.{$index}.file")) {
+
                     $file = $request->file("documents.{$index}.file");
-                    $filename = time() . '_' . $file->getClientOriginalName();
+                    $filename = time().'_'.$file->getClientOriginalName();
+
                     $relativePath = 'projects';
                     $absolutePath = public_path($relativePath);
 
@@ -694,23 +717,23 @@ class ProjectController extends Controller
                     }
 
                     $file->move($absolutePath, $filename);
-                    $docPath = $relativePath . '/' . $filename;
+
+                    $docPath = $relativePath.'/'.$filename;
                 }
-                // Case B: No New File, Check if it's an Existing Document
-                // We check the hidden input `existing_documents[$index][file]`
+                // Keep existing file
                 elseif ($request->has("existing_documents.{$index}.file")) {
                     $docPath = $request->input("existing_documents.{$index}.file");
                 }
 
-                // Only add if we have a file path
                 if ($docPath) {
                     $finalDocuments[] = [
                         'label' => $docLabel,
-                        'file' => $docPath,
-                        'notes' => $docNotes
+                        'file'  => $docPath,
+                        'notes' => $docNotes,
                     ];
                 }
             }
+
             $filePaths['documents'] = $finalDocuments;
         }
 
