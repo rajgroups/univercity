@@ -390,7 +390,10 @@ class ProjectController extends Controller
             $projectData = $this->handleStageTransition($projectData, $project, $request);
 
             $project->update($projectData);
-
+Log::info('BANNER DEBUG', [
+    'value' => $projectData['banner_images'] ?? null,
+    'type'  => gettype($projectData['banner_images'] ?? null),
+]);
             DB::commit();
 
             return redirect()->route('admin.project.index')
