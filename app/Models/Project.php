@@ -115,57 +115,6 @@ class Project extends Model
     {
         return $value ? trim((string) $value) : null;
     }
-
-
-    public function getLinksAttribute($value)
-    {
-        // Already an array → return as is
-        if (is_array($value)) {
-            return $value;
-        }
-
-        // Try JSON decode
-        $decoded = json_decode($value, true);
-
-        // If decode works → return array
-        if (is_array($decoded)) {
-            return $decoded;
-        }
-
-        // If value is "[]" or null → return empty array
-        return [];
-    }
-
-    public function getRisksAttribute($value)
-    {
-        // Already an array → return
-        if (is_array($value)) {
-            return $value;
-        }
-
-        // Attempt JSON decode
-        $decoded = json_decode($value, true);
-
-        // If decoded correctly → return array
-        if (is_array($decoded)) {
-            return $decoded;
-        }
-
-        // Fallback → return empty array
-        return [];
-    }
-
-    public function getDocumentsAttribute($value)
-    {
-        if (is_array($value)) {
-            return $value;
-        }
-
-        $decoded = json_decode($value, true);
-
-        return is_array($decoded) ? $decoded : [];
-    }
-
     public function getAlignmentCategoriesAttribute($value)
     {
         if ($value === null) {
@@ -189,6 +138,33 @@ class Project extends Model
         return is_array($decoded) ? $decoded : [];
     }
 
+    public function getDocumentsAttribute($value)
+{
+    return $this->decodeArrayField($value);
+}
+
+public function getLinksAttribute($value)
+{
+    return $this->decodeArrayField($value);
+}
+
+    protected function decodeArrayField($value)
+    {
+        if ($value === null) return [];
+
+        // Already an array → return it
+        if (is_array($value)) return $value;
+
+        // First decode
+        $decoded = json_decode($value, true);
+
+        // Handle double-encoded JSON like "\"[{...}]\""
+        if (is_string($decoded)) {
+            $decoded = json_decode($decoded, true);
+        }
+
+        return is_array($decoded) ? $decoded : [];
+    }
 
     public function getGovtSchemesAttribute($value)
     {
@@ -288,6 +264,51 @@ class Project extends Model
 
         return [];
     }
+
+    public function getStakeholdersAttribute($value)
+    {
+        if ($value === null) {
+            return [];
+        }
+
+        // Already an array → return it
+        if (is_array($value)) {
+            return $value;
+        }
+
+        // First decode
+        $decoded = json_decode($value, true);
+
+        // Handle double-encoded JSON
+        if (is_string($decoded)) {
+            $decoded = json_decode($decoded, true);
+        }
+
+        return is_array($decoded) ? $decoded : [];
+    }
+
+    public function getRisksAttribute($value)
+    {
+        if ($value === null) {
+            return [];
+        }
+
+        // Already an array
+        if (is_array($value)) {
+            return $value;
+        }
+
+        // First decode
+        $decoded = json_decode($value, true);
+
+        // Handle cases like "\"[{...}]\""
+        if (is_string($decoded)) {
+            $decoded = json_decode($decoded, true);
+        }
+
+        return is_array($decoded) ? $decoded : [];
+    }
+
 
     public function getSdgGoalsAttribute($value)
     {
