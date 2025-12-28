@@ -111,6 +111,21 @@ class Project extends Model
         return 0;
     }
 
+    public function getBannerImagesAttribute($value)
+    {
+        // If null or empty → return null (not an array, since it's a single image field)
+        if ($value === null || $value === '' || $value === '[]' || $value === '"[]"') {
+            return null;
+        }
+
+        // If it's a valid image path string
+        if (is_string($value) && strlen(trim($value)) > 2) {
+            return $value;
+        }
+
+        return null;
+    }
+
     public function getLinksAttribute($value)
     {
         // Already an array → return as is
@@ -160,26 +175,76 @@ class Project extends Model
         return is_array($decoded) ? $decoded : [];
     }
 
-    public function getGalleryImagesAttribute($value)
+    public function getAlignmentCategoriesAttribute($value)
     {
+        // Already an array → return as is
         if (is_array($value)) {
-            return asset($value);
+            return $value;
         }
 
+        // Try JSON decode
         $decoded = json_decode($value, true);
 
-        // If JSON decodes to an array → return it
+        // If decode works → return array
         if (is_array($decoded)) {
             return $decoded;
         }
 
-        // If value is "[]" or empty → return empty array
-        if ($value === '[]' || $value === null || $value === '') {
+        // If value is "[]" or null → return empty array
+        return [];
+    }
+
+    public function getGovtSchemesAttribute($value)
+    {
+        // Already an array → return as is
+        if (is_array($value)) {
+            return $value;
+        }
+
+        // Try JSON decode
+        $decoded = json_decode($value, true);
+
+        // If decode works → return array
+        if (is_array($decoded)) {
+            return $decoded;
+        }
+
+        // If value is "[]" or null → return empty array
+        return [];
+    }
+
+    public function getGalleryImagesAttribute($value)
+    {
+        // If null or empty → return empty array
+        if ($value === null || $value === '' || $value === '[]' || $value === '"[]"') {
             return [];
         }
 
-        // If it's a single image string → wrap into array
-        return [$value];
+        // Already an array → filter and return
+        if (is_array($value)) {
+            return array_values(array_filter($value, function($item) {
+                // Filter out invalid entries
+                return !empty($item) && $item !== '[]' && $item !== '"[]"' && is_string($item) && strlen(trim($item)) > 0;
+            }));
+        }
+
+        // Try JSON decode
+        $decoded = json_decode($value, true);
+
+        // If JSON decodes to an array → filter and return
+        if (is_array($decoded)) {
+            return array_values(array_filter($decoded, function($item) {
+                // Filter out invalid entries
+                return !empty($item) && $item !== '[]' && $item !== '"[]"' && is_string($item) && strlen(trim($item)) > 0;
+            }));
+        }
+
+        // If it's a valid single image string → wrap into array
+        if (is_string($value) && strlen(trim($value)) > 0 && $value !== '[]' && $value !== '"[]"') {
+            return [$value];
+        }
+
+        return [];
     }
 
 

@@ -1,4 +1,4 @@
-{{-- @dd($project->gallery_images) --}}
+{{-- @dd($project->alignment_categories) --}}
 @extends('layouts.admin.app')
 @section('content')
     <div class="page-header">
@@ -266,7 +266,7 @@
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                                         {{-- @dd($project->banner_images); --}}
-                                        @if(!empty($project->banner_images))
+                                        @if($project->banner_images && $project->banner_images !== '[]' && $project->banner_images !== '"[]"')
                                             <div class="mt-2">
                                                 <label class="form-label small">Existing Banner Image:</label>
 

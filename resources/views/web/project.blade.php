@@ -1,5 +1,3 @@
-{{-- @dd($project->documents); --}}
-{{-- @dd($project->donut_metric); --}}
 @extends('layouts.web.app')
 
 @section('content')
@@ -153,6 +151,11 @@
             <button class="nav-link btn btn-outline-purple rounded-pill px-4" id="resources-tab" data-bs-toggle="pill" data-bs-target="#resources" type="button" role="tab" aria-controls="resources" aria-selected="false">
                 <i class="bi bi-shield-check me-2"></i>Resources & Risks
             </button>
+            @if(isset($surveys) && $surveys->count() > 0)
+            <button class="nav-link btn btn-outline-teal rounded-pill px-4" id="feedback-tab" data-bs-toggle="pill" data-bs-target="#feedback" type="button" role="tab" aria-controls="feedback" aria-selected="false">
+                <i class="bi bi-chat-heart me-2"></i>Feedback <span class="badge bg-primary ms-1">{{ $surveys->count() }}</span>
+            </button>
+            @endif
         </nav>
     </div>
 
@@ -226,6 +229,15 @@
                         <small class="text-muted">Requirements & mitigation</small>
                     </div>
                 </button>
+                @if(isset($surveys) && $surveys->count() > 0)
+                <button class="list-group-item list-group-item-action py-3 d-flex align-items-center gap-3" data-bs-toggle="pill" data-bs-target="#feedback" role="tab">
+                    <i class="bi bi-chat-heart fs-5" style="color: #20c997;"></i>
+                    <div>
+                        <span class="d-block fw-bold">Feedback <span class="badge bg-primary">{{ $surveys->count() }}</span></span>
+                        <small class="text-muted">Survey responses & insights</small>
+                    </div>
+                </button>
+                @endif
             </div>
         </div>
     </div>
@@ -557,7 +569,7 @@
                             <div class="card-body p-4">
                                 <div class="d-flex justify-content-between align-items-start mb-3">
                                     <div>
-                                        <span class="badge bg-primary bg-opacity-10 text-primary mb-2">{{ $milestone->phase }}</span>
+                                        <span class="badge bg-primary bg-opacity-10 text-white mb-2">{{ $milestone->phase }}</span>
                                         <h6 class="card-title fw-bold mb-2">{{ $milestone->task_name }}</h6>
                                     </div>
                                     <span class="badge
@@ -927,7 +939,6 @@
             </div>
 
             <!-- Banner Images -->
-            {{-- @dd($project->banner_images); --}}
            @if(!empty($project->banner_images))
             <div class="mb-5 gallery-section" id="banner-section">
                 <h5 class="fw-bold mb-4">Project Images</h5>
@@ -1038,7 +1049,7 @@
                                         <div class="card-body">
                                             <div class="d-flex align-items-center">
                                                 <div class="bg-primary bg-opacity-10 rounded p-3 me-3">
-                                                    <i class="bi bi-file-earmark-text fs-2 text-primary"></i>
+                                                    <i class="bi bi-file-earmark-text fs-2 text-white"></i>
                                                 </div>
                                                 <div class="flex-grow-1">
                                                     <h6 class="card-title fw-bold mb-1">{{ $document['label'] ?? 'Document' }}</h6>
@@ -1221,7 +1232,7 @@
                                 @endif
                             </div>
 
-                            @if($project->operational_risks_ongoing)
+                            <!-- @if($project->operational_risks_ongoing)
                             <div class="mb-4">
                                 <h5 class="fw-bold mb-3">Operational Risks</h5>
                                 <div class="p-3 bg-light rounded border">
@@ -1239,7 +1250,7 @@
                                     {{ $project->resources_needed_ongoing }}
                                 </div>
                             </div>
-                            @endif
+                            @endif -->
                         </div>
                     </div>
                 </div>
@@ -1257,7 +1268,7 @@
                                     <svg width="120" height="120" viewBox="0 0 36 36">
                                         <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#e6e6e6" stroke-width="3"/>
                                         <path class="circle" stroke-dasharray="{{ $project->project_progress ?? 0 }}, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#4e73df" stroke-width="3" stroke-linecap="round"/>
-                                        <text x="18" y="22" fill="#4e73df" font-size="8" text-anchor="middle" font-weight="bold">{{ $project->project_progress ?? 0 }}%</text>
+                                        <text x="18" y="22" fill="#4e73df" font-size="5" text-anchor="middle" font-weight="bold">{{ $project->project_progress ?? 0 }}%</text>
                                     </svg>
                                 </div>
                                 <small class="text-muted d-block mb-2">Overall Progress</small>
@@ -1269,7 +1280,7 @@
                                     <svg width="100" height="100" viewBox="0 0 36 36">
                                         <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#e6e6e6" stroke-width="3"/>
                                         <path class="circle" stroke-dasharray="{{ $project->completion_readiness ?? 0 }}, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#28a745" stroke-width="3" stroke-linecap="round"/>
-                                        <text x="18" y="22" fill="#28a745" font-size="8" text-anchor="middle" font-weight="bold">{{ $project->completion_readiness ?? 0 }}%</text>
+                                        <text x="18" y="22" fill="#28a745" font-size="5" text-anchor="middle" font-weight="bold">{{ $project->completion_readiness ?? 0 }}%</text>
                                     </svg>
                                 </div>
                                 <small class="text-muted d-block mb-2">Completion Readiness</small>
@@ -1381,6 +1392,260 @@
             </div>
         </div>
 
+        <!-- Feedback Tab -->
+        @if(isset($surveys) && $surveys->count() > 0)
+        <div class="tab-pane fade" id="feedback" role="tabpanel">
+            <!-- Header Section -->
+            <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+                <div>
+                    <h4 class="mb-0 fw-bold"><i class="bi bi-chat-heart text-teal me-2"></i>Community Feedback</h4>
+                    <p class="text-muted mb-0">Survey responses from stakeholders, beneficiaries & team members</p>
+                </div>
+                <div class="d-flex align-items-center gap-3">
+                    <span class="badge bg-primary bg-opacity-10 text-white px-3 py-2 rounded-pill">
+                        <i class="bi bi-people-fill me-1"></i>{{ $surveyStats['total'] }} Responses
+                    </span>
+                    @if($surveys->count() > 0)
+                    <span class="badge bg-success bg-opacity-10 text-success px-3 py-2 rounded-pill">
+                        <i class="bi bi-calendar-check me-1"></i>
+                        {{ $surveys->min('survey_date') ? \Carbon\Carbon::parse($surveys->min('survey_date'))->format('M Y') : 'N/A' }} - 
+                        {{ $surveys->max('survey_date') ? \Carbon\Carbon::parse($surveys->max('survey_date'))->format('M Y') : 'N/A' }}
+                    </span>
+                    @endif
+                </div>
+            </div>
+
+            <div class="row g-4">
+                <!-- Left Column: Charts -->
+                <div class="col-lg-4">
+                    <!-- Satisfaction Distribution Chart -->
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-header bg-white border-0 py-3">
+                            <h6 class="card-title mb-0 fw-bold">
+                                <i class="bi bi-emoji-smile text-success me-2"></i>Satisfaction Levels
+                            </h6>
+                        </div>
+                        <div class="card-body text-center">
+                            <div style="height: 200px; position: relative;">
+                                <canvas id="satisfactionChart"></canvas>
+                            </div>
+                            <div class="mt-3">
+                                <div class="d-flex flex-wrap justify-content-center gap-2 small">
+                                    <span><i class="bi bi-circle-fill text-success"></i> Very Satisfied</span>
+                                    <span><i class="bi bi-circle-fill" style="color: #17a2b8"></i> Satisfied</span>
+                                    <span><i class="bi bi-circle-fill text-secondary"></i> Neutral</span>
+                                    <span><i class="bi bi-circle-fill text-danger"></i> Dissatisfied</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Project Success Rate -->
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-header bg-white border-0 py-3">
+                            <h6 class="card-title mb-0 fw-bold">
+                                <i class="bi bi-trophy text-warning me-2"></i>Project Success Rating
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            @php
+                                $yesPercent = $surveyStats['total'] > 0 ? round(($surveyStats['success']['Yes'] / $surveyStats['total']) * 100) : 0;
+                            @endphp
+                            <div class="text-center mb-4">
+                                <div class="position-relative d-inline-block">
+                                    <svg width="140" height="140" viewBox="0 0 36 36" class="circular-chart-success">
+                                        <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#e6e6e6" stroke-width="3"/>
+                                        <path class="circle" stroke-dasharray="{{ $yesPercent }}, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#28a745" stroke-width="3" stroke-linecap="round"/>
+                                        <text x="18" y="20.5" fill="#28a745" font-size="8" text-anchor="middle" font-weight="bold">{{ $yesPercent }}%</text>
+                                        <text x="18" y="25" fill="#6c757d" font-size="3" text-anchor="middle">SUCCESS</text>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="row text-center g-2">
+                                <div class="col-4">
+                                    <div class="p-2 bg-success bg-opacity-10 rounded">
+                                        <h5 class="mb-0 text-success">{{ $surveyStats['success']['Yes'] }}</h5>
+                                        <small class="text-muted">Yes</small>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="p-2 bg-danger bg-opacity-10 rounded">
+                                        <h5 class="mb-0 text-danger">{{ $surveyStats['success']['No'] }}</h5>
+                                        <small class="text-muted">No</small>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="p-2 bg-warning bg-opacity-10 rounded">
+                                        <h5 class="mb-0 text-warning">{{ $surveyStats['success']['Not Sure'] }}</h5>
+                                        <small class="text-muted">Unsure</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Role Breakdown -->
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-white border-0 py-3">
+                            <h6 class="card-title mb-0 fw-bold">
+                                <i class="bi bi-person-badge text-primary me-2"></i>Respondents by Role
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            @foreach($surveyStats['roles'] as $role => $count)
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="flex-grow-1">
+                                    <div class="d-flex justify-content-between mb-1">
+                                        <span class="small fw-medium">{{ $role }}</span>
+                                        <span class="small text-muted">{{ $count }}</span>
+                                    </div>
+                                    <div class="progress" style="height: 8px;">
+                                        <div class="progress-bar bg-gradient" style="width: {{ ($count / $surveyStats['total']) * 100 }}%; background: linear-gradient(90deg, #667eea, #764ba2);"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Survey Responses -->
+                <div class="col-lg-8">
+                    <!-- Filter Bar -->
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-body py-3">
+                            <div class="d-flex flex-wrap align-items-center gap-3">
+                                <span class="fw-bold small text-muted">Filter by:</span>
+                                <div class="btn-group btn-group-sm" role="group">
+                                    <input type="radio" class="btn-check" name="surveyFilter" id="filter-all-surveys" autocomplete="off" checked onclick="filterSurveys('all')">
+                                    <label class="btn btn-outline-primary" for="filter-all-surveys">All</label>
+                                    
+                                    <input type="radio" class="btn-check" name="surveyFilter" id="filter-satisfied" autocomplete="off" onclick="filterSurveys('satisfied')">
+                                    <label class="btn btn-outline-success" for="filter-satisfied">Satisfied</label>
+                                    
+                                    <input type="radio" class="btn-check" name="surveyFilter" id="filter-neutral" autocomplete="off" onclick="filterSurveys('neutral')">
+                                    <label class="btn btn-outline-secondary" for="filter-neutral">Neutral</label>
+                                    
+                                    <input type="radio" class="btn-check" name="surveyFilter" id="filter-dissatisfied" autocomplete="off" onclick="filterSurveys('dissatisfied')">
+                                    <label class="btn btn-outline-danger" for="filter-dissatisfied">Dissatisfied</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Survey Cards Grid -->
+                    <div class="row g-3" id="surveyCardsGrid">
+                        @foreach($surveys->sortByDesc('survey_date') as $survey)
+                        <div class="col-md-12 survey-card-item" 
+                             data-satisfaction="{{ strtolower(str_replace(' ', '-', $survey->satisfaction)) }}"
+                             data-role="{{ strtolower(str_replace(' ', '-', $survey->role)) }}">
+                            <div class="card border-0 shadow-sm h-100 survey-feedback-card">
+                                <div class="card-body p-4">
+                                    <!-- Header with Avatar & Info -->
+                                    <div class="d-flex align-items-start mb-3">
+                                        <div class="survey-avatar me-3">
+                                            @php
+                                                $initials = collect(explode(' ', $survey->name))->map(fn($n) => strtoupper(substr($n, 0, 1)))->take(2)->join('');
+                                                $colors = ['#667eea', '#764ba2', '#f093fb', '#f5576c', '#4facfe', '#00f2fe', '#43e97b', '#38f9d7'];
+                                                $colorIndex = ord($initials[0] ?? 'A') % count($colors);
+                                            @endphp
+                                            <div class="rounded-circle d-flex align-items-center justify-content-center text-white fw-bold" style="width: 48px; height: 48px; background: linear-gradient(135deg, {{ $colors[$colorIndex] }}, {{ $colors[($colorIndex + 1) % count($colors)] }});">
+                                                {{ $initials }}
+                                            </div>
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <h6 class="mb-1 fw-bold">{{ $survey->name }}</h6>
+                                            <div class="d-flex flex-wrap gap-2 align-items-center">
+                                                <span class="badge bg-primary bg-opacity-10 text-white small">{{ $survey->role }}</span>
+                                                <small class="text-muted">
+                                                    <i class="bi bi-calendar3 me-1"></i>{{ \Carbon\Carbon::parse($survey->survey_date)->format('d M Y') }}
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Satisfaction Indicator -->
+                                    <div class="d-flex align-items-center gap-2 mb-3">
+                                        @switch($survey->satisfaction)
+                                            @case('Very Satisfied')
+                                                <span class="badge bg-success bg-opacity-15 text-white px-3 py-2">
+                                                    <i class="bi bi-emoji-laughing me-1"></i>Very Satisfied
+                                                </span>
+                                                @break
+                                            @case('Satisfied')
+                                                <span class="badge px-3 py-2" style="background: rgba(23, 162, 184, 0.15); color: #17a2b8;">
+                                                    <i class="bi bi-emoji-smile me-1"></i>Satisfied
+                                                </span>
+                                                @break
+                                            @case('Neutral')
+                                                <span class="badge bg-secondary bg-opacity-15 text-white px-3 py-2">
+                                                    <i class="bi bi-emoji-neutral me-1"></i>Neutral
+                                                </span>
+                                                @break
+                                            @case('Dissatisfied')
+                                                <span class="badge bg-danger bg-opacity-15 text-danger px-3 py-2">
+                                                    <i class="bi bi-emoji-frown me-1"></i>Dissatisfied
+                                                </span>
+                                                @break
+                                        @endswitch
+
+                                        <!-- Project Success Badge -->
+                                        @switch($survey->project_success)
+                                            @case('Yes')
+                                                <span class="badge bg-success px-2 py-1">
+                                                    <i class="bi bi-check-circle-fill me-1"></i>Success
+                                                </span>
+                                                @break
+                                            @case('No')
+                                                <span class="badge bg-danger px-2 py-1">
+                                                    <i class="bi bi-x-circle-fill me-1"></i>Not Successful
+                                                </span>
+                                                @break
+                                            @case('Not Sure')
+                                                <span class="badge bg-warning text-dark px-2 py-1">
+                                                    <i class="bi bi-question-circle-fill me-1"></i>Unsure
+                                                </span>
+                                                @break
+                                        @endswitch
+                                    </div>
+
+                                    <!-- Comment -->
+                                    @if($survey->comments)
+                                    <div class="survey-comment p-3 bg-light rounded-3 border-start border-3 border-primary">
+                                        <i class="bi bi-quote text-primary opacity-50 fs-5"></i>
+                                        <p class="mb-0 text-secondary survey-comment-text" style="font-size: 0.9rem;">
+                                            {{ Str::limit($survey->comments, 150) }}
+                                        </p>
+                                        @if(strlen($survey->comments) > 150)
+                                        <button class="btn btn-link btn-sm p-0 text-primary expand-comment" data-full-text="{{ $survey->comments }}">
+                                            Read more <i class="bi bi-chevron-down"></i>
+                                        </button>
+                                        @endif
+                                    </div>
+                                    @else
+                                    <div class="text-muted text-center py-2 small">
+                                        <i class="bi bi-chat-left-text me-1"></i>No comments provided
+                                    </div>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                        @endforeach
+                    </div>
+
+                    <!-- Load More (if many surveys) -->
+                    @if($surveys->count() > 6)
+                    <div class="text-center mt-4" id="loadMoreSurveys">
+                        <button class="btn btn-outline-primary rounded-pill px-4" onclick="showAllSurveys()">
+                            <i class="bi bi-arrow-down-circle me-2"></i>Show All {{ $surveys->count() }} Responses
+                        </button>
+                    </div>
+                    @endif
+                </div>
+            </div>
+        </div>
+        @endif
+
         <!-- SDG & Alignment Tab -->
         <div class="tab-pane fade" id="alignment" role="tabpanel">
             <!-- SDG Alignment -->
@@ -1428,7 +1693,7 @@
             <div>
                 <div class="d-flex align-items-center mb-4">
                     <div class="bg-primary bg-opacity-10 rounded-circle p-3 me-3">
-                        <i class="bi bi-diagram-3 fs-2 text-primary"></i>
+                        <i class="bi bi-diagram-3 fs-2 text-white"></i>
                     </div>
                     <div>
                         <h4 class="fw-bold mb-0">Strategic Alignment</h4>
@@ -1452,7 +1717,6 @@
                                         'csr_schedule_vii' => 'CSR Schedule VII',
                                     ];
                                 @endphp
-                                @dd($project->alignment_categories);
                                 @foreach($project->alignment_categories as $cat)
                                 <span class="badge bg-primary bg-opacity-10 text- border border-primary border-opacity-25 px-3 py-2">
                                     {{ $alignmentLabels[$cat] ?? ucfirst(str_replace('_', ' ', $cat)) }}
@@ -1700,6 +1964,36 @@
 @push('styles')
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightbox2@2.11.4/dist/css/lightbox.min.css">
 <style>
+    /* Lightbox Fix - Force Modal to Center */
+    .lightboxOverlay {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100vw !important;
+        height: 100vh !important;
+        z-index: 9999 !important;
+        background: rgba(0,0,0,0.85) !important;
+    }
+    
+    .lightbox {
+        position: fixed !important;
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) !important;
+        z-index: 10000 !important;
+        margin: 0 !important;
+    }
+    
+    .lb-outerContainer {
+        background-color: #fff;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+    
+    .lb-dataContainer {
+        padding: 10px 0;
+    }
+
     .project-hero {
         background-size: cover;
         background-position: center;
@@ -1862,6 +2156,78 @@
     ::-webkit-scrollbar-thumb:hover {
         background: #a8a8a8;
     }
+
+    /* ========================================
+       SURVEY FEEDBACK SECTION STYLES
+       ======================================== */
+    
+    .btn-outline-teal {
+        color: #20c997;
+        border-color: #20c997;
+    }
+    
+    .btn-outline-teal:hover,
+    .btn-outline-teal.active {
+        background-color: #20c997;
+        border-color: #20c997;
+        color: white;
+    }
+    
+    .text-teal {
+        color: #20c997 !important;
+    }
+    
+    .survey-feedback-card {
+        transition: all 0.3s ease;
+        border-radius: 12px !important;
+    }
+    
+    .survey-feedback-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1) !important;
+    }
+    
+    .survey-avatar > div {
+        transition: transform 0.3s ease;
+    }
+    
+    .survey-feedback-card:hover .survey-avatar > div {
+        transform: scale(1.1);
+    }
+    
+    .survey-comment {
+        position: relative;
+    }
+    
+    .survey-comment .bi-quote {
+        position: absolute;
+        top: -5px;
+        left: 10px;
+        opacity: 0.3;
+    }
+    
+    .expand-comment {
+        font-size: 0.85rem;
+        text-decoration: none;
+    }
+    
+    .expand-comment:hover {
+        text-decoration: underline;
+    }
+    
+    #satisfactionChart {
+        max-height: 200px;
+    }
+    
+    .circular-chart-success .circle {
+        animation: progress-success 1s ease-out forwards;
+    }
+    
+    @keyframes progress-success {
+        0% {
+            stroke-dasharray: 0 100;
+        }
+    }
 </style>
 @endpush
 
@@ -1876,7 +2242,26 @@ lightbox.option({
     'resizeDuration': 200,
     'wrapAround': true,
     'albumLabel': "Image %1 of %2",
-    'fadeDuration': 300
+    'fadeDuration': 300,
+    'positionFromTop': 0,
+    'fitImagesInViewport': true
+});
+
+// Fix lightbox position after it opens
+document.addEventListener('click', function(e) {
+    const link = e.target.closest('[data-lightbox]');
+    if (link) {
+        setTimeout(function() {
+            const lightbox = document.getElementById('lightbox');
+            const overlay = document.getElementById('lightboxOverlay');
+            if (lightbox) {
+                lightbox.style.cssText = 'position: fixed !important; top: 50% !important; left: 50% !important; transform: translate(-50%, -50%) !important; z-index: 10000 !important; margin: 0 !important;';
+            }
+            if (overlay) {
+                overlay.style.cssText = 'position: fixed !important; top: 0 !important; left: 0 !important; width: 100vw !important; height: 100vh !important; z-index: 9999 !important;';
+            }
+        }, 100);
+    }
 });
 
 // Filter milestones
@@ -2170,6 +2555,112 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+
+// ========================================
+// SURVEY FEEDBACK SECTION - Chart & Functions
+// ========================================
+
+// Initialize Satisfaction Chart
+@if(isset($surveys) && $surveys->count() > 0)
+document.addEventListener('DOMContentLoaded', function() {
+    const satisfactionCtx = document.getElementById('satisfactionChart');
+    if (satisfactionCtx) {
+        new Chart(satisfactionCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Very Satisfied', 'Satisfied', 'Neutral', 'Dissatisfied'],
+                datasets: [{
+                    data: [
+                        {{ $surveyStats['satisfaction']['Very Satisfied'] }},
+                        {{ $surveyStats['satisfaction']['Satisfied'] }},
+                        {{ $surveyStats['satisfaction']['Neutral'] }},
+                        {{ $surveyStats['satisfaction']['Dissatisfied'] }}
+                    ],
+                    backgroundColor: ['#28a745', '#17a2b8', '#6c757d', '#dc3545'],
+                    borderWidth: 0,
+                    hoverOffset: 10
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                aspectRatio: 1,
+                cutout: '65%',
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                const percentage = total > 0 ? Math.round((context.raw / total) * 100) : 0;
+                                return `${context.label}: ${context.raw} (${percentage}%)`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+});
+@endif
+
+// Filter Survey Cards
+function filterSurveys(filter) {
+    const cards = document.querySelectorAll('.survey-card-item');
+    cards.forEach(card => {
+        const satisfaction = card.dataset.satisfaction;
+        let show = false;
+        
+        switch(filter) {
+            case 'all':
+                show = true;
+                break;
+            case 'satisfied':
+                show = satisfaction === 'very-satisfied' || satisfaction === 'satisfied';
+                break;
+            case 'neutral':
+                show = satisfaction === 'neutral';
+                break;
+            case 'dissatisfied':
+                show = satisfaction === 'dissatisfied';
+                break;
+        }
+        
+        if (show) {
+            card.style.display = 'block';
+            card.classList.add('animate__animated', 'animate__fadeIn');
+        } else {
+            card.style.display = 'none';
+        }
+    });
+}
+
+// Expand Comment Text
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.expand-comment').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const fullText = this.dataset.fullText;
+            const commentText = this.previousElementSibling;
+            if (commentText) {
+                commentText.textContent = fullText;
+                this.style.display = 'none';
+            }
+        });
+    });
+});
+
+// Show All Surveys (if using load more)
+function showAllSurveys() {
+    const cards = document.querySelectorAll('.survey-card-item');
+    cards.forEach((card, index) => {
+        card.style.display = 'block';
+        card.style.animationDelay = `${index * 50}ms`;
+        card.classList.add('animate__animated', 'animate__fadeInUp');
+    });
+    document.getElementById('loadMoreSurveys').style.display = 'none';
+}
 </script>
 @endpush
 

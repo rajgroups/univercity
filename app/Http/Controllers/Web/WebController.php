@@ -149,7 +149,8 @@ class WebController extends Controller
                 'estimation.items', 
                 'donors', 
                 'fundings', 
-                'utilizations'
+                'utilizations',
+                'surveys' // Added surveys relationship
             ])
             ->firstOrFail();
 
@@ -159,13 +160,31 @@ class WebController extends Controller
         $donors = $project->donors;
         $fundings = $project->fundings;
         $utilizations = $project->utilizations;
+        $surveys = $project->surveys;
 
-        // 4️⃣ Resolve stakeholders from milestones
+        // 4️⃣ Calculate survey statistics
+        $surveyStats = [
+            'total' => $surveys->count(),
+            'satisfaction' => [
+                'Very Satisfied' => $surveys->where('satisfaction', 'Very Satisfied')->count(),
+                'Satisfied' => $surveys->where('satisfaction', 'Satisfied')->count(),
+                'Neutral' => $surveys->where('satisfaction', 'Neutral')->count(),
+                'Dissatisfied' => $surveys->where('satisfaction', 'Dissatisfied')->count(),
+            ],
+            'success' => [
+                'Yes' => $surveys->where('project_success', 'Yes')->count(),
+                'No' => $surveys->where('project_success', 'No')->count(),
+                'Not Sure' => $surveys->where('project_success', 'Not Sure')->count(),
+            ],
+            'roles' => $surveys->groupBy('role')->map->count(),
+        ];
+
+        // 5️⃣ Resolve stakeholders from milestones
         // Note: We need to import Stakeholder m    odel or use full path
         $stakeholderIds = $milestones->pluck('stakeholder_id')->filter()->unique();
         $stakeholders = \App\Models\Stakeholder::whereIn('id', $stakeholderIds)->get()->keyBy('id');
 
-        // 5️⃣ Return view
+        // 6️⃣ Return view
         return view('web.project', compact(
             'project', 
             'category', 
@@ -174,7 +193,9 @@ class WebController extends Controller
             'donors', 
             'fundings', 
             'utilizations', 
-            'stakeholders'
+            'stakeholders',
+            'surveys',
+            'surveyStats'
         ));
     }
 
