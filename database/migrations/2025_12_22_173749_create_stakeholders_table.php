@@ -27,9 +27,9 @@ return new class extends Migration
             $table->string('alternate_phone')->nullable();
 
             // Company/Organization Details
-            $table->string('company_name')->nullable();
-            $table->string('designation')->nullable();
-            $table->string('department')->nullable();
+            $table->string('company_name',100)->nullable();
+            $table->string('designation',100)->nullable();
+            $table->string('department', 100)->nullable();
 
             // Stakeholder Type & Classification
             $table->enum('type', [
