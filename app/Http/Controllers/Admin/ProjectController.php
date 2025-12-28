@@ -169,6 +169,126 @@ class ProjectController extends Controller
     }
 
     /**
+     * Prepare SDG input from comma-separated string to array
+     */
+    protected function prepareSDGInput(Request $request)
+    {
+        if ($request->has('sdg_goals') && !empty($request->sdg_goals)) {
+            // Handle comma-separated string from hidden input
+            $sdgGoals = explode(',', $request->sdg_goals);
+            $sdgGoals = array_map('intval', array_filter($sdgGoals));
+            $sdgGoals = array_values(array_unique($sdgGoals)); // Remove duplicates
+            sort($sdgGoals); // Sort ascending
+
+            $request->merge(['sdg_goals' => $sdgGoals]);
+        } else {
+            $request->merge(['sdg_goals' => null]);
+        }
+    }
+
+    /**
+     * Prepare array inputs from the form
+     */
+    protected function prepareArrayInputs(Request $request)
+    {
+        // Handle dynamic arrays
+        $arrayFields = [
+            'multiple_locations',
+            'donut_metrics',
+            'target_groups',
+            'objectives',
+            'stakeholders',
+            'risks',
+            'documents',
+            'links'
+        ];
+
+        foreach ($arrayFields as $field) {
+            if ($request->has($field) && is_array($request->$field)) {
+                // Filter out empty entries
+                $filteredArray = array_filter($request->$field, function($item) {
+                    if (is_array($item)) {
+                        return !empty(array_filter($item, function($value) {
+                            return !is_null($value) && $value !== '';
+                        }));
+                    }
+                    return !empty(trim($item));
+                });
+
+                // Re-index array
+                $request->merge([$field => array_values($filteredArray)]);
+            } elseif ($request->has($field)) {
+                // Ensure it's always an array
+                $request->merge([$field => null]);
+            }
+        }
+
+        // Handle alignment categories (multi-select)
+        if ($request->has('alignment_categories')) {
+            $alignmentCategories = $request->input('alignment_categories');
+            if (!is_array($alignmentCategories)) {
+                $alignmentCategories = !empty($alignmentCategories) ? [$alignmentCategories] : [];
+            }
+            $request->merge(['alignment_categories' => array_values(array_filter($alignmentCategories))]);
+        } else {
+            $request->merge(['alignment_categories' => []]);
+        }
+
+        // Handle govt schemes (multi-select)
+        if ($request->has('govt_schemes')) {
+            $govtSchemes = $request->input('govt_schemes');
+            if (!is_array($govtSchemes)) {
+                $govtSchemes = !empty($govtSchemes) ? [$govtSchemes] : [];
+            }
+            $request->merge(['govt_schemes' => array_values(array_filter($govtSchemes))]);
+        } else {
+            $request->merge(['govt_schemes' => null]);
+        }
+
+        // Handle target groups - ensure proper structure
+        if ($request->has('target_groups') && is_array($request->target_groups)) {
+            $targetGroups = [];
+            foreach ($request->target_groups as $group) {
+                if (!empty($group['group']) && !empty($group['count'])) {
+                    $targetGroups[] = [
+                        'group' => $group['group'],
+                        'count' => (int) $group['count'],
+                        'notes' => $group['notes'] ?? ''
+                    ];
+                }
+            }
+            $request->merge(['target_groups' => $targetGroups]);
+        }
+
+        // Handle donut metrics - ensure proper structure
+        if ($request->has('donut_metrics') && is_array($request->donut_metrics)) {
+            $donutMetrics = [];
+            foreach ($request->donut_metrics as $metric) {
+                if (!empty($metric['label']) && !empty($metric['value'])) {
+                    $donutMetrics[] = [
+                        'label' => $metric['label'],
+                        'value' => (int) $metric['value'],
+                        'notes' => $metric['notes'] ?? ''
+                    ];
+                }
+            }
+            $request->merge(['donut_metrics' => $donutMetrics]);
+        }
+
+        // Handle boolean toggle for show_map_preview
+        $request->merge([
+            'show_map_preview' => $request->has('show_map_preview') || $request->input('show_map_preview') == '1' ? 1 : 0
+        ]);
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(Project $project)
+    {
+        return view('admin.projects.show', compact('project'));
+    }
+    /**
      * JSON encode ONLY these fields.
      */
     protected function encodeArrayFields($data)
