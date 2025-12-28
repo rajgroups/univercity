@@ -62,6 +62,128 @@ class ProjectController extends Controller
         return view('admin.project.list', compact('projects', 'categories', 'stats'));
     }
 
+        /**
+     * Validate project data
+     */
+    private function validateProject(Request $request, $action = 'store', $project = null)
+    {
+        $rules = [
+            // Basic Details
+            'project_code' => ['required', 'string', 'max:100'],
+            'location_type' => ['required', 'in:RUR,URB,MET,MIX'],
+            'title' => ['required', 'string', 'max:255'],
+            'subtitle' => ['nullable', 'string', 'max:255'],
+            'slug' => ['required', 'string', 'max:255'],
+            'category_id' => ['required', 'exists:category,id'],
+            'short_description' => ['required', 'string', 'max:500'],
+            'description' => ['required', 'string'],
+            'planned_start_date' => ['required', 'date'],
+            'planned_end_date' => ['nullable', 'date', 'after_or_equal:planned_start_date'],
+            'stage' => ['required', 'in:upcoming,ongoing,completed'],
+
+            // Location Details
+            'target_location_type' => ['required', 'in:single,multiple'],
+            'pincode' => ['nullable', 'string', 'max:10'],
+            'state' => ['nullable', 'string', 'max:100'],
+            'district' => ['nullable', 'string', 'max:100'],
+            'taluk' => ['nullable', 'string', 'max:100'],
+            'panchayat' => ['nullable', 'string', 'max:100'],
+            'building_name' => ['nullable', 'string', 'max:255'],
+            'gps_coordinates' => ['nullable', 'string', 'max:100'],
+            'location_summary' => ['nullable', 'string'],
+            'show_map_preview' => ['boolean'],
+
+            // Strategic Goals
+            'problem_statement' => ['required', 'string'],
+            'baseline_survey' => ['nullable', 'string'],
+            'expected_outcomes' => ['nullable', 'string'],
+            'scalability_notes' => ['nullable', 'string'],
+            'alignment_notes' => ['nullable', 'string'],
+            'sustainability_plan' => ['required', 'string'],
+
+            // CSR & Stakeholders
+            'csr_invitation' => ['required', 'string'],
+            'cta_button_text' => ['nullable', 'string', 'max:100'],
+
+            // Resources & Risks (Upcoming)
+            'resources_needed' => ['nullable', 'string'],
+            'compliance_requirements' => ['nullable', 'string'],
+
+            // Ongoing Stage Fields
+            'last_update_summary' => ['nullable', 'string', 'max:500'],
+            'project_progress' => ['nullable', 'numeric', 'min:0', 'max:100'],
+            'actual_beneficiary_count' => ['nullable', 'integer', 'min:0'],
+            'challenges_identified' => ['nullable', 'string'],
+            'compliance_requirement_status' => ['nullable', 'string'],
+            'solutions_actions_taken' => ['nullable', 'string'],
+            'completion_readiness' => ['nullable', 'numeric', 'min:0', 'max:100'],
+            'handover_sustainability_note' => ['nullable', 'string'],
+
+            // Actual dates for ongoing/completed
+            'actual_start_date' => ['nullable', 'date'],
+            'actual_end_date' => ['nullable', 'date', 'after_or_equal:actual_start_date'],
+
+            // SDG Goals validation
+            'sdg_goals' => ['nullable', 'array'],
+            'sdg_goals.*' => ['integer', 'min:1', 'max:17'],
+
+            // Alignment Categories validation
+            'alignment_categories' => ['nullable', 'array'],
+            'alignment_categories.*' => ['in:sdg,nep2020,skill_india,nsqf,govt_schemes,csr_schedule_vii'],
+
+            // Government Schemes validation
+            'govt_schemes' => ['nullable', 'array'],
+            'govt_schemes.*' => ['in:skill_india_mission,nsp,pmkvy,nlm,beti_bachao'],
+
+            // File uploads
+            'thumbnail_image' => [$action === 'update' ? 'nullable' : 'required', 'image', 'max:5120'], // 5MB
+            'banner_images' => [$action === 'update' ? 'nullable' : 'required', 'image', 'max:5120'],
+            'gallery_images.*' => ['nullable', 'image', 'max:5120'],
+            'before_photo' => ['nullable', 'image', 'max:5120'],
+            'expected_photo' => ['nullable', 'image', 'max:5120'],
+            'impact_image' => ['nullable', 'image', 'max:5120'],
+
+            // Array/JSON fields validation
+            'multiple_locations' => ['nullable', 'array'],
+            'donut_metrics' => ['nullable', 'array'],
+            'target_groups' => ['nullable', 'array'],
+            'objectives' => ['nullable', 'array'],
+            'stakeholders' => ['nullable', 'array'],
+            'risks' => ['nullable', 'array'],
+            'operational_risks_ongoing' => ['nullable', 'array'],
+            'resources_needed_ongoing' => ['nullable', 'array'],
+            'documents' => ['nullable', 'array'],
+            'links' => ['nullable', 'array'],
+
+            // Status
+            'status' => ['nullable', 'in:active,inactive'],
+        ];
+
+        // Add unique rule for slug in update
+        if ($action === 'update' && $project) {
+            $rules['slug'][] = Rule::unique('projects')->ignore($project->id);
+            $rules['project_code'][] = Rule::unique('projects')->ignore($project->id);
+        } else {
+            $rules['slug'][] = 'unique:projects';
+            $rules['project_code'][] = 'unique:projects';
+        }
+
+        // Conditional validation based on stage
+        $stage = $request->input('stage', $project ? $project->stage : 'upcoming');
+
+        if (in_array($stage, ['ongoing', 'completed'])) {
+            $rules['last_update_summary'] = ['nullable', 'string', 'max:500'];
+            $rules['actual_beneficiary_count'] = ['nullable', 'integer', 'min:0'];
+            $rules['actual_start_date'] = ['nullable', 'date'];
+
+            if ($stage === 'completed') {
+                $rules['actual_end_date'] = ['required', 'date', 'after_or_equal:actual_start_date'];
+                $rules['handover_sustainability_note'] = ['required', 'string'];
+            }
+        }
+
+        return $request->validate($rules);
+    }
     /**
      * Store a newly created resource.
      */
