@@ -61,7 +61,7 @@ class ProjectController extends Controller
 
         $projects = $query->orderBy('created_at', 'desc')->paginate(20);
         $categories = Category::where('status', 'active')->get();
-
+        // dd($projects);
         return view('admin.project.list', compact('projects', 'categories', 'stats'));
     }
 
@@ -110,30 +110,32 @@ class ProjectController extends Controller
         // Validate the request
         $validated = $this->validateProject($request, 'store');
 
-        // dd($validated);
+        Log::info('Project@store: After validation', ['alignment_categories' => $validated['alignment_categories'] ?? 'MISSING']);
+
         try {
             DB::beginTransaction();
 
             // Handle file uploads
             $filePaths = $this->handleFileUploads($request);
 
-            // Create the project
+            // Create the project and prepare array data
             $projectData = array_merge($validated, $filePaths);
 
-            // Convert arrays to JSON for database storage
-            $projectData = $this->prepareJsonData($projectData, $request);
-
-            // Set default values for new project
+            // Stage and status defaults
             $projectData['stage'] = 'upcoming';
             $projectData['status'] = 1;
             $projectData['slug'] = Str::slug($validated['slug']);
 
-            // Ensure SDG goals are properly formatted
-            if (isset($projectData['sdg_goals']) && is_array($projectData['sdg_goals'])) {
-                $projectData['sdg_goals'] = json_encode($projectData['sdg_goals']);
-            } elseif (!isset($projectData['sdg_goals'])) {
-                $projectData['sdg_goals'] = json_encode([]);
-            }
+            // ========== CRITICAL FIX: Manually encode all array fields ==========
+            $projectData = $this->encodeArrayFields($projectData);
+            // ====================================================================
+
+            // Debug before create
+            Log::info('Before creating project', [
+                'alignment_categories' => $projectData['alignment_categories'],
+                'govt_schemes' => $projectData['govt_schemes'],
+                'sdg_goals' => $projectData['sdg_goals'] ?? 'not set'
+            ]);
 
             $project = Project::create($projectData);
 
@@ -144,13 +146,56 @@ class ProjectController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::info($e->getMessage());
+            Log::error('Project creation error', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
             return redirect()->back()
                 ->withInput()
                 ->with('error', 'Error creating project: ' . $e->getMessage());
         }
     }
 
+    // Add this new method to your controller
+    protected function encodeArrayFields($data)
+    {
+        // List of all array fields that need JSON encoding
+        $arrayFields = [
+            'alignment_categories',
+            'govt_schemes',
+            'sdg_goals',
+            'target_groups',
+            'donut_metrics',
+            'stakeholders',
+            'risks',
+            'banner_images',
+            'gallery_images',
+            'documents',
+            'links',
+            'multiple_locations',
+            'resources_needed_ongoing',
+            'operational_risks_ongoing'
+        ];
+
+        foreach ($arrayFields as $field) {
+            if (isset($data[$field]) && is_array($data[$field])) {
+                // Encode array to JSON
+                $data[$field] = json_encode($data[$field]);
+            } elseif (isset($data[$field]) && is_string($data[$field])) {
+                // If it's already a string, check if it's valid JSON
+                $decoded = json_decode($data[$field], true);
+                if (json_last_error() !== JSON_ERROR_NONE) {
+                    // If not valid JSON, encode as empty array
+                    $data[$field] = json_encode([]);
+                }
+            } else {
+                // Set default empty JSON array
+                $data[$field] = json_encode([]);
+            }
+        }
+
+        return $data;
+    }
     /**
      * Prepare SDG input from comma-separated string to array
      */
@@ -165,7 +210,7 @@ class ProjectController extends Controller
 
             $request->merge(['sdg_goals' => $sdgGoals]);
         } else {
-            $request->merge(['sdg_goals' => []]);
+            $request->merge(['sdg_goals' => null]);
         }
     }
 
@@ -202,22 +247,30 @@ class ProjectController extends Controller
                 $request->merge([$field => array_values($filteredArray)]);
             } elseif ($request->has($field)) {
                 // Ensure it's always an array
-                $request->merge([$field => []]);
+                $request->merge([$field => null]);
             }
         }
 
         // Handle alignment categories (multi-select)
-        if ($request->has('alignment_categories') && !is_array($request->alignment_categories)) {
-            $request->merge(['alignment_categories' => []]);
-        } elseif (!$request->has('alignment_categories')) {
+        if ($request->has('alignment_categories')) {
+            $alignmentCategories = $request->input('alignment_categories');
+            if (!is_array($alignmentCategories)) {
+                $alignmentCategories = !empty($alignmentCategories) ? [$alignmentCategories] : [];
+            }
+            $request->merge(['alignment_categories' => array_values(array_filter($alignmentCategories))]);
+        } else {
             $request->merge(['alignment_categories' => []]);
         }
 
         // Handle govt schemes (multi-select)
-        if ($request->has('govt_schemes') && !is_array($request->govt_schemes)) {
-            $request->merge(['govt_schemes' => []]);
-        } elseif (!$request->has('govt_schemes')) {
-            $request->merge(['govt_schemes' => []]);
+        if ($request->has('govt_schemes')) {
+            $govtSchemes = $request->input('govt_schemes');
+            if (!is_array($govtSchemes)) {
+                $govtSchemes = !empty($govtSchemes) ? [$govtSchemes] : [];
+            }
+            $request->merge(['govt_schemes' => array_values(array_filter($govtSchemes))]);
+        } else {
+            $request->merge(['govt_schemes' => null]);
         }
 
         // Handle target groups - ensure proper structure
@@ -271,22 +324,22 @@ class ProjectController extends Controller
     {
         $categories = Category::where('status', 1)->get();
 
-        // Decode JSON fields for the view
-        $project->banner_images = $project->banner_images ? json_decode($project->banner_images, true) : [];
-        $project->gallery_images = $project->gallery_images ? json_decode($project->gallery_images, true) : [];
-        $project->multiple_locations = $project->multiple_locations ? json_decode($project->multiple_locations, true) : [];
-        $project->donut_metrics = $project->donut_metrics ? json_decode($project->donut_metrics, true) : [];
-        $project->target_groups = $project->target_groups ? json_decode($project->target_groups, true) : [];
-        $project->objectives = $project->objectives ? json_decode($project->objectives, true) : [];
-        $project->alignment_categories = $project->alignment_categories ? json_decode($project->alignment_categories, true) : [];
-        $project->sdg_goals = $project->sdg_goals ? json_decode($project->sdg_goals, true) : [];
-        $project->govt_schemes = $project->govt_schemes ? json_decode($project->govt_schemes, true) : [];
-        $project->stakeholders = $project->stakeholders ? json_decode($project->stakeholders, true) : [];
-        $project->risks = $project->risks ? json_decode($project->risks, true) : [];
-        $project->resources_needed_ongoing = $project->resources_needed_ongoing ? json_decode($project->resources_needed_ongoing, true) : [];
-        $project->operational_risks_ongoing = $project->operational_risks_ongoing ? json_decode($project->operational_risks_ongoing, true) : [];
-        $project->documents = $project->documents ? json_decode($project->documents, true) : [];
-        $project->links = $project->links ? json_decode($project->links, true) : [];
+        // Fields are already cast to arrays in the Project model
+        $project->banner_images = $project->banner_images ?? [];
+        $project->gallery_images = $project->gallery_images ?? [];
+        $project->multiple_locations = $project->multiple_locations ?? [];
+        $project->donut_metrics = $project->donut_metrics ?? [];
+        $project->target_groups = $project->target_groups ?? [];
+        $project->objectives = $project->objectives ?? [];
+        $project->alignment_categories = $project->alignment_categories ?? [];
+        $project->sdg_goals = $project->sdg_goals ?? [];
+        $project->govt_schemes = $project->govt_schemes ?? [];
+        $project->stakeholders = $project->stakeholders ?? [];
+        $project->risks = $project->risks ?? [];
+        $project->resources_needed_ongoing = $project->resources_needed_ongoing ?? [];
+        $project->operational_risks_ongoing = $project->operational_risks_ongoing ?? [];
+        $project->documents = $project->documents ?? [];
+        $project->links = $project->links ?? [];
 
         return view('admin.project.edit', compact('project', 'categories'));
     }
@@ -304,6 +357,7 @@ class ProjectController extends Controller
 
         // Validate the request
         $validated = $this->validateProject($request, 'update', $project);
+        Log::info('Project@update: After validation', ['alignment_categories' => $validated['alignment_categories'] ?? 'MISSING']);
 
         try {
             DB::beginTransaction();
@@ -313,20 +367,17 @@ class ProjectController extends Controller
 
             // Update the project data
             $projectData = array_merge($validated, $filePaths);
-            Log::info('Project Update Data before JSON encode:', ['filePaths' => $filePaths, 'projectData_banners' => $projectData['banner_images'] ?? 'null']);
 
-            // Convert arrays to JSON for database storage
+            // Prepare array data
             $projectData = $this->prepareJsonData($projectData, $request);
+
+            // Convert status to boolean/integer if present
+            if (isset($projectData['status'])) {
+                $projectData['status'] = $projectData['status'] === 'active' ? 1 : 0;
+            }
 
             // Handle stage transition logic
             $projectData = $this->handleStageTransition($projectData, $project, $request);
-
-            // Ensure SDG goals are properly formatted
-            if (isset($projectData['sdg_goals']) && is_array($projectData['sdg_goals'])) {
-                $projectData['sdg_goals'] = json_encode($projectData['sdg_goals']);
-            } elseif (!isset($projectData['sdg_goals'])) {
-                $projectData['sdg_goals'] = json_encode([]);
-            }
 
             $project->update($projectData);
 
@@ -337,6 +388,7 @@ class ProjectController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
+            Log::info($e->getMessage());
 
             return redirect()->back()
                 ->withInput()
@@ -379,7 +431,7 @@ class ProjectController extends Controller
             'category_id' => ['required', 'exists:category,id'],
             'short_description' => ['required', 'string', 'max:500'],
             'description' => ['required', 'string'],
-            'planned_start_date' => [$action === 'store' ? 'required' : 'nullable', 'date'],
+            'planned_start_date' => ['required', 'date'],
             'planned_end_date' => ['nullable', 'date', 'after_or_equal:planned_start_date'],
             'stage' => ['required', 'in:upcoming,ongoing,completed'],
 
@@ -439,7 +491,7 @@ class ProjectController extends Controller
 
             // File uploads
             'thumbnail_image' => [$action === 'update' ? 'nullable' : 'required', 'image', 'max:5120'], // 5MB
-            'banner_images.*' => ['nullable', 'image', 'max:5120'],
+            'banner_images' => [$action === 'update' ? 'nullable' : 'required', 'image', 'max:5120'],
             'gallery_images.*' => ['nullable', 'image', 'max:5120'],
             'before_photo' => ['nullable', 'image', 'max:5120'],
             'expected_photo' => ['nullable', 'image', 'max:5120'],
@@ -529,7 +581,7 @@ class ProjectController extends Controller
 
                 $file = $request->file($field);
                 $filename = time() . '_' . $file->getClientOriginalName();
-                $relativePath = 'projects/' . $field;
+                $relativePath = 'projects';
                 $absolutePath = public_path($relativePath);
 
                 if (!File::exists($absolutePath)) {
@@ -542,7 +594,7 @@ class ProjectController extends Controller
         }
 
         // 2. Handle Multiple Files: Banner Images
-        $currentBanners = ($project && $project->banner_images) ? json_decode($project->banner_images, true) : [];
+        $currentBanners = ($project && $project->banner_images) ? $project->banner_images : [];
         if (!is_array($currentBanners)) $currentBanners = [];
 
         // Process Removals for Banners
@@ -563,27 +615,26 @@ class ProjectController extends Controller
             }
         }
 
-        // Add New Banners
+        // Add New Banner (single file)
         if ($request->hasFile('banner_images')) {
-            foreach ($request->file('banner_images') as $banner) {
-                $filename = time() . '_' . $banner->getClientOriginalName();
-                $relativePath = 'projects/banners';
-                $absolutePath = public_path($relativePath);
 
-                if (!File::exists($absolutePath)) {
-                    File::makeDirectory($absolutePath, 0755, true);
-                }
+            $banner = $request->file('banner_images'); // single file
 
-                $banner->move($absolutePath, $filename);
-                $finalPath = $relativePath . '/' . $filename;
-                $currentBanners[] = $finalPath;
+            $filename = time().'_'.$banner->getClientOriginalName();
+            $relativePath = 'projects';
+            $absolutePath = public_path($relativePath);
+
+            if (!File::exists($absolutePath)) {
+                File::makeDirectory($absolutePath, 0755, true);
             }
-        }
-        $filePaths['banner_images'] = array_values($currentBanners);
 
+            $banner->move($absolutePath, $filename);
+
+            $filePaths['banner_images'] = $relativePath.'/'.$filename; // <-- single value
+        }
 
         // 3. Handle Multiple Files: Gallery Images
-        $currentGallery = ($project && $project->gallery_images) ? json_decode($project->gallery_images, true) : [];
+        $currentGallery = ($project && $project->gallery_images) ? $project->gallery_images : [];
         if (!is_array($currentGallery)) $currentGallery = [];
 
         // Process Removals for Gallery
@@ -605,7 +656,7 @@ class ProjectController extends Controller
         if ($request->hasFile('gallery_images')) {
             foreach ($request->file('gallery_images') as $galleryImage) {
                 $filename = time() . '_' . $galleryImage->getClientOriginalName();
-                $relativePath = 'projects/gallery';
+                $relativePath = 'projects';
                 $absolutePath = public_path($relativePath);
 
                 if (!File::exists($absolutePath)) {
@@ -635,7 +686,7 @@ class ProjectController extends Controller
                 if ($request->hasFile("documents.{$index}.file")) {
                     $file = $request->file("documents.{$index}.file");
                     $filename = time() . '_' . $file->getClientOriginalName();
-                    $relativePath = 'projects/documents';
+                    $relativePath = 'projects';
                     $absolutePath = public_path($relativePath);
 
                     if (!File::exists($absolutePath)) {
@@ -681,65 +732,35 @@ class ProjectController extends Controller
             'govt_schemes',
             'stakeholders',
             'risks',
-            'resources_needed_ongoing',
-            'operational_risks_ongoing',
             'links'
         ];
 
         foreach ($jsonFields as $field) {
-if (isset($data[$field])) {
+            if (isset($data[$field])) {
+                // If it's a JSON string, decode it to an array (since model will re-encode it)
+                if (is_string($data[$field])) {
+                    $decoded = json_decode($data[$field], true);
+                    $data[$field] = is_array($decoded) ? $decoded : null;
+                }
 
-    // Decode JSON string if already encoded
-    if (is_string($data[$field])) {
-        $decoded = json_decode($data[$field], true);
-        $data[$field] = is_array($decoded) ? $decoded : null;
-    }
-
-    if (is_array($data[$field])) {
-
-        $filteredData = array_filter($data[$field], function ($item) {
-
-            // 🚨 VERY IMPORTANT CHECK
-            if (!is_array($item)) {
-                return false;
-            }
-
-            return !empty(array_filter($item, function ($value) {
-                return $value !== null && $value !== '';
-            }));
-        });
-
-        $data[$field] = !empty($filteredData)
-            ? json_encode(array_values($filteredData))
-            : null;
-    } else {
-        $data[$field] = null;
-    }
-}
- elseif ($request->has($field) && !isset($data[$field])) {
-                // Handle cases where field is in request but not in validated data
+                if (is_array($data[$field])) {
+                    $filteredData = array_filter($data[$field], function ($item) {
+                        if (!is_array($item)) {
+                            // Allow 0 as a valid value (important for IDs or boolean-like metrics)
+                            return $item !== null && $item !== '';
+                        }
+                        return !empty(array_filter($item, function ($value) {
+                            return $value !== null && $value !== '';
+                        }));
+                    });
+                    $data[$field] = array_values($filteredData);
+                }
+            } elseif ($request->has($field)) {
                 $fieldData = $request->input($field);
-                if (is_array($fieldData) && !empty(array_filter($fieldData))) {
-                    $data[$field] = json_encode($fieldData);
-                } else {
-                    $data[$field] = null;
+                if (is_array($fieldData)) {
+                    $data[$field] = array_values(array_filter($fieldData));
                 }
             }
-        }
-
-        // Handle banner_images separately (already handled in handleFileUploads)
-        if (isset($data['banner_images']) && is_array($data['banner_images'])) {
-            $data['banner_images'] = json_encode($data['banner_images']);
-        }
-
-        // Handle gallery_images separately (already handled in handleFileUploads)
-        if (isset($data['gallery_images']) && is_array($data['gallery_images'])) {
-            $data['gallery_images'] = json_encode($data['gallery_images']);
-        }
-
-        // Handle documents separately (already handled in handleFileUploads)
-        if (isset($data['documents']) && is_array($data['documents'])) {
-            $data['documents'] = json_encode($data['documents']);
         }
 
         return $data;
@@ -797,18 +818,22 @@ if (isset($data[$field])) {
             File::delete(public_path($project->thumbnail_image));
         }
 
-        // Delete banner images
-        if ($project->banner_images) {
-            $banners = json_decode($project->banner_images, true);
-            foreach ($banners as $banner) {
+        // Delete banner images safely (single or multiple)
+        if (!empty($project->banner_images)) {
+
+            $images = is_array($project->banner_images)
+                ? $project->banner_images
+                : [$project->banner_images]; // convert single to array
+
+            foreach ($images as $banner) {
                 File::delete(public_path($banner));
             }
         }
 
+
         // Delete gallery images
-        if ($project->gallery_images) {
-            $gallery = json_decode($project->gallery_images, true);
-            foreach ($gallery as $image) {
+        if ($project->gallery_images && is_array($project->gallery_images)) {
+            foreach ($project->gallery_images as $image) {
                 File::delete(public_path($image));
             }
         }
@@ -822,9 +847,8 @@ if (isset($data[$field])) {
         }
 
         // Delete documents
-        if ($project->documents) {
-            $documents = json_decode($project->documents, true);
-            foreach ($documents as $document) {
+        if ($project->documents && is_array($project->documents)) {
+            foreach ($project->documents as $document) {
                 if (isset($document['file'])) {
                     File::delete(public_path($document['file']));
                 }

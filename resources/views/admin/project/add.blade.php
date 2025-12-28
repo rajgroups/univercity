@@ -241,11 +241,11 @@
                                         <label class="form-label">Banner Images <span class="text-danger">*</span></label>
                                         <input type="file"
                                             class="form-control @error('banner_images') is-invalid @enderror"
-                                            name="banner_images[]" accept="image/*" multiple>
+                                            name="banner_images" accept="image/*" multiple>
                                         @error('banner_images')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
-                                        @error('banner_images.*')
+                                        @error('banner_images')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                                         <div class="form-text">Upload multiple real images of project area (schools,
@@ -1778,7 +1778,7 @@
                 }
 
                 // Card click events
-                sdgGrid.on('click', '.sdg-card', function(e) {
+                sdgGrid.off('click', '.sdg-card').on('click', '.sdg-card', function(e) {
                     const card = $(this);
                     const sdgId = card.data('sdg-id');
 
@@ -1794,53 +1794,52 @@
 
                 // Long press/right click for preview
                 let pressTimer;
-                sdgGrid.on('contextmenu', '.sdg-card', function(e) {
+                sdgGrid.off('contextmenu', '.sdg-card').on('contextmenu', '.sdg-card', function(e) {
                     e.preventDefault();
                     const sdgId = $(this).data('sdg-id');
                     showSDGPreview(sdgId);
                 });
 
-                sdgGrid.on('mousedown', '.sdg-card', function() {
+                sdgGrid.off('mousedown', '.sdg-card').on('mousedown', '.sdg-card', function() {
                     const card = $(this);
                     pressTimer = setTimeout(function() {
                         const sdgId = card.data('sdg-id');
                         showSDGPreview(sdgId);
                     }, 1000); // 1 second for long press
-                }).on('mouseup mouseleave', function() {
+                }).off('mouseup mouseleave').on('mouseup mouseleave', function() {
                     clearTimeout(pressTimer);
                 });
 
                 // Double click for preview
-                sdgGrid.on('dblclick', '.sdg-card', function() {
+                sdgGrid.off('dblclick', '.sdg-card').on('dblclick', '.sdg-card', function() {
                     const sdgId = $(this).data('sdg-id');
                     showSDGPreview(sdgId);
                 });
 
                 // Remove chip event
-                chipsContainer.on('click', '.btn-close', function(e) {
+                chipsContainer.off('click', '.btn-close').on('click', '.btn-close', function(e) {
                     e.stopPropagation();
                     const sdgId = $(this).data('sdg-id');
                     updateSDGSelection(sdgId, false);
                 });
 
                 // Clear all SDGs
-                $('#clear_all_sdgs').on('click', function() {
+                $('#clear_all_sdgs').off('click').on('click', function() {
                     if (confirm('Are you sure you want to clear all selected SDGs?')) {
                         selectedSDGs = [];
                         hiddenInput.val('');
-                        updateSDGSummary();
-                        updateSDGCards();
+                        updateSDGSelection(null, null); // Trigger updates
                     }
                 });
 
                 // Hover effects
-                sdgGrid.on('mouseenter', '.sdg-card', function() {
+                sdgGrid.off('mouseenter', '.sdg-card').on('mouseenter', '.sdg-card', function() {
                     const card = $(this);
                     if (!card.hasClass('selected')) {
                         card.addClass('border-info');
                         card.css('transform', 'translateY(-2px)');
                     }
-                }).on('mouseleave', '.sdg-card', function() {
+                }).off('mouseleave', '.sdg-card').on('mouseleave', '.sdg-card', function() {
                     const card = $(this);
                     card.removeClass('border-info');
                     card.css('transform', '');
@@ -1860,7 +1859,11 @@
             }
 
             // Listen for alignment category changes
-            $('select[name="alignment_categories[]"]').on('change', function() {
+            $('select[name="alignment_categories[]"]').off('change').on('change', function() {
+                let selected = $(this).val() || [];
+                $('#sdg_section').toggle(selected.includes('sdg'));
+                $('#govt_schemes_section').toggle(selected.includes('govt_schemes'));
+
                 setTimeout(() => {
                     if ($('#sdg_section').is(':visible')) {
                         initializeSDGSelection();
@@ -1874,7 +1877,7 @@
             }
 
             // Reinitialize on accordion expand
-            $('.accordion-collapse').on('shown.bs.collapse', function() {
+            $('.accordion-collapse').off('shown.bs.collapse').on('shown.bs.collapse', function() {
                 if ($(this).attr('id') === 'sdg_section') {
                     initializeSDGSelection();
                 }
@@ -1948,12 +1951,7 @@
                 $('#multiple_locations_section').toggle(type === 'multiple');
             });
 
-            // Alignment categories toggle
-            $('select[name="alignment_categories[]"]').on('change', function() {
-                let selected = $(this).val() || [];
-                $('#sdg_section').toggle(selected.includes('sdg'));
-                $('#govt_schemes_section').toggle(selected.includes('govt_schemes'));
-            });
+            // Alignment categories toggle (redundant handled above)
 
             // Add/remove dynamic fields counters
             let locationCounter =

@@ -51,11 +51,55 @@ class Project extends Model
         'show_map_preview' => 'boolean',
         'project_progress' => 'decimal:2',
         'completion_readiness' => 'decimal:2',
+        'target_groups' => 'array',
+        'sdg_goals' => 'array',
+        'objectives' => 'array',
+        'stakeholders' => 'array',
+        'alignment_categories' => 'array',
+        'govt_schemes' => 'array',
+        'risks' => 'array',
+        'multiple_locations' => 'array',
+        // 'banner_images' => 'array',
+        'gallery_images' => 'array',
+        'donut_metrics' => 'array',
+        'documents' => 'array',
+        'links' => 'array',
+        'risks' => 'array',
     ];
 
     public function category()
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function surveys()
+    {
+        return $this->hasMany(Survey::class);
+    }
+
+    public function milestones()
+    {
+        return $this->hasMany(ProjectMilestone::class);
+    }
+
+    public function estimation()
+    {
+        return $this->hasOne(ProjectEstimation::class);
+    }
+
+    public function donors()
+    {
+        return $this->hasMany(ProjectDonor::class);
+    }
+
+    public function fundings()
+    {
+        return $this->hasMany(ProjectFunding::class);
+    }
+
+    public function utilizations()
+    {
+        return $this->hasMany(ProjectUtilization::class);
     }
 
     // Accessor for funding progress
@@ -66,4 +110,79 @@ class Project extends Model
         }
         return 0;
     }
+
+    public function getLinksAttribute($value)
+    {
+        // Already an array → return as is
+        if (is_array($value)) {
+            return $value;
+        }
+
+        // Try JSON decode
+        $decoded = json_decode($value, true);
+
+        // If decode works → return array
+        if (is_array($decoded)) {
+            return $decoded;
+        }
+
+        // If value is "[]" or null → return empty array
+        return [];
+    }
+
+    public function getRisksAttribute($value)
+    {
+        // Already an array → return
+        if (is_array($value)) {
+            return $value;
+        }
+
+        // Attempt JSON decode
+        $decoded = json_decode($value, true);
+
+        // If decoded correctly → return array
+        if (is_array($decoded)) {
+            return $decoded;
+        }
+
+        // Fallback → return empty array
+        return [];
+    }
+
+    public function getDocumentsAttribute($value)
+    {
+        if (is_array($value)) {
+            return $value;
+        }
+
+        $decoded = json_decode($value, true);
+
+        return is_array($decoded) ? $decoded : [];
+    }
+
+    public function getGalleryImagesAttribute($value)
+    {
+        if (is_array($value)) {
+            return asset($value);
+        }
+
+        $decoded = json_decode($value, true);
+
+        // If JSON decodes to an array → return it
+        if (is_array($decoded)) {
+            return $decoded;
+        }
+
+        // If value is "[]" or empty → return empty array
+        if ($value === '[]' || $value === null || $value === '') {
+            return [];
+        }
+
+        // If it's a single image string → wrap into array
+        return [$value];
+    }
+
+
+
+
 }

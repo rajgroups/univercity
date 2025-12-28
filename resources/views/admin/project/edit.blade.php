@@ -1,4 +1,4 @@
-{{-- @dd($categories) --}}
+{{-- @dd($project->gallery_images) --}}
 @extends('layouts.admin.app')
 @section('content')
     <div class="page-header">
@@ -63,7 +63,7 @@
                 <!-- Section 0: Project Stage Indicator -->
                 <div class="accordion-item border mb-4">
                     <h2 class="accordion-header" id="headingStage">
-                        <div class="accordion-button collapsed bg-white" data-bs-toggle="collapse"
+                        <div class="accordion-button bg-white" data-bs-toggle="collapse"
                             data-bs-target="#stageSection">
                             <div class="d-flex align-items-center justify-content-between flex-fill">
                                 <h5 class="d-flex align-items-center">
@@ -155,7 +155,7 @@
                 <!-- Section 1: Basic Project Details -->
                 <div class="accordion-item border mb-4">
                     <h2 class="accordion-header" id="headingBasic">
-                        <div class="accordion-button collapsed bg-white" data-bs-toggle="collapse"
+                        <div class="accordion-button bg-white" data-bs-toggle="collapse"
                             data-bs-target="#basicSection">
                             <div class="d-flex align-items-center justify-content-between flex-fill">
                                 <h5 class="d-flex align-items-center">
@@ -265,22 +265,30 @@
                                         @error('banner_images.*')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
-
-                                        <!-- Existing Banner Images -->
-                                        @if($project->banner_images && count($project->banner_images) > 0)
+                                        {{-- @dd($project->banner_images); --}}
+                                        @if(!empty($project->banner_images))
                                             <div class="mt-2">
-                                                <label class="form-label small">Existing Banner Images:</label>
-                                                <div class="d-flex flex-wrap gap-2">
-                                                    @foreach($project->banner_images as $banner)
-                                                        <div class="position-relative" style="width: 80px;">
-                                                            <img src="{{ asset($banner) }}" alt="Banner" class="img-thumbnail" style="width: 80px; height: 60px; object-fit: cover;">
-                                                            <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 p-0" style="width: 20px; height: 20px; font-size: 10px;" onclick="removeImage('banner', '{{ $banner }}')">×</button>
-                                                        </div>
-                                                    @endforeach
+                                                <label class="form-label small">Existing Banner Image:</label>
+
+                                                <div class="position-relative d-inline-block" style="width: 80px;">
+                                                    <img src="{{ asset($project->banner_images) }}"
+                                                        alt="Banner"
+                                                        class="img-thumbnail"
+                                                        style="width: 80px; height: 60px; object-fit: cover;">
+
+                                                    <button type="button"
+                                                            class="btn btn-sm btn-danger position-absolute top-0 end-0 p-0"
+                                                            style="width: 20px; height: 20px; font-size: 10px;"
+                                                            onclick="removeImage('banner', '{{ $project->banner_images }}')">
+                                                        ×
+                                                    </button>
                                                 </div>
-                                                <input type="hidden" name="existing_banners" value="{{ json_encode($project->banner_images) }}">
+
+                                                <input type="hidden" name="existing_banners"
+                                                    value="{{ $project->banner_images }}">
                                             </div>
                                         @endif
+
                                         <div class="form-text">Upload multiple real images of project area (schools, villages, etc.) - Max 5MB each</div>
                                     </div>
                                 </div>
@@ -317,7 +325,7 @@
                                         <label class="form-label">Planned Start Date <span class="text-danger">*</span></label>
                                         <input type="date"
                                             class="form-control @error('planned_start_date') is-invalid @enderror"
-                                            name="planned_start_date" value="{{ old('planned_start_date', $project->planned_start_date) }}">
+                                            name="planned_start_date" value="{{ old('planned_start_date', $project->planned_start_date ? $project->planned_start_date->format('Y-m-d') : '') }}">
                                         @error('planned_start_date')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -329,7 +337,7 @@
                                         <label class="form-label">Planned End Date</label>
                                         <input type="date"
                                             class="form-control @error('planned_end_date') is-invalid @enderror"
-                                            name="planned_end_date" value="{{ old('planned_end_date', $project->planned_end_date) }}">
+                                            name="planned_end_date" value="{{ old('planned_end_date', $project->planned_end_date ? $project->planned_end_date->format('Y-m-d') : '') }}">
                                         @error('planned_end_date')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -347,52 +355,48 @@
                             </div>
 
                             <!-- Actual Dates for Ongoing/Completed Projects -->
-                            @if(in_array($project->stage, ['ongoing', 'completed']))
-                                <div class="row mt-3">
-                                    <div class="col-md-4">
-                                        <div class="mb-3">
-                                            <label class="form-label">Actual Start Date <span class="text-danger">*</span></label>
-                                            <input type="date"
-                                                class="form-control @error('actual_start_date') is-invalid @enderror"
-                                                name="actual_start_date" value="{{ old('actual_start_date', $project->actual_start_date) }}">
-                                            @error('actual_start_date')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                            <div class="form-text">Actual project start date</div>
-                                        </div>
-                                    </div>
-                                    @if($project->stage == 'completed')
-                                        <div class="col-md-4">
-                                            <div class="mb-3">
-                                                <label class="form-label">Actual End Date <span class="text-danger">*</span></label>
-                                                <input type="date"
-                                                    class="form-control @error('actual_end_date') is-invalid @enderror"
-                                                    name="actual_end_date" value="{{ old('actual_end_date', $project->actual_end_date) }}">
-                                                @error('actual_end_date')
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
-                                                <div class="form-text">Actual project completion date</div>
-                                            </div>
-                                        </div>
-                                    @endif
-                                    <div class="col-md-4">
-                                        <div class="mb-3">
-                                            <label class="form-label">Project Progress</label>
-                                            <div class="input-group">
-                                                <input type="number"
-                                                    class="form-control @error('project_progress') is-invalid @enderror"
-                                                    name="project_progress" min="0" max="100"
-                                                    value="{{ old('project_progress', $project->project_progress) }}">
-                                                <span class="input-group-text">%</span>
-                                            </div>
-                                            @error('project_progress')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                            <div class="form-text">Current completion percentage</div>
-                                        </div>
+                            <div class="row mt-3" id="actual_dates_section" style="{{ in_array($project->stage, ['ongoing', 'completed']) ? '' : 'display:none;' }}">
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label class="form-label">Actual Start Date <span class="text-danger">*</span></label>
+                                        <input type="date"
+                                            class="form-control @error('actual_start_date') is-invalid @enderror"
+                                            name="actual_start_date" value="{{ old('actual_start_date', $project->actual_start_date ? $project->actual_start_date->format('Y-m-d') : '') }}">
+                                        @error('actual_start_date')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                        <div class="form-text">Actual project start date</div>
                                     </div>
                                 </div>
-                            @endif
+                                <div class="col-md-4" id="actual_end_date_wrapper" style="{{ $project->stage == 'completed' ? '' : 'display:none;' }}">
+                                    <div class="mb-3">
+                                        <label class="form-label">Actual End Date <span class="text-danger">*</span></label>
+                                        <input type="date"
+                                            class="form-control @error('actual_end_date') is-invalid @enderror"
+                                            name="actual_end_date" value="{{ old('actual_end_date', $project->actual_end_date ? $project->actual_end_date->format('Y-m-d') : '') }}">
+                                        @error('actual_end_date')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                        <div class="form-text">Actual project completion date</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label class="form-label">Project Progress</label>
+                                        <div class="input-group">
+                                            <input type="number"
+                                                class="form-control @error('project_progress') is-invalid @enderror"
+                                                name="project_progress" min="0" max="100"
+                                                value="{{ old('project_progress', $project->project_progress) }}">
+                                            <span class="input-group-text">%</span>
+                                        </div>
+                                        @error('project_progress')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                        <div class="form-text">Current completion percentage</div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -400,7 +404,7 @@
                 <!-- Section 2: Target Location Details -->
                 <div class="accordion-item border mb-4">
                     <h2 class="accordion-header" id="headingLocation">
-                        <div class="accordion-button collapsed bg-white" data-bs-toggle="collapse"
+                        <div class="accordion-button bg-white" data-bs-toggle="collapse"
                             data-bs-target="#locationSection">
                             <div class="d-flex align-items-center justify-content-between flex-fill">
                                 <h5 class="d-flex align-items-center">
@@ -410,7 +414,7 @@
                             </div>
                         </div>
                     </h2>
-                    <div id="locationSection" class="accordion-collapse collapse">
+                    <div id="locationSection" class="accordion-collapse collapse show">
                         <div class="accordion-body border-top">
                             <div class="row">
                                 <div class="col-md-6">
@@ -720,7 +724,7 @@
                 <!-- Section 3: Strategic Goals, Objective & Impact Alignment -->
                 <div class="accordion-item border mb-4">
                     <h2 class="accordion-header" id="headingStrategic">
-                        <div class="accordion-button collapsed bg-white" data-bs-toggle="collapse"
+                        <div class="accordion-button bg-white" data-bs-toggle="collapse"
                             data-bs-target="#strategicSection">
                             <div class="d-flex align-items-center justify-content-between flex-fill">
                                 <h5 class="d-flex align-items-center">
@@ -730,7 +734,7 @@
                             </div>
                         </div>
                     </h2>
-                    <div id="strategicSection" class="accordion-collapse collapse">
+                    <div id="strategicSection" class="accordion-collapse collapse show">
                         <div class="accordion-body border-top">
                             <div class="row">
                                 <div class="col-md-12">
@@ -1333,7 +1337,7 @@
                 <!-- Section 4: Ongoing Project Updates (Conditional) -->
                 <div class="accordion-item border mb-4" id="section_ongoing" style="{{ in_array($project->stage, ['ongoing', 'completed']) ? '' : 'display:none;' }}">
                     <h2 class="accordion-header" id="headingOngoing">
-                        <div class="accordion-button collapsed bg-white" data-bs-toggle="collapse"
+                        <div class="accordion-button bg-white" data-bs-toggle="collapse"
                             data-bs-target="#ongoingSection">
                             <div class="d-flex align-items-center justify-content-between flex-fill">
                                 <h5 class="d-flex align-items-center">
@@ -1343,7 +1347,7 @@
                             </div>
                         </div>
                     </h2>
-                    <div id="ongoingSection" class="accordion-collapse collapse">
+                    <div id="ongoingSection" class="accordion-collapse collapse show">
                         <div class="accordion-body border-top">
                             <div class="row">
                                 <div class="col-md-12">
@@ -1447,7 +1451,7 @@
                 <!-- Section 5: CSR & Stakeholders Engagement -->
                 <div class="accordion-item border mb-4">
                     <h2 class="accordion-header" id="headingCSR">
-                        <div class="accordion-button collapsed bg-white" data-bs-toggle="collapse"
+                        <div class="accordion-button bg-white" data-bs-toggle="collapse"
                             data-bs-target="#csrSection">
                             <div class="d-flex align-items-center justify-content-between flex-fill">
                                 <h5 class="d-flex align-items-center">
@@ -1457,7 +1461,7 @@
                             </div>
                         </div>
                     </h2>
-                    <div id="csrSection" class="accordion-collapse collapse">
+                    <div id="csrSection" class="accordion-collapse collapse show">
                         <div class="accordion-body border-top">
                             <div class="row">
                                 <div class="col-md-12">
@@ -1565,7 +1569,7 @@
                 <!-- Section 6: Resource & Operation Compliance Risks -->
                 <div class="accordion-item border mb-4">
                     <h2 class="accordion-header" id="headingResources">
-                        <div class="accordion-button collapsed bg-white" data-bs-toggle="collapse"
+                        <div class="accordion-button bg-white" data-bs-toggle="collapse"
                             data-bs-target="#resourcesSection">
                             <div class="d-flex align-items-center justify-content-between flex-fill">
                                 <h5 class="d-flex align-items-center">
@@ -1575,7 +1579,7 @@
                             </div>
                         </div>
                     </h2>
-                    <div id="resourcesSection" class="accordion-collapse collapse">
+                    <div id="resourcesSection" class="accordion-collapse collapse show">
                         <div class="accordion-body border-top">
                             <div class="row">
                                 <div class="col-md-12">
@@ -1736,7 +1740,7 @@
                 <!-- Section 7: Media and Documents -->
                 <div class="accordion-item border mb-4">
                     <h2 class="accordion-header" id="headingMedia">
-                        <div class="accordion-button collapsed bg-white" data-bs-toggle="collapse"
+                        <div class="accordion-button bg-white" data-bs-toggle="collapse"
                             data-bs-target="#mediaSection">
                             <div class="d-flex align-items-center justify-content-between flex-fill">
                                 <h5 class="d-flex align-items-center">
@@ -1746,7 +1750,7 @@
                             </div>
                         </div>
                     </h2>
-                    <div id="mediaSection" class="accordion-collapse collapse">
+                    <div id="mediaSection" class="accordion-collapse collapse show">
                         <div class="accordion-body border-top">
                             <div class="row">
                                 <div class="col-md-12">
@@ -1762,21 +1766,37 @@
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
 
-                                        <!-- Existing Gallery Images -->
-                                        @if($project->gallery_images && count($project->gallery_images) > 0)
-                                            <div class="mt-2">
-                                                <label class="form-label small">Existing Gallery Images:</label>
-                                                <div class="d-flex flex-wrap gap-2">
-                                                    @foreach($project->gallery_images as $galleryImage)
-                                                        <div class="position-relative" style="width: 80px;">
-                                                            <img src="{{ Storage::url($galleryImage) }}" alt="Gallery" class="img-thumbnail" style="width: 80px; height: 60px; object-fit: cover;">
-                                                            <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 p-0" style="width: 20px; height: 20px; font-size: 10px;" onclick="removeImage('gallery', '{{ $galleryImage }}')">×</button>
-                                                        </div>
-                                                    @endforeach
+                                    <!-- Gallery Images -->
+                                    {{-- @dd($project->gallery_images) --}}
+                                    @if(!empty($project->gallery_images))
+                                    <div class="mt-2">
+                                        <label class="form-label small">Existing Gallery Images:</label>
+
+                                        <div class="d-flex flex-wrap gap-2">
+                                            @foreach($project->gallery_images as $galleryImage)
+                                                <div class="position-relative" style="width: 80px;">
+                                                    <img src="{{ asset($galleryImage) }}"
+                                                        class="img-thumbnail"
+                                                        style="width: 80px; height: 60px; object-fit: cover;">
+
+                                                    <button type="button"
+                                                            class="btn btn-sm btn-danger position-absolute top-0 end-0 p-0"
+                                                            style="width: 20px; height: 20px; font-size: 10px;"
+                                                            onclick="removeImage('gallery', '{{ $galleryImage }}')">
+                                                        ×
+                                                    </button>
                                                 </div>
-                                                <input type="hidden" name="existing_gallery" value="{{ json_encode($project->gallery_images) }}">
-                                            </div>
-                                        @endif
+                                            @endforeach
+                                        </div>
+
+                                        <input type="hidden"
+                                            name="existing_gallery"
+                                            value="{{ json_encode($project->gallery_images) }}">
+                                    </div>
+                                    @else
+                                    <div class="text-muted small">No gallery images uploaded yet</div>
+                                    @endif
+
                                         <div class="form-text">Upload real photos of project implementation - Max 5 images, 5MB each</div>
                                     </div>
                                 </div>
@@ -2178,7 +2198,7 @@
                 } else {
                      hiddenInput.name = `removed_${type}`;
                 }
-                
+
                 hiddenInput.value = path;
                 document.getElementById('projectForm').appendChild(hiddenInput);
 
@@ -2362,7 +2382,7 @@
                 }
 
                 // Card click events
-                sdgGrid.on('click', '.sdg-card', function(e) {
+                sdgGrid.off('click', '.sdg-card').on('click', '.sdg-card', function(e) {
                     const card = $(this);
                     const sdgId = card.data('sdg-id');
 
@@ -2378,53 +2398,52 @@
 
                 // Long press/right click for preview
                 let pressTimer;
-                sdgGrid.on('contextmenu', '.sdg-card', function(e) {
+                sdgGrid.off('contextmenu', '.sdg-card').on('contextmenu', '.sdg-card', function(e) {
                     e.preventDefault();
                     const sdgId = $(this).data('sdg-id');
                     showSDGPreview(sdgId);
                 });
 
-                sdgGrid.on('mousedown', '.sdg-card', function() {
+                sdgGrid.off('mousedown', '.sdg-card').on('mousedown', '.sdg-card', function() {
                     const card = $(this);
                     pressTimer = setTimeout(function() {
                         const sdgId = card.data('sdg-id');
                         showSDGPreview(sdgId);
                     }, 1000); // 1 second for long press
-                }).on('mouseup mouseleave', function() {
+                }).off('mouseup mouseleave').on('mouseup mouseleave', function() {
                     clearTimeout(pressTimer);
                 });
 
                 // Double click for preview
-                sdgGrid.on('dblclick', '.sdg-card', function() {
+                sdgGrid.off('dblclick', '.sdg-card').on('dblclick', '.sdg-card', function() {
                     const sdgId = $(this).data('sdg-id');
                     showSDGPreview(sdgId);
                 });
 
                 // Remove chip event
-                chipsContainer.on('click', '.btn-close', function(e) {
+                chipsContainer.off('click', '.btn-close').on('click', '.btn-close', function(e) {
                     e.stopPropagation();
                     const sdgId = $(this).data('sdg-id');
                     updateSDGSelection(sdgId, false);
                 });
 
                 // Clear all SDGs
-                $('#clear_all_sdgs').on('click', function() {
+                $('#clear_all_sdgs').off('click').on('click', function() {
                     if (confirm('Are you sure you want to clear all selected SDGs?')) {
                         selectedSDGs = [];
                         hiddenInput.val('');
-                        updateSDGSummary();
-                        updateSDGCards();
+                        updateSDGSelection(null, null); // Trigger updates
                     }
                 });
 
                 // Hover effects
-                sdgGrid.on('mouseenter', '.sdg-card', function() {
+                sdgGrid.off('mouseenter', '.sdg-card').on('mouseenter', '.sdg-card', function() {
                     const card = $(this);
                     if (!card.hasClass('selected')) {
                         card.addClass('border-info');
                         card.css('transform', 'translateY(-2px)');
                     }
-                }).on('mouseleave', '.sdg-card', function() {
+                }).off('mouseleave', '.sdg-card').on('mouseleave', '.sdg-card', function() {
                     const card = $(this);
                     card.removeClass('border-info');
                     card.css('transform', '');
@@ -2444,7 +2463,11 @@
             }
 
             // Listen for alignment category changes
-            $('select[name="alignment_categories[]"]').on('change', function() {
+            $('select[name="alignment_categories[]"]').off('change').on('change', function() {
+                let selected = $(this).val() || [];
+                $('#sdg_section').toggle(selected.includes('sdg'));
+                $('#govt_schemes_section').toggle(selected.includes('govt_schemes'));
+
                 setTimeout(() => {
                     if ($('#sdg_section').is(':visible')) {
                         initializeSDGSelection();
@@ -2458,7 +2481,7 @@
             }
 
             // Reinitialize on accordion expand
-            $('.accordion-collapse').on('shown.bs.collapse', function() {
+            $('.accordion-collapse').off('shown.bs.collapse').on('shown.bs.collapse', function() {
                 if ($(this).attr('id') === 'sdg_section') {
                     initializeSDGSelection();
                 }
@@ -2534,12 +2557,7 @@
                 $('#multiple_locations_section').toggle(type === 'multiple');
             });
 
-            // Alignment categories toggle
-            $('select[name="alignment_categories[]"]').on('change', function() {
-                let selected = $(this).val() || [];
-                $('#sdg_section').toggle(selected.includes('sdg'));
-                $('#govt_schemes_section').toggle(selected.includes('govt_schemes'));
-            });
+            // Alignment categories toggle (redundant handled above)
 
             // Add/remove dynamic fields counters
             let locationCounter = {{ is_array(old('multiple_locations', $project->multiple_locations)) ? count(old('multiple_locations', $project->multiple_locations)) : 0 }};
@@ -2810,19 +2828,23 @@
             // Stage change listener
             $('select[name="stage"]').on('change', function() {
                 var stage = $(this).val();
-                
-                // Toggle Ongoing Section
+
+                // Toggle Ongoing Section (Dashboard section)
                 if (stage === 'ongoing' || stage === 'completed') {
                     $('#section_ongoing').slideDown();
+                    $('#actual_dates_section').slideDown();
                 } else {
                     $('#section_ongoing').slideUp();
+                    $('#actual_dates_section').slideUp();
                 }
-                
+
                 // Toggle Completed Fields
                 if (stage === 'completed') {
                     $('#completed_fields_wrapper').slideDown();
+                    $('#actual_end_date_wrapper').slideDown();
                 } else {
                     $('#completed_fields_wrapper').slideUp();
+                    $('#actual_end_date_wrapper').slideUp();
                 }
             });
 

@@ -66,19 +66,9 @@ class SDGHelper
         return $filteredSDGs;
     }
 
-    public static function getSDGImageUrl($id, $source = 'un_primary')
+    public static function getSDGImageUrl($id)
     {
-        $color = self::$sdgColors[$id] ?? '4C9F38';
-
-        $sources = [
-            'un_primary' => self::$iconSources['un_primary'],
-            'un_alternative' => self::$iconSources['un_alternative'],
-            'ui_avatar' => self::$iconSources['ui_avatar']
-        ];
-
-        $url = $sources[$source] ?? self::$iconSources['un_primary'];
-
-        return str_replace(['{id}', '{color}'], [$id, $color], $url);
+        return asset("sdg/{$id}.jpg");
     }
 
     public static function getSDGColor($id)

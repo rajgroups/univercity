@@ -26,5 +26,11 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
+
+        $this->renderable(function (\Illuminate\Http\Exceptions\PostTooLargeException $e, $request) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'The uploaded data is too large. Please reduce the number of files or the file size and try again.');
+        });
     }
 }

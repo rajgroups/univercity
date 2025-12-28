@@ -54,7 +54,7 @@
                     <div class="input-group">
                         <span class="input-group-text"><i class="feather feather-search"></i></span>
                         <input type="text" class="form-control" name="search" placeholder="Search projects..."
-                               value="{{ request('search') }}">
+                            value="{{ request('search') }}">
                     </div>
                 </div>
                 <div class="col-md-2">
@@ -70,8 +70,9 @@
                     <label class="form-label">Category</label>
                     <select class="form-select" name="category">
                         <option value="">All Categories</option>
-                        @foreach($categories as $category)
-                            <option value="{{ $category->id }}" {{ request('category') == $category->id ? 'selected' : '' }}>
+                        @foreach ($categories as $category)
+                            <option value="{{ $category->id }}"
+                                {{ request('category') == $category->id ? 'selected' : '' }}>
                                 {{ $category->name }}
                             </option>
                         @endforeach
@@ -91,8 +92,8 @@
                     <label class="form-label">Status</label>
                     <select class="form-select" name="status">
                         <option value="">All Status</option>
-                        <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>Active</option>
-                        <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>Inactive</option>
+                        <option value="active" {{ request('status') == 1 ? 'selected' : '' }}>Active</option>
+                        <option value="inactive" {{ request('status') == 0 ? 'selected' : '' }}>Inactive</option>
                     </select>
                 </div>
                 <div class="col-md-1 d-flex align-items-end">
@@ -101,7 +102,7 @@
                     </button>
                 </div>
             </form>
-            @if(request()->anyFilled(['search', 'stage', 'category', 'location_type', 'status']))
+            @if (request()->anyFilled(['search', 'stage', 'category', 'location_type', 'status']))
                 <div class="mt-3">
                     <a href="{{ route('admin.project.index') }}" class="btn btn-sm btn-outline-secondary">
                         <i class="feather feather-x me-1"></i> Clear Filters
@@ -213,6 +214,7 @@
                     </thead>
                     <tbody>
                         @forelse($projects as $project)
+                        {{-- @dd($project->status); --}}
                             <tr>
                                 <td class="text-center">
                                     <input type="checkbox" class="select-item" value="{{ $project->id }}">
@@ -222,33 +224,35 @@
                                 </td>
                                 <td>
                                     <div class="d-flex align-items-center">
-                                        @if($project->thumbnail_image)
-                                            <div class="flex-shrink-0 me-3">
-                                                <img src="{{ asset($project->thumbnail_image) }}"
-                                                     alt="{{ $project->title }}"
-                                                     class="avatar-md rounded">
-                                            </div>
-                                        @endif
+                                        <!-- @if ($project->thumbnail_image)
+    <div class="flex-shrink-0 me-3">
+                                                    <img src="{{ asset($project->thumbnail_image) }}"
+                                                         alt="{{ $project->title }}"
+                                                         class="avatar-md rounded">
+                                                </div>
+    @endif -->
                                         <div class="flex-grow-1">
                                             <h6 class="mb-1">
-                                                <a href="{{ route('admin.project.show', $project->id) }}" class="text-dark">
+                                                <a href="{{ route('admin.project.show', $project->id) }}"
+                                                    class="text-dark">
                                                     {{ Str::limit($project->title, 50) }}
                                                 </a>
                                             </h6>
                                             <p class="text-muted mb-0 small">
                                                 <i class="feather feather-calendar me-1"></i>
                                                 {{ \Carbon\Carbon::parse($project->planned_start_date)->format('M d, Y') }}
-                                                @if($project->planned_end_date)
-                                                    - {{ \Carbon\Carbon::parse($project->planned_end_date)->format('M d, Y') }}
+                                                @if ($project->planned_end_date)
+                                                    -
+                                                    {{ \Carbon\Carbon::parse($project->planned_end_date)->format('M d, Y') }}
                                                 @endif
                                             </p>
                                             <p class="text-muted mb-0 small">
                                                 <i class="feather feather-map-pin me-1"></i>
                                                 {{ $project->location_type }} |
-                                                @if($project->state)
+                                                @if ($project->state)
                                                     {{ $project->state }},
                                                 @endif
-                                                @if($project->district)
+                                                @if ($project->district)
                                                     {{ $project->district }}
                                                 @endif
                                             </p>
@@ -261,7 +265,7 @@
                                     </span>
                                 </td>
                                 <td>
-                                    @if($project->stage === 'upcoming')
+                                    @if ($project->stage === 'upcoming')
                                         <span class="badge bg-warning text-dark">
                                             <i class="feather feather-clock me-1"></i> Upcoming
                                         </span>
@@ -278,13 +282,11 @@
                                 <td>
                                     <div class="progress" style="height: 6px;">
                                         <div class="progress-bar
-                                            @if($project->stage === 'completed') bg-success
+                                            @if ($project->stage === 'completed') bg-success
                                             @elseif($project->project_progress >= 50) bg-info
                                             @else bg-warning @endif"
-                                            role="progressbar"
-                                            style="width: {{ $project->project_progress }}%"
-                                            aria-valuenow="{{ $project->project_progress }}"
-                                            aria-valuemin="0"
+                                            role="progressbar" style="width: {{ $project->project_progress }}%"
+                                            aria-valuenow="{{ $project->project_progress }}" aria-valuemin="0"
                                             aria-valuemax="100">
                                         </div>
                                     </div>
@@ -296,7 +298,8 @@
                                             <i class="feather feather-users text-primary"></i>
                                         </div>
                                         <div class="flex-grow-1 ms-2">
-                                            <h6 class="mb-0">{{ number_format($project->actual_beneficiary_count) }}</h6>
+                                            <h6 class="mb-0">{{ number_format($project->actual_beneficiary_count) }}
+                                            </h6>
                                             <small class="text-muted">Beneficiaries</small>
                                         </div>
                                     </div>
@@ -304,57 +307,55 @@
                                 <td>
                                     <div class="form-check form-switch">
                                         <input type="checkbox" class="form-check-input status-toggle"
-                                               data-id="{{ $project->id }}"
-                                               id="status{{ $project->id }}"
-                                               {{ $project->status === 'active' ? 'checked' : '' }}>
+                                            data-id="{{ $project->id }}" id="status{{ $project->id }}"
+                                            {{ $project->status == 1 ? 'checked' : '' }}>
                                         <label class="form-check-label" for="status{{ $project->id }}"></label>
                                     </div>
                                 </td>
                                 <td class="text-center">
-    <div class="btn-group" role="group">
-        <!-- View button -->
-        <a href="{{ route('admin.project.show', $project->id) }}"
-           class="btn btn-sm btn-outline-primary"
-           data-bs-toggle="tooltip"
-           title="View">
-            <i class="feather feather-eye"></i>
-        </a>
+                                    <div class="btn-group" role="group">
+                                        <!-- View button -->
+                                        <a href="{{ route('admin.project.show', $project->id) }}"
+                                            class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip"
+                                            title="View">
+                                            <i class="feather feather-eye"></i>
+                                        </a>
 
-        <!-- Edit button -->
-        <a href="{{ route('admin.project.edit', $project->id) }}"
-           class="btn btn-sm btn-outline-info"
-           data-bs-toggle="tooltip"
-           title="Edit">
-            <i class="feather feather-edit"></i>
-        </a>
+                                        <!-- Edit button -->
+                                        <a href="{{ route('admin.project.edit', $project->id) }}"
+                                            class="btn btn-sm btn-outline-info" data-bs-toggle="tooltip" title="Edit">
+                                            <i class="feather feather-edit"></i>
+                                        </a>
 
-        <!-- Estimation button -->
-        <a href="{{ route('admin.project.estmator.index', $project->id) }}"
-           class="btn btn-sm btn-outline-warning"
-           data-bs-toggle="tooltip"
-           title="Estimation">
-            <i class="feather feather-dollar-sign"></i>
-        </a>
+                                        <!-- Survey button -->
+                                        <a href="{{ route('admin.surveys.create', ['project_id' => $project->id]) }}"
+                                            class="btn btn-sm btn-outline-secondary" data-bs-toggle="tooltip"
+                                            title="Add Survey">
+                                            <i class="feather feather-clipboard"></i>
+                                        </a>
 
-        <!-- Milestones button -->
-        <a href="{{ route('admin.project.milestones.create', $project->id) }}"
-           class="btn btn-sm btn-outline-success"
-           data-bs-toggle="tooltip"
-           title="Milestones">
-            <i class="feather feather-target"></i>
-        </a>
+                                        <!-- Estimation button -->
+                                        <a href="{{ route('admin.project.estmator.index', $project->id) }}"
+                                            class="btn btn-sm btn-outline-warning" data-bs-toggle="tooltip"
+                                            title="Estimation">
+                                            <i class="feather feather-dollar-sign"></i>
+                                        </a>
 
-        <!-- Delete button -->
-        <button type="button"
-                class="btn btn-sm btn-outline-danger delete-btn"
-                data-id="{{ $project->id }}"
-                data-title="{{ $project->title }}"
-                data-bs-toggle="tooltip"
-                title="Delete">
-            <i class="feather feather-trash-2"></i>
-        </button>
-    </div>
-</td>
+                                        <!-- Milestones button -->
+                                        <a href="{{ route('admin.project.milestones.create', $project->id) }}"
+                                            class="btn btn-sm btn-outline-success" data-bs-toggle="tooltip"
+                                            title="Milestones">
+                                            <i class="feather feather-target"></i>
+                                        </a>
+
+                                        <!-- Delete button -->
+                                        <button type="button" class="btn btn-sm btn-outline-danger delete-btn"
+                                            data-id="{{ $project->id }}" data-title="{{ $project->title }}"
+                                            data-bs-toggle="tooltip" title="Delete">
+                                            <i class="feather feather-trash-2"></i>
+                                        </button>
+                                    </div>
+                                </td>
                             </tr>
                         @empty
                             <tr>
@@ -375,7 +376,7 @@
             </div>
 
             <!-- Bulk Actions -->
-            @if($projects->count() > 0)
+            @if ($projects->count() > 0)
                 <div class="d-flex justify-content-between align-items-center mt-3">
                     <div class="bulk-actions">
                         <select class="form-select form-select-sm" style="width: auto;" id="bulkAction">
@@ -416,7 +417,8 @@
                 </div>
                 <div class="modal-body">
                     <p>Are you sure you want to delete project "<span id="projectTitle"></span>"?</p>
-                    <p class="text-danger"><small>This action cannot be undone. All related data will be permanently deleted.</small></p>
+                    <p class="text-danger"><small>This action cannot be undone. All related data will be permanently
+                            deleted.</small></p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -432,144 +434,145 @@
 @endsection
 
 @push('styles')
-<style>
-    .avatar-md {
-        width: 60px;
-        height: 60px;
-        object-fit: cover;
-    }
+    <style>
+        .avatar-md {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+        }
 
-    .progress {
-        border-radius: 10px;
-    }
+        .progress {
+            border-radius: 10px;
+        }
 
-    .empty-state {
-        padding: 40px 0;
-    }
+        .empty-state {
+            padding: 40px 0;
+        }
 
-    .table-hover tbody tr:hover {
-        background-color: rgba(0, 0, 0, 0.02);
-    }
+        .table-hover tbody tr:hover {
+            background-color: rgba(0, 0, 0, 0.02);
+        }
 
-    .form-switch .form-check-input {
-        width: 3em;
-        height: 1.5em;
-    }
+        .form-switch .form-check-input {
+            width: 3em;
+            height: 1.5em;
+        }
 
-    .bulk-actions {
-        display: flex;
-        align-items: center;
-    }
-</style>
+        .bulk-actions {
+            display: flex;
+            align-items: center;
+        }
+    </style>
 @endpush
 
 @push('scripts')
-<script>
-    $(document).ready(function() {
-        // Initialize tooltips
-        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-            return new bootstrap.Tooltip(tooltipTriggerEl)
-        });
+    <script>
+        $(document).ready(function() {
+            // Initialize tooltips
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+            var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl)
+            });
 
-        // Select All checkbox
-        $('#selectAll').on('change', function() {
-            $('.select-item').prop('checked', $(this).prop('checked'));
-        });
+            // Select All checkbox
+            $('#selectAll').on('change', function() {
+                $('.select-item').prop('checked', $(this).prop('checked'));
+            });
 
-        // Individual checkbox - uncheck selectAll if any unchecked
-        $('.select-item').on('change', function() {
-            if (!$(this).prop('checked')) {
-                $('#selectAll').prop('checked', false);
-            }
-        });
-
-        // Status toggle
-        $('.status-toggle').on('change', function() {
-            const projectId = $(this).data('id');
-            const isActive = $(this).prop('checked');
-
-            $.ajax({
-                url: "{{ route('admin.project.toggle-status', '') }}/" + projectId,
-                method: 'POST',
-                data: {
-                    _token: "{{ csrf_token() }}",
-                    _method: 'PATCH'
-                },
-                success: function(response) {
-                    toastr.success('Project status updated successfully!');
-                },
-                error: function(xhr) {
-                    $(this).prop('checked', !isActive);
-                    toastr.error('Error updating project status');
+            // Individual checkbox - uncheck selectAll if any unchecked
+            $('.select-item').on('change', function() {
+                if (!$(this).prop('checked')) {
+                    $('#selectAll').prop('checked', false);
                 }
             });
-        });
 
-        // Delete button click
-        $('.delete-btn').on('click', function() {
-            const projectId = $(this).data('id');
-            const projectTitle = $(this).data('title');
+            // Status toggle
+            $('.status-toggle').on('change', function() {
+                const projectId = $(this).data('id');
+                const isActive = $(this).prop('checked');
 
-            $('#projectTitle').text(projectTitle);
-            $('#deleteForm').attr('action', "{{ route('admin.project.destroy', '') }}/" + projectId);
-
-            const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
-            deleteModal.show();
-        });
-
-        // Bulk actions
-        $('#applyBulkAction').on('click', function() {
-            const action = $('#bulkAction').val();
-            const selectedIds = [];
-
-            $('.select-item:checked').each(function() {
-                selectedIds.push($(this).val());
+                $.ajax({
+                    url: "{{ route('admin.project.toggle-status', '') }}/" + projectId,
+                    method: 'POST',
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                        _method: 'PATCH'
+                    },
+                    success: function(response) {
+                        toastr.success('Project status updated successfully!');
+                    },
+                    error: function(xhr) {
+                        $(this).prop('checked', !isActive);
+                        toastr.error('Error updating project status');
+                    }
+                });
             });
 
-            if (selectedIds.length === 0) {
-                toastr.warning('Please select at least one project');
-                return;
-            }
+            // Delete button click
+            $('.delete-btn').on('click', function() {
+                const projectId = $(this).data('id');
+                const projectTitle = $(this).data('title');
 
-            if (!action) {
-                toastr.warning('Please select an action');
-                return;
-            }
+                $('#projectTitle').text(projectTitle);
+                $('#deleteForm').attr('action', "{{ route('admin.project.destroy', '') }}/" + projectId);
 
-            if (action === 'delete') {
-                if (!confirm('Are you sure you want to delete ' + selectedIds.length + ' selected project(s)?')) {
+                const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+                deleteModal.show();
+            });
+
+            // Bulk actions
+            $('#applyBulkAction').on('click', function() {
+                const action = $('#bulkAction').val();
+                const selectedIds = [];
+
+                $('.select-item:checked').each(function() {
+                    selectedIds.push($(this).val());
+                });
+
+                if (selectedIds.length === 0) {
+                    toastr.warning('Please select at least one project');
                     return;
                 }
-            }
 
-            $.ajax({
-                url: "{{ route('admin.project.bulk-action') }}",
-                method: 'POST',
-                data: {
-                    _token: "{{ csrf_token() }}",
-                    action: action,
-                    ids: selectedIds
-                },
-                success: function(response) {
-                    toastr.success(response.message);
-                    setTimeout(() => {
-                        location.reload();
-                    }, 1000);
-                },
-                error: function(xhr) {
-                    toastr.error('Error performing bulk action');
+                if (!action) {
+                    toastr.warning('Please select an action');
+                    return;
                 }
-            });
-        });
 
-        // Auto refresh stats every 30 seconds
-        setInterval(function() {
-            $.get("{{ route('admin.project.stats') }}", function(data) {
-                // Update stats cards if needed
-                console.log('Stats refreshed');
+                if (action === 'delete') {
+                    if (!confirm('Are you sure you want to delete ' + selectedIds.length +
+                            ' selected project(s)?')) {
+                        return;
+                    }
+                }
+
+                $.ajax({
+                    url: "{{ route('admin.project.bulk-action') }}",
+                    method: 'POST',
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                        action: action,
+                        ids: selectedIds
+                    },
+                    success: function(response) {
+                        toastr.success(response.message);
+                        setTimeout(() => {
+                            location.reload();
+                        }, 1000);
+                    },
+                    error: function(xhr) {
+                        toastr.error('Error performing bulk action');
+                    }
+                });
             });
-        }, 30000);
-    });
-</script>
+
+            // Auto refresh stats every 30 seconds
+            setInterval(function() {
+                $.get("{{ route('admin.project.stats') }}", function(data) {
+                    // Update stats cards if needed
+                    console.log('Stats refreshed');
+                });
+            }, 30000);
+        });
+    </script>
 @endpush

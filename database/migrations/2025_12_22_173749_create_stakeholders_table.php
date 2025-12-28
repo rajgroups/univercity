@@ -11,7 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('stakeholders', function (Blueprint $table) {
+        if (!Schema::hasTable('stakeholders')) {
+            Schema::create('stakeholders', function (Blueprint $table) {
             $table->id();
 
             // Basic Information
@@ -110,9 +111,11 @@ return new class extends Migration
             $table->index(['company_name', 'designation']);
             $table->index('last_contacted');
         });
+    }
 
         // Create stakeholder_project pivot table
-        Schema::create('stakeholder_project', function (Blueprint $table) {
+        if (!Schema::hasTable('stakeholder_project')) {
+            Schema::create('stakeholder_project', function (Blueprint $table) {
             $table->id();
             $table->foreignId('stakeholder_id')->constrained()->onDelete('cascade');
             $table->foreignId('project_id')->constrained()->onDelete('cascade');
@@ -138,9 +141,11 @@ return new class extends Migration
             $table->unique(['stakeholder_id', 'project_id']);
             $table->index(['project_id', 'role']);
         });
+    }
 
         // Create stakeholder_communication_log table
-        Schema::create('stakeholder_communications', function (Blueprint $table) {
+        if (!Schema::hasTable('stakeholder_communications')) {
+            Schema::create('stakeholder_communications', function (Blueprint $table) {
             $table->id();
             $table->foreignId('stakeholder_id')->constrained()->onDelete('cascade');
             $table->foreignId('project_id')->nullable()->constrained()->onDelete('cascade');
@@ -194,9 +199,11 @@ return new class extends Migration
             $table->index(['project_id', 'status']);
             $table->index('response_due_date');
         });
+    }
 
         // Create stakeholder_feedback table
-        Schema::create('stakeholder_feedbacks', function (Blueprint $table) {
+        if (!Schema::hasTable('stakeholder_feedbacks')) {
+            Schema::create('stakeholder_feedbacks', function (Blueprint $table) {
             $table->id();
             $table->foreignId('stakeholder_id')->constrained()->onDelete('cascade');
             $table->foreignId('project_id')->constrained()->onDelete('cascade');
@@ -226,6 +233,7 @@ return new class extends Migration
             $table->index(['stakeholder_id', 'project_id']);
             $table->index(['feedback_type', 'rating']);
         });
+    }
     }
 
     /**

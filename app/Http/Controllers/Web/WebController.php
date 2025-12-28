@@ -132,51 +132,60 @@ class WebController extends Controller
         return view('web.scheme', compact('announcement','similars'));
     }
 
-    public function upcoming($categorySlug, $projectSlug)
+    public function showProject($categorySlug, $slug)
     {
         // 1️⃣ Find category
         $category = Category::where('slug', $categorySlug)
-            ->where('status', 1)
+            // ->where('status', 1) // Optional: enforce active category
             ->firstOrFail();
 
-        // 2️⃣ Find the project
-        $project = Project::where('slug', $projectSlug)
-            ->where('type', 2) // 2 = Upcoming
+        // 2️⃣ Find the project with relationships
+        $project = Project::where('slug', $slug)
             ->where('category_id', $category->id)
             ->where('status', 1)
+            ->with([
+                'category',
+                'milestones', 
+                'estimation.items', 
+                'donors', 
+                'fundings', 
+                'utilizations'
+            ])
             ->firstOrFail();
 
-        // 3️⃣ Get similar upcoming projects in same category
-        $similarProjects = Project::where('type', 2)
-            ->where('status', 1)
-            ->where('category_id', $category->id)
-            ->where('id', '!=', $project->id)
-            ->latest()
-            ->take(5)
-            ->get();
+        // 3️⃣ Extract data for view
+        $milestones = $project->milestones;
+        $estimation = $project->estimation;
+        $donors = $project->donors;
+        $fundings = $project->fundings;
+        $utilizations = $project->utilizations;
 
-        // 4️⃣ Return view
-        return view('web.projectupcoming', compact('project', 'similarProjects', 'category'));
+        // 4️⃣ Resolve stakeholders from milestones
+        // Note: We need to import Stakeholder m    odel or use full path
+        $stakeholderIds = $milestones->pluck('stakeholder_id')->filter()->unique();
+        $stakeholders = \App\Models\Stakeholder::whereIn('id', $stakeholderIds)->get()->keyBy('id');
+
+        // 5️⃣ Return view
+        return view('web.project', compact(
+            'project', 
+            'category', 
+            'milestones', 
+            'estimation', 
+            'donors', 
+            'fundings', 
+            'utilizations', 
+            'stakeholders'
+        ));
     }
 
+    public function upcoming($categorySlug, $projectSlug)
+    {
+        return $this->showProject($categorySlug, $projectSlug);
+    }
 
-    public function ongoing($category, $slug){
-        // Get the category by slug
-        $category = Category::where('slug', $category)->firstOrFail();
-
-        // Get the announcement by category ID and slug
-        $announcement = Project::where('slug', $slug)
-                    ->where('type',1)
-                    ->where('category_id', $category->id)
-                    ->firstOrFail();
-        $similars = Project::where('type', 1)
-            ->where('id', '!=', $announcement->id)
-            ->where('category_id', $category->id)
-            ->latest()
-            ->limit(5)
-            ->get();
-        // Return view with data
-        return view('web.projectongoing', compact('announcement','similars'));
+    public function ongoing($category, $slug)
+    {
+        return $this->showProject($category, $slug);
     }
 
     public function sectors(Request $request)
@@ -480,6 +489,45 @@ class WebController extends Controller
         return view('web.coursedetail', compact('course', 'banners', 'relatedCourses'));
     }
 
+    public function storeInterest(Request $request) 
+    {
+        $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
+            'project_id' => 'required|exists:projects,id',
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'organization' => 'nullable|string|max:255',
+            'message' => 'nullable|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['success' => false, 'errors' => $validator->errors()], 422);
+        }
+
+        try {
+            // Store as enquiry or specific interest model
+            // For now, let's use Enquiry model or just return success if email is sent
+            // Assuming Enquiry model has dynamic fields or we append to message
+            
+            $project = Project::find($request->project_id);
+            $fullMessage = "Project Interest: " . $project->title . "\n";
+            $fullMessage .= "Organization: " . $request->organization . "\n";
+            $fullMessage .= "Message: " . $request->message;
+
+            $enquiry = \App\Models\Enquiry::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'mobile' => '0000000000', // Placeholder as it might be required
+                'type' => 1, // General Enquiry type? Or specific?
+                'message' => $fullMessage,
+                'status' => 1,
+            ]);
+
+            return response()->json(['success' => true, 'message' => 'Thank you for your interest!']);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'Something went wrong.'], 500);
+        }
+    }
+
     public function catalog(Request $request)
     {
         $projects = Project::query();
@@ -494,10 +542,10 @@ class WebController extends Controller
         // Filter: Type
         if (in_array($request->type, ['project_1', 'project_2', 'announcement_1', 'announcement_2'])) {
             if ($request->type === 'project_1') {
-                $projects->where('type', 1);
+                $projects->where('stage', 'ongoing');
                 $announcements->whereRaw('1=0');
             } elseif ($request->type === 'project_2') {
-                $projects->where('type', 2);
+                $projects->where('stage', 'upcoming');
                 $announcements->whereRaw('1=0');
             } elseif ($request->type === 'announcement_1') {
                 $announcements->where('type', 1);
@@ -516,13 +564,13 @@ class WebController extends Controller
 
 
         // Fetch and tag type for frontend
-        $projectResults = $projects->get()->map(function ($item) {
-            $item->type_label = $item->type == 1 ? 'Ongoing' : 'Upcoming';
+        $projectResults = $projects->with('category')->get()->map(function ($item) {
+            $item->type_label = ucfirst($item->stage);
             $item->item_type = 'project';
             return $item;
         });
 
-        $announcementResults = $announcements->get()->map(function ($item) {
+        $announcementResults = $announcements->with('category')->get()->map(function ($item) {
             $item->type_label = $item->type == 1 ? 'Program' : 'Scheme';
             $item->item_type = 'announcement';
             return $item;

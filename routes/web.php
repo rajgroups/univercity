@@ -94,14 +94,13 @@ Route::middleware(['maintenance'])->group(function () {
     // scheme Route
     Route::get('/scheme/{category}/{slug}', [WebController::class, 'scheme'])->name('web.announcement.scheme');
 
-    // upcoming-project  Route
-    Route::get('/upcoming-project/test', function(){
-        return view('web.projectupcoming');
-    });
-    Route::get('/upcoming-project/{category}/{slug}', [WebController::class, 'upcoming'])->name('web.upcoming.project');
 
-    // ongoing-project  Route
-    Route::get('/ongoing-project/{category}/{slug}', [WebController::class, 'ongoing'])->name('web.ongoging.project');
+    Route::get('/project/{category}/{slug}', [WebController::class, 'showProject'])->name('web.project.show');
+    Route::post('/project/interest', [WebController::class, 'storeInterest'])->name('web.project.interest');
+
+    // These routes are kept for backward compatibility if needed, but should be updated in views
+    Route::get('/upcoming-project/{category}/{slug}', [WebController::class, 'showProject'])->name('web.upcoming.project');
+    Route::get('/ongoing-project/{category}/{slug}', [WebController::class, 'showProject'])->name('web.ongoging.project');
 
     // Sector Routes
     Route::get('/sector', [WebController::class, 'sectors'])->name('web.sector');

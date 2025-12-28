@@ -95,6 +95,9 @@ Route::prefix('admin')->as('admin.')->group(function() {
         // Onrginzation Routes
         // Route::resource('organization',Or::class);
 
+        // Survey Routes
+        Route::resource('surveys', App\Http\Controllers\Admin\SurveyController::class);
+
         // Setting Home Page Settings Route
         Route::get('settings/home/edit',[SettingController::class,'editHomePage'])->name('setting.home.edit');
         Route::post('settings/home/update/{id}', [SettingController::class, 'homeUpdate'])->name('setting.home.update');
