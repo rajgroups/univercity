@@ -113,19 +113,7 @@ class Project extends Model
 
     public function getBannerImagesAttribute($value)
     {
-        // Return null if empty
-        if ($value === null || trim($value) === '' || $value === '[]' || $value === '"[]"') {
-            return null;
-        }
-
-        // If JSON accidentally stored earlier, extract first value
-        $decoded = json_decode($value, true);
-        if (is_array($decoded) && isset($decoded[0])) {
-            return $decoded[0];
-        }
-
-        // Always return a single string path
-        return trim($value);
+        return $value ? trim((string) $value) : null;
     }
 
 
