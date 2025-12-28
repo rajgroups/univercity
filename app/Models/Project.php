@@ -231,39 +231,39 @@ public function getLinksAttribute($value)
     }
 
 
-    public function getGalleryImagesAttribute($value)
-    {
-        // If null or empty → return empty array
-        if ($value === null || $value === '' || $value === '[]' || $value === '"[]"') {
-            return [];
-        }
+    // public function getGalleryImagesAttribute($value)
+    // {
+    //     // If null or empty → return empty array
+    //     if ($value === null || $value === '' || $value === '[]' || $value === '"[]"') {
+    //         return [];
+    //     }
 
-        // Already an array → filter and return
-        if (is_array($value)) {
-            return array_values(array_filter($value, function($item) {
-                // Filter out invalid entries
-                return !empty($item) && $item !== '[]' && $item !== '"[]"' && is_string($item) && strlen(trim($item)) > 0;
-            }));
-        }
+    //     // Already an array → filter and return
+    //     if (is_array($value)) {
+    //         return array_values(array_filter($value, function($item) {
+    //             // Filter out invalid entries
+    //             return !empty($item) && $item !== '[]' && $item !== '"[]"' && is_string($item) && strlen(trim($item)) > 0;
+    //         }));
+    //     }
 
-        // Try JSON decode
-        $decoded = json_decode($value, true);
+    //     // Try JSON decode
+    //     $decoded = json_decode($value, true);
 
-        // If JSON decodes to an array → filter and return
-        if (is_array($decoded)) {
-            return array_values(array_filter($decoded, function($item) {
-                // Filter out invalid entries
-                return !empty($item) && $item !== '[]' && $item !== '"[]"' && is_string($item) && strlen(trim($item)) > 0;
-            }));
-        }
+    //     // If JSON decodes to an array → filter and return
+    //     if (is_array($decoded)) {
+    //         return array_values(array_filter($decoded, function($item) {
+    //             // Filter out invalid entries
+    //             return !empty($item) && $item !== '[]' && $item !== '"[]"' && is_string($item) && strlen(trim($item)) > 0;
+    //         }));
+    //     }
 
-        // If it's a valid single image string → wrap into array
-        if (is_string($value) && strlen(trim($value)) > 0 && $value !== '[]' && $value !== '"[]"') {
-            return [$value];
-        }
+    //     // If it's a valid single image string → wrap into array
+    //     if (is_string($value) && strlen(trim($value)) > 0 && $value !== '[]' && $value !== '"[]"') {
+    //         return [$value];
+    //     }
 
-        return [];
-    }
+    //     return [];
+    // }
 
     public function getStakeholdersAttribute($value)
     {
@@ -342,5 +342,35 @@ public function getLinksAttribute($value)
             && $value !== '[]'
             && $value !== '"[]"';
     }
+
+    public function getGalleryImagesAttribute($value)
+{
+    if ($value === null) {
+        return [];
+    }
+
+    // Already an array → clean & return
+    if (is_array($value)) {
+        return array_values(array_filter($value, fn($v) =>
+            is_string($v) && trim($v) !== ''
+        ));
+    }
+
+    // First decode
+    $decoded = json_decode($value, true);
+
+    // Handle double-encoded JSON like "\"[\"a.jpg\"]\""
+    if (is_string($decoded)) {
+        $decoded = json_decode($decoded, true);
+    }
+
+    // Final clean + return
+    return is_array($decoded)
+        ? array_values(array_filter($decoded, fn($v) =>
+            is_string($v) && trim($v) !== ''
+        ))
+        : [];
+}
+
 
 }
