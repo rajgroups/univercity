@@ -62,13 +62,190 @@ class ProjectController extends Controller
         return view('admin.project.list', compact('projects', 'categories', 'stats'));
     }
 
-        /**
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        $categories = Category::where('status', 1)->get();
+
+        $year = date('Y');
+        $locationCode = 'LOC';
+
+        $lastProject = Project::whereYear('created_at', $year)
+            ->orderBy('id', 'desc')
+            ->first();
+
+        if ($lastProject) {
+            $lastCode = $lastProject->project_code;
+            $lastSequence = (int) substr($lastCode, -4);
+            $sequence = $lastSequence + 1;
+        } else {
+            $sequence = 1;
+        }
+
+        $projectCode = 'ISICO-' . $year . '-' . $locationCode . '-' . str_pad($sequence, 4, '0', STR_PAD_LEFT);
+
+        return view('admin.project.add', compact('categories', 'projectCode'));
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        $this->prepareSDGInput($request);
+        $this->prepareArrayInputs($request);
+
+        $validated = $this->validateProject($request, 'store');
+
+        try {
+            DB::beginTransaction();
+
+            $filePaths = $this->handleFileUploads($request);
+
+            $projectData = array_merge($validated, $filePaths);
+
+            // CRITICAL: banner_images is STRING (VARCHAR), not array
+            if (isset($projectData['banner_images']) && is_array($projectData['banner_images'])) {
+                $projectData['banner_images'] = $projectData['banner_images'][0] ?? null;
+            }
+
+            $projectData['stage'] = 'upcoming';
+            $projectData['status'] = 1;
+            $projectData['slug']  = Str::slug($validated['slug']);
+
+            $projectData = $this->encodeArrayFields($projectData);
+
+            Project::create($projectData);
+
+            DB::commit();
+
+            return redirect()->route('admin.project.index')
+                ->with('success', 'Project created successfully!');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Project creation error: ' . $e->getMessage());
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Error creating project: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(Project $project)
+    {
+        $categories = Category::where('status', 1)->get();
+
+        // For display purposes only - cast to arrays in view
+        $project->banner_images = $project->banner_images ?? null; // SINGLE value
+        $project->gallery_images = $project->gallery_images ?? [];
+        $project->multiple_locations = $project->multiple_locations ?? [];
+        $project->donut_metrics = $project->donut_metrics ?? [];
+        $project->target_groups = $project->target_groups ?? [];
+        $project->objectives = $project->objectives ?? [];
+        $project->alignment_categories = $project->alignment_categories ?? [];
+        $project->sdg_goals = $project->sdg_goals ?? [];
+        $project->govt_schemes = $project->govt_schemes ?? [];
+        $project->stakeholders = $project->stakeholders ?? [];
+        $project->risks = $project->risks ?? [];
+        $project->resources_needed_ongoing = $project->resources_needed_ongoing ?? [];
+        $project->operational_risks_ongoing = $project->operational_risks_ongoing ?? [];
+        $project->documents = $project->documents ?? [];
+        $project->links = $project->links ?? [];
+
+        return view('admin.project.edit', compact('project', 'categories'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, Project $project)
+    {
+        $this->prepareSDGInput($request);
+        $this->prepareArrayInputs($request);
+
+        $validated = $this->validateProject($request, 'update', $project);
+
+        try {
+            DB::beginTransaction();
+
+            $filePaths = $this->handleFileUploads($request, $project);
+
+            $projectData = array_merge($validated, $filePaths);
+
+            // CRITICAL: Ensure banner_images is always a STRING, never array
+            if (isset($projectData['banner_images'])) {
+                if (is_array($projectData['banner_images'])) {
+                    $projectData['banner_images'] = $projectData['banner_images'][0] ?? null;
+                }
+                // Convert to string
+                $projectData['banner_images'] = $projectData['banner_images'] ? (string)$projectData['banner_images'] : null;
+            }
+
+            // Prepare JSON fields
+            $projectData = $this->prepareJsonData($projectData, $request);
+
+            // Convert status
+            if (isset($projectData['status'])) {
+                $projectData['status'] = $projectData['status'] === 'active' ? 1 : 0;
+            }
+
+            // Handle stage transition
+            $projectData = $this->handleStageTransition($projectData, $project, $request);
+
+            // Encode array fields
+            $projectData = $this->encodeArrayFields($projectData);
+
+            // Debug log
+            Log::info('Updating project', [
+                'banner_images' => $projectData['banner_images'] ?? 'NULL',
+                'type' => gettype($projectData['banner_images'] ?? 'NOT SET')
+            ]);
+
+            $project->update($projectData);
+
+            DB::commit();
+
+            return redirect()->route('admin.project.index')
+                ->with('success', 'Project updated successfully!');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Project update error: ' . $e->getMessage());
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Error updating project: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Project $project)
+    {
+        try {
+            $this->deleteProjectFiles($project);
+            $project->delete();
+
+            return redirect()->route('admin.project.index')
+                ->with('success', 'Project deleted successfully!');
+
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('error', 'Error deleting project: ' . $e->getMessage());
+        }
+    }
+
+    /**
      * Validate project data
      */
     private function validateProject(Request $request, $action = 'store', $project = null)
     {
         $rules = [
-            // Basic Details
             'project_code' => ['required', 'string', 'max:100'],
             'location_type' => ['required', 'in:RUR,URB,MET,MIX'],
             'title' => ['required', 'string', 'max:255'],
@@ -105,7 +282,7 @@ class ProjectController extends Controller
             'csr_invitation' => ['required', 'string'],
             'cta_button_text' => ['nullable', 'string', 'max:100'],
 
-            // Resources & Risks (Upcoming)
+            // Resources & Risks
             'resources_needed' => ['nullable', 'string'],
             'compliance_requirements' => ['nullable', 'string'],
 
@@ -118,8 +295,6 @@ class ProjectController extends Controller
             'solutions_actions_taken' => ['nullable', 'string'],
             'completion_readiness' => ['nullable', 'numeric', 'min:0', 'max:100'],
             'handover_sustainability_note' => ['nullable', 'string'],
-
-            // Actual dates for ongoing/completed
             'actual_start_date' => ['nullable', 'date'],
             'actual_end_date' => ['nullable', 'date', 'after_or_equal:actual_start_date'],
 
@@ -135,9 +310,9 @@ class ProjectController extends Controller
             'govt_schemes' => ['nullable', 'array'],
             'govt_schemes.*' => ['in:skill_india_mission,nsp,pmkvy,nlm,beti_bachao'],
 
-            // File uploads
-            'thumbnail_image' => [$action === 'update' ? 'nullable' : 'required', 'image', 'max:5120'], // 5MB
-            'banner_images' => [$action === 'update' ? 'nullable' : 'required', 'image', 'max:5120'],
+            // File uploads - banner_images is SINGLE file
+            'thumbnail_image' => [$action === 'update' ? 'nullable' : 'required', 'image', 'max:5120'],
+            'banner_images' => [$action === 'update' ? 'nullable' : 'required', 'image', 'max:5120'], // Single file
             'gallery_images.*' => ['nullable', 'image', 'max:5120'],
             'before_photo' => ['nullable', 'image', 'max:5120'],
             'expected_photo' => ['nullable', 'image', 'max:5120'],
@@ -159,7 +334,6 @@ class ProjectController extends Controller
             'status' => ['nullable', 'in:active,inactive'],
         ];
 
-        // Add unique rule for slug in update
         if ($action === 'update' && $project) {
             $rules['slug'][] = Rule::unique('projects')->ignore($project->id);
             $rules['project_code'][] = Rule::unique('projects')->ignore($project->id);
@@ -168,152 +342,37 @@ class ProjectController extends Controller
             $rules['project_code'][] = 'unique:projects';
         }
 
-        // Conditional validation based on stage
         $stage = $request->input('stage', $project ? $project->stage : 'upcoming');
 
-        if (in_array($stage, ['ongoing', 'completed'])) {
-            $rules['last_update_summary'] = ['nullable', 'string', 'max:500'];
-            $rules['actual_beneficiary_count'] = ['nullable', 'integer', 'min:0'];
-            $rules['actual_start_date'] = ['nullable', 'date'];
-
-            if ($stage === 'completed') {
-                $rules['actual_end_date'] = ['required', 'date', 'after_or_equal:actual_start_date'];
-                $rules['handover_sustainability_note'] = ['required', 'string'];
-            }
+        if ($stage === 'completed') {
+            $rules['actual_end_date'] = ['required', 'date', 'after_or_equal:actual_start_date'];
+            $rules['handover_sustainability_note'] = ['required', 'string'];
         }
 
         return $request->validate($rules);
     }
-    /**
-     * Store a newly created resource.
-     */
-    public function store(Request $request)
-    {
-        $this->prepareSDGInput($request);
-        $this->prepareArrayInputs($request);
-
-        $validated = $this->validateProject($request, 'store');
-
-        DB::beginTransaction();
-
-        $filePaths = $this->handleFileUploads($request);
-
-        $projectData = array_merge($validated, $filePaths);
-
-        // 🚨 banner_images must ALWAYS be a string
-        if (isset($projectData['banner_images']) && is_array($projectData['banner_images'])) {
-            $projectData['banner_images'] = $projectData['banner_images'][0] ?? null;
-        }
-
-        $projectData['stage'] = 'upcoming';
-        $projectData['status'] = 1;
-        $projectData['slug']  = Str::slug($validated['slug']);
-
-        // Encode ONLY real array fields
-        $projectData = $this->encodeArrayFields($projectData);
-
-        $project = Project::create($projectData);
-
-        DB::commit();
-
-        return redirect()->route('admin.project.index')
-            ->with('success', 'Project created successfully!');
-    }
 
     /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Project $project)
-    {
-        $categories = Category::where('status', 1)->get();
-
-        // Fields are already cast to arrays in the Project model
-        $project->banner_images = $project->banner_images ?? [];
-        $project->gallery_images = $project->gallery_images ?? [];
-        $project->multiple_locations = $project->multiple_locations ?? [];
-        $project->donut_metrics = $project->donut_metrics ?? [];
-        $project->target_groups = $project->target_groups ?? [];
-        $project->objectives = $project->objectives ?? [];
-        $project->alignment_categories = $project->alignment_categories ?? [];
-        $project->sdg_goals = $project->sdg_goals ?? [];
-        $project->govt_schemes = $project->govt_schemes ?? [];
-        $project->stakeholders = $project->stakeholders ?? [];
-        $project->risks = $project->risks ?? [];
-        $project->resources_needed_ongoing = $project->resources_needed_ongoing ?? [];
-        $project->operational_risks_ongoing = $project->operational_risks_ongoing ?? [];
-        $project->documents = $project->documents ?? [];
-        $project->links = $project->links ?? [];
-
-        return view('admin.project.edit', compact('project', 'categories'));
-    }
-    /**
-     * Update the resource.
-     */
-    public function update(Request $request, Project $project)
-    {
-        $this->prepareSDGInput($request);
-        $this->prepareArrayInputs($request);
-
-        $validated = $this->validateProject($request, 'update', $project);
-
-        DB::beginTransaction();
-
-        $filePaths = $this->handleFileUploads($request, $project);
-
-        $projectData = array_merge($validated, $filePaths);
-
-        // 🚨 Normalize banner to STRING before JSON processing
-        if (isset($projectData['banner_images']) && is_array($projectData['banner_images'])) {
-            $projectData['banner_images'] = $projectData['banner_images'][0] ?? null;
-        }
-
-        // Process only REAL JSON fields
-        $projectData = $this->prepareJsonData($projectData, $request);
-
-        if (isset($projectData['status'])) {
-            $projectData['status'] = $projectData['status'] === 'active' ? 1 : 0;
-        }
-
-        $projectData = $this->handleStageTransition($projectData, $project, $request);
-
-        // 🔒 FINAL SAFETY — force SQL string value
-        if (isset($projectData['banner_images'])) {
-            $projectData['banner_images'] =
-                $projectData['banner_images'] ? (string) $projectData['banner_images'] : null;
-        }
-
-        $project->update($projectData);
-
-        DB::commit();
-
-        return redirect()->route('admin.project.index')
-            ->with('success', 'Project updated successfully!');
-    }
-
-    /**
-     * Prepare SDG input from comma-separated string to array
+     * Prepare SDG input
      */
     protected function prepareSDGInput(Request $request)
     {
         if ($request->has('sdg_goals') && !empty($request->sdg_goals)) {
-            // Handle comma-separated string from hidden input
             $sdgGoals = explode(',', $request->sdg_goals);
             $sdgGoals = array_map('intval', array_filter($sdgGoals));
-            $sdgGoals = array_values(array_unique($sdgGoals)); // Remove duplicates
-            sort($sdgGoals); // Sort ascending
-
+            $sdgGoals = array_values(array_unique($sdgGoals));
+            sort($sdgGoals);
             $request->merge(['sdg_goals' => $sdgGoals]);
         } else {
-            $request->merge(['sdg_goals' => null]);
+            $request->merge(['sdg_goals' => []]);
         }
     }
 
     /**
-     * Prepare array inputs from the form
+     * Prepare array inputs
      */
     protected function prepareArrayInputs(Request $request)
     {
-        // Handle dynamic arrays
         $arrayFields = [
             'multiple_locations',
             'donut_metrics',
@@ -327,7 +386,6 @@ class ProjectController extends Controller
 
         foreach ($arrayFields as $field) {
             if ($request->has($field) && is_array($request->$field)) {
-                // Filter out empty entries
                 $filteredArray = array_filter($request->$field, function($item) {
                     if (is_array($item)) {
                         return !empty(array_filter($item, function($value) {
@@ -336,16 +394,13 @@ class ProjectController extends Controller
                     }
                     return !empty(trim($item));
                 });
-
-                // Re-index array
                 $request->merge([$field => array_values($filteredArray)]);
             } elseif ($request->has($field)) {
-                // Ensure it's always an array
                 $request->merge([$field => null]);
             }
         }
 
-        // Handle alignment categories (multi-select)
+        // Handle alignment categories
         if ($request->has('alignment_categories')) {
             $alignmentCategories = $request->input('alignment_categories');
             if (!is_array($alignmentCategories)) {
@@ -356,7 +411,7 @@ class ProjectController extends Controller
             $request->merge(['alignment_categories' => []]);
         }
 
-        // Handle govt schemes (multi-select)
+        // Handle govt schemes
         if ($request->has('govt_schemes')) {
             $govtSchemes = $request->input('govt_schemes');
             if (!is_array($govtSchemes)) {
@@ -364,10 +419,10 @@ class ProjectController extends Controller
             }
             $request->merge(['govt_schemes' => array_values(array_filter($govtSchemes))]);
         } else {
-            $request->merge(['govt_schemes' => null]);
+            $request->merge(['govt_schemes' => []]);
         }
 
-        // Handle target groups - ensure proper structure
+        // Handle target groups
         if ($request->has('target_groups') && is_array($request->target_groups)) {
             $targetGroups = [];
             foreach ($request->target_groups as $group) {
@@ -382,7 +437,7 @@ class ProjectController extends Controller
             $request->merge(['target_groups' => $targetGroups]);
         }
 
-        // Handle donut metrics - ensure proper structure
+        // Handle donut metrics
         if ($request->has('donut_metrics') && is_array($request->donut_metrics)) {
             $donutMetrics = [];
             foreach ($request->donut_metrics as $metric) {
@@ -397,21 +452,13 @@ class ProjectController extends Controller
             $request->merge(['donut_metrics' => $donutMetrics]);
         }
 
-        // Handle boolean toggle for show_map_preview
         $request->merge([
-            'show_map_preview' => $request->has('show_map_preview') || $request->input('show_map_preview') == '1' ? 1 : 0
+            'show_map_preview' => $request->has('show_map_preview') ? 1 : 0
         ]);
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(Project $project)
-    {
-        return view('admin.projects.show', compact('project'));
-    }
-    /**
-     * JSON encode ONLY these fields.
+     * Encode array fields to JSON (banner_images is NOT included)
      */
     protected function encodeArrayFields($data)
     {
@@ -434,6 +481,14 @@ class ProjectController extends Controller
         foreach ($arrayFields as $field) {
             if (isset($data[$field]) && is_array($data[$field])) {
                 $data[$field] = json_encode($data[$field]);
+            } elseif (isset($data[$field]) && is_string($data[$field])) {
+                // If it's already a string, check if it's valid JSON
+                $decoded = json_decode($data[$field], true);
+                if (json_last_error() !== JSON_ERROR_NONE) {
+                    $data[$field] = json_encode([]);
+                }
+            } else {
+                $data[$field] = json_encode([]);
             }
         }
 
@@ -441,108 +496,223 @@ class ProjectController extends Controller
     }
 
     /**
-     * Banner upload logic (unchanged — still correct)
+     * Handle file uploads
      */
     private function handleFileUploads(Request $request, $project = null)
     {
         $filePaths = [];
 
-        // Single fields
+        // 1. Handle single file uploads
         $singleFiles = [
-            'thumbnail_image','before_photo','expected_photo','impact_image'
+            'thumbnail_image',
+            'before_photo',
+            'expected_photo',
+            'impact_image'
         ];
 
         foreach ($singleFiles as $field) {
-            if ($request->has("removed_$field") && $project && $project->$field) {
-                File::delete(public_path($project->$field));
+            // Remove existing file
+            if ($request->has("removed_{$field}") && $request->input("removed_{$field}")) {
+                if ($project && $project->$field) {
+                    $absolutePath = public_path($project->$field);
+                    if (File::exists($absolutePath)) {
+                        File::delete($absolutePath);
+                    }
+                }
                 $filePaths[$field] = null;
             }
 
+            // Upload new file
             if ($request->hasFile($field)) {
-                if ($project && $project->$field) {
-                    File::delete(public_path($project->$field));
+                // Delete old file
+                if ($project && $project->$field && !isset($filePaths[$field])) {
+                    $absolutePath = public_path($project->$field);
+                    if (File::exists($absolutePath)) {
+                        File::delete($absolutePath);
+                    }
                 }
 
                 $file = $request->file($field);
-                $name = time().'_'.$file->getClientOriginalName();
-                $dir  = public_path('projects');
+                $filename = time() . '_' . $file->getClientOriginalName();
+                $relativePath = 'projects';
+                $absolutePath = public_path($relativePath);
 
-                if (!File::exists($dir)) File::makeDirectory($dir, 0755, true);
+                if (!File::exists($absolutePath)) {
+                    File::makeDirectory($absolutePath, 0755, true);
+                }
 
-                $file->move($dir, $name);
-                $filePaths[$field] = "projects/$name";
+                $file->move($absolutePath, $filename);
+                $filePaths[$field] = $relativePath . '/' . $filename;
             }
         }
 
-        // 🚨 Banner — SINGLE file
+        // 2. Handle banner_images (SINGLE file - VARCHAR column)
         if ($request->hasFile('banner_images')) {
-
+            // Delete old banner if exists
             if ($project && $project->banner_images) {
-                File::delete(public_path($project->banner_images));
+                $absolutePath = public_path($project->banner_images);
+                if (File::exists($absolutePath)) {
+                    File::delete($absolutePath);
+                }
             }
 
-            $file = $request->file('banner_images');
-            $name = time().'_'.$file->getClientOriginalName();
-            $dir  = public_path('projects');
+            $banner = $request->file('banner_images');
+            $filename = time() . '_' . $banner->getClientOriginalName();
+            $relativePath = 'projects';
+            $absolutePath = public_path($relativePath);
 
-            if (!File::exists($dir)) File::makeDirectory($dir, 0755, true);
+            if (!File::exists($absolutePath)) {
+                File::makeDirectory($absolutePath, 0755, true);
+            }
 
-            $file->move($dir, $name);
-
-            $filePaths['banner_images'] = "projects/$name"; // ← STRING
-        }
-
-        if ($request->has('removed_banner_image') && $project?->banner_images) {
-            File::delete(public_path($project->banner_images));
+            $banner->move($absolutePath, $filename);
+            
+            // Store as PLAIN STRING (VARCHAR)
+            $filePaths['banner_images'] = $relativePath . '/' . $filename;
+        } 
+        // Handle banner removal
+        elseif ($request->has('removed_banner_image') && $request->input('removed_banner_image')) {
+            if ($project && $project->banner_images) {
+                $absolutePath = public_path($project->banner_images);
+                if (File::exists($absolutePath)) {
+                    File::delete($absolutePath);
+                }
+            }
             $filePaths['banner_images'] = null;
         }
 
-        // Gallery stays array
-        $gallery = ($project && is_array($project->gallery_images))
-            ? $project->gallery_images : [];
+        // 3. Handle gallery_images (ARRAY)
+        $currentGallery = ($project && $project->gallery_images) ? $project->gallery_images : [];
+        if (!is_array($currentGallery)) {
+            $currentGallery = [];
+        }
 
+        // Remove gallery images
         if ($request->has('removed_gallery_image')) {
-            foreach ((array)$request->removed_gallery_image as $g) {
-                File::delete(public_path($g));
-                $gallery = array_diff($gallery, [$g]);
+            $galleryToRemove = $request->input('removed_gallery_image');
+            if (!is_array($galleryToRemove)) {
+                $galleryToRemove = [$galleryToRemove];
+            }
+
+            $currentGallery = array_diff($currentGallery, $galleryToRemove);
+
+            foreach ($galleryToRemove as $path) {
+                $absolutePath = public_path($path);
+                if (File::exists($absolutePath)) {
+                    File::delete($absolutePath);
+                }
             }
         }
 
+        // Add new gallery images
         if ($request->hasFile('gallery_images')) {
-            foreach ($request->file('gallery_images') as $img) {
-                $name = time().'_'.$img->getClientOriginalName();
-                $dir  = public_path('projects');
-                if (!File::exists($dir)) File::makeDirectory($dir, 0755, true);
-                $img->move($dir, $name);
-                $gallery[] = "projects/$name";
+            foreach ($request->file('gallery_images') as $galleryImage) {
+                $filename = time() . '_' . $galleryImage->getClientOriginalName();
+                $relativePath = 'projects';
+                $absolutePath = public_path($relativePath);
+
+                if (!File::exists($absolutePath)) {
+                    File::makeDirectory($absolutePath, 0755, true);
+                }
+
+                $galleryImage->move($absolutePath, $filename);
+                $currentGallery[] = $relativePath . '/' . $filename;
             }
         }
 
-        $filePaths['gallery_images'] = array_values($gallery);
+        $filePaths['gallery_images'] = array_values($currentGallery);
+
+        // 4. Handle documents
+        if ($request->has('documents')) {
+            $finalDocuments = [];
+            $inputDocs = $request->input('documents');
+
+            foreach ($inputDocs as $index => $docData) {
+                $docPath = null;
+                $docLabel = $docData['label'] ?? '';
+                $docNotes = $docData['notes'] ?? '';
+
+                // New uploaded file
+                if ($request->hasFile("documents.{$index}.file")) {
+                    $file = $request->file("documents.{$index}.file");
+                    $filename = time() . '_' . $file->getClientOriginalName();
+                    $relativePath = 'projects';
+                    $absolutePath = public_path($relativePath);
+
+                    if (!File::exists($absolutePath)) {
+                        File::makeDirectory($absolutePath, 0755, true);
+                    }
+
+                    $file->move($absolutePath, $filename);
+                    $docPath = $relativePath . '/' . $filename;
+                }
+                // Keep existing file
+                elseif ($request->has("existing_documents.{$index}.file")) {
+                    $docPath = $request->input("existing_documents.{$index}.file");
+                }
+
+                if ($docPath) {
+                    $finalDocuments[] = [
+                        'label' => $docLabel,
+                        'file' => $docPath,
+                        'notes' => $docNotes
+                    ];
+                }
+            }
+
+            $filePaths['documents'] = $finalDocuments;
+        }
 
         return $filePaths;
     }
 
     /**
-     * JSON fields (banner NOT included)
+     * Prepare JSON data for database storage
      */
     private function prepareJsonData(array $data, Request $request)
     {
         $jsonFields = [
-            'multiple_locations','donut_metrics','target_groups','objectives',
-            'alignment_categories','sdg_goals','govt_schemes',
-            'stakeholders','risks','links'
+            'multiple_locations',
+            'donut_metrics',
+            'target_groups',
+            'objectives',
+            'alignment_categories',
+            'sdg_goals',
+            'govt_schemes',
+            'stakeholders',
+            'risks',
+            'links'
         ];
 
         foreach ($jsonFields as $field) {
-            if (isset($data[$field]) && is_array($data[$field])) {
-                $data[$field] = array_values(array_filter($data[$field]));
+            if (isset($data[$field])) {
+                // If it's a JSON string, decode it
+                if (is_string($data[$field])) {
+                    $decoded = json_decode($data[$field], true);
+                    $data[$field] = is_array($decoded) ? $decoded : null;
+                }
+
+                if (is_array($data[$field])) {
+                    $filteredData = array_filter($data[$field], function ($item) {
+                        if (!is_array($item)) {
+                            return $item !== null && $item !== '';
+                        }
+                        return !empty(array_filter($item, function ($value) {
+                            return $value !== null && $value !== '';
+                        }));
+                    });
+                    $data[$field] = array_values($filteredData);
+                }
+            } elseif ($request->has($field)) {
+                $fieldData = $request->input($field);
+                if (is_array($fieldData)) {
+                    $data[$field] = array_values(array_filter($fieldData));
+                }
             }
         }
 
         return $data;
     }
-
 
     /**
      * Handle stage transition logic
@@ -552,32 +722,22 @@ class ProjectController extends Controller
         $oldStage = $project->stage;
         $newStage = $data['stage'];
 
-        // If moving from upcoming to ongoing
         if ($oldStage === 'upcoming' && $newStage === 'ongoing') {
-            // Set actual start date if not set
             if (empty($data['actual_start_date'])) {
                 $data['actual_start_date'] = now()->toDateString();
             }
-
-            // Set initial progress
             if (empty($data['project_progress'])) {
                 $data['project_progress'] = 0;
             }
         }
 
-        // If moving from ongoing to completed
         if ($oldStage === 'ongoing' && $newStage === 'completed') {
-            // Set actual end date if not set
             if (empty($data['actual_end_date'])) {
                 $data['actual_end_date'] = now()->toDateString();
             }
-
-            // Set completion readiness to 100% if not set
             if (empty($data['completion_readiness'])) {
                 $data['completion_readiness'] = 100;
             }
-
-            // Set project progress to 100% if not set
             if (empty($data['project_progress'])) {
                 $data['project_progress'] = 100;
             }
@@ -596,18 +756,10 @@ class ProjectController extends Controller
             File::delete(public_path($project->thumbnail_image));
         }
 
-        // Delete banner images safely (single or multiple)
-        if (!empty($project->banner_images)) {
-
-            $images = is_array($project->banner_images)
-                ? $project->banner_images
-                : [$project->banner_images]; // convert single to array
-
-            foreach ($images as $banner) {
-                File::delete(public_path($banner));
-            }
+        // Delete banner (single file)
+        if ($project->banner_images) {
+            File::delete(public_path($project->banner_images));
         }
-
 
         // Delete gallery images
         if ($project->gallery_images && is_array($project->gallery_images)) {
@@ -645,7 +797,6 @@ class ProjectController extends Controller
 
             return redirect()->back()
                 ->with('success', 'Project status updated successfully!');
-
         } catch (\Exception $e) {
             return redirect()->back()
                 ->with('error', 'Error updating project status: ' . $e->getMessage());
@@ -697,14 +848,12 @@ class ProjectController extends Controller
         $callback = function() use ($projects) {
             $file = fopen('php://output', 'w');
 
-            // Add CSV headers
             fputcsv($file, [
                 'ID', 'Project Code', 'Title', 'Category', 'Stage',
                 'Location Type', 'Start Date', 'End Date', 'Progress',
                 'Beneficiary Count', 'Status', 'Created At'
             ]);
 
-            // Add data rows
             foreach ($projects as $project) {
                 fputcsv($file, [
                     $project->id,
@@ -758,12 +907,10 @@ class ProjectController extends Controller
                     Project::whereIn('id', $request->ids)->update(['status' => 'active']);
                     $message = 'Projects activated successfully';
                     break;
-
                 case 'deactivate':
                     Project::whereIn('id', $request->ids)->update(['status' => 'inactive']);
                     $message = 'Projects deactivated successfully';
                     break;
-
                 case 'delete':
                     $projects = Project::whereIn('id', $request->ids)->get();
                     foreach ($projects as $project) {
@@ -780,10 +927,8 @@ class ProjectController extends Controller
                 'success' => true,
                 'message' => $message
             ]);
-
         } catch (\Exception $e) {
             DB::rollBack();
-
             return response()->json([
                 'success' => false,
                 'message' => 'Error performing bulk action: ' . $e->getMessage()
@@ -791,7 +936,8 @@ class ProjectController extends Controller
         }
     }
 
-    public function createMilestone($projectid){
+    public function createMilestone($projectid)
+    {
         $project = Project::findOrFail($projectid);
         $stakeholders = Stakeholder::where('status', 'active')->get();
         $milestones = ProjectMilestone::where('project_id', $projectid)->get();
@@ -816,12 +962,10 @@ class ProjectController extends Controller
             $projectId = $request->project_id;
             $updatedTasks = [];
 
-            // Handle deletions
             if ($request->has('delete_tasks')) {
                 ProjectMilestone::whereIn('id', $request->delete_tasks)->delete();
             }
 
-            // Handle updates and creations
             if ($request->has('tasks')) {
                 foreach ($request->tasks as $taskData) {
                     $task = ProjectMilestone::updateOrCreate(
@@ -857,7 +1001,6 @@ class ProjectController extends Controller
                 'message' => 'Milestones saved successfully',
                 'updated_tasks' => $updatedTasks
             ]);
-
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json([
@@ -886,8 +1029,10 @@ class ProjectController extends Controller
             ], 500);
         }
     }
-        public function createEstmator($projectid){
-            $projects = Project::findOrFail($projectid);
-            return view('admin.project.estmator',compact('projects'));
-        }
+
+    public function createEstmator($projectid)
+    {
+        $projects = Project::findOrFail($projectid);
+        return view('admin.project.estmator', compact('projects'));
+    }
 }
