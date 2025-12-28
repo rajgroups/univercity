@@ -314,48 +314,54 @@
                                 </td>
                                 <td class="text-center">
                                     <div class="btn-group" role="group">
-                                        <!-- View button -->
+
+                                        <!-- View -->
                                         <a href="{{ route('admin.project.show', $project->id) }}"
-                                            class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip"
-                                            title="View">
-                                            <i class="feather feather-eye"></i>
+                                        class="btn btn-sm btn-outline-primary"
+                                        data-bs-toggle="tooltip" title="View">
+                                            <i class="bi bi-eye"></i>
                                         </a>
 
-                                        <!-- Edit button -->
+                                        <!-- Edit -->
                                         <a href="{{ route('admin.project.edit', $project->id) }}"
-                                            class="btn btn-sm btn-outline-info" data-bs-toggle="tooltip" title="Edit">
-                                            <i class="feather feather-edit"></i>
+                                        class="btn btn-sm btn-outline-info"
+                                        data-bs-toggle="tooltip" title="Edit">
+                                            <i class="bi bi-pencil-square"></i>
                                         </a>
 
-                                        <!-- Survey button -->
+                                        <!-- Survey -->
                                         <a href="{{ route('admin.surveys.create', ['project_id' => $project->id]) }}"
-                                            class="btn btn-sm btn-outline-secondary" data-bs-toggle="tooltip"
-                                            title="Add Survey">
-                                            <i class="feather feather-clipboard"></i>
+                                        class="btn btn-sm btn-outline-secondary"
+                                        data-bs-toggle="tooltip" title="Add Survey">
+                                            <i class="bi bi-clipboard-check"></i>
                                         </a>
 
-                                        <!-- Estimation button -->
+                                        <!-- Estimation -->
                                         <a href="{{ route('admin.project.estmator.index', $project->id) }}"
-                                            class="btn btn-sm btn-outline-warning" data-bs-toggle="tooltip"
-                                            title="Estimation">
-                                            <i class="feather feather-dollar-sign"></i>
+                                        class="btn btn-sm btn-outline-warning"
+                                        data-bs-toggle="tooltip" title="Estimation">
+                                            <i class="bi bi-cash-coin"></i>
                                         </a>
 
-                                        <!-- Milestones button -->
+                                        <!-- Milestones -->
                                         <a href="{{ route('admin.project.milestones.create', $project->id) }}"
-                                            class="btn btn-sm btn-outline-success" data-bs-toggle="tooltip"
-                                            title="Milestones">
-                                            <i class="feather feather-target"></i>
+                                        class="btn btn-sm btn-outline-success"
+                                        data-bs-toggle="tooltip" title="Milestones">
+                                            <i class="bi bi-flag"></i>
                                         </a>
 
-                                        <!-- Delete button -->
-                                        <button type="button" class="btn btn-sm btn-outline-danger delete-btn"
-                                            data-id="{{ $project->id }}" data-title="{{ $project->title }}"
-                                            data-bs-toggle="tooltip" title="Delete">
-                                            <i class="feather feather-trash-2"></i>
+                                        <!-- Delete -->
+                                        <button type="button"
+                                        class="btn btn-sm btn-outline-danger delete-btn"
+                                        data-id="{{ $project->id }}"
+                                        data-title="{{ $project->title }}"
+                                        data-bs-toggle="tooltip" title="Delete">
+                                            <i class="bi bi-trash"></i>
                                         </button>
+
                                     </div>
                                 </td>
+
                             </tr>
                         @empty
                             <tr>
