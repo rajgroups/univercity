@@ -99,6 +99,32 @@ class ProjectController extends Controller
     }
 
     /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(Project $project)
+    {
+        $categories = Category::where('status', 1)->get();
+
+        // Fields are already cast to arrays in the Project model
+        $project->banner_images = $project->banner_images ?? [];
+        $project->gallery_images = $project->gallery_images ?? [];
+        $project->multiple_locations = $project->multiple_locations ?? [];
+        $project->donut_metrics = $project->donut_metrics ?? [];
+        $project->target_groups = $project->target_groups ?? [];
+        $project->objectives = $project->objectives ?? [];
+        $project->alignment_categories = $project->alignment_categories ?? [];
+        $project->sdg_goals = $project->sdg_goals ?? [];
+        $project->govt_schemes = $project->govt_schemes ?? [];
+        $project->stakeholders = $project->stakeholders ?? [];
+        $project->risks = $project->risks ?? [];
+        $project->resources_needed_ongoing = $project->resources_needed_ongoing ?? [];
+        $project->operational_risks_ongoing = $project->operational_risks_ongoing ?? [];
+        $project->documents = $project->documents ?? [];
+        $project->links = $project->links ?? [];
+
+        return view('admin.project.edit', compact('project', 'categories'));
+    }
+    /**
      * Update the resource.
      */
     public function update(Request $request, Project $project)
