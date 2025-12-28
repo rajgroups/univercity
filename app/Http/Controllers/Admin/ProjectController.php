@@ -121,6 +121,11 @@ class ProjectController extends Controller
             // Create the project and prepare array data
             $projectData = array_merge($validated, $filePaths);
 
+            // Ensure banner_images is always a plain string (never array / json)
+            if (isset($projectData['banner_images']) && is_array($projectData['banner_images'])) {
+                $projectData['banner_images'] = $projectData['banner_images'][0] ?? null;
+            }
+
             // Stage and status defaults
             $projectData['stage'] = 'upcoming';
             $projectData['status'] = 1;
@@ -367,6 +372,11 @@ class ProjectController extends Controller
 
             // Update the project data
             $projectData = array_merge($validated, $filePaths);
+
+            // Ensure banner_images is always a plain string (never array / json)
+            if (isset($projectData['banner_images']) && is_array($projectData['banner_images'])) {
+                $projectData['banner_images'] = $projectData['banner_images'][0] ?? null;
+            }
 
             // Prepare array data
             $projectData = $this->prepareJsonData($projectData, $request);
