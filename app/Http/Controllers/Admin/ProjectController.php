@@ -275,6 +275,7 @@ class ProjectController extends Controller
         return $data;
     }
 
+
     /**
      * Handle stage transition logic
      */
@@ -522,103 +523,103 @@ class ProjectController extends Controller
         }
     }
 
-public function createMilestone($projectid){
-    $project = Project::findOrFail($projectid);
-    $stakeholders = Stakeholder::where('status', 'active')->get();
-    $milestones = ProjectMilestone::where('project_id', $projectid)->get();
+    public function createMilestone($projectid){
+        $project = Project::findOrFail($projectid);
+        $stakeholders = Stakeholder::where('status', 'active')->get();
+        $milestones = ProjectMilestone::where('project_id', $projectid)->get();
 
-    return view('admin.project.milestone', compact('project', 'stakeholders', 'milestones'));
-}
+        return view('admin.project.milestone', compact('project', 'stakeholders', 'milestones'));
+    }
 
-public function storeMilestones(Request $request)
-{
-    $request->validate([
-        'project_id' => 'required|exists:projects,id',
-        'tasks' => 'array',
-        'tasks.*.stakeholder_id' => 'required|exists:stakeholders,id',
-        'tasks.*.phase' => 'required|string',
-        'tasks.*.task_name' => 'required|string',
-        'delete_tasks' => 'array'
-    ]);
+    public function storeMilestones(Request $request)
+    {
+        $request->validate([
+            'project_id' => 'required|exists:projects,id',
+            'tasks' => 'array',
+            'tasks.*.stakeholder_id' => 'required|exists:stakeholders,id',
+            'tasks.*.phase' => 'required|string',
+            'tasks.*.task_name' => 'required|string',
+            'delete_tasks' => 'array'
+        ]);
 
-    try {
-        DB::beginTransaction();
+        try {
+            DB::beginTransaction();
 
-        $projectId = $request->project_id;
-        $updatedTasks = [];
+            $projectId = $request->project_id;
+            $updatedTasks = [];
 
-        // Handle deletions
-        if ($request->has('delete_tasks')) {
-            ProjectMilestone::whereIn('id', $request->delete_tasks)->delete();
-        }
-
-        // Handle updates and creations
-        if ($request->has('tasks')) {
-            foreach ($request->tasks as $taskData) {
-                $task = ProjectMilestone::updateOrCreate(
-                    [
-                        'id' => $taskData['id'] ?? null,
-                        'project_id' => $projectId
-                    ],
-                    [
-                        'stakeholder_id' => $taskData['stakeholder_id'],
-                        'phase' => $taskData['phase'],
-                        'task_name' => $taskData['task_name'],
-                        'planned_start_date' => $taskData['start_date'] ?: null,
-                        'planned_end_date' => $taskData['end_date'] ?: null,
-                        'in_charge' => $taskData['in_charge'],
-                        'priority' => $taskData['priority'],
-                        'status' => $taskData['status'],
-                        'progress' => $taskData['progress'],
-                        'notes' => $taskData['notes']
-                    ]
-                );
-
-                $updatedTasks[] = [
-                    'client_id' => $taskData['client_id'] ?? null,
-                    'id' => $task->id
-                ];
+            // Handle deletions
+            if ($request->has('delete_tasks')) {
+                ProjectMilestone::whereIn('id', $request->delete_tasks)->delete();
             }
+
+            // Handle updates and creations
+            if ($request->has('tasks')) {
+                foreach ($request->tasks as $taskData) {
+                    $task = ProjectMilestone::updateOrCreate(
+                        [
+                            'id' => $taskData['id'] ?? null,
+                            'project_id' => $projectId
+                        ],
+                        [
+                            'stakeholder_id' => $taskData['stakeholder_id'],
+                            'phase' => $taskData['phase'],
+                            'task_name' => $taskData['task_name'],
+                            'planned_start_date' => $taskData['start_date'] ?: null,
+                            'planned_end_date' => $taskData['end_date'] ?: null,
+                            'in_charge' => $taskData['in_charge'],
+                            'priority' => $taskData['priority'],
+                            'status' => $taskData['status'],
+                            'progress' => $taskData['progress'],
+                            'notes' => $taskData['notes']
+                        ]
+                    );
+
+                    $updatedTasks[] = [
+                        'client_id' => $taskData['client_id'] ?? null,
+                        'id' => $task->id
+                    ];
+                }
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Milestones saved successfully',
+                'updated_tasks' => $updatedTasks
+            ]);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'message' => 'Error saving milestones: ' . $e->getMessage()
+            ], 500);
         }
-
-        DB::commit();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Milestones saved successfully',
-            'updated_tasks' => $updatedTasks
-        ]);
-
-    } catch (\Exception $e) {
-        DB::rollBack();
-        return response()->json([
-            'success' => false,
-            'message' => 'Error saving milestones: ' . $e->getMessage()
-        ], 500);
     }
-}
 
-public function getMilestones($projectId)
-{
-    try {
-        $milestones = ProjectMilestone::where('project_id', $projectId)
-            ->with('stakeholder')
-            ->orderBy('phase')
-            ->get();
+    public function getMilestones($projectId)
+    {
+        try {
+            $milestones = ProjectMilestone::where('project_id', $projectId)
+                ->with('stakeholder')
+                ->orderBy('phase')
+                ->get();
 
-        return response()->json([
-            'success' => true,
-            'milestones' => $milestones
-        ]);
-    } catch (\Exception $e) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Error fetching milestones: ' . $e->getMessage()
-        ], 500);
+            return response()->json([
+                'success' => true,
+                'milestones' => $milestones
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error fetching milestones: ' . $e->getMessage()
+            ], 500);
+        }
     }
-}
-    public function createEstmator($projectid){
-        $projects = Project::findOrFail($projectid);
-        return view('admin.project.estmator',compact('projects'));
-    }
+        public function createEstmator($projectid){
+            $projects = Project::findOrFail($projectid);
+            return view('admin.project.estmator',compact('projects'));
+        }
 }
