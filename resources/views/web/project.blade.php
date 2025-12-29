@@ -11,7 +11,7 @@
                 <!-- Breadcrumb -->
                 <nav aria-label="breadcrumb" class="mb-4">
                     <ol class="breadcrumb mb-0">
-                        <li class="breadcrumb-item"><a href="{{ route('web.catalog') }}" class="text-white-50 text-decoration-none"><i class="bi bi-arrow-left me-1"></i> Back to Projects</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('web.catalog') }}" class="text-white text-decoration-none"><i class="bi bi-arrow-left me-1"></i> Back to Projects</a></li>
                         <li class="breadcrumb-item active text-white" aria-current="page">{{ Str::limit($project->title, 30) }}</li>
                     </ol>
                 </nav>
@@ -32,7 +32,7 @@
                 <h1 class="display-4 fw-bold mb-3 text-white">{{ $project->title }}</h1>
 
                 @if($project->subtitle)
-                <p class="lead mb-4 text-white-75">{{ $project->subtitle }}</p>
+                <p class="lead mb-4 text-white">{{ $project->subtitle }}</p>
                 @endif
 
                 <!-- Quick Stats Cards -->
@@ -280,7 +280,7 @@
                                 <div class="row g-3">
                                     @foreach($project->objectives as $objective)
                                     <div class="col-md-6">
-                                        <div class="card border-start border-3 border-primary h-100">
+                                        <div class="card border-start border-1 m-1 border-primary h-100">
                                             <div class="card-body">
                                                 <div class="d-flex align-items-start">
                                                     <i class="bi bi-check-circle-fill text-primary me-2 mt-1"></i>

@@ -5,12 +5,12 @@
             Response #{{ is_numeric($index) ? $index + 1 : 'New' }}
         </h6>
         <button type="button" class="btn btn-sm btn-outline-danger remove-card-btn" onclick="removeCard(this)">
-            <i class="feather feather-trash-2"></i>
+            <i class="bi bi-trash"></i>
         </button>
     </div>
     <div class="card-body">
         <input type="hidden" name="surveys[{{ $index }}][id]" value="{{ $survey['id'] ?? '' }}">
-        
+
         <div class="row">
             <div class="col-md-4">
                 <div class="mb-3">

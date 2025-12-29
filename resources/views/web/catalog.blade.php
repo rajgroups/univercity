@@ -20,13 +20,13 @@
                 </nav>
                 <h1 class="display-4 fw-bold mb-3">Initiatives <span class="text-warning">&</span> Impact</h1>
                 <p class="lead text-white-50 mb-4">Explore our growing catalog of projects, government schemes, and educational programs across India.</p>
-                
+
                 <!-- Hero Search -->
                 <form method="GET" action="{{ route('web.catalog') }}" class="hero-search-wrapper shadow-lg rounded-pill bg-white p-2 d-flex">
                     <div class="flex-grow-1 px-3 d-flex align-items-center">
                         <i class="bi bi-search text-muted me-2"></i>
-                        <input type="text" name="search" value="{{ request('search') }}" 
-                               class="form-control border-0 shadow-none border-0" 
+                        <input type="text" name="search" value="{{ request('search') }}"
+                               class="form-control border-0 shadow-none border-0"
                                placeholder="Search for projects, schemes or programs...">
                     </div>
                     @if(request('type')) <input type="hidden" name="type" value="{{ request('type') }}"> @endif
@@ -59,7 +59,7 @@
                         <form method="GET" action="{{ route('web.catalog') }}" id="catalogFilters">
                             <!-- Preserve Search if current -->
                             @if(request('search')) <input type="hidden" name="search" value="{{ request('search') }}"> @endif
-                            
+
                             <!-- Initiative Type -->
                             <div class="mb-4">
                                 <label class="form-label small fw-bold text-uppercase text-muted mb-3">Initiative Type</label>
@@ -124,7 +124,7 @@
             <!-- Results Header -->
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <p class="text-muted mb-0">Showing <strong>{{ $results->firstItem() ?? 0 }}-{{ $results->lastItem() ?? 0 }}</strong> of <strong>{{ $results->total() }}</strong> initiatives</p>
-                <div class="d-none d-md-block d-lg-none">
+                <div class="d-md-block d-lg-none">
                     <button class="btn btn-primary btn-sm rounded-pill px-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileFilterCanvas">
                         <i class="bi bi-funnel"></i> Filters
                     </button>
@@ -142,11 +142,11 @@
                                     $placeholder = $item->item_type === 'project' ? 'assets/images/project-placeholder.jpg' : 'assets/images/announcement-placeholder.jpg';
                                     $typeClass = $item->item_type === 'project' ? 'bg-primary' : 'bg-success';
                                 @endphp
-                                <img src="{{ asset($image ?? $placeholder) }}" 
-                                     class="card-img-top" 
-                                     alt="{{ $item->title }}" 
+                                <img src="{{ asset($image ?? $placeholder) }}"
+                                     class="card-img-top"
+                                     alt="{{ $item->title }}"
                                      style="height: 200px; width:100%; object-fit: cover;">
-                                
+
                                 <span class="badge {{ $typeClass }} position-absolute top-0 start-0 m-3 shadow-sm px-3 py-2 rounded-pill">
                                     {{ $item->type_label }}
                                 </span>
@@ -159,12 +159,12 @@
                                 <p class="card-text text-muted line-clamp-3 mb-4">
                                     {{ \Illuminate\Support\Str::limit(strip_tags($item->description), 120) }}
                                 </p>
-                                
+
                                 <div class="mt-auto pt-3 border-top">
                                     @php
                                         $categorySlug = $item->category->slug ?? 'general';
                                         $slug = $item->slug;
-                                        
+
                                         if ($item->item_type === 'project') {
                                             if ($item->stage === 'upcoming') {
                                                 $link = route('web.upcoming.project', [$categorySlug, $slug]);
@@ -174,8 +174,8 @@
                                                 $link = route('web.project.show', [$categorySlug, $slug]);
                                             }
                                         } else {
-                                            $link = $item->type == 1 
-                                                ? route('web.announcement.program', [$categorySlug, $slug]) 
+                                            $link = $item->type == 1
+                                                ? route('web.announcement.program', [$categorySlug, $slug])
                                                 : route('web.announcement.scheme', [$categorySlug, $slug]);
                                         }
                                     @endphp
@@ -229,7 +229,7 @@
     .hero-backdrop {
         position: absolute;
         top: 0; left: 0; right: 0; bottom: 0;
-        background: linear-gradient(135deg, rgba(13, 110, 253, 0.9) 0%, rgba(26, 26, 46, 0.95) 100%), 
+        background: linear-gradient(135deg, rgba(13, 110, 253, 0.9) 0%, rgba(26, 26, 46, 0.95) 100%),
                     url('https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=1200&q=80');
         background-size: cover;
         background-position: center;
@@ -293,7 +293,7 @@
     .group:hover .group-hover-translate-x {
         transform: translateX(5px);
     }
-    
+
     /* Pagination Styling Override */
     .pagination-wrapper nav .pagination {
         margin-bottom: 0;
@@ -317,7 +317,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     const desktopFilters = document.getElementById('catalogFilters');
     const mobileContainer = document.getElementById('mobileFilterContainer');
-    
+
     if (desktopFilters && mobileContainer) {
         mobileContainer.innerHTML = desktopFilters.outerHTML;
         // Ensure unique IDs in mobile clone if necessary
