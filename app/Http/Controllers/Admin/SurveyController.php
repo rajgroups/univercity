@@ -8,6 +8,8 @@ use App\Models\Survey; // Assuming Survey model is in App\Models
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Flasher\Laravel\Facade\Flasher;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class SurveyController extends Controller
 {
@@ -28,7 +30,7 @@ class SurveyController extends Controller
     {
         $projects = Project::select('id', 'title', 'project_code')->get();
         $selectedProjectId = $request->query('project_id');
-        
+
         $existingSurveys = [];
         if ($selectedProjectId) {
             $existingSurveys = Survey::where('project_id', $selectedProjectId)->get();
@@ -55,7 +57,7 @@ class SurveyController extends Controller
         ]);
 
         try {
-            \DB::beginTransaction();
+            DB::beginTransaction();
 
             $projectId = $request->project_id;
             $submittedIds = collect($request->surveys)->pluck('id')->filter()->toArray();
@@ -73,13 +75,14 @@ class SurveyController extends Controller
                 );
             }
 
-            \DB::commit();
+            DB::commit();
+            notyf()->addSuccess('Surveys created successfully!');
             Flasher::addSuccess('Surveys updated successfully!');
             return redirect()->route('admin.surveys.index');
 
         } catch (\Exception $e) {
-            \DB::rollBack();
-            \Log::error('Survey Store Error: ' . $e->getMessage());
+            DB::rollBack();
+            Log::error('Survey Store Error: ' . $e->getMessage());
             Flasher::addError('An error occurred while saving the surveys.');
             return redirect()->back()->withInput();
         }
@@ -116,6 +119,7 @@ class SurveyController extends Controller
     public function destroy($id)
     {
         Survey::destroy($id);
+        notyf()->addSuccess('Survey deleted successfully.');
         Flasher::addSuccess('Survey deleted successfully.');
         return redirect()->back();
     }

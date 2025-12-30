@@ -12,6 +12,17 @@
     </div>
 </div>
 
+{{-- Custom Notification Toast --}}
+<div id="notificationToast" class="toast align-items-center text-bg-success border-0 position-fixed"
+     style="top: 20px; right: 20px; z-index: 9999;" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="d-flex">
+        <div class="toast-body">
+            <span id="toastMessage"></span>
+        </div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+</div>
+
 <input type="hidden" id="project_id" value="{{ $project->id }}">
 <input type="hidden" id="estimation_id" value="{{ $estimation->id }}">
 <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -189,7 +200,7 @@
                 </table>
             </div>
         </div>
-        
+
         <!-- Funds Received Tracker -->
         <div class="mt-5">
             <div class="d-flex justify-content-between align-items-center mb-3">
@@ -328,6 +339,30 @@ const CATEGORIES = [
     'Miscellaneous'
 ];
 
+// Custom Notification Function
+function showNotification(message, type = 'success') {
+    const toastEl = document.getElementById('notificationToast');
+    const toastMessage = document.getElementById('toastMessage');
+    const toast = new bootstrap.Toast(toastEl);
+
+    // Set message and type
+    toastMessage.textContent = message;
+
+    // Change background color based on type
+    if (type === 'success') {
+        toastEl.className = 'toast align-items-center text-bg-success border-0 position-fixed';
+    } else if (type === 'error') {
+        toastEl.className = 'toast align-items-center text-bg-danger border-0 position-fixed';
+    } else if (type === 'warning') {
+        toastEl.className = 'toast align-items-center text-bg-warning border-0 position-fixed';
+    } else if (type === 'info') {
+        toastEl.className = 'toast align-items-center text-bg-info border-0 position-fixed';
+    }
+
+    // Show toast
+    toast.show();
+}
+
 $(document).ready(function () {
     updateTotals();
     updateFundingProgress();
@@ -386,7 +421,7 @@ function calculateRow(input) {
     const unit = parseFloat(row.find('.unit').val()) || 0;
     const total = qty * unit;
     row.find('.total').val(total.toFixed(2));
-    updateTotals(); 
+    updateTotals();
 }
 
 function updateTotals() {
@@ -411,7 +446,7 @@ function saveEstimationRow(btn) {
     formData.append('quantity', row.find('.qty').val());
     formData.append('unit_cost', row.find('.unit').val());
     formData.append('phase', row.find('.phase').val());
-    
+
     const fileInput = row.find('.file-input')[0];
     if (fileInput.files.length > 0) {
         formData.append('file', fileInput.files[0]);
@@ -429,14 +464,14 @@ function saveEstimationRow(btn) {
             if (response.success) {
                 row.data('id', response.item.id);
                 $(btn).prop('disabled', false).text('Save');
-                notyf.success('Item saved successfully');
+                showNotification('Item saved successfully', 'success');
                 updateTotals();
                 markSaved(row);
             }
         },
         error: function(err) {
             $(btn).prop('disabled', false).text('Save');
-            notyf.error('Error saving item');
+            showNotification('Error saving item', 'error');
             console.error(err);
         }
     });
@@ -449,6 +484,7 @@ function deleteEstimationRow(btn) {
     if (!id) {
         row.remove();
         updateTotals();
+        showNotification('Item removed', 'info');
         return;
     }
 
@@ -461,7 +497,10 @@ function deleteEstimationRow(btn) {
         success: function(response) {
             row.remove();
             updateTotals();
-            notyf.success('Item deleted');
+            showNotification('Item deleted successfully', 'success');
+        },
+        error: function() {
+            showNotification('Error deleting item', 'error');
         }
     });
 }
@@ -501,12 +540,12 @@ function updateFundingProgress() {
         raised += parseFloat($(this).val()) || 0;
     });
     const total = parseFloat($('#totalEstimatedCost').text().replace(/[^0-9.]/g, '')) || 0;
-    const percent = total > 0 ? ((raised / total) * 100).toFixed(1) : 0; 
-    
+    const percent = total > 0 ? ((raised / total) * 100).toFixed(1) : 0;
+
     $('#fundingProgress').css('width', Math.min(percent, 100) + '%').text(percent + '%');
     $('#raisedAmount').text('₹ ' + raised.toLocaleString('en-IN'));
     $('#fundingPercentage').text(percent + '%');
-    
+
     $('#totalPledged').text('₹ ' + raised.toLocaleString('en-IN'));
     updateDonorLeaderboard();
 }
@@ -521,17 +560,11 @@ function updateDonorLeaderboard() {
     });
 
     donors.sort((a, b) => b.amount - a.amount);
-    // Be careful not to target status badge here. Status badge is .status-badge
-    // Leaderboard badge is just .badge inside 5th column? 
-    // Wait, the HTML structure I added earlier:
-    // <td><span class="badge bg-secondary">-</span></td> (Leaderboard)
-    // <td class="text-center"><span class="badge bg-success status-badge">...</span></td> (Status)
-    // So `tr.find('.badge')` will find BOTH. I need to be specific.
-    
+
     $('#donorTable tr').each(function() {
         $(this).find('td:eq(4) .badge').removeClass('bg-warning').addClass('bg-secondary').text('-');
     });
-    
+
     donors.forEach((donor, index) => {
         const rank = index + 1;
         const badge = donor.row.find('td:eq(4) .badge');
@@ -562,12 +595,12 @@ function saveDonorRow(btn) {
         success: function(response) {
             row.data('id', response.donor.id);
             $(btn).prop('disabled', false);
-            notyf.success('Donor saved');
+            showNotification('Donor saved successfully', 'success');
             markSaved(row);
         },
         error: function(err) {
             $(btn).prop('disabled', false);
-            notyf.error('Error saving donor');
+            showNotification('Error saving donor', 'error');
         }
     });
 }
@@ -579,6 +612,7 @@ function deleteDonorRow(btn) {
     if (!id) {
         row.remove();
         updateFundingProgress();
+        showNotification('Donor removed', 'info');
         return;
     }
 
@@ -591,13 +625,17 @@ function deleteDonorRow(btn) {
         success: function(response) {
             row.remove();
             updateFundingProgress();
-            notyf.success('Donor deleted');
+            showNotification('Donor deleted successfully', 'success');
+        },
+        error: function() {
+            showNotification('Error deleting donor', 'error');
         }
     });
 }
 
 function toggleDonorList() {
     $('#donorSection').toggle();
+    showNotification('Donor list toggled', 'info');
 }
 
 // ================= FUNDING RECEIVED FUNCTIONS =================
@@ -648,13 +686,13 @@ function saveFundingRow(btn) {
         success: function(response) {
             row.data('id', response.funding.id);
             $(btn).prop('disabled', false);
-            notyf.success('Funding Record saved');
+            showNotification('Funding Record saved successfully', 'success');
             updateFundingTotals();
             markSaved(row);
         },
         error: function(err) {
             $(btn).prop('disabled', false);
-            notyf.error('Error saving funding');
+            showNotification('Error saving funding record', 'error');
         }
     });
 }
@@ -666,6 +704,7 @@ function deleteFundingRow(btn) {
     if (!id) {
         row.remove();
         updateFundingTotals();
+        showNotification('Funding record removed', 'info');
         return;
     }
 
@@ -678,7 +717,10 @@ function deleteFundingRow(btn) {
         success: function(response) {
             row.remove();
             updateFundingTotals();
-            notyf.success('Funding Record deleted');
+            showNotification('Funding Record deleted successfully', 'success');
+        },
+        error: function() {
+            showNotification('Error deleting funding record', 'error');
         }
     });
 }
@@ -686,6 +728,7 @@ function deleteFundingRow(btn) {
 // ================= UTILIZATION FUNCTIONS =================
 function addUtilizationRow() {
     appendUtilizationRow(null);
+    showNotification('New utilization row added', 'info');
 }
 
 function updateUtilizationTotals() {
@@ -707,7 +750,7 @@ function saveUtilizationRow(btn) {
     formData.append('estimated_amount', row.find('.estimated').val());
     formData.append('actual_amount', row.find('.actual').val());
     formData.append('phase', row.find('.phase').val());
-    
+
     const fileInput = row.find('.file-input')[0];
     if (fileInput.files.length > 0) {
         formData.append('file', fileInput.files[0]);
@@ -724,13 +767,13 @@ function saveUtilizationRow(btn) {
         success: function(response) {
             row.data('id', response.utilization.id);
             $(btn).prop('disabled', false).text('Save');
-            notyf.success('Utilization saved');
+            showNotification('Utilization saved successfully', 'success');
             updateUtilizationTotals();
             markSaved(row);
         },
         error: function(err) {
             $(btn).prop('disabled', false).text('Save');
-            notyf.error('Error saving');
+            showNotification('Error saving utilization', 'error');
         }
     });
 }
@@ -742,6 +785,7 @@ function deleteUtilizationRow(btn) {
     if (!id) {
         row.remove();
         updateUtilizationTotals();
+        showNotification('Utilization record removed', 'info');
         return;
     }
 
@@ -754,7 +798,10 @@ function deleteUtilizationRow(btn) {
         success: function(response) {
             row.remove();
             updateUtilizationTotals();
-            notyf.success('Deleted');
+            showNotification('Utilization record deleted successfully', 'success');
+        },
+        error: function() {
+            showNotification('Error deleting utilization record', 'error');
         }
     });
 }
@@ -777,8 +824,8 @@ function importFromEstimation() {
         success: function(response) {
             btn.prop('disabled', false).html(originalText);
             if (response.success) {
-                notyf.success(response.message);
-                
+                showNotification(response.message, 'success');
+
                 // Dynamically append new items
                 if (response.items && response.items.length > 0) {
                     response.items.forEach(item => {
@@ -787,22 +834,22 @@ function importFromEstimation() {
                     updateUtilizationTotals();
                 }
             } else {
-                notyf.error(response.message);
+                showNotification(response.message, 'error');
             }
         },
         error: function(err) {
             btn.prop('disabled', false).html(originalText);
-            notyf.error('Error importing items');
+            showNotification('Error importing items', 'error');
         }
     });
 }
 
 function appendUtilizationRow(data = null) {
-    const categoriesOptions = CATEGORIES.map(cat => 
+    const categoriesOptions = CATEGORIES.map(cat =>
         `<option ${data && data.category === cat ? 'selected' : ''}>${cat}</option>`
     ).join('');
-    
-    const phaseOptions = ['P1','P2','P3','P4','P5','P6','P7'].map(phase => 
+
+    const phaseOptions = ['P1','P2','P3','P4','P5','P6','P7'].map(phase =>
         `<option ${data && data.phase === phase ? 'selected' : ''}>${phase}</option>`
     ).join('');
 

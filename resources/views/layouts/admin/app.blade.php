@@ -35,7 +35,7 @@
         </div>
         <!-- wrap @e -->
     </div>
-
+{{-- {!! flasher_render() !!}s --}}
     <!-- JAVASCRIPT -->
     @include('layouts.admin.dependency.js')
     @if ($errors->any())

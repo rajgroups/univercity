@@ -316,11 +316,11 @@
                                     <div class="btn-group" role="group">
 
                                         <!-- View -->
-                                        <a href="{{ route('admin.project.show', $project->id) }}"
+                                        {{-- <a href="{{ route('admin.project.show', $project->id) }}"
                                         class="btn btn-sm btn-outline-primary"
                                         data-bs-toggle="tooltip" title="View">
                                             <i class="bi bi-eye"></i>
-                                        </a>
+                                        </a> --}}
 
                                         <!-- Edit -->
                                         <a href="{{ route('admin.project.edit', $project->id) }}"

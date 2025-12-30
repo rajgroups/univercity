@@ -31,7 +31,7 @@
         </li>
     </ul>
     <div class="page-btn">
-        <a href="{{ route('admin.project.show', $project->id) }}" class="btn btn-outline-secondary me-2">
+        <a href="{{ route('admin.project.index', $project->id) }}" class="btn btn-outline-secondary me-2">
             <i class="ti ti-arrow-left me-1"></i>Back to Project
         </a>
         <button class="btn btn-primary" onclick="loadExistingMilestones()">
@@ -1046,7 +1046,7 @@ function saveToServer(tasksData, tasksToDelete) {
                         const index = parseInt(parts[1]);
                         const field = parts[2];
                         const $card = $('.task-card').eq(index);
-                        
+
                         // Map field names to classes
                         let inputSelector = '';
                         if (field === 'stakeholder_id') inputSelector = '.stakeholder-select-task';

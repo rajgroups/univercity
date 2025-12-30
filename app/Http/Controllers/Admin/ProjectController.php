@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
+use Flasher\Laravel\Facade\Flasher;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\File;
 
@@ -120,12 +121,12 @@ class ProjectController extends Controller
             Project::create($projectData);
 
             DB::commit();
-
-            return redirect()->route('admin.project.index')
-                ->with('success', 'Project created successfully!');
+            notyf()->addSuccess('Project created successfully!');
+            return redirect()->route('admin.project.index');
 
         } catch (\Exception $e) {
             DB::rollBack();
+            notyf()->addError('Project creation error: ' . $e->getMessage());
             Log::error('Project creation error: ' . $e->getMessage());
             return redirect()->back()
                 ->withInput()
@@ -209,12 +210,13 @@ class ProjectController extends Controller
             $project->update($projectData);
 
             DB::commit();
-
-            return redirect()->route('admin.project.index')
-                ->with('success', 'Project updated successfully!');
-
+            // dd('hi');
+             notyf()->addSuccess('Project created successfully!');
+            Flasher::addSuccess('Project updated successfully!');
+            return redirect()->route('admin.project.index')->with('success','Project created successfully');
         } catch (\Exception $e) {
             DB::rollBack();
+            notyf()->addSuccess('Project update error: ' . $e->getMessage());
             Log::error('Project update error: ' . $e->getMessage());
             return redirect()->back()
                 ->withInput()
@@ -230,7 +232,7 @@ class ProjectController extends Controller
         try {
             $this->deleteProjectFiles($project);
             $project->delete();
-
+            notyf()->addSuccess('Project deleted successfully!');
             return redirect()->route('admin.project.index')
                 ->with('success', 'Project deleted successfully!');
 
@@ -566,10 +568,10 @@ class ProjectController extends Controller
             }
 
             $banner->move($absolutePath, $filename);
-            
+
             // Store as PLAIN STRING (VARCHAR)
             $filePaths['banner_images'] = $relativePath . '/' . $filename;
-        } 
+        }
         // Handle banner removal
         elseif ($request->has('removed_banner_image') && $request->input('removed_banner_image')) {
             if ($project && $project->banner_images) {

@@ -102,7 +102,7 @@
                              <div class="col-lg-3 col-md-6">
                                 <div class="course-card">
                                     <a href="{{ route('web.global.course', ['countries[]' => $item->id]) }}" class="card-img">
-                                        <img src="{{ asset($item->image)}}" alt="img">
+                                        <img src="{{ asset($item->emoji)}}" alt="img">
                                     </a>
                                     <div class="card-content">
                                         <a href="{{ route('web.global.course', ['countries[]' => $item->id]) }}" class="h5 fw-500 mb-16">{{ $item->name }}</a>
