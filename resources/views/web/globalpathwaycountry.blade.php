@@ -102,7 +102,16 @@
                              <div class="col-lg-3 col-md-6">
                                 <div class="course-card">
                                     <a href="{{ route('web.global.course', ['countries[]' => $item->id]) }}" class="card-img">
-                                        <img src="{{ asset($item->emoji)}}" alt="img">
+                                       @php
+                                        function countryFlag($code) {
+                                            return implode('', array_map(
+                                                fn($char) => mb_chr(0x1F1E6 - 65 + ord($char)),
+                                                str_split(strtoupper($code))
+                                            ));
+                                        }
+                                        @endphp
+
+                                        <span>{{ countryFlag($item->emoji) }}</span>
                                     </a>
                                     <div class="card-content">
                                         <a href="{{ route('web.global.course', ['countries[]' => $item->id]) }}" class="h5 fw-500 mb-16">{{ $item->name }}</a>
