@@ -145,10 +145,10 @@ class WebController extends Controller
             ->where('status', 1)
             ->with([
                 'category',
-                'milestones', 
-                'estimation.items', 
-                'donors', 
-                'fundings', 
+                'milestones',
+                'estimation.items',
+                'donors',
+                'fundings',
                 'utilizations',
                 'surveys' // Added surveys relationship
             ])
@@ -186,13 +186,13 @@ class WebController extends Controller
 
         // 6️⃣ Return view
         return view('web.project', compact(
-            'project', 
-            'category', 
-            'milestones', 
-            'estimation', 
-            'donors', 
-            'fundings', 
-            'utilizations', 
+            'project',
+            'category',
+            'milestones',
+            'estimation',
+            'donors',
+            'fundings',
+            'utilizations',
             'stakeholders',
             'surveys',
             'surveyStats'
@@ -510,7 +510,7 @@ class WebController extends Controller
         return view('web.coursedetail', compact('course', 'banners', 'relatedCourses'));
     }
 
-    public function storeInterest(Request $request) 
+    public function storeInterest(Request $request)
     {
         $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
             'project_id' => 'required|exists:projects,id',
@@ -528,7 +528,7 @@ class WebController extends Controller
             // Store as enquiry or specific interest model
             // For now, let's use Enquiry model or just return success if email is sent
             // Assuming Enquiry model has dynamic fields or we append to message
-            
+
             $project = Project::find($request->project_id);
             $fullMessage = "Project Interest: " . $project->title . "\n";
             $fullMessage .= "Organization: " . $request->organization . "\n";
