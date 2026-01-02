@@ -86,7 +86,7 @@ return new class extends Migration
 
             // Timestamps
             $table->timestamps();
-            $table->softDeletes();
+            // $table->softDeletes();
 
             // Indexes for better performance
             $table->index('project_code');
