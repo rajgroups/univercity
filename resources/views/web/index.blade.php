@@ -411,6 +411,9 @@
                         <div class="swiper upcomingproject">
                             <div class="swiper-wrapper">
                                 @foreach ($upcomingProjects as $project)
+                                    @if (!$project->category)
+                                        @continue
+                                    @endif
                                     <div class="swiper-slide">
                                         <div class="blog-card">
                                             {{-- {{ route('project.details', $project->slug) }} --}}
