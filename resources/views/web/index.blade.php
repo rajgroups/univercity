@@ -285,7 +285,7 @@
 
                                     <a href="{{ route('web.project.show', [$project->category->slug, $project->slug]) }}"
                                         class="card-img">
-                                        <img src="{{ asset($project->image) }}" alt="{{ $project->title }}">
+                                        <img src="{{ asset($project->thumbnail_image) }}" alt="{{ $project->title }}">
                                         <span class="date-block">
                                             <span
                                                 class="h6 fw-400 light-black">{{ \Carbon\Carbon::parse($project->created_at)->format('d') }}</span>
@@ -419,7 +419,7 @@
                                             {{-- {{ route('project.details', $project->slug) }} --}}
                                             <a href="{{ route('web.project.show', [$project->category->slug, $project->slug]) }}"
                                                 class="card-img">
-                                                <img src="{{ asset($project->image) }}" alt="{{ $project->title }}">
+                                                <img src="{{ asset($project->thumbnail_image) }}" alt="{{ $project->title }}">
                                                 <span class="date-block">
                                                     <span
                                                         class="h6 fw-400 light-black">{{ \Carbon\Carbon::parse($project->created_at)->format('d') }}</span>

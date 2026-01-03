@@ -4,7 +4,7 @@
 
 <!-- Hero Section - Modernized -->
 <div class="project-hero position-relative overflow-hidden"
-     style="@if($project->thumbnail_image) background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.5)), url('{{ asset($project->thumbnail_image) }}'); @else background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); @endif">
+     style="@if($project->banner_images) background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.5)), url('{{ asset($project->banner_images) }}'); @else background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); @endif">
     <div class="container position-relative py-5 z-2">
         <div class="row align-items-center min-vh-70">
             <div class="col-lg-8">
