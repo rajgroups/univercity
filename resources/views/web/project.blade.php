@@ -275,7 +275,7 @@
                             @if(!empty($project->objectives))
                             <div class="mb-5">
                                 <h5 class="fw-bold mb-3 text-primary">
-                                    <i class="bi bi-bullseye me-2"></i>Key Objectives
+                                    <i class="bi bi-bullseye me-2"></i>Objectives
                                 </h5>
                                 <div class="row g-3">
                                     @foreach($project->objectives as $objective)
@@ -363,7 +363,7 @@
 
                             @if(count($targetGroups) > 0)
                             <div class="mb-5">
-                                <h5 class="fw-bold mb-3">Target Beneficiaries</h5>
+                                <h5 class="fw-bold mb-3">Beneficiaries</h5>
                                 <div class="row g-3">
                                     @foreach($targetGroups as $group)
                                     <div class="col-6 col-md-3">
@@ -1657,7 +1657,7 @@
                         <i class="bi bi-globe-americas fs-2 text-success"></i>
                     </div>
                     <div>
-                        <h4 class="fw-bold mb-0">SDG Alignment</h4>
+                        <h4 class="fw-bold mb-0">SDG Goals</h4>
                         <p class="text-muted mb-0">Sustainable Development Goals</p>
                     </div>
                 </div>
@@ -1697,7 +1697,7 @@
                         <i class="bi bi-diagram-3 fs-2 text-white"></i>
                     </div>
                     <div>
-                        <h4 class="fw-bold mb-0">Strategic Alignment</h4>
+                        <h4 class="fw-bold mb-0">Strategic</h4>
                         <p class="text-muted mb-0">Government Schemes & Policies</p>
                     </div>
                 </div>
