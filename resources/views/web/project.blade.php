@@ -409,65 +409,26 @@
                             @endif
 
                             <!-- Donut Metrics -->
-                            @if (!empty($project->donut_metrics))
+                            @if(!empty($project->donut_metrics))
                             <div class="mb-5">
                                 <h5 class="fw-bold mb-4">Metrics</h5>
                                 <div class="row g-4">
-                                    @foreach ((array) $project->donut_metrics as $metric)
-
-                                        @php
-                                            // Read percentage safely and clamp between 0–100
-                                            $percent = isset($metric['percentage'])
-                                                ? max(0, min(100, (float) $metric['percentage']))
-                                                : 0;
-
-                                            $label = $metric['label'] ?? 'Metric';
-                                            $value = $metric['value'] ?? '';
-                                        @endphp
-
-                                        <div class="col-md-4">
-                                            <div class="card border-0 shadow-sm h-100">
-                                                <div class="card-body text-center p-4">
-
-                                                    <div class="position-relative d-inline-block mb-3">
-                                                        <svg width="100" height="100" viewBox="0 0 36 36" class="circular-chart primary">
-
-                                                            <path class="circle-bg"
-                                                                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                                                                fill="none"
-                                                                stroke="#e6e6e6"
-                                                                stroke-width="3" />
-
-                                                            <path class="circle"
-                                                                stroke-dasharray="{{ $percent }}, 100"
-                                                                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                                                                fill="none"
-                                                                stroke="#4e73df"
-                                                                stroke-width="3"
-                                                                stroke-linecap="round" />
-
-                                                            <text x="18"
-                                                                y="22"
-                                                                class="percentage"
-                                                                fill="#4e73df"
-                                                                font-size="8"
-                                                                text-anchor="middle"
-                                                                font-weight="bold">
-                                                                {{ $percent }}%
-                                                            </text>
-
-                                                        </svg>
-                                                    </div>
-
-                                                    <h6 class="fw-bold mb-2">{{ $label }}</h6>
-
-                                                    @if($value !== '')
-                                                        <p class="text-muted small mb-0">{{ $value }}</p>
-                                                    @endif
-
+                                    @foreach((array) $project->donut_metrics as $metric)
+                                    <div class="col-md-4">
+                                        <div class="card border-0 shadow-sm h-100">
+                                            <div class="card-body text-center p-4">
+                                                <div class="position-relative d-inline-block mb-3">
+                                                    <svg width="100" height="100" viewBox="0 0 36 36" class="circular-chart primary">
+                                                        <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#e6e6e6" stroke-width="3"/>
+                                                        <path class="circle" stroke-dasharray="{{ $metric['value'] ?? 0 }}, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#4e73df" stroke-width="3" stroke-linecap="round"/>
+                                                        <text x="18" y="22" class="percentage" fill="#4e73df" font-size="8" text-anchor="middle" font-weight="bold">{{ $metric['value'] ?? 0 }}%</text>
+                                                    </svg>
                                                 </div>
+                                                <h6 class="fw-bold mb-2">{{ $metric['label'] ?? 'Metric' }}</h6>
+                                                <p class="text-muted small mb-0">{{ $metric['value'] ?? '' }}</p>
                                             </div>
                                         </div>
+                                    </div>
                                     @endforeach
                                 </div>
                             </div>
