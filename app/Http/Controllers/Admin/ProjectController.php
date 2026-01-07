@@ -104,10 +104,9 @@ class ProjectController extends Controller
             DB::beginTransaction();
 
             $filePaths = $this->handleFileUploads($request);
-
             $projectData = array_merge($validated, $filePaths);
 
-            // CRITICAL: banner_images is STRING (VARCHAR), not array
+            // banner_images fix
             if (isset($projectData['banner_images']) && is_array($projectData['banner_images'])) {
                 $projectData['banner_images'] = $projectData['banner_images'][0] ?? null;
             }
@@ -118,7 +117,22 @@ class ProjectController extends Controller
 
             $projectData = $this->encodeArrayFields($projectData);
 
-            Project::create($projectData);
+            // 🔹 STEP 1: CREATE PROJECT
+            $project = Project::create($projectData);
+
+            // 🔹 STEP 2: GENERATE PROJECT CODE (USING MODEL ACCESSOR)
+            $year = date('Y');
+
+            $projectCode = 'ISICO-'
+                . $year . '-'
+                . $project->location_code . '-'
+                . str_pad($project->id, 4, '0', STR_PAD_LEFT);
+
+            Log::info($projectCode);
+            // 🔹 STEP 3: UPDATE SAME RECORD
+            $project->update([
+                'project_code' => $projectCode,
+            ]);
 
             DB::commit();
             notyf()->addSuccess('Project created successfully!');
@@ -127,11 +141,9 @@ class ProjectController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             notyf()->addError('Project creation error: ' . $e->getMessage());
-            Log::error('Project creation error: ' . $e->getMessage());
-            return redirect()->back()
-                ->withInput()
-                ->with('error', 'Error creating project: ' . $e->getMessage());
+            return redirect()->back()->withInput();
         }
+
     }
 
     /**

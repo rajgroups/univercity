@@ -8,7 +8,7 @@
     {{-- <title>{{ $defaultSettings->site_title ?? null }}</title> --}}
     {{-- <title>ISICO - INDIAN SKILL INSTUTUTE CO-OPERATION</title> --}}
     @include('layouts.web.dependency.css')
-    {{-- @stack('css') --}}
+    @stack('css')
 </head>
 
 <body>

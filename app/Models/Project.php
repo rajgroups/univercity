@@ -167,21 +167,7 @@ public function getLinksAttribute($value)
 
     public function getGovtSchemesAttribute($value)
     {
-        // Already an array → return as is
-        if (is_array($value)) {
-            return $value;
-        }
-
-        // Try JSON decode
-        $decoded = json_decode($value, true);
-
-        // If decode works → return array
-        if (is_array($decoded)) {
-            return $decoded;
-        }
-
-        // If value is "[]" or null → return empty array
-        return [];
+        return $this->decodeArrayField($value);
     }
 
     public function getDonutMetricsAttribute($value)
@@ -370,6 +356,42 @@ public function getLinksAttribute($value)
         ))
         : [];
 }
+public function getResolvedLocationAttribute()
+{
+    if ($this->target_location_type === 'single') {
+        return $this->district;
+    }
+
+    if ($this->target_location_type === 'multiple' && $this->multiple_locations) {
+        $locations = is_string($this->multiple_locations)
+            ? json_decode($this->multiple_locations, true)
+            : $this->multiple_locations;
+
+        return $locations[0]['district'] ?? 'N/A';
+    }
+
+    return 'N/A';
+}
+
+public function getLocationCodeAttribute()
+{
+    $district = null;
+
+    if ($this->target_location_type === 'single') {
+        $district = $this->district;
+    } elseif ($this->target_location_type === 'multiple' && $this->multiple_locations) {
+        $locations = is_string($this->multiple_locations)
+            ? json_decode($this->multiple_locations, true)
+            : $this->multiple_locations;
+
+        $district = $locations[0]['district'] ?? null;
+    }
+
+    return $district
+        ? strtoupper(substr(preg_replace('/\s+/', '', $district), 0, 3))
+        : 'LOC';
+}
+
 
 
 }

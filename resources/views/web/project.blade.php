@@ -1,7 +1,19 @@
-{{-- @dd($project->sdg_goals); --}}
+                               {{-- @dd($project->govt_schemes) --}}
 @extends('layouts.web.app')
 @section('content')
+@push('css')
+<style>
+    .sdg-img {
+    width: 50%;
+}
 
+@media (max-width: 576px) {
+    .w-md-50 {
+        width: 100% !important;
+    }
+}
+</style>
+@endpush
 <!-- Hero Section - Modernized -->
 <div class="project-hero position-relative overflow-hidden"
      style="@if($project->banner_images) background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.5)), url('{{ asset($project->banner_images) }}'); @else background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); @endif">
@@ -63,11 +75,7 @@
                                     <div>
                                         <small class="text-black-50 d-block">LOCATION</small>
                                         <strong class="text-black fs-6">
-                                            @if($project->location_summary)
-                                                {{ Str::limit($project->location_summary, 15) }}
-                                            @else
-                                                {{ Str::limit($project->district ?? 'N/A', 10) }}
-                                            @endif
+                                            {{ Str::limit($project->resolved_location, 10) }}
                                         </strong>
                                     </div>
                                 </div>
@@ -296,6 +304,29 @@
                             </div>
                             @endif
 
+                            <!-- Reports -->
+                            @if($project->baseline_survey || $project->sustainability_plan)
+                            <div class="card border-0 shadow-sm mb-4">
+                                <div class="card-header bg-white border-0 py-3">
+                                    <h5 class="card-title mb-0 fw-bold">Baseline Survey & Sustainability Plan</h5>
+                                </div>
+                                <div class="card-body">
+                                    @if($project->baseline_survey)
+                                    <div class="mb-4">
+                                        <h6 class="fw-bold mb-2">Baseline Survey</h6>
+                                        <p class="text-muted small mb-0">{{ Str::limit($project->baseline_survey, 120) }}</p>
+                                    </div>
+                                    @endif
+
+                                    @if($project->sustainability_plan)
+                                    <div>
+                                        <h6 class="fw-bold mb-2">Sustainability Plan</h6>
+                                        <p class="text-muted small mb-0">{{ Str::limit($project->sustainability_plan, 120) }}</p>
+                                    </div>
+                                    @endif
+                                </div>
+                            </div>
+                            @endif
                             <!-- Problem & Solution Cards -->
                             @if($project->problem_statement || $project->expected_outcomes || $project->scalability_notes)
                             <div class="row g-3 mb-5">
@@ -372,12 +403,12 @@
                                                 @switch($group['group'] ?? '')
                                                     @case('students')
                                                         <div class="bg-primary bg-opacity-10 rounded-circle p-3 mb-3 mx-auto" style="width: 70px; height: 70px;">
-                                                            <i class="bi bi-mortarboard fs-2 text-primary"></i>
+                                                            <i class="bi person-fill fs-2 text-primary"></i>
                                                         </div>
                                                         @break
                                                     @case('youth')
                                                         <div class="bg-success bg-opacity-10 rounded-circle p-3 mb-3 mx-auto" style="width: 70px; height: 70px;">
-                                                            <i class="bi bi-people fs-2 text-success"></i>
+                                                            <i class="bi bi-person-standing fs-2 text-success"></i>
                                                         </div>
                                                         @break
                                                     @case('women')
@@ -385,9 +416,9 @@
                                                             <i class="bi bi-gender-female fs-2 text-danger"></i>
                                                         </div>
                                                         @break
-                                                    @case('shg')
+                                                    @case('schools')
                                                         <div class="bg-warning bg-opacity-10 rounded-circle p-3 mb-3 mx-auto" style="width: 70px; height: 70px;">
-                                                            <i class="bi bi-shop-window fs-2 text-warning"></i>
+                                                            <i class="bi bi-building fs-2 text-warning"></i>
                                                         </div>
                                                         @break
                                                     @default
@@ -538,187 +569,244 @@
 
         <!-- Milestones Tab -->
         <div class="tab-pane fade" id="milestones" role="tabpanel">
+
             @if(isset($milestones) && $milestones->count() > 0)
-            <div class="mb-4">
-                <!-- Filter Buttons -->
-                <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
-                    <div>
-                        <h4 class="mb-0 fw-bold">Project Milestones</h4>
-                        <p class="text-muted mb-0">Track project progress and timelines</p>
-                    </div>
-                    <div class="btn-group btn-group-sm" role="group">
-                        <input type="radio" class="btn-check" name="milestone-filter" id="filter-all" autocomplete="off" checked onclick="filterMilestones('all')">
-                        <label class="btn btn-outline-primary" for="filter-all">All</label>
 
-                        <input type="radio" class="btn-check" name="milestone-filter" id="filter-completed" autocomplete="off" onclick="filterMilestones('completed')">
-                        <label class="btn btn-outline-success" for="filter-completed">Completed</label>
+                <!-- View Switch Tabs -->
+                <ul class="nav nav-pills mb-4" id="milestoneViewTab" role="tablist">
+                    <li class="nav-item">
+                        <button class="nav-link" data-bs-toggle="pill"
+                            data-bs-target="#milestone-card-view" type="button">
+                            <i class="bi bi-grid-3x3-gap me-1"></i> Card View
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-link active" data-bs-toggle="pill"
+                            data-bs-target="#milestone-table-view" type="button">
+                            <i class="bi bi-table me-1"></i> Table View
+                        </button>
+                    </li>
+                </ul>
 
-                        <input type="radio" class="btn-check" name="milestone-filter" id="filter-progress" autocomplete="off" onclick="filterMilestones('in-progress')">
-                        <label class="btn btn-outline-warning" for="filter-progress">In Progress</label>
+                <div class="tab-content">
 
-                        <input type="radio" class="btn-check" name="milestone-filter" id="filter-pending" autocomplete="off" onclick="filterMilestones('pending')">
-                        <label class="btn btn-outline-secondary" for="filter-pending">Pending</label>
-                    </div>
-                </div>
+                    <!-- ================= CARD VIEW ================= -->
+                    <div class="tab-pane fade" id="milestone-card-view">
 
-                <!-- Milestones Grid -->
-                <div class="row g-4" id="milestone-container">
-                    @foreach($milestones->sortBy('phase') as $milestone)
-                    <div class="col-12 col-md-6 col-lg-4 milestone-item" data-status="{{ $milestone->status }}">
-                        <div class="card border-0 shadow-sm h-100 hover-lift">
-                            <div class="card-body p-4">
-                                <div class="d-flex justify-content-between align-items-start mb-3">
-                                    <div>
-                                        <span class="badge bg-primary bg-opacity-10 text-white mb-2">{{ $milestone->phase }}</span>
-                                        <h6 class="card-title fw-bold mb-2">{{ $milestone->task_name }}</h6>
-                                    </div>
-                                    <span class="badge
-                                        @switch($milestone->status)
-                                            @case('completed') bg-success @break
-                                            @case('in-progress') bg-warning text-dark @break
-                                            @case('on-hold') bg-danger @break
-                                            @default bg-secondary
-                                        @endswitch rounded-pill">
-                                        {{ ucfirst($milestone->status) }}
-                                    </span>
-                                </div>
+                        <div class="row g-4">
+                            @foreach($milestones->sortBy('phase') as $milestone)
+                            <div class="col-12 col-md-6 col-lg-4">
+                                <div class="card border-0 shadow-sm h-100">
+                                    <div class="card-body p-4">
 
-                                <!-- Progress -->
-                                <div class="mb-3">
-                                    <div class="d-flex justify-content-between mb-2">
-                                        <span class="text-muted small">Progress</span>
-                                        <span class="fw-bold {{ $milestone->progress == 100 ? 'text-success' : 'text-primary' }}">
-                                            {{ $milestone->progress }}%
-                                        </span>
-                                    </div>
-                                    <div class="progress" style="height: 6px;">
-                                        <div class="progress-bar {{ $milestone->progress == 100 ? 'bg-success' : 'bg-primary' }} progress-bar-striped"
-                                             style="width: {{ $milestone->progress }}%"></div>
-                                    </div>
-                                </div>
-
-                                <!-- Details -->
-                                <div class="row g-2 mb-3">
-                                    <div class="col-6">
-                                        <div class="d-flex align-items-center">
-                                            <i class="bi bi-calendar-event text-muted me-2 fs-6"></i>
+                                        <div class="d-flex justify-content-between mb-3">
                                             <div>
-                                                <small class="text-muted d-block" style="font-size: 0.7rem;">Timeline</small>
-                                                <span class="fw-semibold d-block" style="font-size: 0.8rem;">
-                                                    {{ $milestone->planned_start_date ? date('d M', strtotime($milestone->planned_start_date)) : 'TBD' }}
+                                                <span class="badge bg-primary bg-opacity-10 text-primary mb-2">
+                                                    {{ $milestone->phase }}
                                                 </span>
+                                                <h6 class="fw-bold mb-1">{{ $milestone->task_name }}</h6>
                                             </div>
+                                            <span class="badge
+                                                @switch($milestone->status)
+                                                    @case('completed') bg-success @break
+                                                    @case('in-progress') bg-warning text-dark @break
+                                                    @default bg-secondary
+                                                @endswitch">
+                                                {{ ucfirst($milestone->status) }}
+                                            </span>
                                         </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="d-flex align-items-center">
-                                            <i class="bi bi-flag text-muted me-2 fs-6"></i>
-                                            <div>
-                                                <small class="text-muted d-block" style="font-size: 0.7rem;">Priority</small>
-                                                <span class="badge
-                                                    @switch($milestone->priority)
-                                                        @case('high') bg-danger @break
-                                                        @case('urgent') bg-danger @break
-                                                        @case('medium') bg-warning @break
-                                                        @default bg-info
-                                                    @endswitch rounded-pill py-0 px-2" style="font-size: 0.7rem;">
-                                                    {{ ucfirst($milestone->priority) }}
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
 
-                                <!-- People -->
-                                @if($milestone->in_charge || ($milestone->stakeholder_id && isset($stakeholders[$milestone->stakeholder_id])))
-                                <div class="border-top pt-3">
-                                    <div class="d-flex justify-content-between">
-                                        @if($milestone->in_charge)
-                                        <div class="d-flex align-items-center">
-                                            <i class="bi bi-person-check text-primary me-2"></i>
-                                            <div>
-                                                <small class="text-muted d-block">In Charge</small>
-                                                <span class="fw-semibold">{{ $milestone->in_charge }}</span>
+                                        <!-- Progress -->
+                                        <div class="mb-3">
+                                            <div class="progress" style="height:6px;">
+                                                <div class="progress-bar
+                                                    {{ $milestone->progress == 100 ? 'bg-success' : 'bg-primary' }}"
+                                                    style="width: {{ $milestone->progress }}%">
+                                                </div>
                                             </div>
+                                            <small class="text-muted">{{ $milestone->progress }}% completed</small>
                                         </div>
-                                        @endif
 
-                                        @if($milestone->stakeholder_id && isset($stakeholders[$milestone->stakeholder_id]))
-                                        <div class="d-flex align-items-center">
-                                            <i class="bi bi-building text-primary me-2"></i>
-                                            <div>
-                                                <small class="text-muted d-block">Stakeholder</small>
-                                                <span class="fw-semibold">{{ $stakeholders[$milestone->stakeholder_id]->name }}</span>
-                                            </div>
+                                        <!-- Dates -->
+                                        <div class="d-flex justify-content-between small text-muted mb-2">
+                                            <span>
+                                                <i class="bi bi-calendar"></i>
+                                                {{ $milestone->planned_start_date ? date('d M', strtotime($milestone->planned_start_date)) : 'TBD' }}
+                                            </span>
+                                            <span>
+                                                <i class="bi bi-flag"></i>
+                                                {{ ucfirst($milestone->priority) }}
+                                            </span>
+                                        </div>
+
+                                        @if($milestone->notes)
+                                        <div class="mt-3 p-2 bg-light rounded small">
+                                            <i class="bi bi-sticky me-1"></i>{{ $milestone->notes }}
                                         </div>
                                         @endif
-                                    </div>
-                                </div>
-                                @endif
 
-                                @if($milestone->notes)
-                                <div class="mt-3 p-2 bg-light rounded border-start border-3 border-info">
-                                    <div class="d-flex">
-                                        <i class="bi bi-sticky text-info mt-1 me-2"></i>
-                                        <small class="text-secondary">{{ $milestone->notes }}</small>
                                     </div>
-                                </div>
-                                @endif
-                            </div>
-                        </div>
-                    </div>
-                    @endforeach
-                </div>
-            </div>
-
-            <!-- Roadmap Visualization -->
-            <div class="card border-0 shadow-sm mt-5">
-                <div class="card-header bg-white border-0 py-3">
-                    <h5 class="card-title mb-0 fw-bold">
-                        <i class="bi bi-diagram-3 me-2"></i>Project Roadmap
-                    </h5>
-                </div>
-                <div class="card-body p-4">
-                    <div class="position-relative">
-                        <div class="d-flex flex-wrap justify-content-between">
-                            @foreach($milestones->sortBy('phase')->take(6) as $milestone)
-                            <div class="text-center mb-4" style="flex: 1; min-width: 150px;">
-                                <div class="position-relative mb-3">
-                                    <div class="rounded-circle mx-auto d-flex align-items-center justify-content-center
-                                        @switch($milestone->status)
-                                            @case('completed') bg-success border-success @break
-                                            @case('in-progress') bg-warning border-warning @break
-                                            @default bg-secondary border-secondary
-                                        @endswitch border border-3 border-white shadow-sm"
-                                        style="width: 40px; height: 40px;"
-                                        data-bs-toggle="tooltip" title="{{ ucfirst($milestone->status) }}">
-                                        @if($milestone->status == 'completed')
-                                        <i class="bi bi-check-lg text-white"></i>
-                                        @endif
-                                    </div>
-                                </div>
-                                <div>
-                                    <span class="badge bg-light text-dark mb-2">{{ $milestone->phase }}</span>
-                                    <h6 class="fw-bold mb-1">{{ Str::limit($milestone->task_name, 20) }}</h6>
-                                    <small class="text-muted">
-                                        {{ $milestone->planned_end_date ? date('M d', strtotime($milestone->planned_end_date)) : 'TBD' }}
-                                    </small>
                                 </div>
                             </div>
                             @endforeach
                         </div>
+
+                    </div>
+
+                    <!-- ================= TABLE VIEW ================= -->
+                    <div class="tab-pane fade show active" id="milestone-table-view">
+
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Phase</th>
+                                        <th>Task</th>
+                                        <th>Status</th>
+                                        <th>Progress</th>
+                                        <th>Start</th>
+                                        <th>End</th>
+                                        <th>Priority</th>
+                                        <th>In Charge</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($milestones->sortBy('phase') as $milestone)
+                                    <tr>
+                                        <td>
+                                            <span class="badge bg-primary bg-opacity-10 text-white">
+                                                {{ $milestone->phase }}
+                                            </span>
+                                        </td>
+                                        <td class="fw-semibold">{{ $milestone->task_name }}</td>
+                                        <td>
+                                            <span class="badge
+                                                @switch($milestone->status)
+                                                    @case('completed') bg-success @break
+                                                    @case('in-progress') bg-warning text-dark @break
+                                                    @default bg-secondary
+                                                @endswitch">
+                                                {{ ucfirst($milestone->status) }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <div class="progress" style="height:5px;">
+                                                <div class="progress-bar
+                                                    {{ $milestone->progress == 100 ? 'bg-success' : 'bg-primary' }}"
+                                                    style="width: {{ $milestone->progress }}%">
+                                                </div>
+                                            </div>
+                                            <small>{{ $milestone->progress }}%</small>
+                                        </td>
+                                        <td>
+                                            {{ $milestone->planned_start_date ? date('d M Y', strtotime($milestone->planned_start_date)) : 'TBD' }}
+                                        </td>
+                                        <td>
+                                            {{ $milestone->planned_end_date ? date('d M Y', strtotime($milestone->planned_end_date)) : 'TBD' }}
+                                        </td>
+                                        <td>
+                                            <span class="badge text-white
+                                                @switch($milestone->priority)
+                                                    @case('high') bg-danger @break
+                                                    @case('urgent') bg-danger @break
+                                                    @case('medium') bg-warning @break
+                                                    @default bg-info
+                                                @endswitch">
+                                                {{ ucfirst($milestone->priority) }}
+                                            </span>
+                                        </td>
+                                        <td>{{ $milestone->in_charge ?? '-' }}</td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            @else
+                <div class="text-center py-5">
+                    <i class="bi bi-calendar-x display-1 text-muted"></i>
+                    <p class="text-muted mt-3">No milestones available</p>
+                </div>
+            @endif
+            <!-- ================= ROADMAP VIEW ================= -->
+            <div class="card border-0 shadow-sm mt-5">
+                <div class="card-header bg-white border-0 py-3">
+                    <h5 class="fw-bold mb-0">
+                        <i class="bi bi-diagram-3 me-2"></i> Project Roadmap (P1 – P7)
+                    </h5>
+                </div>
+
+                <div class="card-body p-4">
+
+                    @php
+                        // Group milestones by phase (P1, P2, ...)
+                        $groupedMilestones = $milestones->groupBy('phase');
+
+                        // Helper to decide phase status color
+                        function phaseStatusClass($items) {
+                            if ($items->where('status', 'completed')->count() === $items->count()) {
+                                return 'bg-success';
+                            }
+                            if ($items->where('status', 'in-progress')->count() > 0) {
+                                return 'bg-warning text-dark';
+                            }
+                            return 'bg-secondary';
+                        }
+                    @endphp
+
+                    <div class="d-flex justify-content-between align-items-center position-relative roadmap-line">
+
+                        @foreach($groupedMilestones as $phase => $items)
+                        <div class="text-center position-relative flex-fill">
+
+                            <!-- Connector Line -->
+                            @if(!$loop->first)
+                                <span class="position-absolute top-50 start-0 translate-middle-y w-100 border-top border-2"></span>
+                            @endif
+
+                            <!-- Phase Circle -->
+                            <div class="mx-auto rounded-circle d-flex align-items-center justify-content-center
+                                {{ phaseStatusClass($items) }} text-white shadow"
+                                style="width:50px; height:50px;"
+                                data-bs-toggle="tooltip"
+                                title="{{ $items->count() }} milestones">
+
+                                {{ strtoupper($phase) }}
+                            </div>
+
+                            <!-- Phase Info -->
+                            <div class="mt-2">
+                                <small class="fw-semibold d-block">
+                                    {{ $items->count() }} Tasks
+                                </small>
+
+                                <small class="text-muted">
+                                    {{ ucfirst($items->pluck('status')->unique()->implode(', ')) }}
+                                </small>
+                            </div>
+
+                        </div>
+                        @endforeach
+
                     </div>
                 </div>
             </div>
-            @else
-            <div class="text-center py-5">
-                <div class="mb-4">
-                    <i class="bi bi-calendar-check display-1 text-muted opacity-25"></i>
-                </div>
-                <h5 class="fw-normal text-muted mb-2">No milestones planned yet</h5>
-                <p class="text-muted">Check back later for project timeline updates</p>
-            </div>
-            @endif
+            @push('css')
+            <style>
+                .roadmap-line {
+                overflow-x: auto;
+                gap: 10px;
+            }
+
+            .roadmap-line > div {
+                min-width: 120px;
+            }
+            </style>
+            @endpush
         </div>
 
         <!-- Budget Tab -->
@@ -926,14 +1014,14 @@
             <div class="mb-4">
                 <div class="btn-group" role="group">
                     <button type="button" class="btn btn-outline-primary active" onclick="filterGallery('all', event)">All</button>
+                    @if($project->before_photo || $project->expected_photo)
+                    <button type="button" class="btn btn-outline-primary" onclick="filterGallery('comparison', event)">Comparison</button>
+                    @endif
                     @if($project->banner_images)
                     <button type="button" class="btn btn-outline-primary" onclick="filterGallery('banner', event)">Banner</button>
                     @endif
                     @if($project->gallery_images)
                     <button type="button" class="btn btn-outline-primary" onclick="filterGallery('gallery', event)">Gallery</button>
-                    @endif
-                    @if($project->before_photo || $project->expected_photo)
-                    <button type="button" class="btn btn-outline-primary" onclick="filterGallery('comparison', event)">Comparison</button>
                     @endif
                 </div>
             </div>
@@ -1118,30 +1206,6 @@
                 <!-- Sidebar -->
                 <div class="col-lg-4">
                     <div class="sticky-top" style="top: 20px;">
-                        <!-- Reports -->
-                        @if($project->baseline_survey || $project->sustainability_plan)
-                        <div class="card border-0 shadow-sm mb-4">
-                            <div class="card-header bg-white border-0 py-3">
-                                <h5 class="card-title mb-0 fw-bold">Reports & Updates</h5>
-                            </div>
-                            <div class="card-body">
-                                @if($project->baseline_survey)
-                                <div class="mb-4">
-                                    <h6 class="fw-bold mb-2">Baseline Survey</h6>
-                                    <p class="text-muted small mb-0">{{ Str::limit($project->baseline_survey, 120) }}</p>
-                                </div>
-                                @endif
-
-                                @if($project->sustainability_plan)
-                                <div>
-                                    <h6 class="fw-bold mb-2">Sustainability Plan</h6>
-                                    <p class="text-muted small mb-0">{{ Str::limit($project->sustainability_plan, 120) }}</p>
-                                </div>
-                                @endif
-                            </div>
-                        </div>
-                        @endif
-
                         <!-- Share Project -->
                         <div class="card border-0 shadow-sm">
                             <div class="card-header bg-white border-0 py-3">
@@ -1653,13 +1717,17 @@
             @if(isset($project->sdg_goals) && count($project->sdg_goals) > 0)
             <div class="mb-5">
                 <div class="d-flex align-items-center mb-4">
-                    <div class="bg-success bg-opacity-10 rounded-circle p-3 me-3">
+                    <img
+                        src="{{ asset('resource/web/assets/media/sdg_icon.png') }}"
+                        class="img-fluid w-50 w-md-50"
+                        alt="SDG Icon">
+                    {{-- <div class="bg-success bg-opacity-10 rounded-circle p-3 me-3">
                         <i class="bi bi-globe-americas fs-2 text-success"></i>
                     </div>
                     <div>
                         <h4 class="fw-bold mb-0">SDG Goals</h4>
                         <p class="text-muted mb-0">Sustainable Development Goals</p>
-                    </div>
+                    </div> --}}
                 </div>
 
                 <div class="row g-3">
@@ -1675,7 +1743,8 @@
                                     <img src="{{ $sdg['image_url'] ?? '' }}"
                                          alt="SDG {{ $sdgId }}"
                                          class="img-fluid rounded"
-                                         style="height: 80px; width: 80px; object-fit: contain;">
+                                         style="    height: auto;
+    width: 100%; object-fit: contain;">
                                 </div>
                                 <h6 class="fw-bold mb-1" style="color: #{{ $sdgColor }}">Goal {{ $sdgId }}</h6>
                                 <small class="text-muted d-block" style="font-size: 0.7rem; line-height: 1.2;">
@@ -1740,11 +1809,20 @@
                                         'beti_bachao' => 'Beti Bachao',
                                     ];
                                 @endphp
-                                @foreach($project->govt_schemes as $scheme)
-                                <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 px-3 py-2">
-                                    {{ $schemeLabels[$scheme] ?? ucfirst(str_replace('_', ' ', $scheme)) }}
-                                </span>
-                                @endforeach
+                               @php
+                                    $schemes = is_string($project->govt_schemes)
+                                        ? json_decode($project->govt_schemes, true)
+                                        : $project->govt_schemes;
+                                @endphp
+
+                                @if(!empty($schemes))
+                                    @foreach($schemes as $scheme)
+                                        <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 px-3 py-2">
+                                            {{ $schemeLabels[$scheme] ?? ucfirst(str_replace('_', ' ', $scheme)) }}
+                                        </span>
+                                    @endforeach
+                                @endif
+
                             </div>
                         </div>
                         @endif
