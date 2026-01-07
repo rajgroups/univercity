@@ -455,467 +455,321 @@
         </div>
     </div>
     <!-- Our Programmes -->
-    <section class="out-team-sec mt-80 mb-120 wow fadeInUp animated animated" data-wow-delay="540ms"
+    <section class="out-team-sec mt-80 mb-120 wow fadeInUp animated" data-wow-delay="540ms"
         style="visibility: visible; animation-delay: 540ms; animation-name: fadeInUp;">
-        <div class="container-fluid">
-            <div class="heading mb-48">
-                <div class="tagblock mb-16"> <img src="{{ asset('resource/web/assets/media/hero/buld-vec.png') }}"
-                        class="bulb-vec" alt="">
-                    <p class="black">Our Program</p>
+        <div class="container-fluid px-4">
+            <div class="text-center mb-5">
+                <div class="section-tag">
+                    <img src="{{ asset('resource/web/assets/media/hero/buld-vec.png') }}" class="bulb-vec-mini" alt="">
+                    <span>OUR EDUCATIONAL PROGRAMS</span>
                 </div>
-                <div class="text-start mt-2">{{ $settings->program_project_title }}</div>
-                <h3 class="fw-500 text-start mt-2 mb-2">{{ $settings->program_project_main_title }}<span
-                        class="color-primary"> {{ $settings->program_project_main_sub_title }}</span> </h3>
-                <p class="text-start">{{ $settings->program_final_title }}</p>
+                <h3 class="vibrant-title mb-3">{{ $settings->program_project_main_title }} <span class="gradient-text">{{ $settings->program_project_main_sub_title }}</span></h3>
+                <p class="text-muted">{{ $settings->program_final_title }}</p>
             </div>
-            <div class="row align-items-stretch h-100">
+            
+            <div class="row align-items-stretch">
                 @if ($programes->isNotEmpty())
-                    <div class="swiper mySwiperstwo p-0 m-0">
+                    <div class="swiper mySwiperstwo scheme-swiper p-0 m-0">
                         <div class="swiper-wrapper">
                             @foreach ($programes as $program)
-                                <div class="swiper-slide">
-                                     <a href="{{ route('web.announcement.program', [$program->category->slug, $program->slug]) }}" class="h6 fw-500 mb-4p">
-                                        <div class="col-md-*">
-                                            <div class="team-block">
-                                                <div class="img-block">
-                                                    <img class="w-100"
-                                                        src="{{ $program->image ? asset($program->image) : asset('resource/web/assets/media/default/default-img.png') }}"
-                                                        alt="{{ $program->title }}">
-                                                </div>
-                                                <div class="team-content">
-                                                    <div>
-                                                        <a href="{{ route('web.announcement.program', [$program->category->slug, $program->slug]) }}"
-                                                            class="h6 fw-500 mb-4p">{{ $program->title }}</a>
-                                                        <p class="subtitle">
-                                                            {{ \Illuminate\Support\Str::limit(strip_tags($program->description), 80) }}
-                                                        </p>
-                                                    </div>
+                                @php
+                                    $progCategorySlug = $program->category->slug ?? 'skill-development';
+                                @endphp
+                                <div class="swiper-slide mb-4">
+                                    <div class="scheme-card">
+                                        <div class="scheme-image-wrapper">
+                                            <img src="{{ $program->image ? asset($program->image) : asset('resource/web/assets/media/default/default-img.png') }}" alt="{{ $program->title }}">
+                                            <div class="scheme-badge">{{ $program->category->name ?? 'Program' }}</div>
+                                        </div>
+                                        <div class="p-4 flex-grow-1 d-flex flex-column">
+                                            <h6 class="fw-bold mb-2">
+                                                <a href="{{ route('web.announcement.program', [$progCategorySlug, $program->slug]) }}" 
+                                                   class="text-decoration-none text-dark hover-primary">{{ $program->title }}</a>
+                                            </h6>
+                                            <p class="text-muted small mb-3">{{ Str::limit(strip_tags($program->description), 100) }}</p>
+                                            
+                                            <div class="d-flex justify-content-between align-items-center mt-auto">
+                                                <div class="share-links-modern">
                                                     @php
-                                                        $currentUrl = urlencode(request()->fullUrl()); // Dynamically get current page URL
-                                                        $shareText = urlencode($scheme->title ?? 'Check this out!');
+                                                        $progUrl = urlencode(route('web.announcement.program', [$progCategorySlug, $program->slug]));
+                                                        $progText = urlencode($program->title);
                                                     @endphp
-
-                                                    <div class="d-flex gap-8 align-items-center">
-                                                        {{-- LinkedIn Share --}}
-                                                        <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ $currentUrl }}"
-                                                            target="_blank">
-                                                            <img class="links-icon"
-                                                                src="{{ asset('resource/web/assets/media/vector/linkedin.png') }}"
-                                                                alt="LinkedIn">
-                                                        </a>
-
-                                                        {{-- Facebook Share --}}
-                                                        <a href="https://www.facebook.com/sharer/sharer.php?u={{ $currentUrl }}"
-                                                            target="_blank">
-                                                            <img class="links-icon"
-                                                                src="{{ asset('resource/web/assets/media/vector/facebook.png') }}"
-                                                                alt="Facebook">
-                                                        </a>
-
-                                                        {{-- Twitter (X) Share --}}
-                                                        <a href="https://twitter.com/intent/tweet?url={{ $currentUrl }}&text={{ $shareText }}"
-                                                            target="_blank">
-                                                            <img class="links-icon"
-                                                                src="{{ asset('resource/web/assets/media/vector/twitter.webp') }}"
-                                                                alt="Twitter">
-                                                        </a>
-
-                                                        {{-- Instagram: Not directly shareable via URL --}}
-                                                        <a href="https://www.instagram.com/" target="_blank">
-                                                            <img class="links-icon"
-                                                                src="{{ asset('resource/web/assets/media/vector/instagram.webp') }}"
-                                                                alt="Instagram">
-                                                        </a>
-                                                    </div>
+                                                    <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ $progUrl }}" target="_blank" class="share-icon-circle">
+                                                        <img src="{{ asset('resource/web/assets/media/vector/linkedin.png') }}" alt="LI">
+                                                    </a>
+                                                    <a href="https://www.facebook.com/sharer/sharer.php?u={{ $progUrl }}" target="_blank" class="share-icon-circle">
+                                                        <img src="{{ asset('resource/web/assets/media/vector/facebook.png') }}" alt="FB">
+                                                    </a>
                                                 </div>
+                                                <a href="{{ route('web.announcement.program', [$progCategorySlug, $program->slug]) }}" class="btn btn-sm btn-outline-primary rounded-pill px-3">Explore Now</a>
                                             </div>
                                         </div>
-                                     </a>
+                                    </div>
                                 </div>
                             @endforeach
                         </div>
-                        <!-- Swiper Controls -->
-                        <div class="swiper-button-prev"></div>
-                        <div class="swiper-button-next"></div>
                         <div class="swiper-pagination"></div>
                     </div>
                 @else
-                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                        <strong>No educational</strong> Programs available at the moment.
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    <div class="col-12 text-center">
+                        <div class="modern-card p-4">
+                            <p class="text-muted mb-0">No educational programs available at the moment.</p>
+                        </div>
                     </div>
                 @endif
-
             </div>
+    </section>
     </section>
     <!-- end of our Programmes -->
     <!-- End Upcoming Projects -->
     <style>
-        .background-bubbles {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
+        :root {
+            --primary-color: #018c01;
+            --secondary-color: #6e8b38;
+            --text-dark: #2d3436;
+            --text-light: #636e72;
+            --glass-bg: rgba(255, 255, 255, 0.8);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Modern Card Styling */
+        .modern-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
             overflow: hidden;
         }
 
-        .background-bubbles span {
+        .modern-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+        }
+
+        .icon-box {
+            width: 60px;
+            height: 60px;
+            background: rgba(1, 140, 1, 0.1);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            transition: var(--transition);
+        }
+
+        .modern-card:hover .icon-box {
+            background: var(--primary-color);
+            transform: rotate(10deg);
+        }
+
+        .modern-card:hover .icon-box img {
+            filter: brightness(0) invert(1);
+        }
+
+        /* Swiper Refinement */
+        .scheme-swiper {
+            padding: 40px 10px !important;
+        }
+
+        .scheme-card {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            border-radius: 24px;
+            background: #fff;
+            overflow: hidden;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.05);
+            transition: var(--transition);
+        }
+
+        .scheme-card:hover {
+            box-shadow: 0 16px 32px rgba(1, 140, 1, 0.15);
+        }
+
+        .scheme-image-wrapper {
+            position: relative;
+            height: 200px;
+            overflow: hidden;
+        }
+
+        .scheme-image-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+
+        .scheme-card:hover .scheme-image-wrapper img {
+            transform: scale(1.1);
+        }
+
+        .scheme-badge {
             position: absolute;
-            display: block;
+            top: 15px;
+            right: 15px;
+            background: rgba(255,255,255,0.9);
+            padding: 5px 15px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--primary-color);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        /* Section Headings */
+        .section-tag {
+            background: rgba(1, 140, 1, 0.1);
+            color: var(--primary-color);
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 1rem;
+        }
+
+        .bulb-vec-mini {
             width: 20px;
             height: 20px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            animation: float 20s linear infinite;
         }
 
-        @keyframes float {
-            0% {
-                transform: translateY(100vh) scale(0.5);
-                opacity: 0;
-            }
-
-            50% {
-                opacity: 0.3;
-            }
-
-            100% {
-                transform: translateY(-10vh) scale(1);
-                opacity: 0;
-            }
+        /* Typography */
+        .vibrant-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            line-height: 1.2;
+            color: var(--text-dark);
         }
 
-        .circle-container {
-            position: relative;
-            width: 100%;
-            max-width: 700px;
-            height: 700px;
-            margin: auto;
-            top: 70%;
-            transform: translateY(-50%);
-            z-index: 2;
-            margin-top: 70%;
+        .gradient-text {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        .orbit-ring {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 100%;
-            height: 100%;
-            transform: translate(-50%, -50%);
-            border: 2px dashed rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
-            z-index: 1;
-        }
-
-        .central-circle {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 180px;
-            height: 180px;
-            transform: translate(-50%, -50%);
-            background-color: #fff;
-            border-radius: 50%;
-            text-align: center;
-            padding: 20px;
-            color: #1e5631;
-            font-weight: bold;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
-            z-index: 3;
-        }
-
-        .orbit-wrapper {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 100%;
-            height: 100%;
-            transform: translate(-50%, -50%);
-            transform-origin: center center;
-            z-index: 2;
-        }
-
-        .orbiting-box {
-            position: absolute;
-            width: 160px;
-            background-color: #fff;
-            color: #1e5631;
-            padding: 12px;
-            border-radius: 15px;
-            text-align: center;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.15);
-            transition: background 0.3s;
-        }
-
-        .orbiting-box h6 {
-            font-weight: bold;
-            font-size: 15px;
-        }
-
-        .orbiting-box:hover {
-            background-color: #6e8b38;
-            cursor: pointer;
-        }
-
-        .orbiting-box button {
-            background: none;
+        /* Focus Section */
+        .focus-accordion .accordion-item {
             border: none;
-            color: #1e5631;
+            margin-bottom: 15px;
+            background: #fff;
+            border-radius: 15px !important;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            overflow: hidden;
+        }
+
+        .focus-accordion .accordion-button {
+            background: #fff;
+            color: var(--text-dark);
             font-weight: 600;
-            text-decoration: underline;
-            margin-top: 5px;
-        }
-
-        .box1 {
-            top: 0%;
-            left: 50%;
-            transform: translate(-50%, -50%) rotate(0deg);
-        }
-
-        .box2 {
-            top: 25%;
-            left: 92%;
-            transform: translate(-50%, -50%) rotate(0deg);
-        }
-
-        .box3 {
-            top: 75%;
-            left: 92%;
-            transform: translate(-50%, -50%) rotate(0deg);
-        }
-
-        .box4 {
-            top: 100%;
-            left: 50%;
-            transform: translate(-50%, -50%) rotate(0deg);
-        }
-
-        .box5 {
-            top: 75%;
-            left: 8%;
-            transform: translate(-50%, -50%) rotate(0deg);
-        }
-
-        .box6 {
-            top: 25%;
-            left: 8%;
-            transform: translate(-50%, -50%) rotate(0deg);
-        }
-
-        .block {
-            /* background: rgba(39, 48, 126, 0.897); */
-            color: #fff;
-            padding-top: 20px;
-            padding-bottom: 20px;
-        }
-
-        .flow {
-            position: relative;
-            width: 100%;
-        }
-
-        .flow .item {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 100%;
-            position: relative;
-            padding-top: 20px;
-            padding-bottom: 20px;
-            word-break: break-all;
-        }
-
-        .flow .item:first-child {
-            padding-top: 40px;
-        }
-
-        .flow .item:last-child {
-            padding-bottom: 40px;
-        }
-
-        .text h3 {
-            color: white;
-            font-size: 21px;
-        }
-
-        .flow .item::after {
-            content: "";
-            width: 6px;
-            height: 100%;
-            left: calc(50% - 8px);
-            top: 0;
-            border-right: 4px dashed rgb(240, 240, 240);
-            z-index: 1;
-            position: absolute;
-        }
-
-        .flow .item .circle {
-            width: 24px;
-            height: 24px;
-            border-radius: 24px;
-            background: #008c01;
-            position: relative;
-            z-index: 2;
-        }
-
-        .flow .item .text {
-            position: absolute;
             padding: 20px;
-            background: #008c01;
-            border-radius: 8px;
+            box-shadow: none !important;
         }
 
-        .flow .item:nth-child(odd) .text {
-            left: calc(50% + 44px);
+        .focus-accordion .accordion-button:not(.collapsed) {
+            color: var(--primary-color);
+            background: rgba(1, 140, 1, 0.02);
         }
 
-        .flow .item:nth-child(even) .text {
-            right: calc(50% + 44px);
-            text-align: right;
+        /* Interactive Share Icons */
+        .share-links-modern {
+            display: flex;
+            gap: 12px;
+            margin-top: 15px;
         }
 
-        @media screen and (max-width: 478px) {
-            .flow .item {
-                justify-content: flex-start;
-            }
-
-            .flow .item::after {
-                left: 20px;
-            }
-
-            .flow .item .circle {
-                margin-left: 16px;
-            }
-
-            .flow .item .text {
-                position: relative;
-                left: 30px;
-                padding: 20px;
-                background: #008c01;
-            }
-
-            .flow .item:nth-child(even) .text {
-                position: relative;
-                text-align: left;
-                left: 30px;
-            }
-
-            .flow .item:nth-child(odd) .text {
-                position: relative;
-                text-align: left;
-                left: 30px;
-            }
+        .share-icon-circle {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f1f2f6;
+            transition: var(--transition);
         }
 
+        .share-icon-circle:hover {
+            background: var(--primary-color);
+            transform: scale(1.1);
+        }
 
-        @media (max-width: 768px) {
-            .circle-container {
-                width: 100%;
-                height: 100%;
-                max-height: none;
-                transform: none;
-                top: unset;
-                padding-top: 60px;
-            }
+        .share-icon-circle:hover img {
+            filter: brightness(0) invert(1);
+        }
 
-            .orbiting-box {
-                width: 130px;
-                padding: 10px;
-                font-size: 14px;
-            }
-
-            .central-circle {
-                width: 140px;
-                height: 140px;
-                font-size: 14px;
-            }
+        .share-icon-circle img {
+            width: 18px;
+            height: 18px;
+            transition: var(--transition);
         }
     </style>
-    <div class="container">
+    <div class="container py-5">
         <!-- Core Values -->
         <div class="text-center mb-5">
-            <div class="d-inline-flex align-items-center mb-3"> <img
-                    src="{{ asset('resource/web/assets/media/hero/buld-vec.png') }}" class="me-2" alt=""
-                    style="width: 30px;">
-                <p class="mb-0 fw-semibold text-dark">Our Core Values</p>
+            <div class="section-tag">
+                <img src="{{ asset('resource/web/assets/media/hero/buld-vec.png') }}" class="bulb-vec-mini" alt="">
+                <span>OUR CORE VALUES</span>
             </div>
-            <h2 class="fw-bold">Smart Learning. Trusted Experts. <span class="text-primary">Everywhere</span></h2>
+            <h2 class="vibrant-title mb-4">Smart Learning. Trusted Experts. <br><span class="gradient-text">Everywhere</span></h2>
         </div>
-        <div class="row ">
-            <div class="col-md-6">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="card h-100 shadow-sm border-0">
-                            <div class="card-body pt-3 pb-3">
-                                <div class="row align-items-center">
-                                    <div class="col-2 text-center"> <img
-                                            src="{{ asset('resource/web/assets/media/images/equity.png') }}"
-                                            alt="" srcset=""> </div>
-                                    <div class="col-10">
-                                        <h5 class="card-title mb-1 fw-semibold">Equity and Inclusion</h5>
-                                        <p class="card-text small mb-0 p-2 text-light-gray"> Ensuring access to quality
-                                            education and training for all, with a focus on marginalized communities. </p>
-                                    </div>
-                                </div>
+        
+        <div class="row g-4 align-items-center">
+            <div class="col-md-7">
+                <div class="row g-4">
+                    <div class="col-sm-6">
+                        <div class="modern-card p-4 h-100">
+                            <div class="icon-box">
+                                <img src="{{ asset('resource/web/assets/media/images/equity.png') }}" alt="Equity" width="30">
                             </div>
+                            <h5 class="fw-bold mb-3">Equity and Inclusion</h5>
+                            <p class="text-muted small mb-0">Ensuring access to quality education for marginalized communities.</p>
                         </div>
                     </div>
-                    <div class="col-12">
-                        <div class="card h-100 shadow-sm border-0">
-                            <div class="card-body">
-                                <div class="row align-items-center">
-                                    <div class="col-2 text-center"> <img
-                                            src="{{ asset('resource/web/assets/media/images/innovation.png') }}"
-                                            alt="" srcset=""> </div>
-                                    <div class="col-10">
-                                        <h5 class="card-title mb-1 fw-semibold">Innovation and Sustainability</h5>
-                                        <p class="card-text small mb-0 p-2 text-light-gray">Promoting green jobs, emerging
-                                            technologies, and environmentally sustainable practices. </p>
-                                    </div>
-                                </div>
+                    <div class="col-sm-6">
+                        <div class="modern-card p-4 h-100">
+                            <div class="icon-box">
+                                <img src="{{ asset('resource/web/assets/media/images/innovation.png') }}" alt="Innovation" width="30">
                             </div>
+                            <h5 class="fw-bold mb-3">Innovation</h5>
+                            <p class="text-muted small mb-0">Promoting green jobs and environmentally sustainable practices.</p>
                         </div>
                     </div>
-                    <div class="col-12">
-                        <div class="card h-100 shadow-sm border-0">
-                            <div class="card-body">
-                                <div class="row align-items-center">
-                                    <div class="col-2 text-center"> <img
-                                            src="{{ asset('resource/web/assets/media/images/empowerment.png') }}"
-                                            alt="" srcset=""> </div>
-                                    <div class="col-10">
-                                        <h5 class="card-title mb-1 fw-semibold">Empowerment</h5>
-                                        <p class="card-text small mb-0 p-2 text-light-gray"> Enhancing the capabilities of
-                                            children, youth, women, and farmers to achieve economic independence and social
-                                            impact. </p>
-                                    </div>
-                                </div>
+                    <div class="col-sm-6">
+                        <div class="modern-card p-4 h-100">
+                            <div class="icon-box">
+                                <img src="{{ asset('resource/web/assets/media/images/empowerment.png') }}" alt="Empowerment" width="30">
                             </div>
+                            <h5 class="fw-bold mb-3">Empowerment</h5>
+                            <p class="text-muted small mb-0">Enhancing capabilities for economic independence and impact.</p>
                         </div>
                     </div>
-                    <div class="col-12">
-                        <div class="card h-100 shadow-sm border-0">
-                            <div class="card-body">
-                                <div class="row align-items-center">
-                                    <div class="col-2 text-center"> <img
-                                            src="{{ asset('resource/web/assets/media/images/collarabration.png') }}"
-                                            alt="" srcset=""> </div>
-                                    <div class="col-10">
-                                        <h5 class="card-title mb-1 fw-semibold">Collaboration</h5>
-                                        <p class="card-text small mb-0 p-2 text-light-gray"> Partnering with government
-                                            bodies, corporate entities, and international organizations to achieve shared
-                                            goals. </p>
-                                    </div>
-                                </div>
+                    <div class="col-sm-6">
+                        <div class="modern-card p-4 h-100">
+                            <div class="icon-box">
+                                <img src="{{ asset('resource/web/assets/media/images/collarabration.png') }}" alt="Collaboration" width="30">
                             </div>
+                            <h5 class="fw-bold mb-3">Collaboration</h5>
+                            <p class="text-muted small mb-0">Partnering with corporate and govt bodies for shared goals.</p>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-6">
-                <img src="{{ asset('resource/web/assets/media/images/proccess.jfif') }}">
+            <div class="col-md-5">
+                <div class="position-relative">
+                    <img src="{{ asset('resource/web/assets/media/images/proccess.jfif') }}" class="img-fluid rounded-4 shadow-lg w-100" style="object-fit: cover; height: 450px;">
+                    <div class="position-absolute bottom-0 start-0 p-4 w-100">
+                        <div class="modern-card p-3 glass-bright">
+                            <h6 class="mb-0 fw-bold"><i class="bi bi-check-circle-fill text-primary me-2"></i> Quality Education for All</h6>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -942,63 +796,42 @@
                     <div class="swiper mySwiperstwo p-0 m-0">
                         <div class="swiper-wrapper">
                             @foreach ($schemes as $scheme)
-                                <div class="swiper-slide">
-                                    <a href="{{ route('web.announcement.scheme', [$scheme->category->slug, $scheme->slug]) }}" class="h6 fw-500 mb-4p">
-                                        <div class="col-md-*">
-                                            <div class="team-block">
-                                                <div class="img-block">
-                                                    <img class="w-100" src="{{ asset($scheme->image) }}"
-                                                        alt="{{ $scheme->title }}">
-                                                </div>
-                                                <div class="team-content">
-                                                    <div>
-                                                        {{-- {{ route('scheme.details', $scheme->slug) }} --}}
-                                                        <a href="{{ route('web.announcement.scheme', [$scheme->category->slug, $scheme->slug]) }}"
-                                                            class="h6 fw-500 mb-4p">{{ $scheme->title }}</a>
-                                                        <p class="subtitle">{{ $scheme->subtitle }}</p>
-                                                    </div>
+                                @php
+                                    $categorySlug = $scheme->category->slug ?? 'skill-development';
+                                @endphp
+                                <div class="swiper-slide mb-4">
+                                    <div class="scheme-card">
+                                        <div class="scheme-image-wrapper">
+                                            <img src="{{ asset($scheme->image) }}" alt="{{ $scheme->title }}">
+                                            <div class="scheme-badge">{{ $scheme->category->name ?? 'Policy' }}</div>
+                                        </div>
+                                        <div class="p-4 flex-grow-1">
+                                            <h6 class="fw-bold mb-2">
+                                                <a href="{{ route('web.announcement.scheme', [$categorySlug, $scheme->slug]) }}" 
+                                                   class="text-decoration-none text-dark hover-primary">{{ $scheme->title }}</a>
+                                            </h6>
+                                            <p class="text-muted small mb-3">{{ Str::limit($scheme->subtitle, 80) }}</p>
+                                            
+                                            <div class="d-flex justify-content-between align-items-center mt-auto">
+                                                <div class="share-links-modern">
                                                     @php
-                                                        $currentUrl = urlencode(request()->fullUrl()); // Dynamically get current page URL
-                                                        $shareText = urlencode($scheme->title ?? 'Check this out!');
+                                                        $currentUrl = urlencode(route('web.announcement.scheme', [$categorySlug, $scheme->slug]));
+                                                        $shareText = urlencode($scheme->title);
                                                     @endphp
-
-                                                    <div class="d-flex gap-8 align-items-center">
-                                                        {{-- LinkedIn Share --}}
-                                                        <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ $currentUrl }}"
-                                                            target="_blank">
-                                                            <img class="links-icon"
-                                                                src="{{ asset('resource/web/assets/media/vector/linkedin.png') }}"
-                                                                alt="LinkedIn">
-                                                        </a>
-
-                                                        {{-- Facebook Share --}}
-                                                        <a href="https://www.facebook.com/sharer/sharer.php?u={{ $currentUrl }}"
-                                                            target="_blank">
-                                                            <img class="links-icon"
-                                                                src="{{ asset('resource/web/assets/media/vector/facebook.png') }}"
-                                                                alt="Facebook">
-                                                        </a>
-
-                                                        {{-- Twitter (X) Share --}}
-                                                        <a href="https://twitter.com/intent/tweet?url={{ $currentUrl }}&text={{ $shareText }}"
-                                                            target="_blank">
-                                                            <img class="links-icon"
-                                                                src="{{ asset('resource/web/assets/media/vector/twitter.webp') }}"
-                                                                alt="Twitter">
-                                                        </a>
-
-                                                        {{-- Instagram: Not directly shareable via URL --}}
-                                                        <a href="https://www.instagram.com/" target="_blank">
-                                                            <img class="links-icon"
-                                                                src="{{ asset('resource/web/assets/media/vector/instagram.webp') }}"
-                                                                alt="Instagram">
-                                                        </a>
-                                                    </div>
-
+                                                    <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ $currentUrl }}" target="_blank" class="share-icon-circle">
+                                                        <img src="{{ asset('resource/web/assets/media/vector/linkedin.png') }}" alt="LI">
+                                                    </a>
+                                                    <a href="https://www.facebook.com/sharer/sharer.php?u={{ $currentUrl }}" target="_blank" class="share-icon-circle">
+                                                        <img src="{{ asset('resource/web/assets/media/vector/facebook.png') }}" alt="FB">
+                                                    </a>
+                                                    <a href="https://twitter.com/intent/tweet?url={{ $currentUrl }}&text={{ $shareText }}" target="_blank" class="share-icon-circle">
+                                                        <img src="{{ asset('resource/web/assets/media/vector/twitter.webp') }}" alt="X">
+                                                    </a>
                                                 </div>
+                                                <a href="{{ route('web.announcement.scheme', [$categorySlug, $scheme->slug]) }}" class="btn btn-sm btn-outline-primary rounded-pill px-3">View Details</a>
                                             </div>
                                         </div>
-                                    </a>
+                                    </div>
                                 </div>
                             @endforeach
                         </div>
@@ -1087,230 +920,200 @@
             }
         }
     </style> <!-- end of our Programmes -->
-    <div class="ai-background-v">
+    <div class="ai-background-v py-5">
         <div class="shape shape-1"></div>
         <div class="shape shape-2"></div>
         <div class="shape shape-3"></div>
         <div class="container content">
-            <div class="text-center mt-5 mb-3">
-                <div class="d-inline-flex align-items-center mb-3"> <img
-                        src="{{ asset('resource/web/assets/media/hero/buld-vec.png') }}" class="me-2" alt=""
-                        style="width: 30px;">
-                    <p class="mb-0 fw-semibold text-dark">Our Focus</p>
+            <div class="text-center mb-5">
+                <div class="section-tag">
+                    <img src="{{ asset('resource/web/assets/media/hero/buld-vec.png') }}" class="bulb-vec-mini" alt="">
+                    <span>OUR FOCUS AREAS</span>
                 </div>
-                <h2 class="fw-bold mb-3"><span class="text-primary">{{ $settings->focus_main_title }}</span></h2>
+                <h2 class="vibrant-title mb-3">Driving <span class="gradient-text">Sustainable Impact</span></h2>
             </div>
-            <div class="row">
-                <div class="col-md-12 col-lg-6">
+            
+            <div class="row g-5">
+                <div class="col-lg-6">
                     @php
                         $focusAreas = [];
-
                         if (!empty($settings->focus_areas)) {
-                            if (is_string($settings->focus_areas)) {
-                                $decoded = json_decode($settings->focus_areas, true);
-                                if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
-                                    $focusAreas = $decoded;
-                                }
-                            } elseif (is_array($settings->focus_areas)) {
-                                $focusAreas = $settings->focus_areas;
-                            }
+                            $decoded = is_string($settings->focus_areas) ? json_decode($settings->focus_areas, true) : $settings->focus_areas;
+                            if (is_array($decoded)) $focusAreas = $decoded;
                         }
                     @endphp
 
-
                     @if (!empty($focusAreas))
-                        <div class="accordion" id="focusAccordion">
+                        <div class="accordion focus-accordion" id="focusAccordion">
                             @foreach ($focusAreas as $index => $item)
-                                <div class="accordion-item">
+                                <div class="accordion-item shadow-sm">
                                     <h2 class="accordion-header" id="heading{{ $index }}">
                                         <button class="accordion-button {{ $index !== 0 ? 'collapsed' : '' }}"
                                             type="button" data-bs-toggle="collapse"
                                             data-bs-target="#collapse{{ $index }}"
                                             aria-expanded="{{ $index === 0 ? 'true' : 'false' }}"
                                             aria-controls="collapse{{ $index }}">
-                                            {{ $index + 1 }}. {{ $item['focus_title'] ?? 'No Title' }}
+                                            <span class="me-3 text-primary fw-bold">{{ sprintf('%02d', $index + 1) }}</span>
+                                            {{ $item['focus_title'] ?? 'Strategic Focus' }}
                                         </button>
                                     </h2>
                                     <div id="collapse{{ $index }}"
                                         class="accordion-collapse collapse {{ $index === 0 ? 'show' : '' }}"
                                         aria-labelledby="heading{{ $index }}" data-bs-parent="#focusAccordion">
-                                        <div class="accordion-body">
-                                            {{ $item['focus_description'] ?? 'No Description available.' }}
+                                        <div class="accordion-body text-muted">
+                                            {{ $item['focus_description'] ?? 'Implementation details under review.' }}
                                         </div>
                                     </div>
                                 </div>
                             @endforeach
                         </div>
                     @endif
-
-
                 </div>
-                <div class="col-md-12 col-lg-6">
-                    <!-- Our Collaborative Approach -->
-                    <h2 class="fw-400 mt-2 mb-1">Our Collaborative Approach</h2>
-                    <p>ISICO aligns its initiatives with national priorities, including the NEP 2020, and works closely
-                        with: </p>
-                    <div id="partnershipsSection bg-white">
-                        <h2 class="mt-5 mb-4 text-primary">Partnerships</h2>
-                        <div class="faq card">
-                            <div class="card-body">
-                                <div class="faq-block mb-24">
-                                    <a href="#" class="accordion-button d-flex justify-content-between align-items-center"
-                                        data-bs-toggle="collapse" data-bs-target="#partner1" aria-expanded="true"
-                                        aria-controls="partner1">
-                                        <span><span class="fw-500">01.</span> &nbsp; Government Schemes</span>
-                                        <i class="bi bi-chevron-down ms-2"></i>
-                                    </a>
-                                    <div id="partner1" class="accordion-collapse collapse show"
-                                        aria-labelledby="partner1" data-bs-parent="#partnershipsSection">
-                                        <p class="text-start">Partnering with state and central programs to implement skill
-                                            and education initiatives.</p>
-                                    </div>
-                                </div>
 
-                                <div class="faq-block mb-24">
-                                    <a href="#" class="accordion-button collapsed d-flex justify-content-between align-items-center"
-                                        data-bs-toggle="collapse" data-bs-target="#partner2" aria-expanded="false"
-                                        aria-controls="partner2">
-                                        <span><span class="fw-500">02.</span> &nbsp; Corporate Social Responsibility (CSR)</span>
-                                        <i class="bi bi-chevron-down ms-2"></i>
-                                    </a>
-                                    <div id="partner2" class="accordion-collapse collapse"
-                                        aria-labelledby="partner2" data-bs-parent="#partnershipsSection">
-                                        <p>Leveraging CSR support for community-based projects in education and
-                                            skill-building.</p>
-                                    </div>
+                <div class="col-lg-6">
+                    <div class="modern-card p-5 h-100">
+                        <h3 class="fw-bold mb-4">Collaborative Approach</h3>
+                        <p class="text-muted mb-5">ISICO aligns its initiatives with national priorities, including the NEP 2020, through strategic synergy.</p>
+                        
+                        <div class="d-flex flex-column gap-4">
+                            <div class="d-flex align-items-start gap-3">
+                                <div class="icon-box m-0 flex-shrink-0" style="width: 45px; height: 45px;">
+                                    <i class="bi bi-building text-primary"></i>
                                 </div>
-
-                                <div class="faq-block">
-                                    <a href="#" class="accordion-button collapsed d-flex justify-content-between align-items-center"
-                                        data-bs-toggle="collapse" data-bs-target="#partner3" aria-expanded="false"
-                                        aria-controls="partner3">
-                                        <span><span class="fw-500">03.</span> &nbsp; International Partnerships</span>
-                                        <i class="bi bi-chevron-down ms-2"></i>
-                                    </a>
-                                    <div id="partner3" class="accordion-collapse collapse"
-                                        aria-labelledby="partner3" data-bs-parent="#partnershipsSection">
-                                        <p>Facilitating knowledge exchange and technical expertise to bring global best
-                                            practices to Indian communities. </p>
-                                    </div>
+                                <div>
+                                    <h6 class="fw-bold mb-1">Government Schemes</h6>
+                                    <p class="small text-muted mb-0">Partnering with central programs for education and skills.</p>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-start gap-3">
+                                <div class="icon-box m-0 flex-shrink-0" style="width: 45px; height: 45px;">
+                                    <i class="bi bi-people text-primary"></i>
+                                </div>
+                                <div>
+                                    <h6 class="fw-bold mb-1">CSR Initiatives</h6>
+                                    <p class="small text-muted mb-0">Leveraging corporate support for community projects.</p>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-start gap-3">
+                                <div class="icon-box m-0 flex-shrink-0" style="width: 45px; height: 45px;">
+                                    <i class="bi bi-globe text-primary"></i>
+                                </div>
+                                <div>
+                                    <h6 class="fw-bold mb-1">International Body</h6>
+                                    <p class="small text-muted mb-0">Exchanging global best practices with Indian expertise.</p>
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
-            </div> <!-- Future Goals -->
-            <div class="row">
+            </div>
+        </div>
+    </div>
+            <div class="row g-5 p-2 m-3">
                 <div class="col-md-6">
                     <!-- Message from the Founder -->
-                    <div class="text-center mt-5">
-                        <div class="d-inline-flex align-items-center mb-3"> <img
-                                src="{{ asset('resource/web/assets/media/hero/buld-vec.png') }}" class="me-2"
-                                alt="" style="width: 30px;">
-                            <p class="mb-0 fw-semibold text-dark">Our Message</p>
+                    <div class="text-center mb-4">
+                        <div class="section-tag">
+                            <img src="{{ asset('resource/web/assets/media/hero/buld-vec.png') }}" class="bulb-vec-mini" alt="">
+                            <span>FOUNDER'S MESSAGE</span>
                         </div>
-                        <h2 class="fw-bold mb-3">A Message from the <span class="text-primary">Founder</span></h2>
+                        <h3 class="fw-bold mb-4">Vision for <span class="text-primary">ISICO</span></h3>
                     </div>
-                    <div class="mt-5 p-4 bg-white border-start border-5 shadow-sm">
-                        <div class="alert alert-primary"> "{{ $settings->founder_message ?? null }}"<br> <strong
-                                class="text-end"
-                                style="text-indent: 40px;    display: block;">{{ $settings->founder_name }}, <cite
-                                    title="Source Title">Founder, ISICO</cite></strong> </div>
+                    <div class="modern-card p-5 border-start border-primary border-5">
+                        <div class="mb-4">
+                            <i class="bi bi-quote text-primary opacity-25" style="font-size: 3rem; line-height: 1;"></i>
+                        </div>
+                        <p class="fs-5 text-muted fst-italic mb-4" style="line-height: 1.8;">
+                            "{{ $settings->founder_message ?? 'Empowering the youth through skill development and quality education for a brighter future.' }}"
+                        </p>
+                        <hr class="opacity-10 my-4">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="avatar-circle bg-primary text-white d-flex align-items-center justify-content-center fw-bold shadow-sm" style="width: 50px; height: 50px; border-radius: 50%;">
+                                {{ substr($settings->founder_name ?? 'F', 0, 1) }}
+                            </div>
+                            <div>
+                                <h6 class="fw-bold mb-0 text-dark">{{ $settings->founder_name ?? 'Founder' }}</h6>
+                                <p class="small text-muted mb-0">Founder, ISICO</p>
+                            </div>
+                        </div>
                     </div>
-                    <style>
-                        .alert-primary {
-                            --bs-alert-color: #018c01;
-                            --bs-alert-bg: #f3fff3;
-                            --bs-alert-border-color: #018c01;
-                            -alert-link-color: #018c01;
-                        }
-                    </style>
                 </div>
+
                 <div class="col-md-6">
-                    <h2 class="mt-5 mb-4 text-primary"></h2> <!-- Message from the Founder -->
-                    <div class="text-center mt-5">
-                        <div class="d-inline-flex align-items-center mb-3"> <img
-                                src="{{ asset('resource/web/assets/media/hero/buld-vec.png') }}" class="me-2"
-                                alt="" style="width: 30px;">
-                            <p class="mb-0 fw-semibold text-dark">Our Future</p>
+                    <div class="text-center mb-4">
+                        <div class="section-tag">
+                            <img src="{{ asset('resource/web/assets/media/hero/buld-vec.png') }}" class="bulb-vec-mini" alt="">
+                            <span>FUTURE GOALS</span>
                         </div>
-                        <h2 class="fw-bold mb-3">Future <span class="text-primary">Goals</span></h2>
+                        <h3 class="fw-bold mb-4">Strategic <span class="text-primary">Roadmap</span></h3>
                     </div>
-                    <p>ISICO is steadfast in its commitment to:</p>
-                   @php
-                        $futureGoals = is_array($settings->future_goals)
-                            ? $settings->future_goals
-                            : json_decode($settings->future_goals, true);
+                    
+                    @php
+                        $futureGoals = is_array($settings->future_goals) ? $settings->future_goals : json_decode($settings->future_goals, true);
                     @endphp
 
                     @if (!empty($futureGoals) && is_array($futureGoals))
-                        <div class="accordion" id="futureGoalsAccordion">
+                        <div class="accordion focus-accordion" id="futureGoalsAccordion">
                             @foreach ($futureGoals as $index => $goal)
-                                @php
-                                    $goalId = 'goal' . $index;
-                                @endphp
-                                <div class="accordion-item">
+                                @php $goalId = 'goal' . $index; @endphp
+                                <div class="accordion-item shadow-sm">
                                     <h2 class="accordion-header" id="heading{{ $goalId }}">
                                         <button class="accordion-button {{ $index !== 0 ? 'collapsed' : '' }}"
                                             type="button" data-bs-toggle="collapse"
                                             data-bs-target="#collapse{{ $goalId }}"
                                             aria-expanded="{{ $index === 0 ? 'true' : 'false' }}"
                                             aria-controls="collapse{{ $goalId }}">
-                                            {{ $index + 1 }}. {{ $goal['goal_title'] ?? 'No Title' }}
+                                            <span class="me-3 text-primary fw-bold">{{ sprintf('%02d', $index + 1) }}</span>
+                                            {{ $goal['goal_title'] ?? 'Strategic Objective' }}
                                         </button>
                                     </h2>
                                     <div id="collapse{{ $goalId }}"
                                         class="accordion-collapse collapse {{ $index === 0 ? 'show' : '' }}"
                                         aria-labelledby="heading{{ $goalId }}"
                                         data-bs-parent="#futureGoalsAccordion">
-                                        <div class="accordion-body text-start">
-                                            {{ $goal['goal_description'] ?? 'No Description' }}
+                                        <div class="accordion-body text-muted">
+                                            {{ $goal['goal_description'] ?? 'Detailing the implementation strategies for this goal.' }}
                                         </div>
                                     </div>
                                 </div>
                             @endforeach
                         </div>
                     @else
-                        <p>No future goals found.</p>
+                        <div class="modern-card p-4 text-center">
+                            <p class="text-muted mb-0">Strategic goals are currently being updated.</p>
+                        </div>
                     @endif
-
                 </div>
             </div>
         </div>
     </div>
-    <div class="scontent-block mb-120 wow fadeInUp animated d-none d-md-none d-lg-block" data-wow-delay="440ms">
-        <div class="container-fluid">
-            <div class="block-content">
-                <div class="block-1"> <img class="num-vector"
-                        src="{{ asset('resource/web/assets/media/vector/instructor.png') }}" alt="Expert Trainers">
-                    <div>
-                        <h3 class="fw-500 mb-8">250+</h3>
-                        <h6 class="fw-500 dark-gray">Certified Trainers</h6>
+    <div class="stats-section py-5 mb-5 wow fadeInUp animated d-none d-lg-block" data-wow-delay="440ms">
+        <div class="container">
+            <div class="modern-card p-4 py-5 bg-primary text-white">
+                <div class="row text-center g-4">
+                    <div class="col-md-3">
+                        <div class="px-3 border-end border-white border-opacity-25">
+                            <h2 class="fw-bold mb-1">250+</h2>
+                            <p class="small mb-0 opacity-75">Certified Trainers</p>
+                        </div>
                     </div>
-                </div>
-                <div class="vr-line"></div>
-                <div class="block-1"> <img class="num-vector"
-                        src="{{ asset('resource/web/assets/media/vector/review.png') }}" alt="Student Feedback">
-                    <div>
-                        <h3 class="fw-500 mb-8">1,000+</h3>
-                        <h6 class="fw-500 dark-gray">Positive Student Reviews</h6>
+                    <div class="col-md-3">
+                        <div class="px-3 border-end border-white border-opacity-25">
+                            <h2 class="fw-bold mb-1">1,000+</h2>
+                            <p class="small mb-0 opacity-75">Student Reviews</p>
+                        </div>
                     </div>
-                </div>
-                <div class="vr-line d-sm-block d-none"></div>
-                <div class="block-1"> <img class="num-vector"
-                        src="{{ asset('resource/web/assets/media/vector/happy-student.png') }}" alt="Trained Students">
-                    <div>
-                        <h3 class="fw-500 mb-8">5,000+</h3>
-                        <h6 class="fw-500 dark-gray">Skilled Students Trained</h6>
+                    <div class="col-md-3">
+                        <div class="px-3 border-end border-white border-opacity-25">
+                            <h2 class="fw-bold mb-1">5,000+</h2>
+                            <p class="small mb-0 opacity-75">Skilled Students</p>
+                        </div>
                     </div>
-                </div>
-                <div class="vr-line"></div>
-                <div class="block-1"> <img class="num-vector"
-                        src="{{ asset('resource/web/assets/media/vector/winning-award.png') }}" alt="Recognition">
-                    <div>
-                        <h3 class="fw-500 mb-8">15+</h3>
-                        <h6 class="fw-500 dark-gray">National Recognitions</h6>
+                    <div class="col-md-3">
+                        <div class="px-3">
+                            <h2 class="fw-bold mb-1">15+</h2>
+                            <p class="small mb-0 opacity-75">National Recognitions</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1526,33 +1329,38 @@
         }
     </style> <!-- Testimonial Section End -->
     @if ($brands->isNotEmpty())
-        <div class="text-center mt-5">
-            <div class="d-inline-flex align-items-center mb-3"> <img
-                    src="{{ asset('resource/web/assets/media/hero/buld-vec.png') }}" class="me-2" alt=""
-                    style="width: 30px;">
-                <p class="mb-0 fw-semibold text-dark">Our Partners</p>
+        <div class="container py-5 mt-5">
+            <div class="text-center mb-5">
+                <div class="section-tag">
+                    <img src="{{ asset('resource/web/assets/media/hero/buld-vec.png') }}" class="bulb-vec-mini" alt="">
+                    <span>OUR PARTNERS</span>
+                </div>
+                <h2 class="vibrant-title mb-3">Our Dedicated <span class="gradient-text">Brand Partners</span></h2>
             </div>
-            <h2 class="fw-bold mb-3">Our Brand <span class="text-primary">Partners</span></h2>
+            
+            <div class="Marquees modern-card p-4 overflow-hidden">
+                <div class="Marquee FirstRow d-flex align-items-center gap-5">
+                    @foreach ($brands as $brand)
+                        <div class="marquee-item px-4 grayscale-hover">
+                            <img src="{{ asset($brand->image) }}" alt="{{ $brand->name }}" height="50" style="object-fit: contain;">
+                        </div>
+                    @endforeach
+                </div>
+            </div>
         </div>
-        <div class="Marquees">
-            <div class="Marquee FirstRow">
-                @foreach ($brands as $brand)
-                    <div class="marquee Item">
-                        <img src="{{ asset($brand->image) }}" alt="{{ $brand->name }}" height="40">
-                    </div>
-                @endforeach
-            </div>
-            {{-- <div class="Marquee SecondRow">
-        <div class="marquee Item"><i class="bi bi-instagram"></i></div>
-        <div class="marquee Item"><i class="bi bi-discord"></i></div>
-        <div class="marquee Item"><i class="bi bi-github"></i></div>
-        <div class="marquee Item"><i class="bi bi-slack"></i></div>
-        <div class="marquee Item"><i class="bi bi-dribbble"></i></div>
-        <div class="marquee Item"><i class="bi bi-behance"></i></div>
-        <div class="marquee Item"><i class="bi bi-skype"></i></div>
-        <div class="marquee Item"><i class="bi bi-telegram"></i></div>
-    </div> --}}
-        </div> <!-- Main Sections -->
+        
+        <style>
+            .grayscale-hover {
+                filter: grayscale(100%);
+                opacity: 0.6;
+                transition: var(--transition);
+            }
+            .grayscale-hover:hover {
+                filter: grayscale(0%);
+                opacity: 1;
+                transform: scale(1.1);
+            }
+        </style>
     @endif
     </div>
 
