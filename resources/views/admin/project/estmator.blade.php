@@ -215,6 +215,7 @@
                         <tr>
                             <th>Date Received</th>
                             <th>Source / Donor Name</th>
+                            <th>Sanction Amount (₹)</th>
                             <th>Amount Received (₹)</th>
                             <th>Notes</th>
                             <th>Status</th>
@@ -226,6 +227,7 @@
                         <tr data-id="{{ $funding->id }}">
                             <td><input type="date" class="form-control form-control-sm funding-date" value="{{ $funding->received_date }}" oninput="markUnsaved(this)"></td>
                             <td><input type="text" class="form-control form-control-sm funding-source" value="{{ $funding->source_type }}" oninput="markUnsaved(this)"></td>
+                            <td><input type="number" class="form-control form-control-sm funding-sanction" value="{{ $funding->sanction_amount }}" oninput="markUnsaved(this)"></td>
                             <td><input type="number" class="form-control form-control-sm funding-amount" value="{{ $funding->amount }}" oninput="updateFundingTotals(); markUnsaved(this)"></td>
                             <td><input type="text" class="form-control form-control-sm funding-notes" value="{{ $funding->notes }}" oninput="markUnsaved(this)"></td>
                             <td class="text-center">
@@ -644,6 +646,7 @@ function addFundingRow() {
     <tr data-id="">
         <td><input type="date" class="form-control form-control-sm funding-date" oninput="markUnsaved(this)"></td>
         <td><input type="text" class="form-control form-control-sm funding-source" placeholder="Donor/Source" oninput="markUnsaved(this)"></td>
+        <td><input type="number" class="form-control form-control-sm funding-sanction" placeholder="Sanction Amt" oninput="markUnsaved(this)" min="0"></td>
         <td><input type="number" class="form-control form-control-sm funding-amount" oninput="updateFundingTotals(); markUnsaved(this)" min="0"></td>
         <td><input type="text" class="form-control form-control-sm funding-notes" placeholder="Notes" oninput="markUnsaved(this)"></td>
         <td class="text-center">
@@ -673,6 +676,7 @@ function saveFundingRow(btn) {
         project_id: PROJECT_ID,
         received_date: row.find('.funding-date').val(),
         source_type: row.find('.funding-source').val(),
+        sanction_amount: row.find('.funding-sanction').val(),
         amount: row.find('.funding-amount').val(),
         notes: row.find('.funding-notes').val()
     };

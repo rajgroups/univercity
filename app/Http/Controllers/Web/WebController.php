@@ -184,6 +184,10 @@ class WebController extends Controller
         $stakeholderIds = $milestones->pluck('stakeholder_id')->filter()->unique();
         $stakeholders = \App\Models\Stakeholder::whereIn('id', $stakeholderIds)->get()->keyBy('id');
 
+        // 5.1️⃣ Calculate budget totals
+        $totalRaised = $donors->sum('amount');
+        $totalReceived = $fundings->sum('amount');
+
         // 6️⃣ Return view
         return view('web.project', compact(
             'project',
@@ -195,7 +199,9 @@ class WebController extends Controller
             'utilizations',
             'stakeholders',
             'surveys',
-            'surveyStats'
+            'surveyStats',
+            'totalRaised',
+            'totalReceived'
         ));
     }
 

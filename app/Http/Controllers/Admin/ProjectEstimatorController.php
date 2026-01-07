@@ -167,6 +167,7 @@ class ProjectEstimatorController extends Controller
         $request->validate([
             'project_id' => 'required|exists:projects,id',
             'amount' => 'required|numeric|min:0',
+            'sanction_amount' => 'nullable|numeric|min:0',
             'source_type' => 'required|string', // Donor Name / Source
             'received_date' => 'required|date',
         ]);
@@ -177,6 +178,7 @@ class ProjectEstimatorController extends Controller
                 [
                     'project_id' => $request->project_id,
                     'source_type' => $request->source_type,
+                    'sanction_amount' => $request->sanction_amount ?? 0,
                     'amount' => $request->amount,
                     'received_date' => $request->received_date,
                     'notes' => $request->notes,

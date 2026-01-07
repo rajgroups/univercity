@@ -546,11 +546,52 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- Top Donors -->
-                        @if($donors->count() > 0)
-                        <div class="card border-0 shadow-sm mb-3">
+                        <!-- Top Supporters -->
+                        @if($fundings->count() > 0)
+                        <div class="card border-0 shadow-sm mb-4">
+                            <div class="card-header bg-white border-0 py-3 d-flex justify-content-between align-items-center">
+                                <h5 class="card-title mb-0 fw-bold">Top Contributors</h5>
+                                <span class="badge bg-primary bg-opacity-10 text-primary">Actual</span>
+                            </div>
+                            <div class="card-body">
+                                <div class="list-group list-group-flush">
+                                    @foreach($fundings->groupBy('source_type')->map(function($items) {
+                                        return [
+                                            'name' => $items->first()->source_type,
+                                            'amount' => $items->sum('amount')
+                                        ];
+                                    })->sortByDesc('amount')->take(5) as $supporter)
+                                    <div class="list-group-item border-0 px-0 py-3">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div class="d-flex align-items-center">
+                                                <div class="bg-primary bg-opacity-10 rounded-circle p-2 me-3">
+                                                    <i class="bi bi-person text-primary"></i>
+                                                </div>
+                                                <div>
+                                                    <h6 class="mb-0 fw-bold">{{ $supporter['name'] }}</h6>
+                                                    <small class="text-muted text-uppercase" style="font-size: 10px;">Verified Contribution</small>
+                                                </div>
+                                            </div>
+                                            <span class="badge bg-success bg-opacity-10 text-success border-0 py-2 px-3">
+                                                ₹ {{ number_format($supporter['amount']) }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                            @if($donors->count() > 0)
+                            <div class="card-footer bg-white border-0 pt-0 pb-3 text-center">
+                                <button class="btn btn-outline-primary btn-sm rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#donorsModal">
+                                    <i class="bi bi-eye me-1"></i>View Pledged Donors
+                                </button>
+                            </div>
+                            @endif
+                        </div>
+                        @elseif($donors->count() > 0)
+                         <div class="card border-0 shadow-sm mb-4">
                             <div class="card-header bg-white border-0 py-3">
-                                <h5 class="card-title mb-0 fw-bold">Top Supporters</h5>
+                                <h5 class="card-title mb-0 fw-bold">Pledged Supporters</h5>
                             </div>
                             <div class="card-body">
                                 <div class="list-group list-group-flush">
@@ -558,16 +599,29 @@
                                     <div class="list-group-item border-0 px-0 py-3">
                                         <div class="d-flex justify-content-between align-items-center">
                                             <div>
-                                                <h6 class="mb-0">{{ $donor->name }}</h6>
+                                                <h6 class="mb-0 fw-bold">{{ $donor->name }}</h6>
                                                 <small class="text-muted">Pledged Amount</small>
                                             </div>
-                                            <span class="badge bg-success bg-opacity-10 text-success border-0 py-2 px-3">
+                                            <span class="badge bg-info bg-opacity-10 text-info border-0 py-2 px-3">
                                                 ₹ {{ number_format($donor->amount) }}
                                             </span>
                                         </div>
                                     </div>
                                     @endforeach
                                 </div>
+                            </div>
+                            <div class="card-footer bg-white border-0 pt-0 pb-3 text-center">
+                                <button class="btn btn-outline-primary btn-sm rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#donorsModal">
+                                    <i class="bi bi-eye me-1"></i>View All Pledges
+                                </button>
+                            </div>
+                        </div>
+                        @else
+                        <div class="card border-0 shadow-sm mb-4">
+                            <div class="card-body text-center py-4">
+                                <i class="bi bi-heart text-muted opacity-25 display-6 mb-3"></i>
+                                <h6 class="text-muted">No supporters yet</h6>
+                                <p class="small text-muted mb-0">Be the first to support this project!</p>
                             </div>
                         </div>
                         @endif
@@ -1858,9 +1912,7 @@
                         </div>
 
                         @php
-                            $totalRaised = $donors->sum('amount');
                             $progressPercentage = $estimation->total_amount > 0 ? ($totalRaised / $estimation->total_amount) * 100 : 0;
-                            $totalReceived = $fundings->sum('amount');
                         @endphp
 
                         <div class="mb-4">
@@ -2002,6 +2054,163 @@
 </div>
 
 <!-- Contact Modal -->
+<!-- Donors Modal (Actual & Pledged) -->
+<div class="modal fade" id="donorsModal" tabindex="-1" aria-labelledby="donorsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header bg-primary text-white border-0 py-4">
+                <div class="d-flex align-items-center">
+                    <div class="bg-white bg-opacity-25 rounded-circle p-2 me-3">
+                        <i class="bi bi-people-fill text-white fs-4"></i>
+                    </div>
+                    <div>
+                        <h5 class="modal-title fw-bold mb-0" id="donorsModalLabel">Project Supporters</h5>
+                        <small class="opacity-75">Every contribution brings us closer to our goal</small>
+                    </div>
+                </div>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-0">
+                <!-- Tabs Navigation -->
+                <ul class="nav nav-tabs nav-fill bg-light border-0" id="supporterTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active py-3 fw-bold border-0 rounded-0" id="actual-tab" data-bs-toggle="tab" data-bs-target="#actual-pane" type="button" role="tab" aria-controls="actual-pane" aria-selected="true">
+                            <i class="bi bi-patch-check-fill me-2 text-success"></i>Actual Contributions
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link py-3 fw-bold border-0 rounded-0" id="pledged-tab" data-bs-toggle="tab" data-bs-target="#pledged-pane" type="button" role="tab" aria-controls="pledged-pane" aria-selected="false">
+                            <i class="bi bi-clock-history me-2 text-info"></i>Pledged Support
+                        </button>
+                    </li>
+                </ul>
+
+                <div class="tab-content" id="supporterTabsContent">
+                    <!-- Actual Contributions Pane -->
+                    <div class="tab-pane fade show active" id="actual-pane" role="tabpanel" aria-labelledby="actual-tab">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="bg-light">
+                                    <tr>
+                                        <th class="border-0 ps-4 py-3 text-uppercase small fw-bold text-muted">Contributor</th>
+                                        <th class="border-0 py-3 text-uppercase small fw-bold text-muted text-end">Received Amount</th>
+                                        <th class="border-0 py-3 text-uppercase small fw-bold text-muted text-center pe-4">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @php
+                                        $groupedFundings = $fundings->groupBy('source_type')->map(function($items) {
+                                            return [
+                                                'name' => $items->first()->source_type,
+                                                'amount' => $items->sum('amount')
+                                            ];
+                                        })->sortByDesc('amount');
+                                    @endphp
+
+                                    @forelse($groupedFundings as $supporter)
+                                    <tr>
+                                        <td class="ps-4 py-3">
+                                            <div class="d-flex align-items-center">
+                                                <div class="avatar-circle-sm bg-success bg-opacity-10 text-success fw-bold me-3 rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                                    {{ strtoupper(substr($supporter['name'], 0, 1)) }}
+                                                </div>
+                                                <div>
+                                                    <span class="fw-bold d-block">{{ $supporter['name'] }}</span>
+                                                    <small class="text-muted">Verified Source</small>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="text-end py-3">
+                                            <span class="fw-bold text-success fs-6">₹ {{ number_format($supporter['amount']) }}</span>
+                                        </td>
+                                        <td class="text-center pe-4 py-3">
+                                            <span class="badge bg-success bg-opacity-10 text-success border-0 rounded-pill px-3">Verified</span>
+                                        </td>
+                                    </tr>
+                                    @empty
+                                    <tr>
+                                        <td colspan="3" class="text-center py-5 text-muted">
+                                            <i class="bi bi-info-circle mb-2 d-block fs-3"></i>
+                                            No verified contributions recorded yet.
+                                        </td>
+                                    </tr>
+                                    @endforelse
+                                </tbody>
+                                @if($groupedFundings->count() > 0)
+                                <tfoot class="bg-light">
+                                    <tr>
+                                        <td class="ps-4 py-3 fw-bold">Total Verified Funds</td>
+                                        <td class="text-end py-3 fw-bold fs-5 text-success">₹ {{ number_format($totalReceived) }}</td>
+                                        <td></td>
+                                    </tr>
+                                </tfoot>
+                                @endif
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Pledged Support Pane -->
+                    <div class="tab-pane fade" id="pledged-pane" role="tabpanel" aria-labelledby="pledged-tab">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="bg-light">
+                                    <tr>
+                                        <th class="border-0 ps-4 py-3 text-uppercase small fw-bold text-muted">Donor Name</th>
+                                        <th class="border-0 py-3 text-uppercase small fw-bold text-muted text-end">Pledged Amount</th>
+                                        <th class="border-0 py-3 text-uppercase small fw-bold text-muted text-center pe-4">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse($donors->sortByDesc('amount') as $donor)
+                                    <tr>
+                                        <td class="ps-4 py-3">
+                                            <div class="d-flex align-items-center">
+                                                <div class="avatar-circle-sm bg-info bg-opacity-10 text-info fw-bold me-3 rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                                    {{ strtoupper(substr($donor->name, 0, 1)) }}
+                                                </div>
+                                                <span class="fw-bold">{{ $donor->name }}</span>
+                                            </div>
+                                        </td>
+                                        <td class="text-end py-3">
+                                            <span class="fw-bold text-dark">₹ {{ number_format($donor->amount) }}</span>
+                                        </td>
+                                        <td class="text-center pe-4 py-3">
+                                            <span class="badge bg-info bg-opacity-10 text-info border-0 rounded-pill px-3">Pledged</span>
+                                        </td>
+                                    </tr>
+                                    @empty
+                                    <tr>
+                                        <td colspan="3" class="text-center py-5 text-muted">
+                                            <i class="bi bi-info-circle mb-2 d-block fs-3"></i>
+                                            No pledges recorded yet.
+                                        </td>
+                                    </tr>
+                                    @endforelse
+                                </tbody>
+                                @if($donors->count() > 0)
+                                <tfoot class="bg-light">
+                                    <tr>
+                                        <td class="ps-4 py-3 fw-bold">Total Pledged Support</td>
+                                        <td class="text-end py-3 fw-bold fs-5 text-primary">₹ {{ number_format($totalRaised) }}</td>
+                                        <td></td>
+                                    </tr>
+                                </tfoot>
+                                @endif
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer border-0 bg-light py-3">
+                <button type="button" class="btn btn-secondary px-4 rounded-pill" data-bs-dismiss="modal">Close</button>
+                <button class="btn btn-success px-4 rounded-pill shadow-sm" data-bs-toggle="modal" data-bs-target="#contactModal">
+                    <i class="bi bi-hand-thumbs-up me-2"></i>I want to support!
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="modal fade" id="contactModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content border-0 shadow-lg">
