@@ -1084,7 +1084,7 @@
                                             <th class="border-0 text-end">Estimated</th>
                                             <th class="border-0 text-end">Actual Spent</th>
                                             <th class="border-0 text-center">Variance</th>
-                                            <th class="border-0 pe-4">Status</th>
+                                            {{-- <th class="border-0 pe-4">Status</th> --}}
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -1110,7 +1110,7 @@
                                                     {{ number_format($variance, 1) }}%
                                                 </span>
                                             </td>
-                                            <td class="pe-4">
+                                            {{-- <td class="pe-4">
                                                 @if($actual >= $estimated * 0.9)
                                                 <span class="badge bg-success bg-opacity-10 text-success border-0">On Track</span>
                                                 @elseif($actual >= $estimated * 0.5)
@@ -1118,7 +1118,7 @@
                                                 @else
                                                 <span class="badge bg-danger bg-opacity-10 text-danger border-0">Behind</span>
                                                 @endif
-                                            </td>
+                                            </td> --}}
                                         </tr>
                                         @endforeach
                                     </tbody>
@@ -1204,6 +1204,51 @@
                 </div>
             </div>
 
+                        <!-- Before/After Comparison -->
+            @if($project->before_photo || $project->expected_photo)
+            <div class="gallery-section" id="comparison-section">
+                <h5 class="fw-bold mb-4">Transformation Progress</h5>
+                <div class="row">
+                    @if($project->before_photo)
+                    <div class="col-md-6 mb-4">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-body p-4">
+                                <h6 class="card-title text-center mb-3">Before</h6>
+                                <img src="{{ asset($project->before_photo) }}"
+                                     alt="Before"
+                                     class="img-fluid rounded"
+                                     style="max-height: 300px; width: 100%; object-fit: cover;">
+                            </div>
+                        </div>
+                    </div>
+                    @endif
+
+                    @if($project->expected_photo)
+                    <div class="col-md-6 mb-4">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-body p-4">
+                                <h6 class="card-title text-center mb-3">Expected Outcome</h6>
+                                <img src="{{ asset($project->expected_photo) }}"
+                                     alt="Expected"
+                                     class="img-fluid rounded"
+                                     style="max-height: 300px; width: 100%; object-fit: cover;">
+                            </div>
+                        </div>
+                    </div>
+                    @endif
+                </div>
+            </div>
+            @endif
+            @else
+            <div class="text-center py-5">
+                <div class="mb-4">
+                    <i class="bi bi-images display-1 text-muted opacity-25"></i>
+                </div>
+                <h5 class="fw-normal text-muted mb-2">No gallery images yet</h5>
+                <p class="text-muted">Images will be added as project progresses</p>
+            </div>
+            @endif
+
             <!-- Banner Images -->
            @if(!empty($project->banner_images))
             <div class="mb-5 gallery-section" id="banner-section">
@@ -1248,51 +1293,6 @@
                     </div>
                     @endforeach
                 </div>
-            </div>
-            @endif
-
-            <!-- Before/After Comparison -->
-            @if($project->before_photo || $project->expected_photo)
-            <div class="gallery-section" id="comparison-section">
-                <h5 class="fw-bold mb-4">Transformation Progress</h5>
-                <div class="row">
-                    @if($project->before_photo)
-                    <div class="col-md-6 mb-4">
-                        <div class="card border-0 shadow-sm h-100">
-                            <div class="card-body p-4">
-                                <h6 class="card-title text-center mb-3">Before</h6>
-                                <img src="{{ asset($project->before_photo) }}"
-                                     alt="Before"
-                                     class="img-fluid rounded"
-                                     style="max-height: 300px; width: 100%; object-fit: cover;">
-                            </div>
-                        </div>
-                    </div>
-                    @endif
-
-                    @if($project->expected_photo)
-                    <div class="col-md-6 mb-4">
-                        <div class="card border-0 shadow-sm h-100">
-                            <div class="card-body p-4">
-                                <h6 class="card-title text-center mb-3">Expected Outcome</h6>
-                                <img src="{{ asset($project->expected_photo) }}"
-                                     alt="Expected"
-                                     class="img-fluid rounded"
-                                     style="max-height: 300px; width: 100%; object-fit: cover;">
-                            </div>
-                        </div>
-                    </div>
-                    @endif
-                </div>
-            </div>
-            @endif
-            @else
-            <div class="text-center py-5">
-                <div class="mb-4">
-                    <i class="bi bi-images display-1 text-muted opacity-25"></i>
-                </div>
-                <h5 class="fw-normal text-muted mb-2">No gallery images yet</h5>
-                <p class="text-muted">Images will be added as project progresses</p>
             </div>
             @endif
         </div>
