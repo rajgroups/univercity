@@ -546,7 +546,31 @@
                                 </div>
                             </div>
                         </div>
-
+                        <!-- Top Donors -->
+                        @if($donors->count() > 0)
+                        <div class="card border-0 shadow-sm mb-3">
+                            <div class="card-header bg-white border-0 py-3">
+                                <h5 class="card-title mb-0 fw-bold">Top Supporters</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="list-group list-group-flush">
+                                    @foreach($donors->sortByDesc('amount')->take(5) as $donor)
+                                    <div class="list-group-item border-0 px-0 py-3">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <h6 class="mb-0">{{ $donor->name }}</h6>
+                                                <small class="text-muted">Pledged Amount</small>
+                                            </div>
+                                            <span class="badge bg-success bg-opacity-10 text-success border-0 py-2 px-3">
+                                                ₹ {{ number_format($donor->amount) }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+                        @endif
                         <!-- CSR Invitation -->
                         @if($project->csr_invitation)
                         <div class="card border-0 shadow-sm border-start border-3 border-success">
@@ -562,6 +586,7 @@
                             </div>
                         </div>
                         @endif
+
                     </div>
                 </div>
             </div>
@@ -967,32 +992,6 @@
                                 </div>
                             </div>
                         </div>
-
-                        <!-- Top Donors -->
-                        @if($donors->count() > 0)
-                        <div class="card border-0 shadow-sm">
-                            <div class="card-header bg-white border-0 py-3">
-                                <h5 class="card-title mb-0 fw-bold">Top Supporters</h5>
-                            </div>
-                            <div class="card-body">
-                                <div class="list-group list-group-flush">
-                                    @foreach($donors->sortByDesc('amount')->take(5) as $donor)
-                                    <div class="list-group-item border-0 px-0 py-3">
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <div>
-                                                <h6 class="mb-0">{{ $donor->name }}</h6>
-                                                <small class="text-muted">Pledged Amount</small>
-                                            </div>
-                                            <span class="badge bg-success bg-opacity-10 text-success border-0 py-2 px-3">
-                                                ₹ {{ number_format($donor->amount) }}
-                                            </span>
-                                        </div>
-                                    </div>
-                                    @endforeach
-                                </div>
-                            </div>
-                        </div>
-                        @endif
                     </div>
                 </div>
             </div>
@@ -1430,13 +1429,13 @@
                                                 @endif me-2">
                                                 {{ strtoupper($risk['impact'] ?? 'MED') }}
                                             </span>
-                                            {{ $risk['category'] ?? 'Risk Item' }}
+                                            {{ $risk['risk'] ?? 'Risk Item' }}
                                         </button>
                                     </h2>
                                     <div id="risk{{ $index }}" class="accordion-collapse collapse" data-bs-parent="#riskAccordion">
                                         <div class="accordion-body pt-2 small">
-                                            <strong class="text-muted">Description:</strong>
-                                            <p class="mb-2">{{ $risk['description'] ?? 'N/A' }}</p>
+                                            <strong class="text-muted">Responsible Person:</strong>
+                                            <p class="mb-2">{{ $risk['responsible'] ?? 'N/A' }}</p>
                                             <strong class="text-muted">Mitigation:</strong>
                                             <p class="mb-0 text-success">{{ $risk['mitigation'] ?? 'N/A' }}</p>
                                         </div>
