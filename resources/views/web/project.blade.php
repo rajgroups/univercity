@@ -403,7 +403,7 @@
                                                 @switch($group['group'] ?? '')
                                                     @case('students')
                                                         <div class="bg-primary bg-opacity-10 rounded-circle p-3 mb-3 mx-auto" style="width: 70px; height: 70px;">
-                                                            <i class="bi person-fill fs-2 text-primary"></i>
+                                                            <i class="bi bi-person fs-2 text-white"></i>
                                                         </div>
                                                         @break
                                                     @case('youth')
@@ -551,7 +551,7 @@
                         <div class="card border-0 shadow-sm mb-4">
                             <div class="card-header bg-white border-0 py-3 d-flex justify-content-between align-items-center">
                                 <h5 class="card-title mb-0 fw-bold">Top Contributors</h5>
-                                <span class="badge bg-primary bg-opacity-10 text-primary">Actual</span>
+                                <span class="badge bg-primary bg-opacity-10 text-text">Actual</span>
                             </div>
                             <div class="card-body">
                                 <div class="list-group list-group-flush">
@@ -565,7 +565,7 @@
                                         <div class="d-flex justify-content-between align-items-center">
                                             <div class="d-flex align-items-center">
                                                 <div class="bg-primary bg-opacity-10 rounded-circle p-2 me-3">
-                                                    <i class="bi bi-person text-primary"></i>
+                                                    <i class="bi bi-person text-white"></i>
                                                 </div>
                                                 <div>
                                                     <h6 class="mb-0 fw-bold">{{ $supporter['name'] }}</h6>
@@ -680,7 +680,7 @@
 
                                         <div class="d-flex justify-content-between mb-3">
                                             <div>
-                                                <span class="badge bg-primary bg-opacity-10 text-primary mb-2">
+                                                <span class="badge bg-primary bg-opacity-10 text-white mb-2">
                                                     {{ $milestone->phase }}
                                                 </span>
                                                 <h6 class="fw-bold mb-1">{{ $milestone->task_name }}</h6>
@@ -812,78 +812,203 @@
                 </div>
             @endif
             <!-- ================= ROADMAP VIEW ================= -->
-            <div class="card border-0 shadow-sm mt-5">
-                <div class="card-header bg-white border-0 py-3">
-                    <h5 class="fw-bold mb-0">
-                        <i class="bi bi-diagram-3 me-2"></i> Project Roadmap (P1 – P7)
-                    </h5>
+            <div class="card border-0 shadow-sm mt-5 overflow-hidden rounded-4">
+                <div class="card-header bg-white border-0 py-4 px-4">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <h5 class="fw-bold mb-0 d-flex align-items-center">
+                            <i class="bi bi-diagram-3-fill text-primary me-3 fs-4"></i>
+                            Project Roadmap <span class="text-muted ms-2 fw-normal fs-6">(Execution Phases)</span>
+                        </h5>
+                        <div class="d-flex gap-2">
+                            <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-3">P1 - P7</span>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="card-body p-4">
+                <div class="card-body p-0">
+                    <div class="roadmap-wrapper p-4 p-lg-5 bg-light bg-opacity-10">
+                        @php
+                            // Group milestones by phase (P1, P2, ...)
+                            $groupedMilestones = $milestones->groupBy('phase');
 
-                    @php
-                        // Group milestones by phase (P1, P2, ...)
-                        $groupedMilestones = $milestones->groupBy('phase');
-
-                        // Helper to decide phase status color
-                        function phaseStatusClass($items) {
-                            if ($items->where('status', 'completed')->count() === $items->count()) {
-                                return 'bg-success';
+                            // Status helper for modern Roadmap
+                            if (!function_exists('getPhaseStatus')) {
+                                function getPhaseStatus($items) {
+                                    if ($items->where('status', 'completed')->count() === $items->count()) {
+                                        return 'completed';
+                                    }
+                                    if ($items->where('status', 'in-progress')->count() > 0) {
+                                        return 'in-progress';
+                                    }
+                                    return 'pending';
+                                }
                             }
-                            if ($items->where('status', 'in-progress')->count() > 0) {
-                                return 'bg-warning text-dark';
-                            }
-                            return 'bg-secondary';
-                        }
-                    @endphp
+                        @endphp
 
-                    <div class="d-flex justify-content-between align-items-center position-relative roadmap-line">
-
-                        @foreach($groupedMilestones as $phase => $items)
-                        <div class="text-center position-relative flex-fill">
-
-                            <!-- Connector Line -->
-                            @if(!$loop->first)
-                                <span class="position-absolute top-50 start-0 translate-middle-y w-100 border-top border-2"></span>
-                            @endif
-
-                            <!-- Phase Circle -->
-                            <div class="mx-auto rounded-circle d-flex align-items-center justify-content-center
-                                {{ phaseStatusClass($items) }} text-white shadow"
-                                style="width:50px; height:50px;"
-                                data-bs-toggle="tooltip"
-                                title="{{ $items->count() }} milestones">
-
-                                {{ strtoupper($phase) }}
+                        <div class="roadmap-track-container">
+                            <div class="roadmap-track">
+                                @foreach(['P1', 'P2', 'P3', 'P4', 'P5', 'P6', 'P7'] as $phase)
+                                    @php
+                                        $items = $groupedMilestones->get($phase) ?? collect();
+                                        $status = $items->isEmpty() ? 'pending' : getPhaseStatus($items);
+                                    @endphp
+                                    <div class="roadmap-step {{ $status }}">
+                                        <div class="roadmap-node" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $items->count() }} Milestones">
+                                            {{ $phase }}
+                                            @if($status == 'completed')
+                                                <i class="bi bi-check-lg position-absolute top-0 start-100 translate-middle bg-success text-white rounded-circle p-1 shadow-sm" style="font-size: 0.8rem;"></i>
+                                            @endif
+                                        </div>
+                                        <div class="roadmap-content">
+                                            <h6 class="roadmap-title mb-1">{{ $items->isEmpty() ? 'Planned' : ($items->first()->task_name ?? 'Phase ' . $phase) }}</h6>
+                                            <span class="roadmap-status">{{ ucfirst($status) }}</span>
+                                            @if(!$items->isEmpty())
+                                                <div class="mt-2">
+                                                    <div class="progress" style="height: 4px; width: 40px; margin: 0 auto;">
+                                                        <div class="progress-bar bg-{{ $status == 'completed' ? 'success' : ($status == 'in-progress' ? 'warning' : 'secondary') }}"
+                                                             style="width: {{ $items->avg('progress') }}%"></div>
+                                                    </div>
+                                                </div>
+                                            @endif
+                                        </div>
+                                    </div>
+                                @endforeach
                             </div>
-
-                            <!-- Phase Info -->
-                            <div class="mt-2">
-                                <small class="fw-semibold d-block">
-                                    {{ $items->count() }} Tasks
-                                </small>
-
-                                <small class="text-muted">
-                                    {{ ucfirst($items->pluck('status')->unique()->implode(', ')) }}
-                                </small>
-                            </div>
-
                         </div>
-                        @endforeach
-
                     </div>
                 </div>
             </div>
+
             @push('css')
             <style>
-                .roadmap-line {
-                overflow-x: auto;
-                gap: 10px;
-            }
+                .roadmap-track-container {
+                    overflow-x: auto;
+                    padding: 40px 0 20px;
+                    scrollbar-width: thin;
+                }
 
-            .roadmap-line > div {
-                min-width: 120px;
-            }
+                .roadmap-track-container::-webkit-scrollbar {
+                    height: 6px;
+                }
+
+                .roadmap-track-container::-webkit-scrollbar-thumb {
+                    background: #dee2e6;
+                    border-radius: 10px;
+                }
+
+                .roadmap-track {
+                    display: flex;
+                    justify-content: space-between;
+                    min-width: 900px;
+                    position: relative;
+                }
+
+                /* Background Connectors */
+                .roadmap-track::before {
+                    content: '';
+                    position: absolute;
+                    top: 30px;
+                    left: 50px;
+                    right: 50px;
+                    height: 4px;
+                    background: #f1f3f5;
+                    z-index: 1;
+                    border-radius: 10px;
+                }
+
+                .roadmap-step {
+                    flex: 1;
+                    position: relative;
+                    z-index: 2;
+                    text-align: center;
+                }
+
+                .roadmap-node {
+                    width: 60px;
+                    height: 60px;
+                    background: #fff;
+                    border-radius: 20px; /* Squircle shape */
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    margin: 0 auto 20px;
+                    box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+                    font-weight: 800;
+                    font-size: 1.1rem;
+                    color: #adb5bd;
+                    position: relative;
+                    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+                    border: 2px solid #f8f9fa;
+                }
+
+                /* Connector Progress Enhancement */
+                .roadmap-step.completed::after {
+                    content: '';
+                    position: absolute;
+                    top: 30px;
+                    left: 50%;
+                    width: 100%;
+                    height: 4px;
+                    background: #198754;
+                    z-index: -1;
+                }
+
+                .roadmap-step:last-child.completed::after {
+                    display: none;
+                }
+
+                /* Status Variations */
+                .roadmap-step.completed .roadmap-node {
+                    background: linear-gradient(135deg, #198754 0%, #20c997 100%);
+                    color: #fff;
+                    box-shadow: 0 10px 20px rgba(25, 135, 84, 0.2);
+                    border: none;
+                }
+
+                .roadmap-step.in-progress .roadmap-node {
+                    background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+                    color: #fff;
+                    box-shadow: 0 10px 20px rgba(245, 158, 11, 0.2);
+                    border: none;
+                    animation: roadmap-pulse 2s infinite;
+                }
+
+                .roadmap-step.completed .roadmap-title { color: #198754; }
+                .roadmap-step.in-progress .roadmap-title { color: #d97706; }
+
+                .roadmap-title {
+                    font-weight: 700;
+                    font-size: 0.85rem;
+                    margin-bottom: 4px;
+                    display: -webkit-box;
+                    -webkit-line-clamp: 2;
+                    -webkit-box-orient: vertical;
+                    overflow: hidden;
+                    height: 2.4em;
+                    padding: 0 10px;
+                }
+
+                .roadmap-status {
+                    font-size: 0.7rem;
+                    font-weight: 700;
+                    text-transform: uppercase;
+                    letter-spacing: 0.5px;
+                    color: #adb5bd;
+                }
+
+                .roadmap-step.completed .roadmap-status { color: #198754; opacity: 0.8; }
+                .roadmap-step.in-progress .roadmap-status { color: #f59e0b; }
+
+                @keyframes roadmap-pulse {
+                    0% { transform: scale(1); box-shadow: 0 10px 20px rgba(245, 158, 11, 0.2); }
+                    50% { transform: scale(1.05); box-shadow: 0 15px 30px rgba(245, 158, 11, 0.4); }
+                    100% { transform: scale(1); box-shadow: 0 10px 20px rgba(245, 158, 11, 0.2); }
+                }
+
+                @media (max-width: 991px) {
+                    .roadmap-track { min-width: 800px; }
+                    .roadmap-node { width: 50px; height: 50px; border-radius: 15px; }
+                }
             </style>
             @endpush
         </div>
@@ -1618,7 +1743,7 @@
                                     </div>
                                     <div class="progress" style="height: 8px;">
                                         <div class="progress-bar bg-gradient" style="width: {{ ($count / $surveyStats['total']) * 100 }}%; background: linear-gradient(90deg, #667eea, #764ba2);"></div>
-                                    </div>
+                                    </div>f
                                 </div>
                             </div>
                             @endforeach
@@ -2052,7 +2177,7 @@
             <div class="modal-header bg-primary text-white border-0 py-4">
                 <div class="d-flex align-items-center">
                     <div class="bg-white bg-opacity-25 rounded-circle p-2 me-3">
-                        <i class="bi bi-people-fill text-white fs-4"></i>
+                        <i class="bi bi-people-fill text-black fs-4"></i>
                     </div>
                     <div>
                         <h5 class="modal-title fw-bold mb-0" id="donorsModalLabel">Project Supporters</h5>
