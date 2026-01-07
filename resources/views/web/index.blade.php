@@ -167,7 +167,7 @@
                                                         <h5 class="text-light-gray">
                                                             <a
                                                                 href="{{ route('web.blog.show', [$blog->category->slug, $blog->slug]) }}">
-                                                                {!! $blog->short_description !!}
+                                                                {!! Str::words(strip_tags($blog->short_description), 12, '...') !!}
                                                             </a>
                                                         </h5>
                                                     </div>
@@ -466,7 +466,7 @@
                 <h3 class="vibrant-title mb-3">{{ $settings->program_project_main_title }} <span class="gradient-text">{{ $settings->program_project_main_sub_title }}</span></h3>
                 <p class="text-muted">{{ $settings->program_final_title }}</p>
             </div>
-            
+
             <div class="row align-items-stretch">
                 @if ($programes->isNotEmpty())
                     <div class="swiper mySwiperstwo scheme-swiper p-0 m-0">
@@ -483,11 +483,11 @@
                                         </div>
                                         <div class="p-4 flex-grow-1 d-flex flex-column">
                                             <h6 class="fw-bold mb-2">
-                                                <a href="{{ route('web.announcement.program', [$progCategorySlug, $program->slug]) }}" 
+                                                <a href="{{ route('web.announcement.program', [$progCategorySlug, $program->slug]) }}"
                                                    class="text-decoration-none text-dark hover-primary">{{ $program->title }}</a>
                                             </h6>
                                             <p class="text-muted small mb-3">{{ Str::limit(strip_tags($program->description), 100) }}</p>
-                                            
+
                                             <div class="d-flex justify-content-between align-items-center mt-auto">
                                                 <div class="share-links-modern">
                                                     @php
@@ -719,7 +719,7 @@
             </div>
             <h2 class="vibrant-title mb-4">Smart Learning. Trusted Experts. <br><span class="gradient-text">Everywhere</span></h2>
         </div>
-        
+
         <div class="row g-4 align-items-center">
             <div class="col-md-7">
                 <div class="row g-4">
@@ -807,11 +807,11 @@
                                         </div>
                                         <div class="p-4 flex-grow-1">
                                             <h6 class="fw-bold mb-2">
-                                                <a href="{{ route('web.announcement.scheme', [$categorySlug, $scheme->slug]) }}" 
+                                                <a href="{{ route('web.announcement.scheme', [$categorySlug, $scheme->slug]) }}"
                                                    class="text-decoration-none text-dark hover-primary">{{ $scheme->title }}</a>
                                             </h6>
                                             <p class="text-muted small mb-3">{{ Str::limit($scheme->subtitle, 80) }}</p>
-                                            
+
                                             <div class="d-flex justify-content-between align-items-center mt-auto">
                                                 <div class="share-links-modern">
                                                     @php
@@ -932,7 +932,7 @@
                 </div>
                 <h2 class="vibrant-title mb-3">Driving <span class="gradient-text">Sustainable Impact</span></h2>
             </div>
-            
+
             <div class="row g-5">
                 <div class="col-lg-6">
                     @php
@@ -974,7 +974,7 @@
                     <div class="modern-card p-5 h-100">
                         <h3 class="fw-bold mb-4">Collaborative Approach</h3>
                         <p class="text-muted mb-5">ISICO aligns its initiatives with national priorities, including the NEP 2020, through strategic synergy.</p>
-                        
+
                         <div class="d-flex flex-column gap-4">
                             <div class="d-flex align-items-start gap-3">
                                 <div class="icon-box m-0 flex-shrink-0" style="width: 45px; height: 45px;">
@@ -1047,7 +1047,7 @@
                         </div>
                         <h3 class="fw-bold mb-4">Strategic <span class="text-primary">Roadmap</span></h3>
                     </div>
-                    
+
                     @php
                         $futureGoals = is_array($settings->future_goals) ? $settings->future_goals : json_decode($settings->future_goals, true);
                     @endphp
@@ -1337,7 +1337,7 @@
                 </div>
                 <h2 class="vibrant-title mb-3">Our Dedicated <span class="gradient-text">Brand Partners</span></h2>
             </div>
-            
+
             <div class="Marquees modern-card p-4 overflow-hidden">
                 <div class="Marquee FirstRow d-flex align-items-center gap-5">
                     @foreach ($brands as $brand)
@@ -1348,7 +1348,7 @@
                 </div>
             </div>
         </div>
-        
+
         <style>
             .grayscale-hover {
                 filter: grayscale(100%);
