@@ -563,7 +563,7 @@
                   <div class="recent-article">
                      <img src="{{ asset($similar->image) }}" class="article-img" alt="{{ $similar->title }}" loading="lazy">
                      <div>
-                        <a href="{{ route('web.prgrame', [$similar->category->slug, $similar->slug]) }}"
+                        <a href="{{ route('web.announcement.program', [$similar->category->slug, $similar->slug]) }}"
                            class="hover-content">
                            {{ Str::limit($similar->title, 60) }}
                         </a>
@@ -589,7 +589,7 @@
 
                   <div class="tag-block">
                      @forelse($similars as $similar)
-                     <a href="{{ route('web.prgrame', [$similar->category->slug, $similar->slug]) }}">
+                     <a href="{{ route('web.announcement.program', [$similar->category->slug, $similar->slug]) }}">
                         {{ Str::limit($similar->title, 25, '...') }}
                      </a>
                      @empty
