@@ -2191,7 +2191,7 @@
                 <ul class="nav nav-tabs nav-fill bg-light border-0" id="supporterTabs" role="tablist">
                     <li class="nav-item" role="presentation">
                         <button class="nav-link active py-3 fw-bold border-0 rounded-0" id="actual-tab" data-bs-toggle="tab" data-bs-target="#actual-pane" type="button" role="tab" aria-controls="actual-pane" aria-selected="true">
-                            <i class="bi bi-patch-check-fill me-2 text-success"></i>Actual Contributions
+                            <i class="bi bi-patch-check-fill me-2 text-success"></i>Major Contributions
                         </button>
                     </li>
                     <li class="nav-item" role="presentation">
