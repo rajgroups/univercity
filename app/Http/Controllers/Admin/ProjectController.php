@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Project;
 use App\Models\Category;
+use App\Models\Announcement;
 use App\Models\ProjectMilestone;
 use App\Models\Stakeholder;
 use Illuminate\Http\Request;
@@ -87,7 +88,9 @@ class ProjectController extends Controller
 
         $projectCode = 'ISICO-' . $year . '-' . $locationCode . '-' . str_pad($sequence, 4, '0', STR_PAD_LEFT);
 
-        return view('admin.project.add', compact('categories', 'projectCode'));
+        $schemes = Announcement::where('type', 2)->where('status', 1)->get(['id', 'title', 'slug']);
+
+        return view('admin.project.add', compact('categories', 'projectCode', 'schemes'));
     }
 
     /**
@@ -170,7 +173,9 @@ class ProjectController extends Controller
         $project->documents = $project->documents ?? [];
         $project->links = $project->links ?? [];
 
-        return view('admin.project.edit', compact('project', 'categories'));
+        $schemes = Announcement::where('type', 2)->where('status', 1)->get(['id', 'title', 'slug']);
+
+        return view('admin.project.edit', compact('project', 'categories', 'schemes'));
     }
 
     /**
@@ -322,7 +327,7 @@ class ProjectController extends Controller
 
             // Government Schemes validation
             'govt_schemes' => ['nullable', 'array'],
-            'govt_schemes.*' => ['in:skill_india_mission,nsp,pmkvy,nlm,beti_bachao'],
+            'govt_schemes.*' => ['string'],
 
             // File uploads - banner_images is SINGLE file
             'thumbnail_image' => [$action === 'update' ? 'nullable' : 'required', 'image', 'max:5120'],

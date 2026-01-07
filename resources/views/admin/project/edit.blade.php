@@ -1297,30 +1297,12 @@
                         class="form-select select2-multiple @error('govt_schemes') is-invalid @enderror"
                         multiple>
 
-                    <option value="skill_india_mission"
-                        @selected(in_array('skill_india_mission', $govtSchemes ?? []))>
-                        Skill India Mission
-                    </option>
-
-                    <option value="nsp"
-                        @selected(in_array('nsp', $govtSchemes ?? []))>
-                        National Skill Development Policy
-                    </option>
-
-                    <option value="pmkvy"
-                        @selected(in_array('pmkvy', $govtSchemes ?? []))>
-                        Pradhan Mantri Kaushal Vikas Yojana
-                    </option>
-
-                    <option value="nlm"
-                        @selected(in_array('nlm', $govtSchemes ?? []))>
-                        National Livelihood Mission
-                    </option>
-
-                    <option value="beti_bachao"
-                        @selected(in_array('beti_bachao', $govtSchemes ?? []))>
-                        Beti Bachao Beti Padhao
-                    </option>
+                    @foreach($schemes as $scheme)
+                        <option value="{{ $scheme->slug }}"
+                            @selected(in_array($scheme->slug, $govtSchemes ?? []))>
+                            {{ $scheme->title }}
+                        </option>
+                    @endforeach
                 </select>
 
                 @error('govt_schemes')

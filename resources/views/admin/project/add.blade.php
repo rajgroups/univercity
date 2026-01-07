@@ -1021,21 +1021,11 @@
                                             <select name="govt_schemes[]"
                                                 class="form-select select2-multiple @error('govt_schemes') is-invalid @enderror"
                                                 multiple>
-                                                <option value="skill_india_mission"
-                                                    {{ in_array('skill_india_mission', old('govt_schemes', [])) ? 'selected' : '' }}>
-                                                    Skill India Mission</option>
-                                                <option value="nsp"
-                                                    {{ in_array('nsp', old('govt_schemes', [])) ? 'selected' : '' }}>
-                                                    National Skill Development Policy</option>
-                                                <option value="pmkvy"
-                                                    {{ in_array('pmkvy', old('govt_schemes', [])) ? 'selected' : '' }}>
-                                                    Pradhan Mantri Kaushal Vikas Yojana</option>
-                                                <option value="nlm"
-                                                    {{ in_array('nlm', old('govt_schemes', [])) ? 'selected' : '' }}>
-                                                    National Livelihood Mission</option>
-                                                <option value="beti_bachao"
-                                                    {{ in_array('beti_bachao', old('govt_schemes', [])) ? 'selected' : '' }}>
-                                                    Beti Bachao Beti Padhao</option>
+                                                @foreach($schemes as $scheme)
+                                                    <option value="{{ $scheme->slug }}"
+                                                        {{ in_array($scheme->slug, old('govt_schemes', [])) ? 'selected' : '' }}>
+                                                        {{ $scheme->title }}</option>
+                                                @endforeach
                                             </select>
                                             @error('govt_schemes')
                                                 <div class="invalid-feedback">{{ $message }}</div>

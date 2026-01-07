@@ -91,7 +91,7 @@
                                         <i class="bi bi-calendar-range text-white fs-5"></i>
                                     </div>
                                     <div>
-                                        <small class="text-black-50 d-block">TIMELINE</small>
+                                        <small class="text-black-50 d-block">Tentative Start</small>
                                         <strong class="text-black fs-6">
                                             @if($project->planned_start_date)
                                                 {{ date('M Y', strtotime($project->planned_start_date)) }}
@@ -1854,15 +1854,6 @@
                             <h6 class="text-muted small text-uppercase mb-3 fw-bold">Government Schemes</h6>
                             <div class="d-flex flex-wrap gap-2">
                                 @php
-                                    $schemeLabels = [
-                                        'skill_india_mission' => 'Skill India Mission',
-                                        'nsp' => 'National Skill Policy',
-                                        'pmkvy' => 'PM Kaushal Vikas',
-                                        'nlm' => 'National Livelihood',
-                                        'beti_bachao' => 'Beti Bachao',
-                                    ];
-                                @endphp
-                               @php
                                     $schemes = is_string($project->govt_schemes)
                                         ? json_decode($project->govt_schemes, true)
                                         : $project->govt_schemes;
@@ -1871,7 +1862,7 @@
                                 @if(!empty($schemes))
                                     @foreach($schemes as $scheme)
                                         <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 px-3 py-2">
-                                            {{ $schemeLabels[$scheme] ?? ucfirst(str_replace('_', ' ', $scheme)) }}
+                                            {{ $govtSchemeTitles[$scheme] ?? ucfirst(str_replace('_', ' ', $scheme)) }}
                                         </span>
                                     @endforeach
                                 @endif

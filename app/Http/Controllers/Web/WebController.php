@@ -188,6 +188,15 @@ class WebController extends Controller
         $totalRaised = $donors->sum('amount');
         $totalReceived = $fundings->sum('amount');
 
+        // 5.2️⃣ Resolve Government Schemes titles
+        $govtSchemeSlugs = $project->govt_schemes;
+        if (is_string($govtSchemeSlugs)) {
+            $govtSchemeSlugs = json_decode($govtSchemeSlugs, true) ?: [];
+        }
+        $govtSchemeTitles = \App\Models\Announcement::where('type', 2)
+            ->whereIn('slug', (array)$govtSchemeSlugs)
+            ->pluck('title', 'slug');
+
         // 6️⃣ Return view
         return view('web.project', compact(
             'project',
@@ -201,7 +210,8 @@ class WebController extends Controller
             'surveys',
             'surveyStats',
             'totalRaised',
-            'totalReceived'
+            'totalReceived',
+            'govtSchemeTitles'
         ));
     }
 
