@@ -363,7 +363,7 @@
             </div>
             <div class="d-flex align-items-center gap-2">
                 <i class="bi bi-building text-white"></i>
-                <p class="light-gray mb-0">{{ $announcement->category->name ?? 'Government' }}</p>
+                <p class="light-gray mb-0">{{ $announcement->category?->name ?? 'Government' }}</p>
             </div>
         </div>
     </div>
@@ -498,7 +498,7 @@
                             <p class="card-text text-muted small mb-3">
                                 {{ \Carbon\Carbon::parse($similar->created_at)->format('M j, Y') }}
                             </p>
-                            <a href="{{ route('web.announcement.scheme', [$similar->category->slug, $similar->slug]) }}"
+                            <a href="{{ route('web.announcement.scheme', [$similar->category?->slug ?? 'general', $similar->slug]) }}"
                                class="btn btn-outline-primary btn-sm">
                                 View Details <i class="bi bi-arrow-right ms-1"></i>
                             </a>
