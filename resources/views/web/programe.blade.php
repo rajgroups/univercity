@@ -271,7 +271,6 @@
         .prog-hero { padding: 80px 0 40px; }
         .prog-meta-grid { gap: 20px; }
     }
-</style>
     @media (max-width: 767.98px) {
         .title-banner {
             padding: 2.5rem 0 1.25rem;
