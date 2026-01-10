@@ -250,14 +250,14 @@
                                                         {{-- {{ route('programe') }} --}}
                                                         <a href="{{ route('web.catalog') }}">1. Educational
                                                             Programs</a>
-                                                        <ul class="sub-menu">
+                                                        <!-- <ul class="sub-menu">
                                                             {{-- {{ route('programe.details', $program->slug) }}" --}}
                                                             @foreach ($educationPrograms as $program)
                                                                 <li><a
                                                                         href="{{ route('web.catalog', ['category_id' => $program->id]) }}">{{ $program->name }}</a>
                                                                 </li>
                                                             @endforeach
-                                                        </ul>
+                                                        </ul> -->
                                                     </li>
 
                                                     {{-- Skill Development Programs --}}

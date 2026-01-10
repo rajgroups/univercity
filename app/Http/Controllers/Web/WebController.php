@@ -215,15 +215,6 @@ class WebController extends Controller
         ));
     }
 
-    public function upcoming($categorySlug, $projectSlug)
-    {
-        return $this->showProject($categorySlug, $projectSlug);
-    }
-
-    public function ongoing($category, $slug)
-    {
-        return $this->showProject($category, $slug);
-    }
 
     public function sectors(Request $request)
     {

@@ -2044,14 +2044,21 @@
                             </div>
                             <div class="card-body">
                                 <div class="d-flex flex-wrap gap-2 mb-3">
-                                    <button class="btn btn-outline-primary btn-sm flex-grow-1">
+                                    <button class="btn btn-outline-primary btn-sm flex-grow-1"
+                                            onclick="shareProject('facebook', '{{ url()->current() }}', '{{ $project->title }}')">
                                         <i class="bi bi-facebook me-1"></i>Facebook
                                     </button>
-                                    <button class="btn btn-outline-info btn-sm flex-grow-1">
-                                        <i class="bi bi-twitter me-1"></i>Twitter
+                                    <button class="btn btn-outline-info btn-sm flex-grow-1"
+                                            onclick="shareProject('twitter', '{{ url()->current() }}', '{{ $project->title }}')">
+                                        <i class="bi bi-twitter-x me-1"></i>Twitter
                                     </button>
-                                    <button class="btn btn-outline-success btn-sm flex-grow-1">
+                                    <button class="btn btn-outline-success btn-sm flex-grow-1"
+                                            onclick="shareProject('whatsapp', '{{ url()->current() }}', '{{ $project->title }}')">
                                         <i class="bi bi-whatsapp me-1"></i>WhatsApp
+                                    </button>
+                                    <button class="btn btn-outline-primary btn-sm flex-grow-1"
+                                            onclick="shareProject('linkedin', '{{ url()->current() }}', '{{ $project->title }}')">
+                                        <i class="bi bi-linkedin me-1"></i>LinkedIn
                                     </button>
                                 </div>
                                 <div class="input-group">
@@ -3354,6 +3361,32 @@ function filterGallery(section, event) {
     } else {
         const targetSec = document.getElementById(section + '-section');
         if (targetSec) targetSec.style.display = 'block';
+    }
+}
+
+// Social sharing
+function shareProject(platform, url, title) {
+    let shareUrl = '';
+    const encodedUrl = encodeURIComponent(url);
+    const encodedTitle = encodeURIComponent(title);
+
+    switch(platform) {
+        case 'facebook':
+            shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
+            break;
+        case 'twitter':
+            shareUrl = `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`;
+            break;
+        case 'whatsapp':
+            shareUrl = `https://api.whatsapp.com/send?text=${encodedTitle}%20${encodedUrl}`;
+            break;
+        case 'linkedin':
+            shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`;
+            break;
+    }
+
+    if (shareUrl) {
+        window.open(shareUrl, '_blank', 'width=600,height=400,menubar=no,toolbar=no,resizable=yes,scrollbars=yes');
     }
 }
 

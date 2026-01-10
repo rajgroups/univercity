@@ -166,13 +166,7 @@
                                         $slug = $item->slug;
 
                                         if ($item->item_type === 'project') {
-                                            if ($item->stage === 'upcoming') {
-                                                $link = route('web.upcoming.project', [$categorySlug, $slug]);
-                                            } elseif ($item->stage === 'ongoing') {
-                                                $link = route('web.ongoging.project', [$categorySlug, $slug]);
-                                            } else {
-                                                $link = route('web.project.show', [$categorySlug, $slug]);
-                                            }
+                                            $link = route('web.project.show', [$categorySlug, $slug]);
                                         } else {
                                             $link = $item->type == 1
                                                 ? route('web.announcement.program', [$categorySlug, $slug])

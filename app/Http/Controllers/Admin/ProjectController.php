@@ -128,10 +128,10 @@ class ProjectController extends Controller
 
             $projectCode = 'ISICO-'
                 . $year . '-'
-                . $project->location_code . '-'
+                . $project->location_type . '-'
                 . str_pad($project->id, 4, '0', STR_PAD_LEFT);
 
-            Log::info($projectCode);
+            // Log::info($projectCode);
             // 🔹 STEP 3: UPDATE SAME RECORD
             $project->update([
                 'project_code' => $projectCode,

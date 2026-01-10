@@ -533,8 +533,8 @@
                     <i class="bi bi-award"></i>
                     Government Scheme
                 </div>
-                <h1 class="scheme-title-main">{{ $announcement->title ?? 'Untitled Scheme' }}</h1>
-                <p class="scheme-subtitle-modern">{{ $announcement->subtitle ?? 'Skill development and empowerment initiative by the government.' }}</p>
+                <h1 class="scheme-title-main text-white">{{ $announcement->title ?? 'Untitled Scheme' }}</h1>
+                <p class="scheme-subtitle-modern text-white">{{ $announcement->subtitle ?? 'Skill development and empowerment initiative by the government.' }}</p>
 
                 <div class="scheme-meta-grid">
                     <div class="scheme-meta-item">

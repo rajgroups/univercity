@@ -98,9 +98,6 @@ Route::middleware(['maintenance'])->group(function () {
     Route::get('/project/{category}/{slug}', [WebController::class, 'showProject'])->name('web.project.show');
     Route::post('/project/interest', [WebController::class, 'storeInterest'])->name('web.project.interest');
 
-    // These routes are kept for backward compatibility if needed, but should be updated in views
-    Route::get('/upcoming-project/{category}/{slug}', [WebController::class, 'showProject'])->name('web.upcoming.project');
-    Route::get('/ongoing-project/{category}/{slug}', [WebController::class, 'showProject'])->name('web.ongoging.project');
 
     // Sector Routes
     Route::get('/sector', [WebController::class, 'sectors'])->name('web.sector');
@@ -115,7 +112,7 @@ Route::middleware(['maintenance'])->group(function () {
     Route::get('/course', [WebController::class, 'course'])->name('web.course.index');
     Route::get('/course/{slug}', [WebController::class, 'courseDetails'])->name('web.course.show');
 
-    // For catelog (Program,scheme,upcoming-project,ongoing-project)
+    // For catelog (Program,scheme,project)
     Route::get('/catalog', [WebController::class, 'catalog'])->name('web.catalog');
 
     // For Blog Catelog

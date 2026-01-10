@@ -247,7 +247,7 @@
 <div class="blog-hero">
     <div class="container text-center text-md-start">
         <h1 class="blog-hero-title">Insights & <br class="d-none d-md-block"> Perspectives</h1>
-        <p class="blog-hero-subtitle">Exploring the future of skill development, innovation, and entrepreneurship in the modern Indian landscape.</p>
+        <p class="blog-hero-subtitle text-white">Exploring the future of skill development, innovation, and entrepreneurship in the modern Indian landscape.</p>
     </div>
 </div>
 
