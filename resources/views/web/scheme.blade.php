@@ -661,7 +661,7 @@
                     <div class="mt-5 p-4 bg-light rounded-4">
                         <h6 class="fw-bold mb-3"><i class="bi bi-headset me-2 text-primary"></i>Need Assistance?</h6>
                         <p class="small text-muted mb-4">Contact our support desk for registration help and more details.</p>
-                        <a href="{{ route('web.contact') }}" class="btn btn-primary w-100 rounded-pill fw-bold py-2">Contact Us</a>
+                        <a href="{{ route('contact') }}" class="btn btn-primary w-100 rounded-pill fw-bold py-2">Contact Us</a>
                     </div>
                 </div>
             </div>

@@ -547,7 +547,7 @@
                     </div>
                     <h6 class="fw-bold">Ready to Elevate?</h6>
                     <p class="small text-muted mb-4">Enroll today and start your journey towards excellence.</p>
-                    <a href="{{ route('web.contact') }}" class="btn btn-primary w-100 rounded-pill fw-bold py-2 shadow-sm">Get Started</a>
+                    <a href="{{ route('contact') }}" class="btn btn-primary w-100 rounded-pill fw-bold py-2 shadow-sm">Get Started</a>
                 </div>
             </div>
         </div>

@@ -674,13 +674,21 @@ class WebController extends Controller
             'resource' => 7
         ];
 
-        $typeId = $typeMap[$typeSlug] ?? 1;
+        $typeId = $typeMap[$typeSlug] ?? null;
 
-        // Get the blog by type and slug
-        $blog = Blog::where('slug', $slug)
-            ->where('type', $typeId)
-            ->with(['category'])
-            ->firstOrFail();
+        // Try to find by type and slug first
+        $query = Blog::where('slug', $slug);
+        
+        if ($typeId) {
+            $blog = (clone $query)->where('type', $typeId)->with(['category'])->first();
+        } else {
+            $blog = null;
+        }
+
+        // Fallback: search by slug only (for legacy URLs or type-mismatch)
+        if (!$blog) {
+            $blog = $query->with(['category'])->firstOrFail();
+        }
 
         // Get similar blogs from the same category
         $similars = Blog::where('id', '!=', $blog->id)

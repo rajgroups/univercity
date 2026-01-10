@@ -160,25 +160,26 @@
                                                             </p>
                                                             <span>{{ \Carbon\Carbon::parse($blog->created_at)->format('F') }}</span>
                                                         </div>
+                                                        @php
+                                                            $typeSlug = match($blog->type) {
+                                                                1 => 'blog',
+                                                                2 => 'news',
+                                                                3 => 'collaboration',
+                                                                4 => 'training',
+                                                                5 => 'research',
+                                                                6 => 'case-study',
+                                                                7 => 'resource',
+                                                                default => 'blog',
+                                                            };
+                                                        @endphp
                                                         <div class="file-box">
                                                             <i class="far fa-folder-open"></i>
-                                                            <p>{{ $blog->title ?? null }}</p>
+                                                            <a href="{{ route('web.blog.show', [$typeSlug, $blog->slug]) }}" class="d-inline-block">
+                                                                <p class="mb-0">{{ $blog->title ?? null }}</p>
+                                                            </a>
                                                         </div>
-                                                        <h5 class="text-light-gray">
-                                                            @php
-                                                                $typeSlug = match($blog->type) {
-                                                                    1 => 'blog',
-                                                                    2 => 'news',
-                                                                    3 => 'collaboration',
-                                                                    4 => 'training',
-                                                                    5 => 'research',
-                                                                    6 => 'case-study',
-                                                                    7 => 'resource',
-                                                                    default => 'blog',
-                                                                };
-                                                            @endphp
-                                                            <a
-                                                                href="{{ route('web.blog.show', [$typeSlug, $blog->slug]) }}">
+                                                        <h5 class="text-light-gray mt-2">
+                                                            <a href="{{ route('web.blog.show', [$typeSlug, $blog->slug]) }}">
                                                                 {!! Str::words(strip_tags($blog->short_description), 12, '...') !!}
                                                             </a>
                                                         </h5>
