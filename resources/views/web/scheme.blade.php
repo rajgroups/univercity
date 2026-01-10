@@ -328,7 +328,6 @@
         .sticky-nav-card { position: static; margin-bottom: 30px; }
         .scheme-meta-grid { gap: 20px; }
     }
-</style>
     section[id^="section"] p {
         line-height: 1.7;
         color: #455a64;
