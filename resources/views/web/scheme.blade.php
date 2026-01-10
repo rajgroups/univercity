@@ -1,153 +1,334 @@
-{{-- @dd($metaDescription) --}}
 @extends('layouts.web.app')
+
 @push('meta')
-    <title>{{ $metaTitle ?? ($announcement->title ?? 'Default Page Title') }}</title>
-
-    <meta name="description"
-        content="{{ $metaDescription ?? Str::limit(strip_tags($announcement->description ?? ''), 150) }}">
-    <meta name="keywords" content="{{ $metaKeywords ?? 'announcement, news, education' }}">
-    <meta name="author" content="{{ $metaAuthor ?? 'YourSiteName' }}">
-    <meta name="robots" content="{{ $metaRobots ?? 'index, follow' }}">
-
-    <!-- Canonical Tag -->
-    <link rel="canonical" href="{{ $metaCanonical ?? url()->current() }}">
+    <title>{{ $metaTitle ?? ($announcement->title ?? 'Government Scheme - ISICO') }}</title>
+    <meta name="description" content="{{ $metaDescription ?? Str::limit(strip_tags($announcement->description ?? ''), 160) }}">
+    <meta name="keywords" content="{{ $metaKeywords ?? 'government scheme, skill development, ISICO, India' }}">
+    <meta name="author" content="ISICO">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="{{ url()->current() }}">
 
     <!-- Open Graph -->
-    <meta property="og:title" content="{{ $metaOgTitle ?? ($announcement->title ?? 'Default OG Title') }}">
-    <meta property="og:description"
-        content="{{ $metaOgDescription ?? Str::limit(strip_tags($announcement->description ?? ''), 150) }}">
+    <meta property="og:title" content="{{ $announcement->title ?? 'Government Scheme' }}">
+    <meta property="og:description" content="{{ Str::limit(strip_tags($announcement->description ?? ''), 160) }}">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="{{ $metaOgUrl ?? url()->current() }}">
-    <meta property="og:image" content="{{ $metaOgImage ?? asset($announcement->image ?? 'default.jpg') }}">
-
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="{{ $metaTwitterTitle ?? ($announcement->title ?? 'Default Twitter Title') }}">
-    <meta name="twitter:description"
-        content="{{ $metaTwitterDescription ?? Str::limit(strip_tags($announcement->description ?? ''), 150) }}">
-    <meta name="twitter:image" content="{{ $metaTwitterImage ?? asset($announcement->image ?? 'default.jpg') }}">
+    <meta property="og:url" content="{{ url()->current() }}">
+    @if(isset($announcement->image))
+    <meta property="og:image" content="{{ asset($announcement->image) }}">
+    @endif
 @endpush
 
 @section('content')
 <style>
-    /* Enhanced Mobile-First Styles for Government Scheme */
-    .title-banner {
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-        padding: 4rem 0 2rem;
+    :root {
+        --scheme-primary: #1565c0;
+        --scheme-secondary: #0d47a1;
+        --scheme-accent: #FFC107;
+        --scheme-light: #f8fbff;
+        --scheme-glass: rgba(255, 255, 255, 0.9);
+        --scheme-shadow: 0 10px 30px rgba(13, 71, 161, 0.08);
+        --transition-soft: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Modern Hero Banner */
+    .scheme-hero {
         position: relative;
-    }
-
-    .title-banner::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: linear-gradient(135deg, rgba(13, 71, 161, 0.85) 0%, rgba(21, 101, 192, 0.7) 100%);
-    }
-
-    .title-banner .container-fluid {
-        position: relative;
-        z-index: 2;
-    }
-
-    .title-banner h2 {
-        font-size: clamp(1.5rem, 4vw, 2.25rem);
-        line-height: 1.3;
-        text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        padding: 100px 0 60px;
+        background-color: #1a1a1a;
+        overflow: hidden;
         color: white;
     }
 
-    .color-primary {
-        color: #FFD54F !important;
-        font-weight: 600;
+    .scheme-hero-bg {
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background-size: cover;
+        background-position: center;
+        filter: brightness(0.4) saturate(1.2);
+        z-index: 1;
     }
 
-    .light-gray {
-        color: #e3f2fd !important;
-        margin-bottom: 0;
+    .scheme-hero-overlay {
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: linear-gradient(135deg, rgba(21, 101, 192, 0.9) 0%, rgba(13, 71, 161, 0.4) 100%);
+        z-index: 2;
     }
 
-    /* Improved Carousel */
-    .carousel-item img {
-        height: min(50vh, 400px);
-        object-fit: cover;
-        border-radius: 0.75rem;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    .scheme-hero .container-fluid {
+        position: relative;
+        z-index: 3;
     }
 
-    .carousel-indicators [data-bs-target] {
-        width: 12px;
-        height: 12px;
-        border-radius: 50%;
-        margin: 0 0.25rem;
-        background-color: #1565c0;
+    .scheme-badge-premium {
+        background: rgba(255, 193, 7, 0.2);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 193, 7, 0.3);
+        color: var(--scheme-accent);
+        padding: 8px 18px;
+        border-radius: 50px;
+        font-size: 0.85rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 24px;
     }
 
-    .carousel-control-prev-icon,
-    .carousel-control-next-icon {
-        background-color: #1565c0;
-        border-radius: 50%;
-        padding: 1rem;
+    .scheme-title-main {
+        font-size: clamp(2rem, 5vw, 3.5rem);
+        font-weight: 800;
+        line-height: 1.1;
+        margin-bottom: 20px;
+        text-shadow: 0 5px 15px rgba(0,0,0,0.2);
     }
 
-    /* Enhanced Navigation Sidebar */
-    #navbar-example {
-        border-radius: 0.75rem;
-        box-shadow: 0 0.25rem 0.75rem rgba(0,0,0,0.1);
-        border: 1px solid #e3f2fd;
-        background: linear-gradient(135deg, #f8fbff 0%, #e3f2fd 100%);
-        position: sticky;
-        top: 6rem;
-        max-height: calc(100vh - 8rem);
-        overflow-y: auto;
+    .scheme-subtitle-modern {
+        font-size: 1.25rem;
+        color: rgba(255,255,255,0.85);
+        max-width: 800px;
+        margin-bottom: 32px;
+        font-weight: 400;
     }
 
-    #navbar-example .nav-link {
-        color: #1565c0;
-        padding: 0.75rem 1rem;
-        border-radius: 0.5rem;
-        margin-bottom: 0.25rem;
-        transition: all 0.2s ease-in-out;
-        border-left: 3px solid transparent;
-        font-weight: 500;
+    .scheme-meta-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 40px;
+        border-top: 1px solid rgba(255,255,255,0.1);
+        padding-top: 24px;
     }
 
-    #navbar-example .nav-link:hover,
-    #navbar-example .nav-link:focus {
-        background-color: #bbdefb;
-        color: #0d47a1;
-        border-left-color: #0d47a1;
-        transform: translateX(4px);
+    .scheme-meta-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
     }
 
-    /* Content Sections */
-    section[id^="section"] {
-        padding: 1.5rem;
+    .scheme-meta-item i {
+        font-size: 1.5rem;
+        color: var(--scheme-accent);
+    }
+
+    .scheme-meta-text span {
+        display: block;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: rgba(255,255,255,0.6);
+    }
+
+    .scheme-meta-text strong {
+        display: block;
+        font-size: 1rem;
+        color: white;
+    }
+
+    /* Main Content Area */
+    .scheme-content-wrapper {
+        background: var(--scheme-light);
+        padding: 80px 0;
+    }
+
+    .scheme-card-main {
         background: white;
-        border-radius: 0.75rem;
-        box-shadow: 0 2px 8px rgba(13, 71, 161, 0.1);
-        margin-bottom: 1.5rem;
-        border-left: 4px solid #1565c0;
-        transition: transform 0.2s ease-in-out;
+        border-radius: 30px;
+        padding: 50px;
+        box-shadow: var(--scheme-shadow);
+        border: 1px solid rgba(21, 101, 192, 0.05);
+        margin-bottom: 40px;
     }
 
-    section[id^="section"]:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(13, 71, 161, 0.15);
+    .section-label {
+        color: var(--scheme-primary);
+        font-weight: 700;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 16px;
+        display: block;
     }
 
-    section[id^="section"] h4 {
-        color: #0d47a1;
-        margin-bottom: 1rem;
-        font-size: clamp(1.25rem, 2vw, 1.5rem);
-        border-bottom: 2px solid #e3f2fd;
-        padding-bottom: 0.5rem;
+    .scheme-heading-section {
+        font-size: 2.25rem;
+        font-weight: 800;
+        color: var(--scheme-secondary);
+        margin-bottom: 30px;
+        line-height: 1.2;
     }
 
+    .rich-text-content {
+        font-size: 1.15rem;
+        line-height: 1.8;
+        color: #455a64;
+    }
+
+    .rich-text-content p {
+        margin-bottom: 24px;
+    }
+
+    /* Sidebar Navigation */
+    .sticky-nav-card {
+        background: white;
+        border-radius: 24px;
+        padding: 30px;
+        box-shadow: var(--scheme-shadow);
+        border: 1px solid rgba(21, 101, 192, 0.05);
+        position: sticky;
+        top: 100px;
+    }
+
+    .nav-pill-custom {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .nav-link-custom {
+        padding: 14px 20px;
+        border-radius: 12px;
+        color: #455a64;
+        font-weight: 600;
+        transition: var(--transition-soft);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        border: 1px solid transparent;
+        text-decoration: none;
+    }
+
+    .nav-link-custom:hover {
+        background: #f1f7ff;
+        color: var(--scheme-primary);
+        transform: translateX(5px);
+    }
+
+    .nav-link-custom.active {
+        background: var(--scheme-primary);
+        color: white;
+        box-shadow: 0 4px 15px rgba(21, 101, 192, 0.2);
+    }
+
+    /* Key Points Items */
+    .point-item {
+        background: white;
+        border-radius: 20px;
+        padding: 30px;
+        margin-bottom: 24px;
+        border: 1px solid rgba(21, 101, 192, 0.1);
+        transition: var(--transition-soft);
+        display: flex;
+        gap: 20px;
+    }
+
+    .point-item:hover {
+        border-color: var(--scheme-primary);
+        box-shadow: 0 8px 25px rgba(21, 101, 192, 0.08);
+        transform: translateY(-5px);
+    }
+
+    .point-icon {
+        width: 50px;
+        height: 50px;
+        background: #f1f7ff;
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--scheme-primary);
+        font-size: 1.5rem;
+        flex-shrink: 0;
+    }
+
+    .point-title {
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: var(--scheme-secondary);
+        margin-bottom: 12px;
+    }
+
+    /* Similar Schemes */
+    .similar-card {
+        background: white;
+        border-radius: 24px;
+        overflow: hidden;
+        border: 1px solid rgba(0,0,0,0.05);
+        transition: var(--transition-soft);
+        height: 100%;
+    }
+
+    .similar-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+    }
+
+    .similar-img-wrapper {
+        height: 180px;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .similar-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.6s ease;
+    }
+
+    .similar-card:hover .similar-img {
+        transform: scale(1.1);
+    }
+
+    .similar-body {
+        padding: 24px;
+    }
+
+    .similar-category {
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: var(--scheme-primary);
+        margin-bottom: 10px;
+        display: block;
+    }
+
+    .similar-title {
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: var(--scheme-secondary);
+        margin-bottom: 15px;
+        line-height: 1.4;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .btn-scheme-link {
+        color: var(--scheme-primary);
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 0.9rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: var(--transition-soft);
+    }
+
+    .btn-scheme-link:hover {
+        color: var(--scheme-secondary);
+        gap: 12px;
+    }
+
+    @media (max-width: 991.98px) {
+        .scheme-card-main { padding: 30px; }
+        .sticky-nav-card { position: static; margin-bottom: 30px; }
+        .scheme-meta-grid { gap: 20px; }
+    }
+</style>
     section[id^="section"] p {
         line-height: 1.7;
         color: #455a64;
@@ -342,173 +523,187 @@
     }
 </style>
 
-<!-- Your Content Here -->
-<section class="title-banner mb-5" style="background-image: url({{ asset($announcement->banner_image) }})">
+<!-- Modern Hero Section -->
+<section class="scheme-hero">
+    <div class="scheme-hero-bg" style="background-image: url({{ asset($announcement->banner_image ?? $announcement->image ?? 'assets/images/placeholder.jpg') }})"></div>
+    <div class="scheme-hero-overlay"></div>
     <div class="container-fluid px-3 px-md-4 px-lg-5">
-        <h2 class="fw-semibold mb-3">
-            {{ $announcement->title ?? '' }}
-            <br class="d-none d-sm-block">
-            <span class="color-primary d-block mt-2">
-                {{ $announcement->subtitle ?? '' }}
-            </span>
-        </h2>
-        <div class="d-flex align-items-center flex-wrap gap-3">
-            <div class="d-flex align-items-center gap-2 scheme-badge">
-                <i class="bi bi-award-fill"></i>
-                <span>Announcement Scheme</span>
-            </div>
-            <div class="d-flex align-items-center gap-2">
-                <i class="bi bi-calendar-check text-white"></i>
-                <p class="light-gray mb-0">{{ \Carbon\Carbon::parse($announcement->created_at)->format('F jS, Y') }}</p>
-            </div>
-            <div class="d-flex align-items-center gap-2">
-                <i class="bi bi-building text-white"></i>
-                <p class="light-gray mb-0">{{ $announcement->category?->name ?? 'Government' }}</p>
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <div class="scheme-badge-premium">
+                    <i class="bi bi-award"></i>
+                    Government Scheme
+                </div>
+                <h1 class="scheme-title-main">{{ $announcement->title ?? 'Untitled Scheme' }}</h1>
+                <p class="scheme-subtitle-modern">{{ $announcement->subtitle ?? 'Skill development and empowerment initiative by the government.' }}</p>
+
+                <div class="scheme-meta-grid">
+                    <div class="scheme-meta-item">
+                        <i class="bi bi-calendar-check"></i>
+                        <div class="scheme-meta-text">
+                            <span>Published On</span>
+                            <strong>{{ $announcement->created_at ? \Carbon\Carbon::parse($announcement->created_at)->format('M d, Y') : 'N/A' }}</strong>
+                        </div>
+                    </div>
+                    <div class="scheme-meta-item">
+                        <i class="bi bi-building"></i>
+                        <div class="scheme-meta-text">
+                            <span>Department</span>
+                            <strong>{{ $announcement->category?->name ?? 'Government of India' }}</strong>
+                        </div>
+                    </div>
+                    <div class="scheme-meta-item">
+                        <i class="bi bi-geo-alt"></i>
+                        <div class="scheme-meta-text">
+                            <span>Availability</span>
+                            <strong>Pan India</strong>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </section>
 
-<div class="container-fluid px-3 px-md-4 px-lg-5">
-    @if ($announcement->images && $announcement->images->count() > 0)
-        <div class="mb-4">
-            <div id="carouselId" class="carousel slide" data-bs-ride="carousel">
-                <!-- Indicators -->
-                <div class="carousel-indicators">
-                    @foreach ($announcement->images as $index => $image)
-                        <button type="button" data-bs-target="#carouselId"
-                            data-bs-slide-to="{{ $index }}"
-                            class="{{ $index === 0 ? 'active' : '' }}"
-                            aria-label="Slide {{ $index + 1 }}"></button>
-                    @endforeach
-                </div>
-
-                <!-- Slides -->
-                <div class="carousel-inner">
-                    @foreach ($announcement->images as $index => $image)
-                        <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
-                            <img src="{{ asset($image->file_name) }}" class="w-100 d-block"
-                                alt="{{ $image->alt_text ?? 'Slide ' . ($index + 1) }}"
-                                loading="lazy">
+<div class="scheme-content-wrapper">
+    <div class="container-fluid px-3 px-md-4 px-lg-5">
+        <div class="row g-5">
+            <!-- Main Content -->
+            <div class="col-lg-8">
+                @if ($announcement->images && $announcement->images->count() > 0)
+                    <div class="mb-5">
+                        <div id="announcementCarousel" class="carousel slide shadow-lg rounded-4 overflow-hidden" data-bs-ride="carousel">
+                            <div class="carousel-inner">
+                                @foreach ($announcement->images as $index => $image)
+                                    <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
+                                        <img src="{{ asset($image->file_name) }}" class="d-block w-100" style="height: 450px; object-fit: cover;" alt="Scheme Image {{ $index + 1 }}">
+                                    </div>
+                                @endforeach
+                            </div>
+                            @if($announcement->images->count() > 1)
+                                <button class="carousel-control-prev" type="button" data-bs-target="#announcementCarousel" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon p-3 rounded-circle bg-dark bg-opacity-25" aria-hidden="true"></span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#announcementCarousel" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon p-3 rounded-circle bg-dark bg-opacity-25" aria-hidden="true"></span>
+                                </button>
+                            @endif
                         </div>
-                    @endforeach
+                    </div>
+                @endif
+
+                <div class="scheme-card-main" id="overview">
+                    <span class="section-label">Overview</span>
+                    <h2 class="scheme-heading-section">About the Scheme</h2>
+                    <div class="rich-text-content">
+                        {!! $announcement->description ?? '<p class="text-muted">No description available for this scheme.</p>' !!}
+                    </div>
                 </div>
 
-                <!-- Controls -->
-                <button class="carousel-control-prev" type="button" data-bs-target="#carouselId" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Previous</span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#carouselId" data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Next</span>
-                </button>
-            </div>
-        </div>
-    @endif
+                @php
+                    $points = [];
+                    if (!empty($announcement->points)) {
+                        $points = is_array($announcement->points) ? $announcement->points : json_decode($announcement->points, true);
+                    }
+                @endphp
 
-    <section class="brife-description mb-5">
-        <div class="container px-0">
-            <div class="d-flex align-items-center gap-3 mb-4">
-                <i class="bi bi-info-circle-fill text-primary fs-4"></i>
-                <h3 class="mb-0 text-primary">Scheme Overview</h3>
-            </div>
-            {!! $announcement->description !!}
-        </div>
-    </section>
+                @if (!empty($points))
+                    <div class="mt-5 pt-4" id="details">
+                        <span class="section-label">Features & Benefits</span>
+                        <h2 class="scheme-heading-section">Key Highlights</h2>
 
-    @php
-        $points = [];
-        if (!empty($announcement->points)) {
-            $points = is_array($announcement->points)
-                ? $announcement->points
-                : json_decode($announcement->points, true);
-        }
-    @endphp
-
-    @if (!empty($points))
-        <div class="row g-4">
-            <div class="col-lg-4">
-                <nav id="navbar-example" class="navbar navbar-light flex-column align-items-stretch p-3 rounded">
-                    <div class="d-flex align-items-center gap-2 mb-3">
-                        <i class="bi bi-list-ul text-primary"></i>
-                        <h5 class="fw-bold mb-0 text-primary">Scheme Details</h5>
-                    </div>
-                    <nav class="nav nav-pills flex-column">
                         @foreach ($points as $index => $point)
                             @php
-                                [$title, $content] = explode(' - ', $point, 2);
-                                $sectionId = 'section' . ($index + 1);
+                                $parts = explode(' - ', $point, 2);
+                                $title = $parts[0] ?? 'Feature';
+                                $content = $parts[1] ?? '';
+                                $sectionId = 'section-' . ($index + 1);
                             @endphp
-                            <a class="nav-link" href="#{{ $sectionId }}">
-                                <i class="bi bi-chevron-right me-2"></i>
-                                {{ $index + 1 }}. {{ $title }}
-                            </a>
+                            <div class="point-item" id="{{ $sectionId }}">
+                                <div class="point-icon">
+                                    <i class="bi bi-check2-circle"></i>
+                                </div>
+                                <div class="point-content">
+                                    <h3 class="point-title">{{ $title }}</h3>
+                                    <p class="text-muted mb-0">{{ $content }}</p>
+                                </div>
+                            </div>
                         @endforeach
-                    </nav>
-                </nav>
+                    </div>
+                @endif
             </div>
 
-            <div class="col-lg-8">
-                <div class="d-flex align-items-center gap-3 mb-4">
-                    <i class="bi bi-card-checklist text-primary fs-4"></i>
-                    <h3 class="mb-0 text-primary">Key Features & Benefits</h3>
-                </div>
-
-                @foreach ($points as $index => $point)
-                    @php
-                        [$title, $content] = explode(' - ', $point, 2);
-                        $sectionId = 'section' . ($index + 1);
-                    @endphp
-
-                    <section id="{{ $sectionId }}" class="mb-4">
-                        <div class="d-flex align-items-start gap-3">
-                            <div class="bg-primary text-white rounded-circle p-2 mt-1 flex-shrink-0">
-                                <i class="bi bi-check-lg"></i>
-                            </div>
-                            <div>
-                                <h4 class="fw-bold mb-3">{{ $index + 1 }}. {{ $title }}</h4>
-                                <p class="mb-0">{{ $content }}</p>
-                            </div>
-                        </div>
-                    </section>
-                @endforeach
-            </div>
-        </div>
-    @endif
-</div>
-
-<!-- Similar Schemes Section -->
-@if(isset($similars) && $similars->count() > 0)
-<section class="mt-5 pt-5 border-top">
-    <div class="container-fluid px-3 px-md-4 px-lg-5">
-        <div class="d-flex align-items-center gap-3 mb-4">
-            <i class="bi bi-collection-play-fill text-primary fs-4"></i>
-            <h3 class="mb-0 text-primary">Similar Government Schemes</h3>
-        </div>
-        <div class="row g-4">
-            @foreach($similars as $similar)
-                <div class="col-md-6 col-lg-4">
-                    <div class="card h-100 border-0 shadow-sm">
-                        <div class="card-body">
-                            <div class="d-flex align-items-start gap-3 mb-3">
-                                <i class="bi bi-building text-primary mt-1"></i>
-                                <h6 class="card-title mb-0">{{ Str::limit($similar->title, 50) }}</h6>
-                            </div>
-                            <p class="card-text text-muted small mb-3">
-                                {{ \Carbon\Carbon::parse($similar->created_at)->format('M j, Y') }}
-                            </p>
-                            <a href="{{ route('web.announcement.scheme', [$similar->category?->slug ?? 'general', $similar->slug]) }}"
-                               class="btn btn-outline-primary btn-sm">
-                                View Details <i class="bi bi-arrow-right ms-1"></i>
+            <!-- Sidebar -->
+            <div class="col-lg-4">
+                <div class="sticky-nav-card shadow-sm border-0">
+                    <h5 class="fw-bold mb-4 d-flex align-items-center gap-2">
+                        <i class="bi bi-list-stars text-primary"></i> Quick Navigation
+                    </h5>
+                    <div class="nav-pill-custom">
+                        <a href="#overview" class="nav-link-custom active">
+                            <i class="bi bi-info-circle"></i> Scheme Overview
+                        </a>
+                        @if (!empty($points))
+                            <a href="#details" class="nav-link-custom">
+                                <i class="bi bi-stars"></i> Key Highlights
                             </a>
-                        </div>
+                            @foreach ($points as $index => $point)
+                                @php
+                                    $title = explode(' - ', $point)[0] ?? 'Detail';
+                                @endphp
+                                <a href="#section-{{ $index + 1 }}" class="nav-link-custom ps-5 small">
+                                    <i class="bi bi-dot"></i> {{ Str::limit($title, 30) }}
+                                </a>
+                            @endforeach
+                        @endif
+                    </div>
+
+                    <div class="mt-5 p-4 bg-light rounded-4">
+                        <h6 class="fw-bold mb-3"><i class="bi bi-headset me-2 text-primary"></i>Need Assistance?</h6>
+                        <p class="small text-muted mb-4">Contact our support desk for registration help and more details.</p>
+                        <a href="{{ route('web.contact') }}" class="btn btn-primary w-100 rounded-pill fw-bold py-2">Contact Us</a>
                     </div>
                 </div>
-            @endforeach
+            </div>
         </div>
+
+        <!-- Similar Schemes -->
+        @if(isset($similars) && $similars->count() > 0)
+            <div class="mt-5 pt-5 border-top">
+                <span class="section-label">Recommended</span>
+                <h2 class="scheme-heading-section mb-5">Similar Government Schemes</h2>
+
+                <div class="row g-4">
+                    @foreach($similars as $similar)
+                        <div class="col-md-6 col-lg-4">
+                            <div class="similar-card">
+                                <div class="similar-img-wrapper">
+                                    <img src="{{ asset($similar->image ?? 'assets/images/placeholder.jpg') }}" class="similar-img" alt="{{ $similar->title ?? 'Scheme' }}">
+                                    <div class="position-absolute top-0 end-0 m-3">
+                                        <span class="badge bg-white text-primary rounded-pill px-3 py-2 shadow-sm small">
+                                            {{ $similar->category?->name ?? 'Government' }}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="similar-body">
+                                    <span class="similar-category">{{ $similar->category?->name ?? 'General' }}</span>
+                                    <h4 class="similar-title">{{ $similar->title ?? 'Untitled Scheme' }}</h4>
+                                    <p class="text-muted small mb-4 line-clamp-2">
+                                        {{ Str::limit(strip_tags($similar->description ?? ''), 100) }}
+                                    </p>
+                                    <hr class="opacity-10 my-4">
+                                    <a href="{{ route('web.announcement.scheme', [$similar->category?->slug ?? 'general', $similar->slug]) }}"
+                                       class="btn-scheme-link">
+                                        View Details <i class="bi bi-arrow-right"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        @endif
     </div>
-</section>
-@endif
-<!-- End Your Content here -->
+</div>
+<!-- End Content -->
 @endsection
