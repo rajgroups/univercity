@@ -662,20 +662,29 @@ class WebController extends Controller
         return view('web.blog', compact('blogs', 'categories'));
     }
 
-    public function blogShow($categorySlug, $slug)
+    public function blogShow($typeSlug, $slug)
     {
-        // Get the category by slug
-        $category = Category::where('slug', $categorySlug)->firstOrFail();
+        $typeMap = [
+            'blog' => 1,
+            'news' => 2,
+            'collaboration' => 3,
+            'training' => 4,
+            'research' => 5,
+            'case-study' => 6,
+            'resource' => 7
+        ];
 
-        // Get the blog by category ID and slug
+        $typeId = $typeMap[$typeSlug] ?? 1;
+
+        // Get the blog by type and slug
         $blog = Blog::where('slug', $slug)
-            ->where('category_id', $category->id)
-            ->with('category')
+            ->where('type', $typeId)
+            ->with(['category'])
             ->firstOrFail();
 
         // Get similar blogs from the same category
         $similars = Blog::where('id', '!=', $blog->id)
-            ->where('category_id', $category->id)
+            ->where('category_id', $blog->category_id)
             ->latest()
             ->limit(5)
             ->get();

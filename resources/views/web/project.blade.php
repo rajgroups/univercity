@@ -3,6 +3,379 @@
 @section('content')
 @push('css')
 <style>
+        :root {
+            --prepare-color: #2E8B57;
+            --deliver-color: #1E90FF;
+            --validate-color: #9B59B6;
+            --finished-color: #28a745;
+            --current-color: #ffc107;
+            --pending-color: #6c757d;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            min-height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        .container-wrapper {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Header Styles */
+        .project-header {
+            background: linear-gradient(135deg, #2c3e50 0%, #1a252f 100%);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            color: white;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .project-header h1 {
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .project-header .badge {
+            font-size: 0.85rem;
+            padding: 0.35rem 0.8rem;
+        }
+
+        /* Phase Bar */
+        .phase-bar-container {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+        }
+
+        .phase-bar-title {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .phase-bar-title i {
+            color: var(--prepare-color);
+        }
+
+        .phase-bar {
+            height: 32px;
+            border-radius: 20px;
+            overflow: hidden;
+            display: flex;
+            border: 2px solid #e9ecef;
+            margin-bottom: 0.5rem;
+        }
+
+        .phase {
+            flex: 1;
+            font-size: 13px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .phase:hover {
+            transform: scale(1.05);
+            z-index: 2;
+        }
+
+        .phase.completed {
+            background: var(--finished-color);
+            color: white;
+        }
+
+        .phase.current {
+            background: var(--current-color);
+            color: #000;
+            border: 2px solid #e6b400;
+            margin: -2px;
+            z-index: 1;
+        }
+
+        .phase.upcoming {
+            background: #f8f9fa;
+            color: #6c757d;
+        }
+
+        .phase-label {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Phase Cards */
+        .phase-card {
+            border-radius: 12px;
+            padding: 1.25rem;
+            height: 100%;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+
+        .phase-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .phase-finished {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            border-left: 4px solid var(--finished-color);
+        }
+
+        .phase-current {
+            background: linear-gradient(135deg, #fff8e1 0%, #ffecb3 100%);
+            border-left: 4px solid var(--current-color);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.4);
+            }
+
+            70% {
+                box-shadow: 0 0 0 6px rgba(255, 193, 7, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(255, 193, 7, 0);
+            }
+        }
+
+        .phase-pending {
+            background: white;
+            border-left: 4px solid #dee2e6;
+        }
+
+        .phase-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.75rem;
+        }
+
+        .phase-number {
+            font-weight: 800;
+            font-size: 1.5rem;
+            color: #2c3e50;
+        }
+
+        .phase-title {
+            font-weight: 600;
+            color: #2c3e50;
+            line-height: 1.3;
+        }
+
+        .badge-finished,
+        .badge-current,
+        .badge-pending {
+            font-size: 11px;
+            border-radius: 20px;
+            padding: 4px 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-finished {
+            background: var(--finished-color);
+            color: white;
+        }
+
+        .badge-current {
+            background: var(--current-color);
+            color: #000;
+        }
+
+        .badge-pending {
+            background: #e9ecef;
+            color: #495057;
+        }
+
+        .layer-badge {
+            font-size: 10px;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .layer-prepare {
+            background: rgba(46, 139, 87, 0.1);
+            color: var(--prepare-color);
+        }
+
+        .layer-deliver {
+            background: rgba(30, 144, 255, 0.1);
+            color: var(--deliver-color);
+        }
+
+        .layer-validate {
+            background: rgba(155, 89, 182, 0.1);
+            color: var(--validate-color);
+        }
+
+        /* Table Styles */
+        .table-container {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            margin-top: 2rem;
+        }
+
+        .table-header-custom {
+            background: linear-gradient(135deg, #2c3e50 0%, #1a252f 100%);
+            color: white;
+            border: none;
+            padding: 1rem 1.5rem;
+        }
+
+        .table thead th {
+            background: #f8f9fa;
+            border-bottom: 2px solid #dee2e6;
+            font-weight: 600;
+            font-size: 0.9rem;
+            padding: 0.75rem 1rem;
+            color: #495057;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .table tbody td {
+            padding: 0.75rem 1rem;
+            vertical-align: middle;
+            border-color: #f1f3f4;
+        }
+
+        .table tbody tr:hover {
+            background-color: rgba(0, 0, 0, 0.02);
+        }
+
+        .status-finished,
+        .status-current,
+        .status-pending {
+            font-size: 11px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .status-finished {
+            background: rgba(40, 167, 69, 0.1);
+            color: var(--finished-color);
+            border: 1px solid rgba(40, 167, 69, 0.3);
+        }
+
+        .status-current {
+            background: rgba(255, 193, 7, 0.1);
+            color: #b38600;
+            border: 1px solid rgba(255, 193, 7, 0.3);
+        }
+
+        .status-pending {
+            background: rgba(108, 117, 125, 0.1);
+            color: var(--pending-color);
+            border: 1px solid rgba(108, 117, 125, 0.3);
+        }
+
+        .phase-section-header {
+            background: linear-gradient(135deg, #e8f5e9 0%, #d4edda 100%);
+            font-weight: 700;
+            color: #155724;
+            font-size: 0.95rem;
+        }
+
+        .phase-section-header.deliver {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            color: #0d47a1;
+        }
+
+        .phase-section-header.validate {
+            background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%);
+            color: #4a148c;
+        }
+
+        /* Summary */
+        .summary-box {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .summary-item:last-child {
+            border-bottom: none;
+        }
+
+        /* Footer */
+        .footer {
+            background: white;
+            border-top: 1px solid #e9ecef;
+            margin-top: 3rem;
+            padding: 1.5rem 0;
+        }
+
+        .footer-logo {
+            font-weight: 800;
+            color: #2c3e50;
+            font-size: 1.25rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .phase {
+                font-size: 11px;
+                padding: 0 4px;
+            }
+
+            .phase-bar {
+                height: 28px;
+            }
+
+            .phase-card {
+                margin-bottom: 1rem;
+            }
+
+            .table-responsive {
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .project-header {
+                padding: 1rem;
+            }
+
+            .phase-bar-title {
+                font-size: 1rem;
+            }
+
+            .phase-title {
+                font-size: 0.95rem;
+            }
+        }
     .sdg-img {
     width: 50%;
 }
@@ -665,6 +1038,13 @@
                             <i class="bi bi-table me-1"></i> Table View
                         </button>
                     </li>
+
+                     <li class="nav-item">
+                        <button class="nav-link" data-bs-toggle="pill"
+                            data-bs-target="#milestone-list-view" type="button">
+                            <i class="bi bi-table me-1"></i> list View
+                        </button>
+                    </li>
                 </ul>
 
                 <div class="tab-content">
@@ -803,6 +1183,279 @@
 
                     </div>
 
+                     <!-- ================= List VIEW ================= -->
+                    <div class="tab-pane fade" id="milestone-list-view">
+                        @php
+                            $phasesList = ['P1', 'P2', 'P3', 'P4', 'P5', 'P6', 'P7'];
+                            
+                            // Static knowledge mapping for phases
+                            $phaseKnowledge = [
+                                'P1' => ['title' => 'Need Assessment & Scoping', 'note' => 'Need assessment complete', 'layer' => 'Prepare'],
+                                'P2' => ['title' => 'Partnerships & CSR Outreach', 'note' => 'MoUs with 2 CSR partners (in discussion)', 'layer' => 'Prepare'],
+                                'P3' => ['title' => 'Procurement & Planning', 'note' => 'Procurement plan pending', 'layer' => 'Prepare'],
+                                'P4' => ['title' => 'Installation & Launch', 'note' => 'Installation after funding closure', 'layer' => 'Deliver'],
+                                'P5' => ['title' => 'Training & Mid Review', 'note' => 'Mid-term assessments scheduled', 'layer' => 'Deliver'],
+                                'P6' => ['title' => 'Audit & External Review', 'note' => 'External audit planned', 'layer' => 'Validate'],
+                                'P7' => ['title' => 'Handover & Sustainability', 'note' => 'Handover & sustainability kit.', 'layer' => 'Validate'],
+                            ];
+
+                            $phaseStatusesMap = [];
+                            $foundActive = false;
+                            
+                            foreach ($phasesList as $p) {
+                                $pItems = $milestones->where('phase', $p);
+                                if ($pItems->count() > 0) {
+                                    $allDone = $pItems->where('status', '!=', 'completed')->count() === 0;
+                                    if ($allDone) {
+                                        $phaseStatusesMap[$p] = 'finished';
+                                    } elseif (!$foundActive) {
+                                        $phaseStatusesMap[$p] = 'current';
+                                        $foundActive = true;
+                                    } else {
+                                        $phaseStatusesMap[$p] = 'pending';
+                                    }
+                                } else {
+                                    $hasPastTasks = $milestones->where('phase', '<', $p)->where('status', '!=', 'completed')->count() == 0 
+                                                   && $milestones->where('phase', '<', $p)->count() > 0;
+                                    $phaseStatusesMap[$p] = $hasPastTasks && !$foundActive ? 'finished' : 'pending';
+                                }
+                            }
+
+                            $nextM = $milestones->where('status', '!=', 'completed')->sortBy('phase')->first();
+                            $nextTaskName = $nextM ? $nextM->task_name : 'Project Completed';
+
+                            $layers = [
+                                'Prepare' => ['P1', 'P2', 'P3'],
+                                'Deliver' => ['P4', 'P5'],
+                                'Validate' => ['P6', 'P7']
+                            ];
+                        @endphp
+
+                        <div class="container-wrapper py-4 px-3 px-md-4">
+
+                            <!-- Phase Bar Card -->
+                            <div class="phase-bar-container">
+                                <div class="phase-bar-title">
+                                    <i class="bi bi-diagram-3-fill"></i>
+                                    Milestone (7-Phase)
+                                </div>
+
+                                <!-- Phase Bar -->
+                                <div class="phase-bar">
+                                    @foreach($phasesList as $p)
+                                        @php 
+                                            $bClass = $phaseStatusesMap[$p] == 'finished' ? 'completed' : ($phaseStatusesMap[$p] == 'current' ? 'current' : 'upcoming');
+                                        @endphp
+                                        <div class="phase {{ $bClass }}">{{ $p }}</div>
+                                    @endforeach
+                                </div>
+
+                                <!-- Layer Labels -->
+                                <div class="d-flex justify-content-between small mt-2">
+                                    <span class="phase-label text-prepare">
+                                        <i class="bi bi-check-circle-fill me-1"></i>Prepare (P1–P3)
+                                    </span>
+                                    <span class="phase-label text-deliver">
+                                        <i class="bi bi-send-fill me-1"></i>Deliver (P4–P5)
+                                    </span>
+                                    <span class="phase-label text-validate">
+                                        <i class="bi bi-clipboard-check-fill me-1"></i>Validate (P6–P7)
+                                    </span>
+                                </div>
+
+                                <!-- Next Step -->
+                                <div class="alert alert-info mt-3 mb-0 py-2">
+                                    <div class="d-flex align-items-center">
+                                        <i class="bi bi-arrow-right-circle-fill me-2 fs-5"></i>
+                                        <div>
+                                            <strong>Next Step:</strong> {{ $nextTaskName }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Phase Cards -->
+                            <div class="row g-3">
+                                @foreach($phasesList as $p)
+                                    @php
+                                        $status = $phaseStatusesMap[$p];
+                                        $cardClass = $status == 'finished' ? 'phase-finished' : ($status == 'current' ? 'phase-current' : 'phase-pending');
+                                        $badgeClass = 'badge-' . $status;
+                                        $statusText = $status == 'current' ? 'Current phase' : ucfirst($status);
+                                        
+                                        $info = $phaseKnowledge[$p];
+                                        $layerName = $info['layer'];
+                                    @endphp
+                                    <div class="col-lg-4 col-md-6">
+                                        <div class="phase-card {{ $cardClass }}">
+                                            <div class="phase-header">
+                                                <div>
+                                                    <div class="phase-number">{{ $p }}</div>
+                                                    <div class="phase-title">{{ $info['title'] }}</div>
+                                                </div>
+                                                <span class="{{ $badgeClass }}">{{ $statusText }}</span>
+                                            </div>
+                                            <div class="d-flex align-items-center mb-2">
+                                                <span class="layer-badge layer-{{ strtolower($layerName) }} me-2">Layer: {{ $layerName }}</span>
+                                            </div>
+                                            <p class="small text-secondary mb-0">
+                                                @if($status == 'finished')
+                                                    <i class="bi bi-check-circle-fill text-success me-1"></i>
+                                                @elseif($status == 'current')
+                                                    <i class="bi bi-play-circle-fill text-warning me-1"></i>
+                                                @else
+                                                    <i class="bi bi-clock-history me-1"></i>
+                                                @endif
+                                                {{ $p }}: {{ $info['note'] }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+
+                            <!-- Milestone Planner Table -->
+                            <div class="table-container">
+                                <div
+                                    class="table-header-custom d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center">
+                                    <div class="d-flex align-items-center mb-2 mb-md-0">
+                                        <i class="bi bi-list-task fs-5 me-2"></i>
+                                        <h2 class="h5 mb-0">Admin · Milestone Planner</h2>
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <small class="text-white-50 me-3 d-none d-md-block">Showing All – {{ $milestones->count() }} items</small>
+                                        <select class="form-select form-select-sm w-auto">
+                                            <option>All Phases</option>
+                                            @foreach($milestones->pluck('phase')->unique()->sort() as $ph)
+                                                <option>Phase {{ substr($ph, 1) }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="table-responsive">
+                                    <table class="table table-hover mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th width="10%">Phase</th>
+                                                <th width="8%">Step</th>
+                                                <th width="22%">Title</th>
+                                                <th width="12%">Planned Date</th>
+                                                <th width="15%">Owner</th>
+                                                <th width="20%">Notes</th>
+                                                <th width="13%">Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach($milestones->groupBy('phase')->sortBy(fn($val, $key) => $key) as $phaseName => $items)
+                                                @php
+                                                    $layerName = 'Unknown';
+                                                    foreach($layers as $lname => $lphases) {
+                                                        if(in_array($phaseName, $lphases)) $layerName = strtolower($lname);
+                                                    }
+                                                @endphp
+                                                <tr class="phase-section-header {{ $layerName }}">
+                                                    <td colspan="7" class="fw-bold">
+                                                        <i class="bi bi-{{ substr($phaseName, 1) }}-circle-fill me-2"></i>Phase {{ substr($phaseName, 1) }} - {{ ucfirst($layerName) }}
+                                                    </td>
+                                                </tr>
+
+                                                @foreach($items as $idx => $m)
+                                                    @php 
+                                                        $mStatus = $m->status == 'completed' ? 'finished' : ($m->status == 'in-progress' ? 'current' : 'pending');
+                                                    @endphp
+                                                    <tr>
+                                                        <td class="fw-medium">{{ $phaseName }}</td>
+                                                        <td><span class="badge bg-light text-dark">{{ $idx + 1 }}/{{ $items->count() }}</span></td>
+                                                        <td class="{{ $m->status == 'pending' ? 'text-muted' : '' }}">
+                                                            @if($m->status == 'completed')
+                                                                <i class="bi bi-check-circle-fill text-success me-1"></i>
+                                                            @endif
+                                                            {{ $m->task_name }}
+                                                        </td>
+                                                        <td>{{ $m->planned_start_date ? $m->planned_start_date->format('Y-m-d') : '—' }}</td>
+                                                        <td><span class="badge bg-light text-dark">{{ $m->in_charge ?? '—' }}</span></td>
+                                                        <td class="text-muted small">{{ Str::limit($m->notes, 40) ?? '—' }}</td>
+                                                        <td><span class="status-{{ $mStatus }}">{{ ucfirst($mStatus) }}</span></td>
+                                                    </tr>
+                                                @endforeach
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <!-- Summary -->
+                                <div class="summary-box m-3">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="summary-item">
+                                                <span><strong>Current Phase:</strong></span>
+                                                <span class="badge-current">{{ collect($phaseStatusesMap)->search('current') ?: 'N/A' }}</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="summary-item">
+                                                <span><strong>Completed Phases:</strong></span>
+                                                <span class="text-success">
+                                                    {{ collect($phaseStatusesMap)->filter(fn($s) => $s == 'finished')->keys()->implode(', ') ?: 'None' }}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="summary-item">
+                                                <span><strong>Pending Phases:</strong></span>
+                                                <span class="text-danger">
+                                                    {{ collect($phaseStatusesMap)->filter(fn($s) => $s == 'pending')->keys()->implode(', ') ?: 'None' }}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mt-2 small text-muted">
+                                        <i class="bi bi-info-circle me-1"></i>
+                                        Tasks: {{ $milestones->count() }} total • {{ $milestones->where('status', 'completed')->count() }} finished • {{ $milestones->where('status', 'in-progress')->count() }} current • {{ $milestones->where('status', 'pending')->count() }} pending
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <script>
+                            // Add hover effect to phase bar segments
+                            document.querySelectorAll('.phase').forEach(phase => {
+                                phase.addEventListener('mouseenter', function () {
+                                    const phaseNum = this.textContent;
+                                    const tooltip = document.createElement('div');
+                                    tooltip.className = 'phase-tooltip';
+                                    tooltip.textContent = `Phase ${phaseNum}`;
+                                    tooltip.style.position = 'absolute';
+                                    tooltip.style.background = '#2c3e50';
+                                    tooltip.style.color = 'white';
+                                    tooltip.style.padding = '4px 8px';
+                                    tooltip.style.borderRadius = '4px';
+                                    tooltip.style.fontSize = '12px';
+                                    tooltip.style.zIndex = '1000';
+                                    tooltip.style.top = '-30px';
+
+                                    this.style.position = 'relative';
+                                    this.appendChild(tooltip);
+                                });
+
+                                phase.addEventListener('mouseleave', function () {
+                                    const tooltip = this.querySelector('.phase-tooltip');
+                                    if (tooltip) {
+                                        tooltip.remove();
+                                    }
+                                });
+                            });
+
+                            // Add active state to table rows
+                            document.querySelectorAll('tbody tr').forEach(row => {
+                                row.addEventListener('click', function () {
+                                    document.querySelectorAll('tbody tr').forEach(r => {
+                                        r.classList.remove('table-active');
+                                    });
+                                    this.classList.add('table-active');
+                                });
+                            });
+                        </script>
+                        </div>
                 </div>
 
             @else

@@ -120,7 +120,7 @@ Route::middleware(['maintenance'])->group(function () {
 
     // For Blog Catelog
     Route::get('/blogs', [WebController::class, 'blog'])->name('web.blog.filter');
-    Route::get('/blogs/{categoryslug}/{slug}', [WebController::class, 'blogShow'])->name('web.blog.show');
+    Route::get('/blogs/{type}/{slug}', [WebController::class, 'blogShow'])->name('web.blog.show');
 
     // For Enquiry Mails
     Route::post('/send-enquiry', [EnquiryController::class, 'store'])->name('web.enquiry');

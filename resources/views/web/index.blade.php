@@ -165,8 +165,20 @@
                                                             <p>{{ $blog->title ?? null }}</p>
                                                         </div>
                                                         <h5 class="text-light-gray">
+                                                            @php
+                                                                $typeSlug = match($blog->type) {
+                                                                    1 => 'blog',
+                                                                    2 => 'news',
+                                                                    3 => 'collaboration',
+                                                                    4 => 'training',
+                                                                    5 => 'research',
+                                                                    6 => 'case-study',
+                                                                    7 => 'resource',
+                                                                    default => 'blog',
+                                                                };
+                                                            @endphp
                                                             <a
-                                                                href="{{ route('web.blog.show', [$blog->category->slug, $blog->slug]) }}">
+                                                                href="{{ route('web.blog.show', [$typeSlug, $blog->slug]) }}">
                                                                 {!! Str::words(strip_tags($blog->short_description), 12, '...') !!}
                                                             </a>
                                                         </h5>
