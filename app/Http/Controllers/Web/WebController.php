@@ -95,39 +95,39 @@ class WebController extends Controller
         ));
     }
     public function program($category, $slug){
-        // Get the category by slug
-        $category = Category::where('slug', $category)->firstOrFail();
-
-        // Get the announcement by category ID and slug
+        // Find the program by slug and type (1)
         $program = Announcement::where('slug', $slug)
-                    ->where('type',1)
-                    ->where('category_id', $category->id)
+                    ->where('type', 1)
+                    ->with('category')
                     ->firstOrFail();
+
+        // Get similar programs from the same category
         $similars = Announcement::where('type', 1)
             ->where('id', '!=', $program->id)
-            ->where('category_id', $category->id)
+            ->where('category_id', $program->category_id)
             ->latest()
             ->limit(5)
             ->get();
+
         // Return view with data
         return view('web.programe', compact('program','similars'));
     }
 
     public function scheme($category, $slug){
-        // Get the category by slug
-        $category = Category::where('slug', $category)->firstOrFail();
-
-        // Get the announcement by category ID and slug
+        // Find the scheme by slug and type (2)
         $announcement = Announcement::where('slug', $slug)
-                    ->where('type',2)
-                    ->where('category_id', $category->id)
+                    ->where('type', 2)
+                    ->with('category')
                     ->firstOrFail();
+
+        // Get similar schemes from the same category
         $similars = Announcement::where('type', 2)
             ->where('id', '!=', $announcement->id)
-            ->where('category_id', $category->id)
+            ->where('category_id', $announcement->category_id)
             ->latest()
             ->limit(5)
             ->get();
+
         // Return view with data
         return view('web.scheme', compact('announcement','similars'));
     }

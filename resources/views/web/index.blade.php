@@ -485,7 +485,7 @@
                         <div class="swiper-wrapper">
                             @foreach ($programes as $program)
                                 @php
-                                    $progCategorySlug = $program->category?->slug ?? 'skill-development';
+                                    $progCategorySlug = $program->category?->slug ?? 'general';
                                 @endphp
                                 <div class="swiper-slide mb-4">
                                     <div class="scheme-card">
@@ -809,7 +809,7 @@
                         <div class="swiper-wrapper">
                             @foreach ($schemes as $scheme)
                                 @php
-                                    $categorySlug = $scheme->category?->slug ?? 'skill-development';
+                                    $categorySlug = $scheme->category?->slug ?? 'general';
                                 @endphp
                                 <div class="swiper-slide mb-4">
                                     <div class="scheme-card">

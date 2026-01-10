@@ -162,7 +162,7 @@
 
                                 <div class="mt-auto pt-3 border-top">
                                     @php
-                                        $categorySlug = $item->category->slug ?? 'general';
+                                        $categorySlug = $item->category?->slug ?? 'general';
                                         $slug = $item->slug;
 
                                         if ($item->item_type === 'project') {
