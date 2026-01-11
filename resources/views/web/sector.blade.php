@@ -25,13 +25,87 @@
 @endpush
 
 @section('content')
-            <!-- Title Banner Section Start -->
-            <section class="title-banner mb-80">
-                <div class="container-fluid">
-                    <h1>All Sectors</h1>
-                </div>
-            </section>
-            <!-- Title Banner Section End -->
+    <style>
+        .modern-page-banner {
+            position: relative;
+            min-height: 350px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            overflow: hidden;
+            margin-bottom: 80px;
+        }
+
+        .modern-page-banner::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.5) 100%);
+            z-index: 1;
+        }
+
+        .modern-banner-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            width: 100%;
+            padding: 0 15px;
+        }
+
+        .modern-banner-title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 1rem;
+            text-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            letter-spacing: -0.5px;
+        }
+
+        .modern-breadcrumb {
+            display: inline-flex;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            border-radius: 50px;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .modern-breadcrumb span {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+            .modern-page-banner {
+                min-height: 250px;
+            }
+            .modern-banner-title {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+
+    <!-- Title Banner Section Start -->
+    <section class="modern-page-banner" style="background-image: url('{{ asset('resource/web/assets/media/banner/sector-bg.jpg') }}'), url('https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=2070&auto=format&fit=crop');">
+        <div class="modern-banner-content" data-aos="fade-up">
+            <div class="modern-breadcrumb">
+                <span>Home</span>
+                <span class="mx-2">/</span>
+                <span class="text-white">Sectors</span>
+            </div>
+            <h1 class="modern-banner-title">Our Sectors</h1>
+            <p class="text-white opacity-75 lead" style="max-width: 600px; margin: 0 auto;">Dedicated to empowering growth across diverse industries through specialized skill development.</p>
+        </div>
+    </section>
+    <!-- Title Banner Section End -->
             <!-- Couse Section Start -->
             <section class="couses-sec mb-120">
                 <div class="container-fluid">
