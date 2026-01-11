@@ -250,27 +250,26 @@
                                                         {{-- {{ route('programe') }} --}}
                                                         <a href="{{ route('web.catalog') }}">1. Educational
                                                             Programs</a>
-                                                        <!-- <ul class="sub-menu">
-                                                            {{-- {{ route('programe.details', $program->slug) }}" --}}
+                                                        {{-- <ul class="sub-menu">
                                                             @foreach ($educationPrograms as $program)
                                                                 <li><a
                                                                         href="{{ route('web.catalog', ['category_id' => $program->id]) }}">{{ $program->name }}</a>
                                                                 </li>
                                                             @endforeach
-                                                        </ul> -->
+                                                        </ul> --}}
                                                     </li>
 
                                                     {{-- Skill Development Programs --}}
                                                     <li>
                                                         <a href="{{ route('web.catalog') }}">2. Skill Development
                                                             Programs</a>
-                                                        <ul class="sub-menu">
+                                                        {{-- <ul class="sub-menu">
                                                             @foreach ($skillPrograms as $program)
                                                                 <li><a
                                                                         href="{{ route('web.catalog', ['category_id' => $program->id]) }}">{{ $program->name }}</a>
                                                                 </li>
                                                             @endforeach
-                                                        </ul>
+                                                        </ul> --}}
                                                     </li>
 
                                                     {{-- CSR Initiatives --}}

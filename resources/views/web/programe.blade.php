@@ -396,8 +396,8 @@
                     <i class="bi bi-mortarboard"></i>
                     Educational Program
                 </div>
-                <h1 class="prog-title-main">{{ $program->title ?? 'Untitled Program' }}</h1>
-                <p class="prog-subtitle-modern">{{ $program->subtitle ?? 'Advanced training and skill development program for career growth.' }}</p>
+                <h1 class="prog-title-main text-white">{{ $program->title ?? 'Untitled Program' }}</h1>
+                <p class="prog-subtitle-modern text-white">{{ $program->subtitle ?? 'Advanced training and skill development program for career growth.' }}</p>
 
                 <div class="prog-meta-grid">
                     <div class="prog-meta-item">

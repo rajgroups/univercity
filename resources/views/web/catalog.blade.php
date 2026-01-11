@@ -18,7 +18,7 @@
                         <li class="breadcrumb-item active text-white" aria-current="page">Catalog</li>
                     </ol>
                 </nav>
-                <h1 class="display-4 fw-bold mb-3">Initiatives <span class="text-warning">&</span> Impact</h1>
+                <h1 class="display-4 fw-bold mb-3 text-white">Initiatives <span class="text-warning">&</span> Impact</h1>
                 <p class="lead text-white-50 mb-4">Explore our growing catalog of projects, government schemes, and educational programs across India.</p>
 
                 <!-- Hero Search -->

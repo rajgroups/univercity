@@ -1187,7 +1187,7 @@
                     <div class="tab-pane fade" id="milestone-list-view">
                         @php
                             $phasesList = ['P1', 'P2', 'P3', 'P4', 'P5', 'P6', 'P7'];
-                            
+
                             // Static knowledge mapping for phases
                             $phaseKnowledge = [
                                 'P1' => ['title' => 'Need Assessment & Scoping', 'note' => 'Need assessment complete', 'layer' => 'Prepare'],
@@ -1201,7 +1201,7 @@
 
                             $phaseStatusesMap = [];
                             $foundActive = false;
-                            
+
                             foreach ($phasesList as $p) {
                                 $pItems = $milestones->where('phase', $p);
                                 if ($pItems->count() > 0) {
@@ -1215,7 +1215,7 @@
                                         $phaseStatusesMap[$p] = 'pending';
                                     }
                                 } else {
-                                    $hasPastTasks = $milestones->where('phase', '<', $p)->where('status', '!=', 'completed')->count() == 0 
+                                    $hasPastTasks = $milestones->where('phase', '<', $p)->where('status', '!=', 'completed')->count() == 0
                                                    && $milestones->where('phase', '<', $p)->count() > 0;
                                     $phaseStatusesMap[$p] = $hasPastTasks && !$foundActive ? 'finished' : 'pending';
                                 }
@@ -1243,7 +1243,7 @@
                                 <!-- Phase Bar -->
                                 <div class="phase-bar">
                                     @foreach($phasesList as $p)
-                                        @php 
+                                        @php
                                             $bClass = $phaseStatusesMap[$p] == 'finished' ? 'completed' : ($phaseStatusesMap[$p] == 'current' ? 'current' : 'upcoming');
                                         @endphp
                                         <div class="phase {{ $bClass }}">{{ $p }}</div>
@@ -1282,7 +1282,7 @@
                                         $cardClass = $status == 'finished' ? 'phase-finished' : ($status == 'current' ? 'phase-current' : 'phase-pending');
                                         $badgeClass = 'badge-' . $status;
                                         $statusText = $status == 'current' ? 'Current phase' : ucfirst($status);
-                                        
+
                                         $info = $phaseKnowledge[$p];
                                         $layerName = $info['layer'];
                                     @endphp
@@ -1360,7 +1360,7 @@
                                                 </tr>
 
                                                 @foreach($items as $idx => $m)
-                                                    @php 
+                                                    @php
                                                         $mStatus = $m->status == 'completed' ? 'finished' : ($m->status == 'in-progress' ? 'current' : 'pending');
                                                     @endphp
                                                     <tr>
@@ -2840,7 +2840,7 @@
                         <i class="bi bi-people-fill text-black fs-4"></i>
                     </div>
                     <div>
-                        <h5 class="modal-title fw-bold mb-0" id="donorsModalLabel">Project Supporters</h5>
+                        <h5 class="modal-title fw-bold mb-0 text-white" id="donorsModalLabel">Project Supporters</h5>
                         <small class="opacity-75">Every contribution brings us closer to our goal</small>
                     </div>
                 </div>
