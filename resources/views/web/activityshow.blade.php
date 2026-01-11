@@ -52,10 +52,14 @@
     object-fit: contain;
 }
         .event-banner {
+            position: relative;
+            min-height: 500px;
+            display: flex;
+            align-items: flex-end;
             background-size: cover;
             background-position: center;
-            padding: 80px 0;
-            position: relative;
+            overflow: hidden;
+            padding-bottom: 4rem;
         }
 
         .event-banner::before {
@@ -65,22 +69,96 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
+            background: linear-gradient(180deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.6) 60%, rgba(0,0,0,0.95) 100%);
+            z-index: 1;
         }
 
         .event-banner-content {
             position: relative;
-            z-index: 1;
+            z-index: 2;
+            width: 100%;
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
             color: white;
+            padding: 0.5rem 1rem;
+            border-right: 1px solid rgba(255, 255, 255, 0.15);
+            min-height: 60px;
+        }
+
+        .info-item:last-child {
+            border-right: none;
+        }
+
+        .info-icon {
+            width: 42px;
+            height: 42px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            font-size: 1.1rem;
+            color: #fff;
+            flex-shrink: 0;
         }
 
         .event-badge {
             display: inline-block;
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-weight: 600;
+            padding: 6px 16px;
+            border-radius: 50px;
+            font-weight: 500;
             margin-right: 10px;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        
+        .event-badge.modern-primary {
+            background: rgba(13, 110, 253, 0.2);
+            color: #6ea8fe;
+            border: 1px solid rgba(13, 110, 253, 0.3);
+            backdrop-filter: blur(4px);
+        }
+
+        .event-badge.modern-success {
+            background: rgba(25, 135, 84, 0.2);
+            color: #75b798;
+            border: 1px solid rgba(25, 135, 84, 0.3);
+            backdrop-filter: blur(4px);
+        }
+
+        @media (max-width: 991px) {
+            .event-banner {
+                min-height: auto;
+                padding-top: 100px;
+            }
+            .glass-panel {
+                padding: 1rem;
+            }
+            .info-item {
+                border-right: none;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+                padding: 1rem 0;
+            }
+            .info-item:last-child {
+                border-bottom: none;
+            }
         }
 
         .event-detail-icon {
@@ -126,59 +204,85 @@
     </style>
 
     <!-- Event Banner Section -->
-    <section class="event-banner mb-80" style="background-image: url({{ asset($event->banner_image ?? $event->image) }})">
-        <div class="container-fluid event-banner-content">
-            <div class="d-flex flex-wrap align-items-center gap-16 mb-3">
-                @if ($event->type == 2)
-                    <span class="event-badge bg-danger">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                            class="me-2 bi bi-trophy-fill" viewBox="0 0 16 16">
-                            <path d="M2 1a1 1 0 0 0-1 1v1a3 3 0 0 0 3 3h.184a5.978
-                        5.978 0 0 0 2.223 2.223A5.978
-                        5.978 0 0 0 5 10.816V12h6v-1.184a5.978
-                        5.978 0 0 0-2.223-2.223A5.978
-                        5.978 0 0 0 10.816 6H11a3 3 0 0
-                        0 3-3V2a1 1 0 0 0-1-1H2zm3 12a1 1 0 0
-                        0-1 1v1h8v-1a1 1 0 0 0-1-1H5z" />
-                        </svg>
-                        Competition
-                    </span>
-                @else
-                    <span class="event-badge bg-primary">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                            class="me-2 bi bi-calendar-event" viewBox="0 0 16 16">
-                            <path d="M11 6a1 1 0 0 1 1 1v1a1 1 0 0
-                        1-1 1H5a1 1 0 0 1-1-1V7a1 1 0
-                        1 1 1h6z" />
-                            <path d="M3.5 0a.5.5 0 0 1
-                        .5.5V1h8V.5a.5.5 0 0
-                        1 1 0V1h1a2 2 0 0
-                        1 2 2v11a2 2 0 0
-                        1-2 2H2a2 2 0 0
-                        1-2-2V3a2 2 0 0
-                        1 2-2h1V.5a.5.5
-                        0 0 1 .5-.5zM1
-                        4v10a1 1 0 0 0 1
-                        1h12a1 1 0 0 0
-                        1-1V4H1z" />
-                        </svg>
-                        Event
-                    </span>
-                @endif
+    <section class="event-banner mb-80" style="background-image: url({{ asset($event->banner_image ?? $event->image) }});">
+        <div class="container event-banner-content">
+            <div class="row">
+                <div class="col-lg-11 mx-auto">
+                    <!-- Badges -->
+                    <div class="d-flex flex-wrap align-items-center mb-2">
+                        @if ($event->type == 2)
+                            <span class="event-badge modern-primary">
+                                <i class="bi bi-trophy-fill me-2"></i> Competition
+                            </span>
+                        @else
+                            <span class="event-badge modern-primary">
+                                <i class="bi bi-calendar-event me-2"></i> Event
+                            </span>
+                        @endif
 
+                        <span class="event-badge modern-success">
+                            <i class="fas {{ $event->entry_fee > 0 ? 'fa-ticket-alt' : 'fa-gift' }} me-2"></i>
+                            {{ $event->entry_fee > 0 ? 'Paid: ₹' . number_format($event->entry_fee, 2) : 'Free' }}
+                        </span>
+                        
+                        <span class="event-badge text-white" style="background: rgba(255,255,255,0.15); backdrop-filter: blur(4px);">
+                            <i class="fas fa-users me-2"></i> {{ $event->max_participants ?? 'Unlimited' }} Spots
+                        </span>
+                    </div>
 
-                <span class="event-badge {{ $event->entry_fee > 0 ? 'bg-success' : 'bg-warning' }}">
-                    <i class="fas {{ $event->entry_fee > 0 ? 'fa-ticket-alt' : 'fa-gift' }} me-2"></i>
-                    {{ $event->entry_fee > 0 ? 'Paid: ₹' . number_format($event->entry_fee, 2) : 'Free' }}
-                </span>
-                <span class="event-badge bg-info">
-                    <i class="fas fa-users me-2"></i>
-                    {{ $event->max_participants ?? 'Unlimited' }} spots
-                </span>
+                    <!-- Title & Subtitle -->
+                    <h1 class="display-4 fw-bold text-white mb-2" style="text-shadow: 0 2px 4px rgba(0,0,0,0.3);">{{ $event->title }}</h1>
+                    @if($event->subtitle)
+                        <h4 class="h5 text-white opacity-75 mb-4 fw-normal" style="max-width: 800px; line-height: 1.6;">{{ $event->subtitle }}</h4>
+                    @endif
+
+                    <!-- Quick Info Glass Panel -->
+                    <div class="glass-panel">
+                        <div class="row g-0 align-items-center">
+                            <!-- Date -->
+                            <div class="col-lg-4">
+                                <div class="info-item">
+                                    <div class="info-icon">
+                                        <i class="fas fa-calendar-day"></i>
+                                    </div>
+                                    <div class="lh-1">
+                                        <small class="d-block text-white opacity-50 text-uppercase fw-bold mb-1" style="font-size: 0.7rem; letter-spacing: 1px;">Date & Time</small>
+                                        <div class="fw-bold fs-6 mb-1">{{ \Carbon\Carbon::parse($event->start_date)->format('M d, Y') }}</div>
+                                        <div class="small opacity-75">{{ \Carbon\Carbon::parse($event->start_time)->format('h:i A') }}</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Location -->
+                            <div class="col-lg-4">
+                                <div class="info-item">
+                                    <div class="info-icon">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                    </div>
+                                    <div class="lh-1">
+                                        <small class="d-block text-white opacity-50 text-uppercase fw-bold mb-1" style="font-size: 0.7rem; letter-spacing: 1px;">Location</small>
+                                        <div class="fw-bold fs-6 mb-1">{{ Str::limit($event->location, 25) }}</div>
+                                        <div class="small opacity-75">{{ $event->location_type }}</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- CTA Button -->
+                            <div class="col-lg-4 ps-lg-4 mt-3 mt-lg-0">
+                                @if (\Carbon\Carbon::now()->gt($event->registration_deadline))
+                                    <button class="btn btn-secondary w-100 py-3 rounded-pill fw-600" disabled>
+                                        Registration Closed
+                                    </button>
+                                @else
+                                    <button class="btn btn-light text-primary w-100 py-3 rounded-pill fw-bold shadow-sm" data-bs-toggle="modal" data-bs-target="#registrationModal" style="transition: all 0.3s ease;">
+                                        Register Now <i class="fas fa-arrow-right ms-2"></i>
+                                    </button>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-
-            <h1 class="fw-500 mb-3 text-white">{{ $event->title }}</h1>
-            <h4 class="text-white">{{ $event->subtitle }}</h4>
         </div>
     </section>
 
