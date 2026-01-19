@@ -6,21 +6,12 @@
     <div class="page-header">
         <div class="row align-items-center">
             <div class="col">
-                <h3 class="page-title">Create Survey for: {{ $project->name }}</h3>
-                {{-- <ul class="breadcrumb">
-                    <li class="breadcrumb-item">
-                        <a href="{{ route('admin.survey.create') }}">Projects</a>
-                    </li>
-                    <li class="breadcrumb-item">
-                        <a href="{{ route('projects.show', $project->id) }}">{{ $project->name }}</a>
-                    </li>
-                    <li class="breadcrumb-item active">Create Survey</li>
-                </ul> --}}
+                <h3 class="page-title">Edit Survey: {{ $project->title }}</h3>
             </div>
             <div class="col-auto">
-                {{-- <a href="{{ route('projects.show', $project->id) }}" class="btn btn-secondary">
-                    <i class="bi bi-arrow-left"></i> Back to Project
-                </a> --}}
+                 <a href="{{ route('admin.survey.index', $project->id) }}" class="btn btn-secondary">
+                    <i class="feather feather-arrow-left me-2"></i> Back to List
+                </a>
             </div>
         </div>
     </div>
@@ -30,15 +21,18 @@
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-body">
-                    <form id="surveyForm" action="{{ route('admin.survey.store', $project->id) }}" method="POST">
+                    <form id="surveyForm" action="{{ route('admin.survey.update', ['project_id' => $project->id, 'id' => $survey->id]) }}" method="POST">
                         @csrf
-
+                        {{-- Use POST for update as per route definition, but good practice is PUT/PATCH if defined that way. 
+                             My route is POST: Route::post('/scrutiny/{project_id}/survey/{id}/update' ... --}}
+                        
                         <!-- Survey Basic Info -->
                         <div class="row mb-4">
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label class="form-label">Survey Title <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" name="title"
+                                            value="{{ $survey->title }}"
                                             placeholder="Enter survey title" required>
                                 </div>
                             </div>
@@ -46,7 +40,7 @@
                                 <div class="form-group">
                                     <label class="form-label">Description</label>
                                     <textarea class="form-control" name="description"
-                                                rows="3" placeholder="Enter survey description"></textarea>
+                                                rows="3" placeholder="Enter survey description">{{ $survey->description }}</textarea>
                                 </div>
                             </div>
                         </div>
@@ -61,57 +55,65 @@
                             <div class="card-body">
                                 <div id="questionsContainer">
                                     <!-- Questions will be added here dynamically -->
-                                    <div class="question-item card mb-3">
-                                        <div class="card-body">
-                                            <div class="row">
-                                                <div class="col-md-8">
-                                                    <div class="form-group">
-                                                        <label class="form-label">Question Text <span class="text-danger">*</span></label>
-                                                        <input type="text" class="form-control question-text"
-                                                                name="questions[0][text]" placeholder="Enter your question" required>
+                                    {{-- Server-side loop to populate existing questions --}}
+                                    @foreach($survey->questions as $index => $question)
+                                        <div class="question-item card mb-3">
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-md-8">
+                                                        <div class="form-group">
+                                                            <label class="form-label">Question Text <span class="text-danger">*</span></label>
+                                                            <input type="text" class="form-control question-text"
+                                                                    name="questions[{{ $index }}][text]" 
+                                                                    value="{{ $question->question_text }}"
+                                                                    placeholder="Enter your question" required>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <div class="form-group">
+                                                            <label class="form-label">Question Type <span class="text-danger">*</span></label>
+                                                            <select class="form-control question-type"
+                                                                    name="questions[{{ $index }}][type]" required>
+                                                                @foreach($questionTypes as $key => $label)
+                                                                    <option value="{{ $key }}" {{ $question->type == $key ? 'selected' : '' }}>{{ $label }}</option>
+                                                                @endforeach
+                                                            </select>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-4">
-                                                    <div class="form-group">
-                                                        <label class="form-label">Question Type <span class="text-danger">*</span></label>
-                                                        <select class="form-control question-type"
-                                                                name="questions[0][type]" required>
-                                                            @foreach($questionTypes as $key => $label)
-                                                                <option value="{{ $key }}">{{ $label }}</option>
-                                                            @endforeach
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </div>
 
-                                            <!-- Options Container (for choice-based questions) -->
-                                            <div class="options-container mt-3" style="display: none;">
-                                                <label class="form-label">Options (one per line)</label>
-                                                <textarea class="form-control options-textarea"
-                                                            name="questions[0][options]"
-                                                            rows="3"
-                                                            placeholder="Option 1&#10;Option 2&#10;Option 3"></textarea>
-                                                <small class="text-muted">Enter each option on a new line</small>
-                                            </div>
+                                                <!-- Options Container (for choice-based questions) -->
+                                                <div class="options-container mt-3" style="display: {{ in_array($question->type, ['radio', 'checkbox', 'select']) ? 'block' : 'none' }};">
+                                                    <label class="form-label">Options (one per line)</label>
+                                                    <textarea class="form-control options-textarea"
+                                                                name="questions[{{ $index }}][options]"
+                                                                rows="3"
+                                                                placeholder="Option 1&#10;Option 2&#10;Option 3">{{ $question->options ? implode("\n", json_decode($question->options, true) ?? []) : '' }}</textarea>
+                                                    <small class="text-muted">Enter each option on a new line</small>
+                                                </div>
 
-                                            <div class="row mt-3">
-                                                <div class="col-md-6">
-                                                    <div class="form-check">
-                                                        <input type="checkbox" class="form-check-input"
-                                                                id="required_0" name="questions[0][required]" value="1">
-                                                        <label class="form-check-label" for="required_0">
-                                                            Required Question
-                                                        </label>
+                                                <div class="row mt-3">
+                                                    <div class="col-md-6">
+                                                        <div class="form-check">
+                                                            <input type="checkbox" class="form-check-input"
+                                                                    id="required_{{ $index }}" name="questions[{{ $index }}][required]" value="1" {{ $question->is_required ? 'checked' : '' }}>
+                                                            <label class="form-check-label" for="required_{{ $index }}">
+                                                                Required Question
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6 text-end">
+                                                        <button type="button" class="btn btn-danger btn-sm remove-question">
+                                                            <i class="bi bi-trash"></i> Remove
+                                                        </button>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-6 text-end">
-                                                    <button type="button" class="btn btn-danger btn-sm remove-question">
-                                                        <i class="bi bi-trash"></i> Remove
-                                                    </button>
-                                                </div>
+                                                
+                                                {{-- Hidden Order Input (optional, if we want to preserve order) --}}
+                                                <input type="hidden" name="questions[{{ $index }}][order]" value="{{ $question->order ?? $index }}">
                                             </div>
                                         </div>
-                                    </div>
+                                    @endforeach
                                 </div>
 
                                 <button type="button" id="addQuestion" class="btn btn-primary mt-3">
@@ -123,7 +125,7 @@
                         <!-- Form Actions -->
                         <div class="text-end">
                             <button type="submit" class="btn btn-primary">
-                                <i class="bi bi-save"></i> Create Survey
+                                <i class="bi bi-save"></i> Update Survey
                             </button>
                         </div>
                     </form>
@@ -137,10 +139,17 @@
 @push('scripts')
 <script>
 $(document).ready(function() {
-    let questionCount = 1;
+    // Start count from existing number of questions
+    let questionCount = {{ $survey->questions->count() }};
+    
+    // If no questions, start at 0
+    if (questionCount === 0) questionCount = 0;
 
     // Add new question
     $('#addQuestion').click(function() {
+        // Find the next available index
+        let newIndex = questionCount;
+        
         const template = `
         <div class="question-item card mb-3">
             <div class="card-body">
@@ -149,14 +158,14 @@ $(document).ready(function() {
                         <div class="form-group">
                             <label class="form-label">Question Text <span class="text-danger">*</span></label>
                             <input type="text" class="form-control question-text"
-                                   name="questions[${questionCount}][text]" placeholder="Enter your question" required>
+                                   name="questions[${newIndex}][text]" placeholder="Enter your question" required>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
                             <label class="form-label">Question Type <span class="text-danger">*</span></label>
                             <select class="form-control question-type"
-                                    name="questions[${questionCount}][type]" required>
+                                    name="questions[${newIndex}][type]" required>
                                 @foreach($questionTypes as $key => $label)
                                     <option value="{{ $key }}">{{ $label }}</option>
                                 @endforeach
@@ -168,7 +177,7 @@ $(document).ready(function() {
                 <div class="options-container mt-3" style="display: none;">
                     <label class="form-label">Options (one per line)</label>
                     <textarea class="form-control options-textarea"
-                              name="questions[${questionCount}][options]"
+                              name="questions[${newIndex}][options]"
                               rows="3"
                               placeholder="Option 1&#10;Option 2&#10;Option 3"></textarea>
                     <small class="text-muted">Enter each option on a new line</small>
@@ -178,8 +187,8 @@ $(document).ready(function() {
                     <div class="col-md-6">
                         <div class="form-check">
                             <input type="checkbox" class="form-check-input"
-                                   id="required_${questionCount}" name="questions[${questionCount}][required]" value="1">
-                            <label class="form-check-label" for="required_${questionCount}">
+                                   id="required_${newIndex}" name="questions[${newIndex}][required]" value="1">
+                            <label class="form-check-label" for="required_${newIndex}">
                                 Required Question
                             </label>
                         </div>
@@ -221,9 +230,6 @@ $(document).ready(function() {
             textarea.prop('required', false);
         }
     });
-
-    // Trigger change on existing question types
-    $('.question-type').trigger('change');
 
     // Form validation
     $('#surveyForm').submit(function(e) {

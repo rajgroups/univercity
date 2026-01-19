@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Feedback;
 
 class Project extends Model
 {
@@ -74,6 +75,11 @@ class Project extends Model
     public function surveys()
     {
         return $this->hasMany(Survey::class);
+    }
+
+    public function feedbacks()
+    {
+        return $this->hasMany(Feedback::class); // Assuming 'project_id' is foreign key
     }
 
     public function milestones()

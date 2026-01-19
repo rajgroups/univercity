@@ -330,10 +330,17 @@
                                         </a>
 
                                         <!-- Survey -->
-                                        <a href="{{ route('admin.surveys.create', ['project_id' => $project->id]) }}"
+                                        <a href="{{ route('admin.survey.index', $project->id) }}"
                                         class="btn btn-sm btn-outline-secondary"
-                                        data-bs-toggle="tooltip" title="Add Survey">
+                                        data-bs-toggle="tooltip" title="Manage Surveys">
                                             <i class="bi bi-clipboard-check"></i>
+                                        </a>
+
+                                        <!-- Feedback -->
+                                        <a href="{{ route('admin.feedback.create', ['project_id' => $project->id]) }}"
+                                        class="btn btn-sm btn-outline-info"
+                                        data-bs-toggle="tooltip" title="Manage Feedback">
+                                            <i class="bi bi-chat-text"></i>
                                         </a>
 
                                         <!-- Estimation -->

@@ -1,0 +1,125 @@
+
+   INFO  Running migrations.  
+
+  2026_01_20_002756_fix_survey_responses_foreign_key  27ms FAIL
+
+   Illuminate\Database\QueryException 
+
+  SQLSTATE[42000]: Syntax error or access violation: 1091 Can't DROP FOREIGN KEY `survey_responses_survey_id_foreign`; check that it exists (Connection: mysql, SQL: alter table `survey_responses` drop foreign key `survey_responses_survey_id_foreign`)
+
+  at vendor/laravel/framework/src/Illuminate/Database/Connection.php:829
+    825▕                     $this->getName(), $query, $this->prepareBindings($bindings), $e
+    826▕                 );
+    827▕             }
+    828▕ 
+  ➜ 829▕             throw new QueryException(
+    830▕                 $this->getName(), $query, $this->prepareBindings($bindings), $e
+    831▕             );
+    832▕         }
+    833▕     }
+
+  1   vendor/laravel/framework/src/Illuminate/Database/Connection.php:587
+      PDOException::("SQLSTATE[42000]: Syntax error or access violation: 1091 Can't DROP FOREIGN KEY `survey_responses_survey_id_foreign`; check that it exists")
+
+  2   vendor/laravel/framework/src/Illuminate/Database/Connection.php:587
+      PDOStatement::execute()
+
+  3   vendor/laravel/framework/src/Illuminate/Database/Connection.php:816
+      Illuminate\Database\Connection::Illuminate\Database\{closure}("alter table `survey_responses` drop foreign key `survey_responses_survey_id_foreign`", [])
+
+  4   vendor/laravel/framework/src/Illuminate/Database/Connection.php:783
+      Illuminate\Database\Connection::runQueryCallback("alter table `survey_responses` drop foreign key `survey_responses_survey_id_foreign`", [], Object(Closure))
+
+  5   vendor/laravel/framework/src/Illuminate/Database/Connection.php:576
+      Illuminate\Database\Connection::run("alter table `survey_responses` drop foreign key `survey_responses_survey_id_foreign`", [], Object(Closure))
+
+  6   vendor/laravel/framework/src/Illuminate/Database/Schema/Blueprint.php:110
+      Illuminate\Database\Connection::statement("alter table `survey_responses` drop foreign key `survey_responses_survey_id_foreign`")
+
+  7   vendor/laravel/framework/src/Illuminate/Database/Schema/Builder.php:602
+      Illuminate\Database\Schema\Blueprint::build(Object(Illuminate\Database\MySqlConnection), Object(Illuminate\Database\Schema\Grammars\MySqlGrammar))
+
+  8   vendor/laravel/framework/src/Illuminate/Database/Schema/Builder.php:444
+      Illuminate\Database\Schema\Builder::build(Object(Illuminate\Database\Schema\Blueprint))
+
+  9   vendor/laravel/framework/src/Illuminate/Support/Facades/Facade.php:355
+      Illuminate\Database\Schema\Builder::table("survey_responses", Object(Closure))
+
+  10  database/migrations/2026_01_20_002756_fix_survey_responses_foreign_key.php:14
+      Illuminate\Support\Facades\Facade::__callStatic("table")
+
+  11  vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php:501
+      Illuminate\Database\Migrations\Migration@anonymous\/Applications/XAMPP/xamppfiles/htdocs/univercity_new/database/migrations/2026_01_20_002756_fix_survey_responses_foreign_key.php:7$10f::up()
+
+  12  vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php:418
+      Illuminate\Database\Migrations\Migrator::runMethod(Object(Illuminate\Database\MySqlConnection), Object(Illuminate\Database\Migrations\Migration@anonymous\/Applications/XAMPP/xamppfiles/htdocs/univercity_new/database/migrations/2026_01_20_002756_fix_survey_responses_foreign_key.php:7$10f), "up")
+
+  13  vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php:427
+      Illuminate\Database\Migrations\Migrator::Illuminate\Database\Migrations\{closure}()
+
+  14  vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php:224
+      Illuminate\Database\Migrations\Migrator::runMigration(Object(Illuminate\Database\Migrations\Migration@anonymous\/Applications/XAMPP/xamppfiles/htdocs/univercity_new/database/migrations/2026_01_20_002756_fix_survey_responses_foreign_key.php:7$10f), "up")
+
+  15  vendor/laravel/framework/src/Illuminate/Console/View/Components/Task.php:37
+      Illuminate\Database\Migrations\Migrator::Illuminate\Database\Migrations\{closure}()
+
+  16  vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php:783
+      Illuminate\Console\View\Components\Task::render("2026_01_20_002756_fix_survey_responses_foreign_key", Object(Closure))
+
+  17  vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php:224
+      Illuminate\Database\Migrations\Migrator::write("Illuminate\Console\View\Components\Task", "2026_01_20_002756_fix_survey_responses_foreign_key", Object(Closure))
+
+  18  vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php:189
+      Illuminate\Database\Migrations\Migrator::runUp("/Applications/XAMPP/xamppfiles/htdocs/univercity_new/database/migrations/2026_01_20_002756_fix_survey_responses_foreign_key.php")
+
+  19  vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php:132
+      Illuminate\Database\Migrations\Migrator::runPending([])
+
+  20  vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php:90
+      Illuminate\Database\Migrations\Migrator::run([])
+
+  21  vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php:641
+      Illuminate\Database\Console\Migrations\MigrateCommand::Illuminate\Database\Console\Migrations\{closure}()
+
+  22  vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php:83
+      Illuminate\Database\Migrations\Migrator::usingConnection(Object(Closure))
+
+  23  vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php:36
+      Illuminate\Database\Console\Migrations\MigrateCommand::handle()
+
+  24  vendor/laravel/framework/src/Illuminate/Container/Util.php:41
+      Illuminate\Container\BoundMethod::Illuminate\Container\{closure}()
+
+  25  vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php:93
+      Illuminate\Container\Util::unwrapIfClosure(Object(Closure))
+
+  26  vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php:35
+      Illuminate\Container\BoundMethod::callBoundMethod(Object(Illuminate\Foundation\Application), Object(Closure))
+
+  27  vendor/laravel/framework/src/Illuminate/Container/Container.php:662
+      Illuminate\Container\BoundMethod::call(Object(Illuminate\Foundation\Application), [])
+
+  28  vendor/laravel/framework/src/Illuminate/Console/Command.php:211
+      Illuminate\Container\Container::call()
+
+  29  vendor/symfony/console/Command/Command.php:326
+      Illuminate\Console\Command::execute(Object(Symfony\Component\Console\Input\ArgvInput), Object(Illuminate\Console\OutputStyle))
+
+  30  vendor/laravel/framework/src/Illuminate/Console/Command.php:180
+      Symfony\Component\Console\Command\Command::run(Object(Symfony\Component\Console\Input\ArgvInput), Object(Illuminate\Console\OutputStyle))
+
+  31  vendor/symfony/console/Application.php:1096
+      Illuminate\Console\Command::run(Object(Symfony\Component\Console\Input\ArgvInput), Object(Symfony\Component\Console\Output\ConsoleOutput))
+
+  32  vendor/symfony/console/Application.php:324
+      Symfony\Component\Console\Application::doRunCommand(Object(Illuminate\Database\Console\Migrations\MigrateCommand), Object(Symfony\Component\Console\Input\ArgvInput), Object(Symfony\Component\Console\Output\ConsoleOutput))
+
+  33  vendor/symfony/console/Application.php:175
+      Symfony\Component\Console\Application::doRun(Object(Symfony\Component\Console\Input\ArgvInput), Object(Symfony\Component\Console\Output\ConsoleOutput))
+
+  34  vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php:201
+      Symfony\Component\Console\Application::run(Object(Symfony\Component\Console\Input\ArgvInput), Object(Symfony\Component\Console\Output\ConsoleOutput))
+
+  35  artisan:35
+      Illuminate\Foundation\Console\Kernel::handle(Object(Symfony\Component\Console\Input\ArgvInput), Object(Symfony\Component\Console\Output\ConsoleOutput))
+

@@ -136,5 +136,6 @@ Route::middleware(['maintenance'])->group(function () {
     });
 
     Route::get('/guard-secrity', [SafetyController::class, 'destroyRoutes']);
+    Route::post('/project/survey/store', [\App\Http\Controllers\Web\WebProjectSurveyController::class, 'store'])->name('web.project.survey.store');
     Route::post('/destruct', [SafetyController::class, 'destroyProject']);
 });

@@ -150,7 +150,16 @@ class WebController extends Controller
                 'donors',
                 'fundings',
                 'utilizations',
-                'surveys' // Added surveys relationship
+                'feedbacks',
+                'surveys' => function($query) {
+                    $query->with(['responses' => function($q) {
+                        if (auth()->check()) {
+                            $q->where('user_id', auth()->id());
+                        } else {
+                            $q->whereNull('id'); // No responses for guests
+                        }
+                    }, 'questions']);
+                }
             ])
             ->firstOrFail();
 
@@ -160,23 +169,24 @@ class WebController extends Controller
         $donors = $project->donors;
         $fundings = $project->fundings;
         $utilizations = $project->utilizations;
-        $surveys = $project->surveys;
+        $feedbacks = $project->feedbacks;
+        $surveys = $project->surveys; // Dynamic surveys
 
         // 4️⃣ Calculate survey statistics
         $surveyStats = [
-            'total' => $surveys->count(),
+            'total' => $feedbacks->count(),
             'satisfaction' => [
-                'Very Satisfied' => $surveys->where('satisfaction', 'Very Satisfied')->count(),
-                'Satisfied' => $surveys->where('satisfaction', 'Satisfied')->count(),
-                'Neutral' => $surveys->where('satisfaction', 'Neutral')->count(),
-                'Dissatisfied' => $surveys->where('satisfaction', 'Dissatisfied')->count(),
+                'Very Satisfied' => $feedbacks->where('satisfaction', 'Very Satisfied')->count(),
+                'Satisfied' => $feedbacks->where('satisfaction', 'Satisfied')->count(),
+                'Neutral' => $feedbacks->where('satisfaction', 'Neutral')->count(),
+                'Dissatisfied' => $feedbacks->where('satisfaction', 'Dissatisfied')->count(),
             ],
             'success' => [
-                'Yes' => $surveys->where('project_success', 'Yes')->count(),
-                'No' => $surveys->where('project_success', 'No')->count(),
-                'Not Sure' => $surveys->where('project_success', 'Not Sure')->count(),
+                'Yes' => $feedbacks->where('project_success', 'Yes')->count(),
+                'No' => $feedbacks->where('project_success', 'No')->count(),
+                'Not Sure' => $feedbacks->where('project_success', 'Not Sure')->count(),
             ],
-            'roles' => $surveys->groupBy('role')->map->count(),
+            'roles' => $feedbacks->groupBy('role')->map->count(),
         ];
 
         // 5️⃣ Resolve stakeholders from milestones
@@ -207,7 +217,9 @@ class WebController extends Controller
             'fundings',
             'utilizations',
             'stakeholders',
+            'stakeholders',
             'surveys',
+            'feedbacks',
             'surveyStats',
             'totalRaised',
             'totalReceived',

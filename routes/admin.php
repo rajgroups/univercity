@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\EnquiryController;
 use App\Http\Controllers\Admin\IntlCourseController;
 use App\Http\Controllers\Admin\OrganizationController;
 use App\Http\Controllers\Admin\ProjectController;
+use App\Http\Controllers\Admin\SurveyController;
 use App\Http\Controllers\Admin\SectorController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\StudentController;
@@ -96,7 +97,7 @@ Route::prefix('admin')->as('admin.')->group(function() {
         // Route::resource('organization',Or::class);
 
         // Survey Routes
-        Route::resource('surveys', App\Http\Controllers\Admin\SurveyController::class);
+        Route::resource('feedback', App\Http\Controllers\Admin\FeedbackController::class);
 
         // Setting Home Page Settings Route
         Route::get('settings/home/edit',[SettingController::class,'editHomePage'])->name('setting.home.edit');
@@ -130,6 +131,14 @@ Route::prefix('admin')->as('admin.')->group(function() {
         });
         // field Log
         Route::get('/projet/fieldlog', [ProjectController::class,'createMilestone']);
+
+        Route::get('/survey/{project_id}/list', [SurveyController::class, 'index'])->name('survey.index');
+        Route::get('/survey/{project_id}/survey/create', [SurveyController::class, 'create'])->name('survey.create');
+        Route::post('/survey/{project_id}/survey/store', [SurveyController::class, 'store'])->name('survey.store');
+        Route::get('/survey/{project_id}/survey/{id}/edit', [SurveyController::class, 'edit'])->name('survey.edit');
+        Route::post('/survey/{project_id}/survey/{id}/update', [SurveyController::class, 'update'])->name('survey.update');
+        Route::delete('/survey/{project_id}/survey/{id}/delete', [SurveyController::class, 'destroy'])->name('survey.destroy');
+
         Route::resource('project', ProjectController::class);
         Route::get('project/{project}/toggle-status', [ProjectController::class, 'toggleStatus'])->name('project.toggle-status');
         Route::get('project/export', [ProjectController::class, 'export'])->name('project.export');

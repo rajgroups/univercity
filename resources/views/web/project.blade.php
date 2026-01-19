@@ -532,9 +532,13 @@
             <button class="nav-link btn btn-outline-purple rounded-pill px-4" id="resources-tab" data-bs-toggle="pill" data-bs-target="#resources" type="button" role="tab" aria-controls="resources" aria-selected="false">
                 <i class="bi bi-shield-check me-2"></i>Resources & Risks
             </button>
-            @if(isset($surveys) && $surveys->count() > 0)
             <button class="nav-link btn btn-outline-teal rounded-pill px-4" id="feedback-tab" data-bs-toggle="pill" data-bs-target="#feedback" type="button" role="tab" aria-controls="feedback" aria-selected="false">
-                <i class="bi bi-chat-heart me-2"></i>Feedback <span class="badge bg-primary ms-1">{{ $surveys->count() }}</span>
+                <i class="bi bi-chat-heart me-2"></i>Feedback <span class="badge bg-primary ms-1">{{ $feedbacks->count() }}</span>
+            </button>
+
+            @if(isset($surveys) && $surveys->count() > 0)
+            <button class="nav-link btn btn-outline-primary rounded-pill px-4" id="survey-tab" data-bs-toggle="pill" data-bs-target="#survey" type="button" role="tab" aria-controls="survey" aria-selected="false">
+                <i class="bi bi-clipboard-data me-2"></i>Surveys <span class="badge bg-success ms-1">{{ $surveys->count() }}</span>
             </button>
             @endif
         </nav>
@@ -2295,7 +2299,7 @@
         </div>
 
         <!-- Feedback Tab -->
-        @if(isset($surveys) && $surveys->count() > 0)
+        <!-- Feedback Tab -->
         <div class="tab-pane fade" id="feedback" role="tabpanel">
             <!-- Header Section -->
             <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
@@ -2305,13 +2309,13 @@
                 </div>
                 <div class="d-flex align-items-center gap-3">
                     <span class="badge bg-primary bg-opacity-10 text-white px-3 py-2 rounded-pill">
-                        <i class="bi bi-people-fill me-1"></i>{{ $surveyStats['total'] }} Responses
+                        <i class="bi bi-people-fill me-1"></i>{{ $feedbacks->count() }} Responses
                     </span>
-                    @if($surveys->count() > 0)
+                    @if($feedbacks->count() > 0)
                     <span class="badge bg-success bg-opacity-10 text-success px-3 py-2 rounded-pill">
                         <i class="bi bi-calendar-check me-1"></i>
-                        {{ $surveys->min('survey_date') ? \Carbon\Carbon::parse($surveys->min('survey_date'))->format('M Y') : 'N/A' }} -
-                        {{ $surveys->max('survey_date') ? \Carbon\Carbon::parse($surveys->max('survey_date'))->format('M Y') : 'N/A' }}
+                        {{ $feedbacks->min('survey_date') ? \Carbon\Carbon::parse($feedbacks->min('survey_date'))->format('M Y') : 'N/A' }} -
+                        {{ $feedbacks->max('survey_date') ? \Carbon\Carbon::parse($feedbacks->max('survey_date'))->format('M Y') : 'N/A' }}
                     </span>
                     @endif
                 </div>
@@ -2437,7 +2441,7 @@
 
                     <!-- Survey Cards Grid -->
                     <div class="row g-3" id="surveyCardsGrid">
-                        @foreach($surveys->sortByDesc('survey_date') as $survey)
+                        @foreach($feedbacks->sortByDesc('survey_date') as $survey)
                         <div class="col-md-12 survey-card-item"
                              data-satisfaction="{{ strtolower(str_replace(' ', '-', $survey->satisfaction)) }}"
                              data-role="{{ strtolower(str_replace(' ', '-', $survey->role)) }}">
@@ -2536,13 +2540,223 @@
                     </div>
 
                     <!-- Load More (if many surveys) -->
-                    @if($surveys->count() > 6)
+                    @if($feedbacks->count() > 6)
                     <div class="text-center mt-4" id="loadMoreSurveys">
                         <button class="btn btn-outline-primary rounded-pill px-4" onclick="showAllSurveys()">
-                            <i class="bi bi-arrow-down-circle me-2"></i>Show All {{ $surveys->count() }} Responses
+                            <i class="bi bi-arrow-down-circle me-2"></i>Show All {{ $feedbacks->count() }} Responses
                         </button>
                     </div>
                     @endif
+                </div>
+            </div>
+        </div>
+        
+        <!-- Survey Tab -->
+        @if(isset($surveys) && $surveys->count() > 0)
+        <div class="tab-pane fade" id="survey" role="tabpanel">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <h4 class="mb-4 fw-bold">Project Surveys</h4>
+                    
+                    <div class="accordion" id="surveyAccordion">
+                        @foreach($surveys as $index => $survey)
+                            @if($survey->is_active)
+                                <div class="accordion-item mb-3 border rounded overflow-hidden">
+                                    <h2 class="accordion-header" id="heading{{ $survey->id }}">
+                                        <button class="accordion-button {{ $index !== 0 ? 'collapsed' : '' }} fw-bold bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ $survey->id }}" aria-expanded="{{ $index === 0 ? 'true' : 'false' }}" aria-controls="collapse{{ $survey->id }}">
+                                            <i class="bi bi-clipboard-data me-2 text-primary"></i> {{ $survey->title }}
+                                        </button>
+                                    </h2>
+                                    <div id="collapse{{ $survey->id }}" class="accordion-collapse collapse {{ $index === 0 ? 'show' : '' }}" aria-labelledby="heading{{ $survey->id }}" data-bs-parent="#surveyAccordion">
+                                        <div class="accordion-body p-4">
+                                            @if($survey->description)
+                                                <p class="text-muted mb-4">{{ $survey->description }}</p>
+                                            @endif
+
+                                            @php
+                                                $userResponse = $survey->responses->first();
+                                            @endphp
+
+                                            @if($userResponse)
+                                                <div class="scrutiny-form">
+                                                    <div class="alert alert-success border-0 bg-success bg-opacity-10 mb-4 rounded-3 d-flex align-items-center">
+                                                        <i class="bi bi-check-circle-fill text-success fs-4 me-3"></i>
+                                                        <div>
+                                                            <h5 class="fw-bold text-success mb-1">Response Submitted</h5>
+                                                            <p class="mb-0 text-success text-opacity-75 small">You have already responded to this survey. Your answers are shown below.</p>
+                                                        </div>
+                                                    </div>
+                                            @else
+                                                <form class="scrutiny-form" action="{{ route('web.project.survey.store') }}" method="POST">
+                                                    @csrf
+                                                    <input type="hidden" name="survey_id" value="{{ $survey->id }}">
+                                            @endif
+                                                
+                                                <div class="survey-conversation">
+                                                    @foreach($survey->questions as $qIndex => $question)
+                                                        <div class="conversation-item mb-4 animate__animated animate__fadeInUp" style="animation-delay: {{ $qIndex * 100 }}ms;">
+                                                            <!-- Admin/System Question Bubble -->
+                                                            <div class="d-flex align-items-start mb-3">
+                                                                <div class="flex-shrink-0 me-3">
+                                                                    <div class="avatar-sm bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center">
+                                                                        <i class="bi bi-patch-question-fill text-primary fs-5"></i>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="flex-grow-1">
+                                                                    <div class="bg-light p-3 rounded-3 rounded-top-0 border-start border-4 border-primary position-relative">
+                                                                        <span class="badge bg-primary mb-2">Question {{ $qIndex + 1 }}</span>
+                                                                        <p class="mb-0 fw-bold text-dark">{{ $question->question_text }}</p>
+                                                                        @if($question->is_required)
+                                                                            <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle">
+                                                                                <span class="visually-hidden">Required</span>
+                                                                            </span>
+                                                                        @endif
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <!-- User Answer Input Bubble -->
+                                                            <div class="d-flex align-items-start justify-content-end mb-4 ms-5">
+                                                                <div class="flex-grow-1">
+                                                                    <div class="p-1">
+                                                                        @if($userResponse)
+                                                                            <div class="bg-primary text-white p-3 rounded-3 rounded-top-0 shadow-sm text-break">
+                                                                                @php
+                                                                                    $ans = isset($userResponse->answers) && is_array($userResponse->answers) 
+                                                                                        ? ($userResponse->answers[$question->id] ?? null) 
+                                                                                        : null;
+                                                                                    if(is_array($ans)) $ans = implode(', ', $ans);
+                                                                                @endphp
+                                                                                <p class="mb-0">{{ $ans ?? 'No answer provided' }}</p>
+                                                                            </div>
+                                                                        @else
+                                                                            @switch($question->type)
+                                                                            @case('text')
+                                                                                <div class="form-floating">
+                                                                                    <input type="text" class="form-control border-0 shadow-sm bg-white" id="q_{{$question->id}}" name="answers[{{ $question->id }}]" placeholder="Your answer..." {{ $question->is_required ? 'required' : '' }}>
+                                                                                    <label for="q_{{$question->id}}" class="text-muted">Type your answer here...</label>
+                                                                                </div>
+                                                                                @break
+                                                                            
+                                                                            @case('textarea')
+                                                                                <div class="form-floating">
+                                                                                    <textarea class="form-control border-0 shadow-sm bg-white" id="q_{{$question->id}}" name="answers[{{ $question->id }}]" placeholder="Your answer..." style="height: 100px" {{ $question->is_required ? 'required' : '' }}></textarea>
+                                                                                    <label for="q_{{$question->id}}" class="text-muted">Type your detailed answer here...</label>
+                                                                                </div>
+                                                                                @break
+                                                                            
+                                                                            @case('number')
+                                                                                <div class="form-floating">
+                                                                                    <input type="number" class="form-control border-0 shadow-sm bg-white" id="q_{{$question->id}}" name="answers[{{ $question->id }}]" placeholder="0" {{ $question->is_required ? 'required' : '' }}>
+                                                                                    <label for="q_{{$question->id}}" class="text-muted">Enter a number...</label>
+                                                                                </div>
+                                                                                @break
+                                                                            
+                                                                            @case('date')
+                                                                                <div class="form-floating">
+                                                                                    <input type="date" class="form-control border-0 shadow-sm bg-white" id="q_{{$question->id}}" name="answers[{{ $question->id }}]" {{ $question->is_required ? 'required' : '' }}>
+                                                                                    <label for="q_{{$question->id}}" class="text-muted">Select Date</label>
+                                                                                </div>
+                                                                                @break
+                                                                            
+                                                                            @case('select')
+                                                                                <div class="form-floating">
+                                                                                    <select class="form-select border-0 shadow-sm bg-white" id="q_{{$question->id}}" name="answers[{{ $question->id }}]" {{ $question->is_required ? 'required' : '' }}>
+                                                                                        <option value="">Select an option</option>
+                                                                                        @if($question->options)
+                                                                                            @foreach(json_decode($question->options) as $option)
+                                                                                                <option value="{{ $option }}">{{ $option }}</option>
+                                                                                            @endforeach
+                                                                                        @endif
+                                                                                    </select>
+                                                                                    <label for="q_{{$question->id}}" class="text-muted">Choose from list</label>
+                                                                                </div>
+                                                                                @break
+                                                                            
+                                                                            @case('radio')
+                                                                                <div class="bg-white p-3 rounded shadow-sm border-0">
+                                                                                    <p class="mb-2 text-muted small fw-bold text-uppercase">Select One:</p>
+                                                                                    @if($question->options)
+                                                                                        <div class="d-flex flex-wrap gap-3">
+                                                                                            @foreach(json_decode($question->options) as $optIndex => $option)
+                                                                                                <div class="form-check">
+                                                                                                    <input class="form-check-input" type="radio" name="answers[{{ $question->id }}]" id="q{{ $question->id }}_opt{{ $optIndex }}" value="{{ $option }}" {{ $question->is_required ? 'required' : '' }}>
+                                                                                                    <label class="form-check-label" for="q{{ $question->id }}_opt{{ $optIndex }}">
+                                                                                                        {{ $option }}
+                                                                                                    </label>
+                                                                                                </div>
+                                                                                            @endforeach
+                                                                                        </div>
+                                                                                    @endif
+                                                                                </div>
+                                                                                @break
+                                                                            
+                                                                            @case('checkbox')
+                                                                                <div class="bg-white p-3 rounded shadow-sm border-0">
+                                                                                    <p class="mb-2 text-muted small fw-bold text-uppercase">Select Multiple:</p>
+                                                                                    @if($question->options)
+                                                                                        <div class="d-flex flex-wrap gap-3">
+                                                                                            @foreach(json_decode($question->options) as $optIndex => $option)
+                                                                                                <div class="form-check">
+                                                                                                    <input class="form-check-input" type="checkbox" name="answers[{{ $question->id }}][]" id="q{{ $question->id }}_opt{{ $optIndex }}" value="{{ $option }}">
+                                                                                                    <label class="form-check-label" for="q{{ $question->id }}_opt{{ $optIndex }}">
+                                                                                                        {{ $option }}
+                                                                                                    </label>
+                                                                                                </div>
+                                                                                            @endforeach
+                                                                                        </div>
+                                                                                    @endif
+                                                                                </div>
+                                                                                @break
+
+                                                                            @case('rating')
+                                                                                <div class="bg-white p-3 rounded shadow-sm border-0 text-center">
+                                                                                    <p class="mb-2 text-muted small fw-bold text-uppercase">Rate 1-5:</p>
+                                                                                    <div class="rating-input d-flex justify-content-center gap-2">
+                                                                                        @for($i = 1; $i <= 5; $i++)
+                                                                                            <div class="form-check form-check-inline me-0">
+                                                                                                <input class="form-check-input btn-check" type="radio" name="answers[{{ $question->id }}]" id="q{{ $question->id }}_rate{{ $i }}" value="{{ $i }}" {{ $question->is_required ? 'required' : '' }}>
+                                                                                                <label class="btn btn-outline-warning rounded-circle d-flex align-items-center justify-content-center p-0" style="width: 40px; height: 40px;" for="q{{ $question->id }}_rate{{ $i }}">
+                                                                                                    {{ $i }}
+                                                                                                </label>
+                                                                                            </div>
+                                                                                        @endfor
+                                                                                    </div>
+                                                                                </div>
+                                                                                @break
+
+                                                                            @default
+                                                                                <input type="text" class="form-control" name="answers[{{ $question->id }}]" {{ $question->is_required ? 'required' : '' }}>
+                                                                        @endswitch
+                                                                        @endif
+                                                                    </div>
+                                                                </div>
+                                                                <div class="flex-shrink-0 ms-3">
+                                                                    <div class="avatar-sm bg-success bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center">
+                                                                        <i class="bi bi-person-fill text-success fs-5"></i>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    @endforeach
+                                                </div>
+
+                                                @if(!$userResponse)
+                                                <div class="text-end mt-4 pt-3 border-top">
+                                                    <button type="submit" class="btn btn-primary px-5 py-3 rounded-pill shadow fw-bold hover-scale">
+                                                        <i class="bi bi-send-fill me-2"></i>Submit Response
+                                                    </button>
+                                                </div>
+                                                </form>
+                                                @else
+                                                </div>
+                                                @endif
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+                        @endforeach
+                    </div>
                 </div>
             </div>
         </div>

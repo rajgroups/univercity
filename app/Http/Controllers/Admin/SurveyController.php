@@ -4,123 +4,162 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Project;
-use App\Models\Survey; // Assuming Survey model is in App\Models
+use App\Models\Survey;
+use App\Models\SurveyQuestion;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
-use Flasher\Laravel\Facade\Flasher;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class SurveyController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index($project_id)
     {
-        // For admin to view all surveys
-        $surveys = Survey::with('project')->latest()->paginate(20);
-        return view('admin.survey.index', compact('surveys'));
+        $project = Project::findOrFail($project_id);
+        $surveys = Survey::where('project_id', $project_id)->get();
+        return view('admin.survey.index', compact('project', 'surveys'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create(Request $request)
+    public function create($project_id)
     {
-        $projects = Project::select('id', 'title', 'project_code')->get();
-        $selectedProjectId = $request->query('project_id');
+        $project = Project::findOrFail($project_id);
 
-        $existingSurveys = [];
-        if ($selectedProjectId) {
-            $existingSurveys = Survey::where('project_id', $selectedProjectId)->get();
-        }
+        // Define question types for the form
+        $questionTypes = [
+            'text' => 'Short Text',
+            'textarea' => 'Long Text',
+            'number' => 'Number',
+            'radio' => 'Single Choice (Radio)',
+            'checkbox' => 'Multiple Choice (Checkbox)',
+            'select' => 'Dropdown',
+            'date' => 'Date',
+            'file' => 'File Upload',
+            'rating' => 'Rating (1-5)',
+        ];
 
-        return view('admin.survey.create', compact('projects', 'selectedProjectId', 'existingSurveys'));
+        return view('admin.survey.create', compact('project', 'questionTypes'));
     }
 
-    /**
-     * Store newly created resources in storage (Batch).
-     */
-    public function store(Request $request)
+    public function store(Request $request, $project_id)
     {
         $request->validate([
-            'project_id' => 'required|exists:projects,id',
-            'surveys' => 'required|array',
-            'surveys.*.name' => 'required|string|max:255',
-            'surveys.*.email' => 'required|email|max:255',
-            'surveys.*.role' => 'required|string|max:100',
-            'surveys.*.survey_date' => 'required|date',
-            'surveys.*.satisfaction' => 'required|string',
-            'surveys.*.project_success' => 'required|string',
-            'surveys.*.comments' => 'nullable|string',
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'questions' => 'required|array',
+            'questions.*.text' => 'required|string',
+            'questions.*.type' => 'required|string|in:text,textarea,number,radio,checkbox,select,date,file,rating',
+            'questions.*.required' => 'nullable|boolean',
+            'questions.*.options' => 'nullable|string', // Changed to string as it comes from textarea
         ]);
 
-        try {
-            DB::beginTransaction();
+        $project = Project::findOrFail($project_id);
 
-            $projectId = $request->project_id;
-            $submittedIds = collect($request->surveys)->pluck('id')->filter()->toArray();
+        // Create the survey
+        $survey = Survey::create([
+            'project_id' => $project->id,
+            'title' => $request->title,
+            'description' => $request->description,
+            'slug' => Str::slug($request->title) . '-' . Str::random(6),
+            'is_active' => true,
+        ]);
 
-            // 1. Delete surveys that were removed in the UI
-            Survey::where('project_id', $projectId)
-                ->whereNotIn('id', $submittedIds)
-                ->delete();
+        // Save questions
+        foreach ($request->questions as $questionData) {
+            $question = new SurveyQuestion([
+                'survey_id' => $survey->id,
+                'question_text' => $questionData['text'],
+                'type' => $questionData['type'],
+                'is_required' => $questionData['required'] ?? false,
+                'order' => $questionData['order'] ?? 999,
+            ]);
 
-            // 2. Update or Create entries
-            foreach ($request->surveys as $surveyData) {
-                Survey::updateOrCreate(
-                    ['id' => $surveyData['id'] ?? null],
-                    array_merge($surveyData, ['project_id' => $projectId])
-                );
+            // Save options for choice-based questions
+            if (in_array($questionData['type'], ['radio', 'checkbox', 'select']) && !empty($questionData['options'])) {
+                // Split by newline and filter empty lines
+                $optionsArray = array_values(array_filter(array_map('trim', explode("\n", $questionData['options']))));
+                $question->options = json_encode($optionsArray);
             }
 
-            DB::commit();
-            notyf()->addSuccess('Surveys created successfully!');
-            Flasher::addSuccess('Surveys updated successfully!');
-            return redirect()->route('admin.surveys.index');
-
-        } catch (\Exception $e) {
-            DB::rollBack();
-            Log::error('Survey Store Error: ' . $e->getMessage());
-            Flasher::addError('An error occurred while saving the surveys.');
-            return redirect()->back()->withInput();
+            $question->save();
         }
+
+        notyf()->addSuccess('Survey created successfully.');
+        return redirect()->route('admin.survey.index', $project->id);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show($id)
+    public function edit($project_id, $id)
     {
-        //
+        $project = Project::findOrFail($project_id);
+        $survey = Survey::with('questions')->findOrFail($id);
+        
+        $questionTypes = [
+            'text' => 'Short Text',
+            'textarea' => 'Long Text',
+            'number' => 'Number',
+            'radio' => 'Single Choice (Radio)',
+            'checkbox' => 'Multiple Choice (Checkbox)',
+            'select' => 'Dropdown',
+            'date' => 'Date',
+            'file' => 'File Upload',
+            'rating' => 'Rating (1-5)',
+        ];
+
+        return view('admin.survey.edit', compact('project', 'survey', 'questionTypes'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit($id)
+    public function update(Request $request, $project_id, $id)
+    {
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'questions' => 'required|array',
+            'questions.*.text' => 'required|string',
+            'questions.*.type' => 'required|string|in:text,textarea,number,radio,checkbox,select,date,file,rating',
+            'questions.*.required' => 'nullable|boolean',
+            'questions.*.options' => 'nullable|string',
+        ]);
+
+        $project = Project::findOrFail($project_id);
+        $survey = Survey::findOrFail($id);
+
+        $survey->update([
+            'title' => $request->title,
+            'description' => $request->description,
+        ]);
+
+        // Delete existing questions and re-create (simplest approach for dynamic forms)
+        // Or specific logic to update/create/delete
+        $survey->questions()->delete();
+
+         // Save questions
+         foreach ($request->questions as $questionData) {
+            $question = new SurveyQuestion([
+                'survey_id' => $survey->id,
+                'question_text' => $questionData['text'],
+                'type' => $questionData['type'],
+                'is_required' => $questionData['required'] ?? false,
+                'order' => $questionData['order'] ?? 999,
+            ]);
+
+            // Save options for choice-based questions
+            if (in_array($questionData['type'], ['radio', 'checkbox', 'select']) && !empty($questionData['options'])) {
+                 // Split by newline and filter empty lines
+                 $optionsArray = array_values(array_filter(array_map('trim', explode("\n", $questionData['options']))));
+                 $question->options = json_encode($optionsArray);
+            }
+
+            $question->save();
+        }
+
+        notyf()->addSuccess('Survey updated successfully.');
+        return redirect()->route('admin.survey.index', $project->id);
+    }
+
+    public function destroy($project_id, $id)
     {
         $survey = Survey::findOrFail($id);
-        return redirect()->route('admin.surveys.create', ['project_id' => $survey->project_id]);
-    }
+        $survey->questions()->delete(); // Ensure questions are deleted
+        $survey->delete();
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy($id)
-    {
-        Survey::destroy($id);
         notyf()->addSuccess('Survey deleted successfully.');
-        Flasher::addSuccess('Survey deleted successfully.');
         return redirect()->back();
     }
 }
