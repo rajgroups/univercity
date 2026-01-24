@@ -149,6 +149,23 @@
                 {{-- Desktop Filters --}}
                 <div class="col-md-3 d-none d-md-block">
                     <form action="{{ route('web.global.course') }}" method="GET" id="courseFilters">
+                        @php
+                            // Helper function to normalize inputs
+                            $normalizeInput = function($input) {
+                                if (is_string($input)) {
+                                    return explode(',', $input);
+                                }
+                                return is_array($input) ? $input : [];
+                            };
+
+                            $selectedSectors = $normalizeInput(request('sectors', []));
+                            $selectedCountries = $normalizeInput(request('countries', []));
+                            $selectedLanguages = $normalizeInput(request('languages', []));
+                            $selectedDurations = $normalizeInput(request('durations', []));
+                            $selectedCategories = $normalizeInput(request('categories', []));
+                            $selectedPathways = $normalizeInput(request('pathways', []));
+                            $selectedPrices = $normalizeInput(request('prices', []));
+                        @endphp
                         <div class="mb-4">
                             <div class="input-group">
                                 <input type="text" class="form-control" name="search" placeholder="Search by course name..." value="{{ request('search') }}">
@@ -164,14 +181,14 @@
                                 <h2 class="accordion-header" id="headingSector">
                                     <button class="accordion-button collapsed shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSector" aria-expanded="false">
                                         <i class="bi bi-grid me-2"></i> Sector
-                                        <span class="badge bg-primary ms-auto">{{ count(request('sectors', [])) }}</span>
+                                        <span class="badge bg-primary ms-auto">{{ count($selectedSectors) }}</span>
                                     </button>
                                 </h2>
-                                <div id="collapseSector" class="accordion-collapse collapse {{ count(request('sectors', [])) ? 'show' : '' }}" aria-labelledby="headingSector" data-bs-parent="#filterAccordion">
+                                <div id="collapseSector" class="accordion-collapse collapse {{ count($selectedSectors) ? 'show' : '' }}" aria-labelledby="headingSector" data-bs-parent="#filterAccordion">
                                     <div class="accordion-body pt-2">
                                         @foreach ($sectors as $sector)
                                             <div class="form-check mb-2">
-                                                <input class="form-check-input" type="checkbox" name="sectors[]" id="sector{{ $sector->id }}" value="{{ $sector->id }}" {{ in_array($sector->id, request('sectors', [])) ? 'checked' : '' }}>
+                                                <input class="form-check-input" type="checkbox" name="sectors[]" id="sector{{ $sector->id }}" value="{{ $sector->id }}" {{ in_array($sector->id, $selectedSectors) ? 'checked' : '' }}>
                                                 <label class="form-check-label d-flex justify-content-between w-100" for="sector{{ $sector->id }}">
                                                     <span>{{ $sector->name }}</span>
                                                     <span class="text-muted small">{{ $sector->intl_courses_count ?? 0 }}</span>
@@ -187,14 +204,14 @@
                                 <h2 class="accordion-header" id="headingCountry">
                                     <button class="accordion-button collapsed shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCountry" aria-expanded="false">
                                         <i class="bi bi-flag me-2"></i> Country
-                                        <span class="badge bg-primary ms-auto">{{ count(request('countries', [])) }}</span>
+                                        <span class="badge bg-primary ms-auto">{{ count($selectedCountries) }}</span>
                                     </button>
                                 </h2>
-                                <div id="collapseCountry" class="accordion-collapse collapse {{ count(request('countries', [])) ? 'show' : '' }}" aria-labelledby="headingCountry" data-bs-parent="#filterAccordion">
+                                <div id="collapseCountry" class="accordion-collapse collapse {{ count($selectedCountries) ? 'show' : '' }}" aria-labelledby="headingCountry" data-bs-parent="#filterAccordion">
                                     <div class="accordion-body pt-2">
                                         @foreach ($countries as $country)
                                             <div class="form-check mb-2">
-                                                <input class="form-check-input" type="checkbox" name="countries[]" id="country{{ $country->id }}" value="{{ $country->iso3 }}" {{ in_array($country->iso3, (array)request('countries', [])) ? 'checked' : '' }}>
+                                                <input class="form-check-input" type="checkbox" name="countries[]" id="country{{ $country->id }}" value="{{ $country->iso3 }}" {{ in_array($country->iso3, $selectedCountries) ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="country{{ $country->id }}">{{ $country->name }}</label>
                                             </div>
                                         @endforeach
@@ -207,14 +224,14 @@
                                 <h2 class="accordion-header" id="headingCategory">
                                     <button class="accordion-button collapsed shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCategory" aria-expanded="false">
                                         <i class="bi bi-folder me-2"></i> Course Level
-                                        <span class="badge bg-primary ms-auto">{{ count(request('categories', [])) }}</span>
+                                        <span class="badge bg-primary ms-auto">{{ count($selectedCategories) }}</span>
                                     </button>
                                 </h2>
-                                <div id="collapseCategory" class="accordion-collapse collapse {{ count(request('categories', [])) ? 'show' : '' }}" aria-labelledby="headingCategory" data-bs-parent="#filterAccordion">
+                                <div id="collapseCategory" class="accordion-collapse collapse {{ count($selectedCategories) ? 'show' : '' }}" aria-labelledby="headingCategory" data-bs-parent="#filterAccordion">
                                     <div class="accordion-body pt-2">
                                         @foreach ($categories as $category)
                                             <div class="form-check mb-2">
-                                                <input class="form-check-input" type="checkbox" name="categories[]" id="category{{ $category->id }}" value="{{ $category->id }}" {{ in_array($category->id, request('categories', [])) ? 'checked' : '' }}>
+                                                <input class="form-check-input" type="checkbox" name="categories[]" id="category{{ $category->id }}" value="{{ $category->id }}" {{ in_array($category->id, $selectedCategories) ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="category{{ $category->id }}">{{ $category->name }}</label>
                                             </div>
                                         @endforeach
@@ -227,14 +244,14 @@
                                 <h2 class="accordion-header" id="headingLang">
                                     <button class="accordion-button collapsed shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#collapseLang" aria-expanded="false">
                                         <i class="bi bi-translate me-2"></i> Language
-                                        <span class="badge bg-primary ms-auto">{{ count(request('languages', [])) }}</span>
+                                        <span class="badge bg-primary ms-auto">{{ count($selectedLanguages) }}</span>
                                     </button>
                                 </h2>
-                                <div id="collapseLang" class="accordion-collapse collapse {{ count(request('languages', [])) ? 'show' : '' }}" aria-labelledby="headingLang" data-bs-parent="#filterAccordion">
+                                <div id="collapseLang" class="accordion-collapse collapse {{ count($selectedLanguages) ? 'show' : '' }}" aria-labelledby="headingLang" data-bs-parent="#filterAccordion">
                                     <div class="accordion-body pt-2">
                                         @foreach (['English', 'Japanese', 'Chinese', 'French', 'German', 'Spanish'] as $language)
                                             <div class="form-check mb-2">
-                                                <input class="form-check-input" type="checkbox" name="languages[]" id="lang{{ $loop->index }}" value="{{ $language }}" {{ in_array($language, request('languages', [])) ? 'checked' : '' }}>
+                                                <input class="form-check-input" type="checkbox" name="languages[]" id="lang{{ $loop->index }}" value="{{ $language }}" {{ in_array($language, $selectedLanguages) ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="lang{{ $loop->index }}">{{ $language }}</label>
                                             </div>
                                         @endforeach
@@ -247,14 +264,14 @@
                                 <h2 class="accordion-header" id="headingPathway">
                                     <button class="accordion-button collapsed shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePathway" aria-expanded="false">
                                         <i class="bi bi-diagram-3 me-2"></i> Study Mode
-                                        <span class="badge bg-primary ms-auto">{{ count(request('pathways', [])) }}</span>
+                                        <span class="badge bg-primary ms-auto">{{ count($selectedPathways) }}</span>
                                     </button>
                                 </h2>
-                                <div id="collapsePathway" class="accordion-collapse collapse {{ count(request('pathways', [])) ? 'show' : '' }}" aria-labelledby="headingPathway" data-bs-parent="#filterAccordion">
+                                <div id="collapsePathway" class="accordion-collapse collapse {{ count($selectedPathways) ? 'show' : '' }}" aria-labelledby="headingPathway" data-bs-parent="#filterAccordion">
                                     <div class="accordion-body pt-2">
                                         @foreach (['Online', 'Onsite Abroad', 'Hybrid', 'Twinning', 'Dual Credit'] as $pathway)
                                             <div class="form-check mb-2">
-                                                <input class="form-check-input" type="checkbox" name="pathways[]" id="pathway{{ $loop->index }}" value="{{ $pathway }}" {{ in_array($pathway, request('pathways', [])) ? 'checked' : '' }}>
+                                                <input class="form-check-input" type="checkbox" name="pathways[]" id="pathway{{ $loop->index }}" value="{{ $pathway }}" {{ in_array($pathway, $selectedPathways) ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="pathway{{ $loop->index }}">{{ $pathway }}</label>
                                             </div>
                                         @endforeach
@@ -267,17 +284,17 @@
                                 <h2 class="accordion-header" id="headingPrice">
                                     <button class="accordion-button collapsed shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePrice" aria-expanded="false">
                                         <i class="bi bi-currency-rupee me-2"></i> Price
-                                        <span class="badge bg-primary ms-auto">{{ count(request('prices', [])) }}</span>
+                                        <span class="badge bg-primary ms-auto">{{ count($selectedPrices) }}</span>
                                     </button>
                                 </h2>
-                                <div id="collapsePrice" class="accordion-collapse collapse {{ count(request('prices', [])) ? 'show' : '' }}" aria-labelledby="headingPrice" data-bs-parent="#filterAccordion">
+                                <div id="collapsePrice" class="accordion-collapse collapse {{ count($selectedPrices) ? 'show' : '' }}" aria-labelledby="headingPrice" data-bs-parent="#filterAccordion">
                                     <div class="accordion-body pt-2">
                                         <div class="form-check mb-2">
-                                            <input class="form-check-input" type="checkbox" name="prices[]" id="priceFree" value="Free" {{ in_array('Free', request('prices', [])) ? 'checked' : '' }}>
+                                            <input class="form-check-input" type="checkbox" name="prices[]" id="priceFree" value="Free" {{ in_array('Free', $selectedPrices) ? 'checked' : '' }}>
                                             <label class="form-check-label" for="priceFree">Free</label>
                                         </div>
                                         <div class="form-check mb-2">
-                                            <input class="form-check-input" type="checkbox" name="prices[]" id="pricePaid" value="Paid" {{ in_array('Paid', request('prices', [])) ? 'checked' : '' }}>
+                                            <input class="form-check-input" type="checkbox" name="prices[]" id="pricePaid" value="Paid" {{ in_array('Paid', $selectedPrices) ? 'checked' : '' }}>
                                             <label class="form-check-label" for="pricePaid">Paid</label>
                                         </div>
                                     </div>
