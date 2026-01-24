@@ -2,6 +2,11 @@
 @section('content')
 @push('css')
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<style>
+    .top-32 {
+        top: 32%;
+    }
+</style>
 @endpush
 
 
@@ -10,7 +15,7 @@
         <div class="col-12">
             <!-- Main Card with gradient header -->
             <div class="card shadow-lg border-0 rounded-4">
-                <div class="card-header bg-primary bg-gradient text-white py-4 rounded-top-4">
+                <div class="card-header bg-gradient text-white py-4 rounded-top-4">
                     <div class="d-flex align-items-center justify-content-between">
                         <div>
                             <h4 class="card-title mb-0 fw-bold">
@@ -31,7 +36,7 @@
                         <!-- Progress Indicator -->
                         <div class="mb-5">
                             <div class="d-none d-md-flex justify-content-between align-items-center position-relative">
-                                <div class="position-absolute top-50 start-0 end-0 translate-middle-y">
+                                <div class="position-absolute top-32 start-0 end-0 translate-middle-y">
                                     <div class="progress" style="height: 4px;">
                                         <div class="progress-bar bg-primary" role="progressbar" style="width: 20%" id="progress-bar"></div>
                                     </div>
@@ -685,52 +690,37 @@
 
             $('#course-fetching-msg').show();
             
-            // Simulate AJAX call - replace with actual API call
-            setTimeout(() => {
-                $('#course-fetching-msg').hide();
-                renderCourses(getSampleCourses());
-            }, 1000);
-        }
-
-        function getSampleCourses() {
-            // Sample data - replace with actual API response
-            return [
-                {
-                    id: 1,
-                    name: 'Introduction to Web Development',
-                    course_code: 'WEB-101',
-                    level: 'Beginner',
-                    image: 'https://via.placeholder.com/400x300/5664d2/ffffff?text=Web+Dev'
+            $.ajax({
+                url: "{{ route('admin.courses.by.sectors') }}",
+                method: 'POST',
+                data: {
+                    sectors: addedSectors,
+                    _token: '{{ csrf_token() }}'
                 },
-                {
-                    id: 2,
-                    name: 'Data Science Fundamentals',
-                    course_code: 'DS-201',
-                    level: 'Intermediate',
-                    image: 'https://via.placeholder.com/400x300/10b981/ffffff?text=Data+Science'
+                success: function(data) {
+                    $('#course-fetching-msg').hide();
+                    renderCourses(data);
                 },
-                {
-                    id: 3,
-                    name: 'Mobile App Development',
-                    course_code: 'MOB-301',
-                    level: 'Advanced',
-                    image: 'https://via.placeholder.com/400x300/f59e0b/ffffff?text=Mobile+App'
-                },
-                {
-                    id: 4,
-                    name: 'UI/UX Design Principles',
-                    course_code: 'UX-102',
-                    level: 'Beginner',
-                    image: 'https://via.placeholder.com/400x300/ef4444/ffffff?text=UI/UX'
+                error: function(xhr, status, error) {
+                    $('#course-fetching-msg').hide();
+                    console.error('Error fetching courses:', error);
+                     $('#courses-grid').html(`
+                    <div class="col-12 text-center py-5">
+                        <div class="display-1 text-danger mb-4">
+                            <i class="bi bi-wifi-off"></i>
+                        </div>
+                        <h5 class="text-danger mb-3">Error fetching courses</h5>
+                        <p class="text-muted">Please try again later.</p>
+                    </div>`);
                 }
-            ];
+            });
         }
 
         function renderCourses(courses) {
             const grid = $('#courses-grid');
             grid.empty();
             
-            if (courses.length === 0) {
+            if (!courses || courses.length === 0) {
                 grid.html(`
                     <div class="col-12 text-center py-5">
                         <div class="display-1 text-muted mb-4">
@@ -746,8 +736,18 @@
                 const template = $('#course-card-template').html();
                 const isSelected = selectedCourses.includes(course.id);
                 
+                // Image handling
+                let imageUrl = 'https://via.placeholder.com/400x300/cccccc/666666?text=No+Image';
+                if (course.image) {
+                    if (course.image.startsWith('http')) {
+                        imageUrl = course.image;
+                    } else {
+                        imageUrl = "{{ asset('storage') }}/" + course.image;
+                    }
+                }
+
                 let card = template
-                    .replace(/PLACEHOLDER_IMAGE/g, course.image || 'https://via.placeholder.com/400x300/cccccc/666666?text=No+Image')
+                    .replace(/PLACEHOLDER_IMAGE/g, imageUrl)
                     .replace(/COURSE_NAME/g, course.name)
                     .replace(/COURSE_CODE/g, course.course_code)
                     .replace(/LEVEL/g, course.level)
@@ -794,16 +794,22 @@
 
         function updateSelectedCount() {
             $('#selected-count').text(selectedCourses.length);
-            // Update hidden inputs for selected courses
-            let inputs = '';
+            
+            // Let's create/update a container for inputs
+            let container = $('#selected-courses-inputs');
+            if (container.length === 0) {
+                 $('<div id="selected-courses-inputs"></div>').appendTo('#learningPathwayForm');
+                 container = $('#selected-courses-inputs');
+            }
+            container.empty();
+            
             selectedCourses.forEach(id => {
-                inputs += `<input type="hidden" name="courses[]" value="${id}">`;
+                container.append(`<input type="hidden" name="courses[]" value="${id}">`);
                 // Check if this course is marked as featured
                 if ($(`#feat_${id}`).is(':checked')) {
-                    inputs += `<input type="hidden" name="course_featured[${id}]" value="1">`;
+                    container.append(`<input type="hidden" name="course_featured[${id}]" value="1">`);
                 }
             });
-            $('#selected-courses-inputs').html(inputs);
         }
 
         // Form submission

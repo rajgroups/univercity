@@ -507,6 +507,16 @@
             <button class="nav-link btn btn-outline-primary rounded-pill px-4 active" id="overview-tab" data-bs-toggle="pill" data-bs-target="#overview" type="button" role="tab" aria-controls="overview" aria-selected="true">
                 <i class="bi bi-info-circle me-2"></i>Overview
             </button>
+            @if($project->learningPathway)
+            <button class="nav-link btn btn-outline-primary rounded-pill px-4" id="pathway-tab" data-bs-toggle="pill" data-bs-target="#pathway" type="button" role="tab" aria-controls="pathway" aria-selected="false">
+                <i class="bi bi-diagram-3 me-2"></i>Pathways
+            </button>
+            @endif
+            @if(isset($surveys) && $surveys->count() > 0)
+            <button class="nav-link btn btn-outline-primary rounded-pill px-4" id="survey-tab" data-bs-toggle="pill" data-bs-target="#survey" type="button" role="tab" aria-controls="survey" aria-selected="false">
+                <i class="bi bi-clipboard-data me-2"></i>Surveys <span class="badge bg-success ms-1">{{ $surveys->count() }}</span>
+            </button>
+            @endif
             @if((isset($project->sdg_goals) && count($project->sdg_goals) > 0) || !empty($project->alignment_categories) || !empty($project->govt_schemes) || $project->alignment_notes)
             <button class="nav-link btn btn-outline-success rounded-pill px-4" id="alignment-tab" data-bs-toggle="pill" data-bs-target="#alignment" type="button" role="tab" aria-controls="alignment" aria-selected="false">
                 <i class="bi bi-globe-americas me-2"></i>SDG & Alignment
@@ -535,17 +545,6 @@
             <button class="nav-link btn btn-outline-teal rounded-pill px-4" id="feedback-tab" data-bs-toggle="pill" data-bs-target="#feedback" type="button" role="tab" aria-controls="feedback" aria-selected="false">
                 <i class="bi bi-chat-heart me-2"></i>Feedback <span class="badge bg-primary ms-1">{{ $feedbacks->count() }}</span>
             </button>
-            @if($project->learningPathway)
-            <button class="nav-link btn btn-outline-primary rounded-pill px-4" id="pathway-tab" data-bs-toggle="pill" data-bs-target="#pathway" type="button" role="tab" aria-controls="pathway" aria-selected="false">
-                <i class="bi bi-diagram-3 me-2"></i>Pathways
-            </button>
-            @endif
-
-            @if(isset($surveys) && $surveys->count() > 0)
-            <button class="nav-link btn btn-outline-primary rounded-pill px-4" id="survey-tab" data-bs-toggle="pill" data-bs-target="#survey" type="button" role="tab" aria-controls="survey" aria-selected="false">
-                <i class="bi bi-clipboard-data me-2"></i>Surveys <span class="badge bg-success ms-1">{{ $surveys->count() }}</span>
-            </button>
-            @endif
         </nav>
     </div>
 
@@ -566,6 +565,24 @@
                         <small class="text-muted">General project details & impact</small>
                     </div>
                 </button>
+                @if($project->learningPathway)
+                <button class="list-group-item list-group-item-action py-3 d-flex align-items-center gap-3" data-bs-toggle="pill" data-bs-target="#pathway" role="tab">
+                    <i class="bi bi-diagram-3 fs-5 text-primary"></i>
+                    <div>
+                        <span class="d-block fw-bold">Pathways</span>
+                        <small class="text-muted">Learning & Impact Model</small>
+                    </div>
+                </button>
+                @endif
+                @if(isset($surveys) && $surveys->count() > 0)
+                <button class="list-group-item list-group-item-action py-3 d-flex align-items-center gap-3" data-bs-toggle="pill" data-bs-target="#survey" role="tab">
+                    <i class="bi bi-clipboard-data fs-5 text-success"></i>
+                    <div>
+                        <span class="d-block fw-bold text-success">Surveys <span class="badge bg-success rounded-pill ms-1">{{ $surveys->count() }}</span></span>
+                        <small class="text-muted">Participate in surveys</small>
+                    </div>
+                </button>
+                @endif
                 @if((isset($project->sdg_goals) && count($project->sdg_goals) > 0) || !empty($project->alignment_categories) || !empty($project->govt_schemes) || $project->alignment_notes)
                 <button class="list-group-item list-group-item-action py-3 d-flex align-items-center gap-3" data-bs-toggle="pill" data-bs-target="#alignment" role="tab">
                     <i class="bi bi-globe-americas fs-5 text-success"></i>
@@ -619,7 +636,6 @@
                         <small class="text-muted">Requirements & mitigation</small>
                     </div>
                 </button>
-                @if(isset($surveys) && $surveys->count() > 0)
                 <button class="list-group-item list-group-item-action py-3 d-flex align-items-center gap-3" data-bs-toggle="pill" data-bs-target="#feedback" role="tab">
                     <i class="bi bi-chat-heart fs-5" style="color: #20c997;"></i>
                     <div>
@@ -627,16 +643,6 @@
                         <small class="text-muted">Survey responses & insights</small>
                     </div>
                 </button>
-                @endif
-                @if($project->learningPathway)
-                <button class="list-group-item list-group-item-action py-3 d-flex align-items-center gap-3" data-bs-toggle="pill" data-bs-target="#pathway" role="tab">
-                    <i class="bi bi-diagram-3 fs-5 text-primary"></i>
-                    <div>
-                        <span class="d-block fw-bold">Pathways</span>
-                        <small class="text-muted">Learning & Impact Model</small>
-                    </div>
-                </button>
-                @endif
             </div>
         </div>
     </div>
@@ -4097,7 +4103,7 @@ function showAllSurveys() {
     });
     document.getElementById('loadMoreSurveys').style.display = 'none';
 }
-<script>
+
 document.addEventListener('DOMContentLoaded', function() {
     // Read more/less functionality
     document.addEventListener('click', function(e) {
@@ -4124,7 +4130,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
-</script>
 </script>
 @endpush
 
