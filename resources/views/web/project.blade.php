@@ -2578,7 +2578,7 @@
 
                     <!-- Survey Cards Grid -->
                     <div class="row g-3" id="surveyCardsGrid">
-                        @foreach($feedbacks->sortByDesc('survey_date') as $survey)
+                        @forelse($feedbacks->sortByDesc('survey_date') as $survey)
                         <div class="col-md-12 survey-card-item"
                              data-satisfaction="{{ strtolower(str_replace(' ', '-', $survey->satisfaction)) }}"
                              data-role="{{ strtolower(str_replace(' ', '-', $survey->role)) }}">
@@ -2673,7 +2673,15 @@
                                 </div>
                             </div>
                         </div>
-                        @endforeach
+                        @empty
+                        <div class="col-12 py-5 text-center">
+                            <div class="mb-3">
+                                 <i class="bi bi-chat-square-text display-1 text-muted opacity-25"></i>
+                            </div>
+                            <h5 class="text-muted">No Feedback Yet</h5>
+                            <p class="text-muted small">Be the first to share your experience with this project.</p>
+                        </div>
+                        @endforelse
                     </div>
 
                     <!-- Load More (if many surveys) -->
