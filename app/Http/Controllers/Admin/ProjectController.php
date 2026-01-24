@@ -366,6 +366,9 @@ class ProjectController extends Controller
         if ($stage === 'completed') {
             $rules['actual_end_date'] = ['required', 'date', 'after_or_equal:actual_start_date'];
             $rules['handover_sustainability_note'] = ['required', 'string'];
+        } else {
+            // For ongoing/upcoming, explicitly keep it nullable
+            $rules['actual_end_date'] = ['nullable', 'date', 'after_or_equal:actual_start_date'];
         }
 
         return $request->validate($rules);

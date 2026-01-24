@@ -534,7 +534,7 @@
             </button>
             <button class="nav-link btn btn-outline-teal rounded-pill px-4" id="feedback-tab" data-bs-toggle="pill" data-bs-target="#feedback" type="button" role="tab" aria-controls="feedback" aria-selected="false">
                 <i class="bi bi-chat-heart me-2"></i>Feedback <span class="badge bg-primary ms-1">{{ $feedbacks->count() }}</span>
-            </button> 
+            </button>
             @if($project->learningPathway)
             <button class="nav-link btn btn-outline-primary rounded-pill px-4" id="pathway-tab" data-bs-toggle="pill" data-bs-target="#pathway" type="button" role="tab" aria-controls="pathway" aria-selected="false">
                 <i class="bi bi-diagram-3 me-2"></i>Pathways
@@ -707,21 +707,67 @@
                                 <div class="card-header bg-white border-0 py-3">
                                     <h5 class="card-title mb-0 fw-bold">Baseline Survey & Sustainability Plan</h5>
                                 </div>
-                                <div class="card-body">
-                                    @if($project->baseline_survey)
-                                    <div class="mb-4">
-                                        <h6 class="fw-bold mb-2">Baseline Survey</h6>
-                                        <p class="text-muted small mb-0">{{ Str::limit($project->baseline_survey, 120) }}</p>
-                                    </div>
-                                    @endif
+                      <div class="card-body">
+    @if($project->baseline_survey)
+    <div class="mb-4">
+        <h6 class="fw-bold mb-2">Baseline Survey</h6>
+        <div class="read-more-container">
+            <p class="text-muted small mb-0" id="baseline-preview">
+                {{ Str::limit($project->baseline_survey, 120) }}
+            </p>
+            @if(strlen($project->baseline_survey) > 120)
+                <p class="text-muted small mb-0 d-none" id="baseline-full">
+                    {{ $project->baseline_survey }}
+                </p>
+                <button type="button" class="btn btn-link btn-sm p-0 text-primary read-more-btn"
+                        data-preview="baseline-preview" data-full="baseline-full">
+                    Read more...
+                </button>
+            @endif
+        </div>
+    </div>
+    @endif
 
-                                    @if($project->sustainability_plan)
-                                    <div>
-                                        <h6 class="fw-bold mb-2">Sustainability Plan</h6>
-                                        <p class="text-muted small mb-0">{{ Str::limit($project->sustainability_plan, 120) }}</p>
-                                    </div>
-                                    @endif
-                                </div>
+    @if($project->sustainability_plan)
+    <div class="mb-4">
+        <h6 class="fw-bold mb-2">Sustainability Plan</h6>
+        <div class="read-more-container">
+            <p class="text-muted small mb-0" id="sustainability-preview">
+                {{ Str::limit($project->sustainability_plan, 120) }}
+            </p>
+            @if(strlen($project->sustainability_plan) > 120)
+                <p class="text-muted small mb-0 d-none" id="sustainability-full">
+                    {{ $project->sustainability_plan }}
+                </p>
+                <button type="button" class="btn btn-link btn-sm p-0 text-primary read-more-btn"
+                        data-preview="sustainability-preview" data-full="sustainability-full">
+                    Read more...
+                </button>
+            @endif
+        </div>
+    </div>
+    @endif
+
+    @if($project->scalability_notes)
+    <div>
+        <h6 class="fw-bold mb-2">Scalability Plan</h6>
+        <div class="read-more-container">
+            <p class="text-muted small mb-0" id="scalability-preview">
+                {{ Str::limit($project->scalability_notes, 120) }}
+            </p>
+            @if(strlen($project->scalability_notes) > 120)
+                <p class="text-muted small mb-0 d-none" id="scalability-full">
+                    {{ $project->scalability_notes }}
+                </p>
+                <button type="button" class="btn btn-link btn-sm p-0 text-primary read-more-btn"
+                        data-preview="scalability-preview" data-full="scalability-full">
+                    Read more...
+                </button>
+            @endif
+        </div>
+    </div>
+    @endif
+</div>
                             </div>
                             @endif
                             <!-- Problem & Solution Cards -->
@@ -2570,14 +2616,14 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Survey Tab -->
         @if(isset($surveys) && $surveys->count() > 0)
         <div class="tab-pane fade" id="survey" role="tabpanel">
             <div class="card border-0 shadow-sm">
                 <div class="card-body p-4">
                     <h4 class="mb-4 fw-bold">Project Surveys</h4>
-                    
+
                     <div class="accordion" id="surveyAccordion">
                         @foreach($surveys as $index => $survey)
                             @if($survey->is_active)
@@ -2611,7 +2657,7 @@
                                                     @csrf
                                                     <input type="hidden" name="survey_id" value="{{ $survey->id }}">
                                             @endif
-                                                
+
                                                 <div class="survey-conversation">
                                                     @foreach($survey->questions as $qIndex => $question)
                                                         <div class="conversation-item mb-4 animate__animated animate__fadeInUp" style="animation-delay: {{ $qIndex * 100 }}ms;">
@@ -2642,8 +2688,8 @@
                                                                         @if($userResponse)
                                                                             <div class="bg-primary text-white p-3 rounded-3 rounded-top-0 shadow-sm text-break">
                                                                                 @php
-                                                                                    $ans = isset($userResponse->answers) && is_array($userResponse->answers) 
-                                                                                        ? ($userResponse->answers[$question->id] ?? null) 
+                                                                                    $ans = isset($userResponse->answers) && is_array($userResponse->answers)
+                                                                                        ? ($userResponse->answers[$question->id] ?? null)
                                                                                         : null;
                                                                                     if(is_array($ans)) $ans = implode(', ', $ans);
                                                                                 @endphp
@@ -2657,28 +2703,28 @@
                                                                                     <label for="q_{{$question->id}}" class="text-muted">Type your answer here...</label>
                                                                                 </div>
                                                                                 @break
-                                                                            
+
                                                                             @case('textarea')
                                                                                 <div class="form-floating">
                                                                                     <textarea class="form-control border-0 shadow-sm bg-white" id="q_{{$question->id}}" name="answers[{{ $question->id }}]" placeholder="Your answer..." style="height: 100px" {{ $question->is_required ? 'required' : '' }}></textarea>
                                                                                     <label for="q_{{$question->id}}" class="text-muted">Type your detailed answer here...</label>
                                                                                 </div>
                                                                                 @break
-                                                                            
+
                                                                             @case('number')
                                                                                 <div class="form-floating">
                                                                                     <input type="number" class="form-control border-0 shadow-sm bg-white" id="q_{{$question->id}}" name="answers[{{ $question->id }}]" placeholder="0" {{ $question->is_required ? 'required' : '' }}>
                                                                                     <label for="q_{{$question->id}}" class="text-muted">Enter a number...</label>
                                                                                 </div>
                                                                                 @break
-                                                                            
+
                                                                             @case('date')
                                                                                 <div class="form-floating">
                                                                                     <input type="date" class="form-control border-0 shadow-sm bg-white" id="q_{{$question->id}}" name="answers[{{ $question->id }}]" {{ $question->is_required ? 'required' : '' }}>
                                                                                     <label for="q_{{$question->id}}" class="text-muted">Select Date</label>
                                                                                 </div>
                                                                                 @break
-                                                                            
+
                                                                             @case('select')
                                                                                 <div class="form-floating">
                                                                                     <select class="form-select border-0 shadow-sm bg-white" id="q_{{$question->id}}" name="answers[{{ $question->id }}]" {{ $question->is_required ? 'required' : '' }}>
@@ -2692,7 +2738,7 @@
                                                                                     <label for="q_{{$question->id}}" class="text-muted">Choose from list</label>
                                                                                 </div>
                                                                                 @break
-                                                                            
+
                                                                             @case('radio')
                                                                                 <div class="bg-white p-3 rounded shadow-sm border-0">
                                                                                     <p class="mb-2 text-muted small fw-bold text-uppercase">Select One:</p>
@@ -2710,7 +2756,7 @@
                                                                                     @endif
                                                                                 </div>
                                                                                 @break
-                                                                            
+
                                                                             @case('checkbox')
                                                                                 <div class="bg-white p-3 rounded shadow-sm border-0">
                                                                                     <p class="mb-2 text-muted small fw-bold text-uppercase">Select Multiple:</p>
@@ -3526,6 +3572,23 @@
             stroke-dasharray: 0 100;
         }
     }
+
+    .read-more-container {
+    position: relative;
+    padding-bottom: 20px;
+}
+
+.read-more-btn {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    font-size: 0.875rem;
+    text-decoration: none;
+}
+
+.read-more-btn:hover {
+    text-decoration: underline;
+}
 </style>
 @endpush
 
@@ -4034,6 +4097,34 @@ function showAllSurveys() {
     });
     document.getElementById('loadMoreSurveys').style.display = 'none';
 }
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Read more/less functionality
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('read-more-btn')) {
+            const previewId = e.target.getAttribute('data-preview');
+            const fullId = e.target.getAttribute('data-full');
+            const previewElement = document.getElementById(previewId);
+            const fullElement = document.getElementById(fullId);
+            const button = e.target;
+
+            if (previewElement && fullElement) {
+                if (previewElement.classList.contains('d-none')) {
+                    // Show preview, hide full
+                    previewElement.classList.remove('d-none');
+                    fullElement.classList.add('d-none');
+                    button.textContent = 'Read more...';
+                } else {
+                    // Show full, hide preview
+                    previewElement.classList.add('d-none');
+                    fullElement.classList.remove('d-none');
+                    button.textContent = 'Read less';
+                }
+            }
+        }
+    });
+});
+</script>
 </script>
 @endpush
 

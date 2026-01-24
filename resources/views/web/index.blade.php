@@ -130,6 +130,27 @@
         .carousel-inner-data li {
             height: auto;
         }
+
+        /* Swiper Card Image Fix */
+        .blog-card .card-img {
+            display: block;
+            overflow: hidden;
+            border-radius: 15px 15px 0 0;
+            height: 250px; /* Fixed height for uniformity */
+            width: 100%;
+            position: relative;
+        }
+
+        .blog-card .card-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Ensures image covers area without distortion */
+            transition: transform 0.5s ease;
+        }
+
+        .blog-card:hover .card-img img {
+            transform: scale(1.1); /* Smooth zoom effect */
+        }
     </style> <!-- About Section Start -->
 
     @include('layouts.web.partition.slider')
