@@ -62,6 +62,13 @@
                                             <i class="bi bi-pencil-square"></i>
                                         </a>
 
+                                        <!-- Responses -->
+                                        <a href="{{ route('admin.survey.responses', ['project_id' => $project->id, 'id' => $survey->id]) }}"
+                                           class="btn btn-sm btn-outline-success"
+                                           data-bs-toggle="tooltip" title="View Responses">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+
                                         <!-- Delete -->
                                         <form action="{{ route('admin.survey.destroy', ['project_id' => $project->id, 'id' => $survey->id]) }}"
                                               method="POST" style="display:inline;" onsubmit="return confirm('Are you sure?');">

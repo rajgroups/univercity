@@ -58,7 +58,7 @@
                                                 <p class="text-muted small mb-3 flex-grow-1">{{ Str::limit($course->short_description ?? 'No description available', 80) }}</p>
                                                 
                                                 <div class="d-flex align-items-center text-muted small mb-4">
-                                                    <i class="feather icon-clock me-1"></i> {{ $course->duration ?? 'N/A' }}
+                                                    <i class="feather icon-clock me-1"></i> {{ $course->duration_number ?? '' }} {{ ucfirst($course->duration_unit ?? '') }}
                                                     <span class="mx-2">•</span> 
                                                     <i class="feather icon-bar-chart-2 me-1"></i> {{ $course->level ?? 'All Levels' }}
                                                 </div>

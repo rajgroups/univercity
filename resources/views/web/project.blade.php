@@ -534,9 +534,9 @@
             <button class="nav-link btn btn-outline-dark rounded-pill px-4" id="documents-tab" data-bs-toggle="pill" data-bs-target="#documents" type="button" role="tab" aria-controls="documents" aria-selected="false">
                 <i class="bi bi-file-text me-2"></i>Documents
             </button>
-            @if($project->stage == 'ongoing')
+            @if($project->stage == 'ongoing' || $project->stage == 'completed')
             <button class="nav-link btn btn-outline-danger rounded-pill px-4" id="execution-tab" data-bs-toggle="pill" data-bs-target="#execution" type="button" role="tab" aria-controls="execution" aria-selected="false">
-                <i class="bi bi-activity me-2"></i>Execution
+                <i class="bi bi-activity me-2"></i>{{ $project->stage == 'completed' ? 'Complete Overview' : 'Execution' }}
             </button>
             @endif
             <button class="nav-link btn btn-outline-purple rounded-pill px-4" id="resources-tab" data-bs-toggle="pill" data-bs-target="#resources" type="button" role="tab" aria-controls="resources" aria-selected="false">
@@ -620,12 +620,12 @@
                         <small class="text-muted">Official papers & resources</small>
                     </div>
                 </button>
-                @if($project->stage == 'ongoing')
+                @if($project->stage == 'ongoing' || $project->stage == 'completed')
                 <button class="list-group-item list-group-item-action py-3 d-flex align-items-center gap-3" data-bs-toggle="pill" data-bs-target="#execution" role="tab">
                     <i class="bi bi-activity fs-5 text-danger"></i>
                     <div>
-                        <span class="d-block fw-bold">Execution</span>
-                        <small class="text-muted">Live updates & challenges</small>
+                        <span class="d-block fw-bold">{{ $project->stage == 'completed' ? 'Complete Overview' : 'Execution' }}</span>
+                        <small class="text-muted">{{ $project->stage == 'completed' ? 'Final Report & Outcomes' : 'Live updates & challenges' }}</small>
                     </div>
                 </button>
                 @endif
@@ -2155,10 +2155,75 @@
         </div>
 
         <!-- Execution Update Tab -->
-        @if($project->stage == 'ongoing')
+        @if($project->stage == 'ongoing' || $project->stage == 'completed')
         <div class="tab-pane fade" id="execution" role="tabpanel">
             <div class="row g-4">
                 <div class="col-lg-8">
+                    
+                    @if($project->stage == 'completed')
+                    <!-- Completed Project Overview Section -->
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-header bg-white border-0 py-3">
+                            <h4 class="card-title mb-0 fw-bold">Project Milestones & Outcomes</h4>
+                        </div>
+                        <div class="card-body">
+                            <!-- Reuse Milestones Logic -->
+                             @if(isset($milestones) && $milestones->count() > 0)
+                                <div class="table-responsive">
+                                    <table class="table table-hover align-middle">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th scope="col" style="width: 5%">#</th>
+                                                <th scope="col" style="width: 25%">Milestone</th>
+                                                <th scope="col" style="width: 15%">Phase</th>
+                                                <th scope="col" style="width: 15%">Status</th>
+                                                <th scope="col" style="width: 15%">Date</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach($milestones->sortBy('phase') as $index => $milestone)
+                                            <tr>
+                                                <td>{{ $loop->iteration }}</td>
+                                                <td>
+                                                    <div class="fw-bold">{{ $milestone->task_name }}</div>
+                                                    @if($milestone->description)
+                                                    <small class="text-muted">{{ Str::limit($milestone->description, 50) }}</small>
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    <span class="badge bg-light text-dark border">
+                                                        Phase {{ $milestone->phase }}
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <span class="badge
+                                                        @switch($milestone->status)
+                                                            @case('completed') bg-success @break
+                                                            @case('in-progress') bg-warning text-dark @break
+                                                            @default bg-secondary
+                                                        @endswitch">
+                                                        {{ ucfirst($milestone->status) }}
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    @if($milestone->end_date)
+                                                        {{ date('d M Y', strtotime($milestone->end_date)) }}
+                                                    @else
+                                                        <span class="text-muted">-</span>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            @else
+                                <p class="text-muted">No specific milestones recorded for this project.</p>
+                            @endif
+                        </div>
+                    </div>
+                    @endif
+
                     <div class="card border-0 shadow-sm">
                         <div class="card-header bg-white border-0 py-3">
                             <h4 class="card-title mb-0 fw-bold">Recent Progress Updates</h4>
@@ -2174,8 +2239,8 @@
                                     </div>
                                 </div>
                             </div>
-                            @endif
-
+                            @endif 
+                            
                             <div class="row g-4 mb-4">
                                 @if($project->challenges_identified)
                                 <div class="col-md-6">

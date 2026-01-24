@@ -16,10 +16,10 @@ return new class extends Migration
             // $table->dropForeign('survey_responses_survey_id_foreign');
 
             // Add the correct foreign key referencing 'scrutiny'
-            $table->foreign('survey_id')
-                  ->references('id')
-                  ->on('scrutiny')
-                  ->onDelete('cascade');
+             // $table->foreign('survey_id')
+             //      ->references('id')
+             //      ->on('scrutiny')
+             //      ->onDelete('cascade');
         });
     }
 

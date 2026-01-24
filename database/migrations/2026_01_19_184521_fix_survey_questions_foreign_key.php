@@ -14,13 +14,13 @@ return new class extends Migration
         Schema::table('survey_questions', function (Blueprint $table) {
             // Drop the incorrect foreign key referencing 'surveys'
             // We use the exact constraint name from the error message to be safe
-            $table->dropForeign('survey_questions_survey_id_foreign');
+             // $table->dropForeign('survey_questions_survey_id_foreign');
 
             // Add the correct foreign key referencing 'scrutiny'
-            $table->foreign('survey_id')
-                  ->references('id')
-                  ->on('scrutiny')
-                  ->onDelete('cascade');
+             // $table->foreign('survey_id')
+             //      ->references('id')
+             //      ->on('scrutiny')
+             //      ->onDelete('cascade');
         });
     }
 

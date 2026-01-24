@@ -18,7 +18,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             RegionsTableSeeder::class,
             SubregionsTableSeeder::class,
-            // CountriesTableSeeder::class,
+            CountriesTableSeeder::class,
         ]);
     }
 }

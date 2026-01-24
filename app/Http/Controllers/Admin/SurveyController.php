@@ -162,4 +162,12 @@ class SurveyController extends Controller
         notyf()->addSuccess('Survey deleted successfully.');
         return redirect()->back();
     }
+
+    public function responses($project_id, $id)
+    {
+        $project = Project::findOrFail($project_id);
+        $survey = Survey::with(['questions', 'responses.user'])->findOrFail($id);
+
+        return view('admin.survey.responses', compact('project', 'survey'));
+    }
 }

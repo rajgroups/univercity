@@ -111,10 +111,175 @@
 
                                 <div class="col-md-6">
                                     <div class="mb-3">
-                                        <label class="form-label">Country Code <span class="text-danger">*</span></label>
+                                        <label class="form-label">ISO2 Code <span class="text-danger">*</span></label>
                                         <input type="text" class="form-control @error('code') is-invalid @enderror"
-                                            name="code" value="{{ old('code') }}" placeholder="Ex: IN, US, UK" required>
+                                            name="code" value="{{ old('code') }}" placeholder="Ex: IN, US" required maxlength="2">
                                         @error('code')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">ISO3 Code</label>
+                                        <input type="text" class="form-control @error('iso3') is-invalid @enderror"
+                                            name="iso3" value="{{ old('iso3') }}" placeholder="Ex: IND, USA" maxlength="3">
+                                        @error('iso3')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Numeric Code</label>
+                                        <input type="text" class="form-control @error('numeric_code') is-invalid @enderror"
+                                            name="numeric_code" value="{{ old('numeric_code') }}" placeholder="Ex: 356" maxlength="3">
+                                        @error('numeric_code')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Phone Code</label>
+                                        <input type="text" class="form-control @error('phonecode') is-invalid @enderror"
+                                            name="phonecode" value="{{ old('phonecode') }}" placeholder="Ex: 91">
+                                        @error('phonecode')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Capital</label>
+                                        <input type="text" class="form-control @error('capital') is-invalid @enderror"
+                                            name="capital" value="{{ old('capital') }}" placeholder="Ex: New Delhi">
+                                        @error('capital')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Currency Code</label>
+                                        <input type="text" class="form-control @error('currency') is-invalid @enderror"
+                                            name="currency" value="{{ old('currency') }}" placeholder="Ex: INR">
+                                        @error('currency')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Currency Name</label>
+                                        <input type="text" class="form-control @error('currency_name') is-invalid @enderror"
+                                            name="currency_name" value="{{ old('currency_name') }}" placeholder="Ex: Indian Rupee">
+                                        @error('currency_name')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Currency Symbol</label>
+                                        <input type="text" class="form-control @error('currency_symbol') is-invalid @enderror"
+                                            name="currency_symbol" value="{{ old('currency_symbol') }}" placeholder="Ex: ₹">
+                                        @error('currency_symbol')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">TLD</label>
+                                        <input type="text" class="form-control @error('tld') is-invalid @enderror"
+                                            name="tld" value="{{ old('tld') }}" placeholder="Ex: .in">
+                                        @error('tld')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Native Name</label>
+                                        <input type="text" class="form-control @error('native') is-invalid @enderror"
+                                            name="native" value="{{ old('native') }}" placeholder="Ex: भारत">
+                                        @error('native')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Nationality</label>
+                                        <input type="text" class="form-control @error('nationality') is-invalid @enderror"
+                                            name="nationality" value="{{ old('nationality') }}" placeholder="Ex: Indian">
+                                        @error('nationality')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Latitude</label>
+                                        <input type="text" class="form-control @error('latitude') is-invalid @enderror"
+                                            name="latitude" value="{{ old('latitude') }}" placeholder="Ex: 20.5937">
+                                        @error('latitude')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Longitude</label>
+                                        <input type="text" class="form-control @error('longitude') is-invalid @enderror"
+                                            name="longitude" value="{{ old('longitude') }}" placeholder="Ex: 78.9629">
+                                        @error('longitude')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">WikiData ID</label>
+                                        <input type="text" class="form-control @error('wikiDataId') is-invalid @enderror"
+                                            name="wikiDataId" value="{{ old('wikiDataId') }}" placeholder="Ex: Q668">
+                                        @error('wikiDataId')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Emoji</label>
+                                        <input type="text" class="form-control @error('emoji') is-invalid @enderror"
+                                            name="emoji" value="{{ old('emoji') }}" placeholder="Ex: 🇮🇳">
+                                        @error('emoji')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">EmojiU</label>
+                                        <input type="text" class="form-control @error('emojiU') is-invalid @enderror"
+                                            name="emojiU" value="{{ old('emojiU') }}" placeholder="Ex: U+1F1EE U+1F1F3">
+                                        @error('emojiU')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                                     </div>
@@ -125,8 +290,8 @@
                                         <label class="form-label">Status <span class="text-danger">*</span></label>
                                         <select name="status" class="form-select @error('status') is-invalid @enderror">
                                             <option value="">Select</option>
-                                            <option value="1" {{ old('status') == 1 ? 'selected' : '' }}>Active</option>
-                                            <option value="0" {{ old('status') == 0 ? 'selected' : '' }}>Inactive</option>
+                                            <option value="1" {{ old('status') == '1' ? 'selected' : '' }}>Active</option>
+                                            <option value="0" {{ old('status') == '0' ? 'selected' : '' }}>Inactive</option>
                                         </select>
                                         @error('status')
                                             <div class="invalid-feedback">{{ $message }}</div>
@@ -135,7 +300,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="mb-3">
-                                        <label class="form-label">Country Flag c <span class="text-danger">*</span></label>
+                                        <label class="form-label">Country Flag <span class="text-danger">*</span></label>
                                         <input type="file" 
                                             class="form-control @error('image') is-invalid @enderror" 
                                             name="image" 

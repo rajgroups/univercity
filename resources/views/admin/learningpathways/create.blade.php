@@ -742,7 +742,13 @@
                     if (course.image.startsWith('http')) {
                         imageUrl = course.image;
                     } else {
-                        imageUrl = "{{ asset('storage') }}/" + course.image;
+                        // Assuming images are stored in storage/app/public and linked to public/storage
+                        // If course.image already contains 'storage/', don't prepend it again
+                        if (course.image.includes('storage/')) {
+                             imageUrl = "{{ asset('') }}" + course.image;
+                        } else {
+                             imageUrl = "{{ asset('storage') }}/" + course.image;
+                        }
                     }
                 }
 

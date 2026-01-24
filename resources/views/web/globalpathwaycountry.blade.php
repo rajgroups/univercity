@@ -190,7 +190,7 @@
                 @foreach ($country as $item)
                     <div class="col-lg-3 col-md-6">
                         <div class="course-card">
-                            <a href="{{ route('web.global.course', ['countries[]' => $item->id]) }}" class="card-img">
+                            <a href="{{ route('web.global.course', ['countries' => $item->iso3]) }}" class="card-img">
                                 @if(isset($item->iso2) && $item->iso2)
                                     {{-- Using FlagCDN with ISO2 code --}}
                                   <img
@@ -209,7 +209,7 @@
                                 @endif
                             </a>
                             <div class="card-content">
-                                <a href="{{ route('web.global.course', ['countries[]' => $item->id]) }}" class="h5 fw-500 mb-16">{{ $item->name }}</a>
+                                <a href="{{ route('web.global.course', ['countries' => $item->iso3]) }}" class="h5 fw-500 mb-16">{{ $item->name }}</a>
                                 <p>{{ \Illuminate\Support\Str::limit(strip_tags($item->description), 100) }}</p>
                             </div>
                         </div>

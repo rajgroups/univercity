@@ -139,6 +139,7 @@ Route::prefix('admin')->as('admin.')->group(function() {
         Route::get('/survey/{project_id}/survey/{id}/edit', [SurveyController::class, 'edit'])->name('survey.edit');
         Route::post('/survey/{project_id}/survey/{id}/update', [SurveyController::class, 'update'])->name('survey.update');
         Route::delete('/survey/{project_id}/survey/{id}/delete', [SurveyController::class, 'destroy'])->name('survey.destroy');
+        Route::get('/survey/{project_id}/survey/{id}/responses', [SurveyController::class, 'responses'])->name('survey.responses');
 
         // Learning Pathways Routes
         Route::get('/project/{project_id}/learningpathways', [App\Http\Controllers\Admin\LearningPathwayController::class, 'index'])->name('learningpathways.index');

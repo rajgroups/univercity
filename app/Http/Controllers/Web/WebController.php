@@ -313,7 +313,22 @@ class WebController extends Controller
 
     // 🌍 Country filter
     if ($request->has('countries') && !empty($request->countries)) {
-        $query->whereIn('country_id', $request->countries);
+        $countries = $request->countries;
+        
+        // Normalize to array if string (e.g. ?countries=IND or ?countries=IND,USA)
+        if (is_string($countries)) {
+            $countries = explode(',', $countries);
+        }
+
+        // Resolve ISO3 codes to IDs
+        $countryIds = Country::whereIn('iso3', $countries)->pluck('id');
+        
+        if ($countryIds->isNotEmpty()) {
+            $query->whereIn('country_id', $countryIds);
+        } else {
+             // Fallback: search by ID if ISO3 fails
+             $query->whereIn('country_id', (array) $request->countries);
+        }
     }
 
     // 📂 Category filter
