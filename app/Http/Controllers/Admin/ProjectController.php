@@ -814,12 +814,28 @@ class ProjectController extends Controller
     public function toggleStatus(Project $project)
     {
         try {
-            $project->status = $project->status === 'active' ? 'inactive' : 'active';
+            // Toggle between 1 and 0
+            $project->status = $project->status == 1 ? 0 : 1;
             $project->save();
+
+            if (request()->wantsJson()) {
+                return response()->json([
+                    'success' => true, 
+                    'message' => 'Project status updated successfully!',
+                    'status' => $project->status
+                ]);
+            }
 
             return redirect()->back()
                 ->with('success', 'Project status updated successfully!');
         } catch (\Exception $e) {
+            if (request()->wantsJson()) {
+                return response()->json([
+                    'success' => false, 
+                    'message' => 'Error updating project status: ' . $e->getMessage()
+                ], 500);
+            }
+
             return redirect()->back()
                 ->with('error', 'Error updating project status: ' . $e->getMessage());
         }

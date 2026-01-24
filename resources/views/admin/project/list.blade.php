@@ -512,7 +512,7 @@
                 const isActive = $(this).prop('checked');
 
                 $.ajax({
-                    url: "{{ route('admin.project.toggle-status', '') }}/" + projectId,
+                    url: "{{ route('admin.project.toggle-status', ':id') }}".replace(':id', projectId),
                     method: 'POST',
                     data: {
                         _token: "{{ csrf_token() }}",

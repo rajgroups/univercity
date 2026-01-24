@@ -150,7 +150,7 @@ Route::prefix('admin')->as('admin.')->group(function() {
         Route::delete('/project/{project_id}/learningpathways/{id}/delete', [App\Http\Controllers\Admin\LearningPathwayController::class, 'destroy'])->name('learningpathways.destroy');
 
         Route::resource('project', ProjectController::class);
-        Route::get('project/{project}/toggle-status', [ProjectController::class, 'toggleStatus'])->name('project.toggle-status');
+        Route::patch('project/{project}/toggle-status', [ProjectController::class, 'toggleStatus'])->name('project.toggle-status');
         Route::get('project/export', [ProjectController::class, 'export'])->name('project.export');
 
         Route::get('/dashboard/stats', [DashboardController::class, 'getStats'])->name('dashboard.stats');
