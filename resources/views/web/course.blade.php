@@ -30,24 +30,89 @@
 
 @section('content')
     <!-- Title Banner Section Start -->
-    <section class="title-banner mb-80">
-        <div class="container-fluid">
-            <div class="row align-items-center">
-                <div class="col-md-8">
-                    <h1 class="display-5 fw-bold text-primary">Explore Our Courses</h1>
-                    <p class="lead text-muted">Discover skill development programs designed for your career growth</p>
-                </div>
-                <div class="col-md-4 text-md-end">
-                    <div class="breadcrumb">
-                        <nav aria-label="breadcrumb">
-                            <ol class="breadcrumb justify-content-md-end">
-                                <li class="breadcrumb-item"><a href="">Home</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Courses</li>
-                            </ol>
-                        </nav>
-                    </div>
-                </div>
+    <style>
+        .modern-page-banner {
+            position: relative;
+            min-height: 350px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            overflow: hidden;
+            margin-bottom: 80px;
+        }
+
+        .modern-page-banner::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.5) 100%);
+            z-index: 1;
+        }
+
+        .modern-banner-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            width: 100%;
+            padding: 0 15px;
+        }
+
+        .modern-banner-title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 1rem;
+            text-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            letter-spacing: -0.5px;
+        }
+
+        .modern-breadcrumb {
+            display: inline-flex;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            border-radius: 50px;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .modern-breadcrumb a, .modern-breadcrumb span {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-decoration: none;
+        }
+
+        .modern-breadcrumb a:hover {
+            color: #fff;
+        }
+
+        @media (max-width: 768px) {
+            .modern-page-banner {
+                min-height: 250px;
+            }
+            .modern-banner-title {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+
+    <!-- Title Banner Section Start -->
+    <section class="modern-page-banner" style="background-image: url('{{ asset('resource/web/assets/media/banner/course-bg.jpg') }}'), url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=2070&auto=format&fit=crop');">
+        <div class="modern-banner-content" data-aos="fade-up">
+            <div class="modern-breadcrumb">
+                <a href="{{ url('/') }}">Home</a>
+                <span class="mx-2">/</span>
+                <span class="text-white">Courses</span>
             </div>
+            <h1 class="modern-banner-title">Explore Our Courses</h1>
+            <p class="text-white opacity-75 lead" style="max-width: 600px; margin: 0 auto;">Discover skill development programs designed to accelerate your career growth.</p>
         </div>
     </section>
     <!-- Title Banner Section End -->
