@@ -170,16 +170,33 @@
                         #searchQuerySubmit:hover {
                             cursor: pointer;
                         }
+
+                        .card-img img {
+                            width: 100%;
+                            height: 180px;
+                            object-fit: cover;
+                            border-radius: 8px 8px 0 0;
+                        }
+                        .course-card {
+                            border: 1px solid #e0e0e0;
+                            border-radius: 8px;
+                            overflow: hidden;
+                            transition: transform 0.3s ease;
+                        }
+                        .course-card:hover {
+                            transform: translateY(-5px);
+                            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+                        }
                     </style>
                     <div class="row row-gap-4 mb-48">
                         @foreach ($sectors as $item)
                              <div class="col-lg-3 col-md-6">
                                 <div class="course-card">
-                                    <a href="{{ route('web.course.index', ['sectors[]' => $item->id]) }}" class="card-img">
+                                    <a href="{{ route('web.course.index', ['sectors' => $item->id]) }}" class="card-img">
                                         <img src="{{ asset($item->image)}}" alt="img">
                                     </a>
                                     <div class="card-content">
-                                        <a href="{{ route('web.course.index', ['sectors[]' => $item->id]) }}" class="h5 fw-500 mb-16">{{ $item->name }}</a>
+                                        <a href="{{ route('web.course.index', ['sectors' => $item->id]) }}" class="h5 fw-500 mb-16">{{ $item->name }}</a>
                                         <p>{{ \Illuminate\Support\Str::limit(strip_tags($item->description), 100) }}</p>
                                     </div>
                                 </div>

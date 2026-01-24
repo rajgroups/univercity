@@ -110,6 +110,15 @@
                         </div>
                         <div class="card-body">
                             <form action="{{ route('web.course.index') }}" method="GET" id="courseFiltersDesktop">
+                                @php
+                                    $selectedSectors = request('sectors', []);
+                                    if (is_string($selectedSectors)) {
+                                        $selectedSectors = explode(',', $selectedSectors);
+                                    }
+                                    if (!is_array($selectedSectors)) {
+                                        $selectedSectors = [];
+                                    }
+                                @endphp
                                 <!-- Search -->
                                 <div class="mb-4">
                                     <label class="form-label fw-semibold">Search Courses</label>
@@ -127,12 +136,12 @@
                                     <div class="mb-4">
                                         <label class="form-label fw-semibold">Active Filters</label>
                                         <div class="d-flex flex-wrap gap-2">
-                                            @foreach (request('sectors', []) as $sectorId)
+                                            @foreach ($selectedSectors as $sectorId)
                                                 @php $sector = $sectors->firstWhere('id', $sectorId); @endphp
                                                 @if ($sector)
                                                     <span class="badge bg-primary">
                                                         {{ $sector->name }}
-                                                        <a href="{{ request()->fullUrlWithQuery(['sectors' => array_diff(request('sectors', []), [$sectorId])]) }}"
+                                                        <a href="{{ request()->fullUrlWithQuery(['sectors' => array_diff($selectedSectors, [$sectorId])]) }}"
                                                             class="text-white ms-1">×</a>
                                                     </span>
                                                 @endif
@@ -166,14 +175,14 @@
                                 <div class="mb-4">
                                     <label class="form-label fw-semibold d-flex justify-content-between">
                                         <span>Sector</span>
-                                        <span class="badge bg-primary">{{ count(request('sectors', [])) }}</span>
+                                        <span class="badge bg-primary">{{ count($selectedSectors) }}</span>
                                     </label>
                                     <div class="filter-options">
                                         @foreach ($sectors as $sector)
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox" name="sectors[]"
                                                     id="sectorDesktop{{ $sector->id }}" value="{{ $sector->id }}"
-                                                    {{ in_array($sector->id, request('sectors', [])) ? 'checked' : '' }}>
+                                                    {{ in_array($sector->id, $selectedSectors) ? 'checked' : '' }}>
                                                 <label class="form-check-label d-flex justify-content-between w-100"
                                                     for="sectorDesktop{{ $sector->id }}">
                                                     <span>{{ $sector->name }}</span>

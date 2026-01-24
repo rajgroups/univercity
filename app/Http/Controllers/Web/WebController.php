@@ -439,7 +439,11 @@ class WebController extends Controller
 
         // Sector filter
         if ($request->has('sectors') && !empty($request->sectors)) {
-            $query->whereIn('sector_id', $request->sectors);
+            $sectors = $request->sectors;
+            if (is_string($sectors)) {
+                 $sectors = explode(',', $sectors);
+            }
+            $query->whereIn('sector_id', (array)$sectors);
         }
 
         $courses = $query->paginate(10);
