@@ -240,7 +240,7 @@
                                     <img src="{{ asset($event->thumbnail_image) }}" class="w-100 event-image" alt="{{ $event->title }}">
 
                                     <span class="badge badge-type bg-primary">
-                                        {{ $event->type }}
+                                        {{ $event->type == 1 ? 'Event' : 'Competition' }}
                                     </span>
                                     @if($event->is_competition)
                                         <span class="badge badge-competition bg-danger">
