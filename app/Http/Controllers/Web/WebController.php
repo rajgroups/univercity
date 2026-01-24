@@ -159,7 +159,11 @@ class WebController extends Controller
                             $q->whereNull('id'); // No responses for guests
                         }
                     }, 'questions']);
-                }
+                },
+                'learningPathway.sectors',
+                'learningPathway.flows.sector',
+                'learningPathway.courses.sector',
+                'learningPathway.roadmaps',
             ])
             ->firstOrFail();
 

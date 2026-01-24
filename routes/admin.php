@@ -61,6 +61,7 @@ Route::prefix('admin')->as('admin.')->group(function() {
         Route::resource('announcement',AnnouncementController::class);
 
         // Course Resource Routes
+        Route::post('courses-by-sectors', [CourseController::class, 'getBySectors'])->name('courses.by.sectors');
         Route::resource('course',CourseController::class);
 
         // Blog Routes
@@ -138,6 +139,14 @@ Route::prefix('admin')->as('admin.')->group(function() {
         Route::get('/survey/{project_id}/survey/{id}/edit', [SurveyController::class, 'edit'])->name('survey.edit');
         Route::post('/survey/{project_id}/survey/{id}/update', [SurveyController::class, 'update'])->name('survey.update');
         Route::delete('/survey/{project_id}/survey/{id}/delete', [SurveyController::class, 'destroy'])->name('survey.destroy');
+
+        // Learning Pathways Routes
+        Route::get('/project/{project_id}/learningpathways', [App\Http\Controllers\Admin\LearningPathwayController::class, 'index'])->name('learningpathways.index');
+        Route::get('/project/{project_id}/learningpathways/create', [App\Http\Controllers\Admin\LearningPathwayController::class, 'create'])->name('learningpathways.create');
+        Route::post('/project/{project_id}/learningpathways/store', [App\Http\Controllers\Admin\LearningPathwayController::class, 'store'])->name('learningpathways.store');
+        Route::get('/project/{project_id}/learningpathways/{id}/edit', [App\Http\Controllers\Admin\LearningPathwayController::class, 'edit'])->name('learningpathways.edit');
+        Route::post('/project/{project_id}/learningpathways/{id}/update', [App\Http\Controllers\Admin\LearningPathwayController::class, 'update'])->name('learningpathways.update');
+        Route::delete('/project/{project_id}/learningpathways/{id}/delete', [App\Http\Controllers\Admin\LearningPathwayController::class, 'destroy'])->name('learningpathways.destroy');
 
         Route::resource('project', ProjectController::class);
         Route::get('project/{project}/toggle-status', [ProjectController::class, 'toggleStatus'])->name('project.toggle-status');

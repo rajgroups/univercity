@@ -534,7 +534,12 @@
             </button>
             <button class="nav-link btn btn-outline-teal rounded-pill px-4" id="feedback-tab" data-bs-toggle="pill" data-bs-target="#feedback" type="button" role="tab" aria-controls="feedback" aria-selected="false">
                 <i class="bi bi-chat-heart me-2"></i>Feedback <span class="badge bg-primary ms-1">{{ $feedbacks->count() }}</span>
+            </button> 
+            @if($project->learningPathway)
+            <button class="nav-link btn btn-outline-primary rounded-pill px-4" id="pathway-tab" data-bs-toggle="pill" data-bs-target="#pathway" type="button" role="tab" aria-controls="pathway" aria-selected="false">
+                <i class="bi bi-diagram-3 me-2"></i>Pathways
             </button>
+            @endif
 
             @if(isset($surveys) && $surveys->count() > 0)
             <button class="nav-link btn btn-outline-primary rounded-pill px-4" id="survey-tab" data-bs-toggle="pill" data-bs-target="#survey" type="button" role="tab" aria-controls="survey" aria-selected="false">
@@ -623,12 +628,27 @@
                     </div>
                 </button>
                 @endif
+                @if($project->learningPathway)
+                <button class="list-group-item list-group-item-action py-3 d-flex align-items-center gap-3" data-bs-toggle="pill" data-bs-target="#pathway" role="tab">
+                    <i class="bi bi-diagram-3 fs-5 text-primary"></i>
+                    <div>
+                        <span class="d-block fw-bold">Pathways</span>
+                        <small class="text-muted">Learning & Impact Model</small>
+                    </div>
+                </button>
+                @endif
             </div>
         </div>
     </div>
 
     <!-- Tab Content -->
     <div class="tab-content" id="projectTabContent">
+        <!-- Pathway Tab -->
+        @if($project->learningPathway)
+        <div class="tab-pane fade" id="pathway" role="tabpanel">
+            @include('web.partials.project-pathway', ['learningPathway' => $project->learningPathway])
+        </div>
+        @endif
 
         <!-- Overview Tab -->
         <div class="tab-pane fade show active" id="overview" role="tabpanel">
@@ -3240,6 +3260,7 @@
 
 @push('styles')
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightbox2@2.11.4/dist/css/lightbox.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 <style>
     /* Lightbox Fix - Force Modal to Center */
     .lightboxOverlay {
@@ -3512,8 +3533,57 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/lightbox2@2.11.4/dist/js/lightbox.min.js"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google_maps.key', 'YOUR_GOOGLE_MAPS_API_KEY') }}&callback=initMap" async defer></script>
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
 <script>
+    // Initialize Swipers for Pathway Tab
+    document.addEventListener('DOMContentLoaded', function() {
+        // Sector Swiper
+        new Swiper(".sector-swiper", {
+            slidesPerView: "auto",
+            spaceBetween: 10,
+            freeMode: true,
+        });
+
+        // Course Swiper
+        new Swiper(".course-swiper", {
+            slidesPerView: 1,
+            spaceBetween: 20,
+            autoplay: {
+                delay: 3000,
+                disableOnInteraction: false,
+            },
+            pagination: {
+                el: ".swiper-pagination",
+                clickable: true,
+            },
+            breakpoints: {
+                640: { slidesPerView: 2, spaceBetween: 20 },
+                1024: { slidesPerView: 3, spaceBetween: 20 },
+            }
+        });
+
+        // Roadmap Swiper
+        new Swiper(".roadmap-swiper", {
+            slidesPerView: 1,
+            spaceBetween: 16,
+            breakpoints: {
+                640: { slidesPerView: 2, spaceBetween: 16 },
+                1024: { slidesPerView: 4, spaceBetween: 16 },
+            }
+        });
+
+        // Flow Swiper (Timeline)
+        new Swiper(".flow-swiper", {
+            slidesPerView: 1,
+            spaceBetween: 20,
+            breakpoints: {
+                640: { slidesPerView: 2, spaceBetween: 20 },
+                1024: { slidesPerView: 4, spaceBetween: 20 },
+            }
+        });
+    });
+
 // Initialize lightbox
 lightbox.option({
     'resizeDuration': 200,

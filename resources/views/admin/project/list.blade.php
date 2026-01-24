@@ -336,6 +336,13 @@
                                             <i class="bi bi-clipboard-check"></i>
                                         </a>
 
+                                        <!-- Learning Pathways -->
+                                        <a href="{{ route('admin.learningpathways.index', $project->id) }}"
+                                        class="btn btn-sm btn-outline-primary"
+                                        data-bs-toggle="tooltip" title="Learning Pathways">
+                                            <i class="bi bi-layers"></i>
+                                        </a>
+
                                         <!-- Feedback -->
                                         <a href="{{ route('admin.feedback.create', ['project_id' => $project->id]) }}"
                                         class="btn btn-sm btn-outline-info"

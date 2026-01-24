@@ -396,7 +396,6 @@ class CourseController extends Controller
     // {
     //     if ($imagePath && file_exists(public_path($imagePath))) {
     //         unlink(public_path($imagePath));
-
     //         // Optional: Remove empty directory if needed
     //         $directory = dirname(public_path($imagePath));
     //         if (is_dir($directory) && count(scandir($directory)) == 2) { // Only . and .. remain
@@ -404,4 +403,19 @@ class CourseController extends Controller
     //         }
     //     }
     // }
+
+    public function getBySectors(Request $request) {
+        $sectorIds = $request->input('sectors', []);
+        
+        if (empty($sectorIds)) {
+            return response()->json([], 200);
+        }
+
+        $courses = Course::whereIn('sector_id', $sectorIds)
+                        ->where('status', 1) // Active courses only
+                        ->select('id', 'name', 'level', 'image', 'course_code') // optimize select
+                        ->get();
+
+        return response()->json($courses);
+    }
 }
