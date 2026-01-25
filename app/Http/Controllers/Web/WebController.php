@@ -591,10 +591,29 @@ class WebController extends Controller
         }
     }
 
-    public function catalog(Request $request)
+    public function projects(Request $request) {
+        return $this->catalog($request, 'projects');
+    }
+
+    public function announcements(Request $request) {
+        return $this->catalog($request, 'announcements');
+    }
+
+    public function catalog(Request $request, $mode = null)
     {
         $projects = Project::query();
         $announcements = Announcement::query();
+
+        // 1. Base Scope based on mode (or legacy URL fallback)
+        if ($mode === 'projects') {
+             // Force only projects
+             // No announcements
+             $announcements->whereRaw('1=0');
+        } elseif ($mode === 'announcements') {
+             // Force only announcements
+             // No projects
+             $projects->whereRaw('1=0');
+        }
 
         // Filter: Category
         if ($request->filled('category_id')) {
@@ -602,22 +621,22 @@ class WebController extends Controller
             $announcements->where('category_id', $request->category_id);
         }
 
-        // Filter: Type
-        if (in_array($request->type, ['project_1', 'project_2', 'announcement_1', 'announcement_2'])) {
-            if ($request->type === 'project_1') {
+        // Filter: Type (Specific Sub-filters)
+        if ($request->filled('type')) {
+             if ($request->type === 'project_3') {
+                // Completed Projects (assuming custom type key)
+                $projects->where('stage', 'completed');
+             } elseif ($request->type === 'project_1') {
                 $projects->where('stage', 'ongoing');
-                $announcements->whereRaw('1=0');
             } elseif ($request->type === 'project_2') {
                 $projects->where('stage', 'upcoming');
-                $announcements->whereRaw('1=0');
             } elseif ($request->type === 'announcement_1') {
-                $announcements->where('type', 1);
-                $projects->whereRaw('1=0');
+                $announcements->where('type', 1); // Program
             } elseif ($request->type === 'announcement_2') {
-                $announcements->where('type', 2);
-                $projects->whereRaw('1=0');
+                $announcements->where('type', 2); // Scheme
             }
         }
+
 
         // Filter: Search
         if ($request->filled('search')) {
@@ -627,17 +646,24 @@ class WebController extends Controller
 
 
         // Fetch and tag type for frontend
-        $projectResults = $projects->with('category')->get()->map(function ($item) {
-            $item->type_label = ucfirst($item->stage);
-            $item->item_type = 'project';
-            return $item;
-        });
+        // Only run query if not forced to empty
+        $projectResults = collect();
+        if ($mode !== 'announcements') {
+            $projectResults = $projects->with('category')->get()->map(function ($item) {
+                $item->type_label = ucfirst($item->stage);
+                $item->item_type = 'project';
+                return $item;
+            });
+        }
 
-        $announcementResults = $announcements->with('category')->get()->map(function ($item) {
-            $item->type_label = $item->type == 1 ? 'Program' : 'Scheme';
-            $item->item_type = 'announcement';
-            return $item;
-        });
+        $announcementResults = collect();
+        if ($mode !== 'projects') {
+             $announcementResults = $announcements->with('category')->get()->map(function ($item) {
+                $item->type_label = $item->type == 1 ? 'Program' : 'Scheme';
+                $item->item_type = 'announcement';
+                return $item;
+            });
+        }
 
         // Merge, sort and paginate
         $merged = $projectResults->merge($announcementResults)->sortByDesc('created_at');
@@ -654,7 +680,8 @@ class WebController extends Controller
 
         return view('web.catalog', [
             'results' => $results,
-            'categories' => Category::all()
+            'categories' => Category::all(),
+            'pageType' => $mode
         ]);
     }
 

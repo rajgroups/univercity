@@ -114,6 +114,8 @@ Route::middleware(['maintenance'])->group(function () {
 
     // For catelog (Program,scheme,project)
     Route::get('/catalog', [WebController::class, 'catalog'])->name('web.catalog');
+    Route::get('/our-projects', [WebController::class, 'projects'])->name('web.projects');
+    Route::get('/program-scheme', [WebController::class, 'announcements'])->name('web.announcements');
 
     // For Blog Catelog
     Route::get('/blogs', [WebController::class, 'blog'])->name('web.blog.filter');

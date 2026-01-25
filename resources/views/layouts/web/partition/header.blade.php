@@ -245,31 +245,14 @@
                                                 <a href="javascript:void(0);">Initiatives</a>
                                                 <ul class="sub-menu">
 
-                                                    {{-- Educational Programs --}}
+                                                    {{-- Projects --}}
                                                     <li>
-                                                        {{-- {{ route('programe') }} --}}
-                                                        <a href="{{ route('web.catalog') }}">1. Educational
-                                                            Programs</a>
-                                                        {{-- <ul class="sub-menu">
-                                                            @foreach ($educationPrograms as $program)
-                                                                <li><a
-                                                                        href="{{ route('web.catalog', ['category_id' => $program->id]) }}">{{ $program->name }}</a>
-                                                                </li>
-                                                            @endforeach
-                                                        </ul> --}}
+                                                        <a href="{{ route('web.projects') }}">1. Projects</a>
                                                     </li>
 
-                                                    {{-- Skill Development Programs --}}
+                                                    {{-- Programs & Schemes --}}
                                                     <li>
-                                                        <a href="{{ route('web.catalog') }}">2. Skill Development
-                                                            Programs</a>
-                                                        {{-- <ul class="sub-menu">
-                                                            @foreach ($skillPrograms as $program)
-                                                                <li><a
-                                                                        href="{{ route('web.catalog', ['category_id' => $program->id]) }}">{{ $program->name }}</a>
-                                                                </li>
-                                                            @endforeach
-                                                        </ul> --}}
+                                                        <a href="{{ route('web.announcements') }}">2. Programs & Schemes</a>
                                                     </li>
 
                                                     {{-- CSR Initiatives --}}

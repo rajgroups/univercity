@@ -6,6 +6,33 @@
     .top-32 {
         top: 32%;
     }
+    /* Course Card Styles */
+    .hover-lift {
+        transition: all 0.3s ease;
+    }
+    .hover-lift:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+    }
+    .line-clamp-2 {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+    .cursor-pointer {
+        cursor: pointer;
+    }
+    .card-img-overlay .badge {
+        backdrop-filter: blur(10px);
+        background-color: rgba(255, 255, 255, 0.9);
+        color: #000;
+        margin-right: 5px;
+    }
+    /* Selection Overlay */
+    /* .course-card.border-primary .selection-overlay {
+        display: flex !important;
+    } */
 </style>
 @endpush
 
@@ -430,27 +457,56 @@
 
 <template id="course-card-template">
     <div class="col-md-6 col-lg-4 col-xl-3">
-        <div class="card h-100 border course-card">
-            <div class="position-absolute top-0 end-0 m-3">
-                <span class="badge bg-primary">Course</span>
-            </div>
-            <img src="PLACEHOLDER_IMAGE" class="card-img-top course-img" alt="Course" style="height: 150px; object-fit: cover;">
-            <div class="card-body">
-                <h6 class="card-title text-truncate" title="COURSE_NAME">COURSE_NAME</h6>
-                <p class="card-text small text-muted mb-2">COURSE_CODE</p>
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <span class="badge bg-info">LEVEL</span>
-                    <small class="text-muted">Duration</small>
+        <div class="course-card card h-100 border-0 shadow-sm hover-lift cursor-pointer select-course-wrapper" data-id="COURSE_ID">
+            <div class="position-relative">
+                <img src="PLACEHOLDER_IMAGE" class="card-img-top" alt="COURSE_NAME" style="height: 200px; object-fit: cover;">
+                <div class="card-img-overlay d-flex justify-content-between align-items-start p-3">
+                    <span class="badge bg-badge-mode">MODE_LABEL</span>
+                    <span class="badge bg-badge-paid">PAID_LABEL</span>
                 </div>
-                <div class="form-check form-switch">
-                    <input class="form-check-input course-featured-check" type="checkbox" role="switch" id="feat_COURSE_ID">
-                    <label class="form-check-label small" for="feat_COURSE_ID">Mark as Featured</label>
-                </div>
+                <!-- Selection Overlay -->
+                <!-- <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center bg-primary bg-opacity-75 selection-overlay" style="display: none;">
+                    <i class="bi bi-check-circle-fill text-white display-3"></i>
+                </div> -->
             </div>
-            <div class="card-footer bg-transparent border-top-0">
-                <button type="button" class="btn btn-outline-primary w-100 select-course-btn" data-id="COURSE_ID">
-                    <i class="bi bi-plus-circle me-1"></i> Select Course
-                </button>
+            <div class="card-body d-flex flex-column">
+                <h6 class="card-title text-primary mb-2 line-clamp-2" style="min-height: 3rem;">COURSE_NAME</h6>
+                <p class="text-muted small mb-2">
+                    <i class="bi bi-building me-1"></i>PROVIDER_NAME
+                </p>
+                <p class="text-warning small mb-2">
+                    <i class="bi bi-tags me-1"></i>SECTOR_NAME
+                </p>
+                <div class="course-meta d-flex justify-content-between text-muted small mb-3">
+                    <span class="d-flex align-items-center" title="Languages">
+                        <i class="bi bi-translate me-1"></i> LANGUAGE_COUNT Languages
+                    </span>
+                    <span class="d-flex align-items-center">
+                        <i class="bi bi-clock me-1"></i> DURATION
+                    </span>
+                </div>
+                <div class="mt-auto">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="rating">
+                            <i class="bi bi-star-fill text-warning"></i>
+                            <small class="text-muted">4.5 (120)</small>
+                        </div>
+                        <div class="enrollment">
+                            <small class="text-muted">
+                                <i class="bi bi-people me-1"></i> ENROLLMENT_COUNT
+                            </small>
+                        </div>
+                    </div>
+                    
+                    <button type="button" class="btn btn-outline-primary w-100 select-course-btn" data-id="COURSE_ID">
+                        <i class="bi bi-plus-circle me-1"></i> Select Course
+                    </button>
+                    
+                    <div class="form-check form-switch mt-2">
+                        <input class="form-check-input course-featured-check" type="checkbox" role="switch" id="feat_COURSE_ID">
+                        <label class="form-check-label small text-muted" for="feat_COURSE_ID">Mark Featured</label>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -743,24 +799,59 @@
                         imageUrl = course.image;
                     } else {
                         // Assuming images are stored in storage/app/public and linked to public/storage
-                        // If course.image already contains 'storage/', don't prepend it again
                         if (course.image.includes('storage/')) {
                              imageUrl = "{{ asset('') }}" + course.image;
                         } else {
-                             imageUrl = "{{ asset('storage') }}/" + course.image;
+                             // Correct path construction
+                             imageUrl = "{{ asset('') }}" + course.image;
                         }
                     }
                 }
 
+                // Data Formatting
+                // Mode
+                const modes = {1: 'Online', 2: 'In-Centre', 3: 'Hybrid', 4: 'On-Demand'};
+                const modeLabel = modes[course.mode_of_study] || 'N/A';
+                const modeBadgeClass = course.mode_of_study == 1 ? 'primary' : 'secondary';
+
+                // Paid
+                const paidLabel = course.paid_type === 'free' ? 'FREE' : 'PAID';
+                const paidBadgeClass = course.paid_type === 'free' ? 'success' : 'warning';
+
+                // Duration
+                let duration = 'Flexible';
+                if (course.duration_number && course.duration_unit) {
+                    duration = course.duration_number + ' ' + course.duration_unit;
+                }
+
+                // Languages
+                 let langCount = 0;
+                 try {
+                     const langs = typeof course.language === 'string' ? JSON.parse(course.language) : course.language;
+                     langCount = Array.isArray(langs) ? langs.length : 0;
+                 } catch(e) { langCount = 0; }
+                 
+                 const provider = course.provider || 'ISICO';
+                 const sectorName = course.sector ? course.sector.name : 'General';
+
+
                 let card = template
                     .replace(/PLACEHOLDER_IMAGE/g, imageUrl)
                     .replace(/COURSE_NAME/g, course.name)
-                    .replace(/COURSE_CODE/g, course.course_code)
-                    .replace(/LEVEL/g, course.level)
-                    .replace(/COURSE_ID/g, course.id);
+                    .replace(/PROVIDER_NAME/g, provider)
+                    .replace(/SECTOR_NAME/g, sectorName)
+                    .replace(/LANGUAGE_COUNT/g, langCount)
+                    .replace(/DURATION/g, duration)
+                    .replace(/ENROLLMENT_COUNT/g, course.enrollment_count || 0)
+                    .replace(/COURSE_ID/g, course.id)
+                    .replace(/MODE_LABEL/g, modeLabel)
+                    .replace(/PAID_LABEL/g, paidLabel)
+                    .replace(/bg-badge-paid/g, 'bg-' + paidBadgeClass)
+                    .replace(/bg-badge-mode/g, 'bg-' + modeBadgeClass);
                 
                 const $card = $(card);
                 
+                // Initialize Selection State
                 if (isSelected) {
                     $card.find('.course-card').addClass('border-primary border-3');
                     $card.find('.select-course-btn')
@@ -769,33 +860,37 @@
                         .html('<i class="bi bi-check-circle me-1"></i> Selected');
                 }
                 
-                // Course selection
-                $card.find('.select-course-btn').on('click', function() {
-                    const courseId = $(this).data('id');
-                    const $btn = $(this);
-                    const $courseCard = $btn.closest('.course-card');
-                    
-                    if (selectedCourses.includes(courseId)) {
-                        // Deselect
-                        selectedCourses = selectedCourses.filter(id => id !== courseId);
-                        $courseCard.removeClass('border-primary border-3').addClass('animate__animated animate__headShake');
-                        $btn.removeClass('btn-primary').addClass('btn-outline-primary')
-                            .html('<i class="bi bi-plus-circle me-1"></i> Select Course');
-                    } else {
-                        // Select
-                        selectedCourses.push(courseId);
-                        $courseCard.addClass('border-primary border-3 animate__animated animate__bounceIn');
-                        $btn.removeClass('btn-outline-primary').addClass('btn-primary')
-                            .html('<i class="bi bi-check-circle me-1"></i> Selected');
-                    }
-                    
-                    updateSelectedCount();
+                // Course selection handler
+                // Handler attached to both card and button for better UX? No, just button as requested in my thought process, 
+                // but usually clicking card is nice. Let's stick to button to avoid conflicts with 'Featured' toggle.
+                $card.find('.select-course-btn').on('click', function(e) {
+                    // e.stopPropagation(); // prevent card click if we had one
+                    toggleCourseSelection($(this), course.id);
                 });
                 
                 grid.append($card);
             });
             
             updateSelectedCount();
+        }
+
+        function toggleCourseSelection($btn, courseId) {
+             const $courseCard = $btn.closest('.course-card');
+             
+             if (selectedCourses.includes(courseId)) {
+                // Deselect
+                selectedCourses = selectedCourses.filter(id => id !== courseId);
+                $courseCard.removeClass('border-primary border-3').addClass('animate__animated animate__headShake');
+                $btn.removeClass('btn-primary').addClass('btn-outline-primary')
+                    .html('<i class="bi bi-plus-circle me-1"></i> Select Course');
+            } else {
+                // Select
+                selectedCourses.push(courseId);
+                $courseCard.addClass('border-primary border-3 animate__animated animate__bounceIn');
+                $btn.removeClass('btn-outline-primary').addClass('btn-primary')
+                    .html('<i class="bi bi-check-circle me-1"></i> Selected');
+            }
+             updateSelectedCount();
         }
 
         function updateSelectedCount() {
@@ -863,6 +958,24 @@
                 }
             `)
             .appendTo('head');
+
+        // Summernote initialization
+        if($('#editor').length > 0) {
+            $('#editor').summernote({
+                height: 300,
+                placeholder: 'Describe the learning outcomes...',
+                toolbar: [
+                    ['style', ['style']],
+                    ['font', ['bold', 'italic', 'underline', 'clear']],
+                    ['fontname', ['fontname']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['table', ['table']],
+                    ['insert', ['link', 'picture']],
+                    ['view', ['fullscreen', 'codeview', 'help']]
+                ]
+            });
+        }
     });
 </script>
 @endpush

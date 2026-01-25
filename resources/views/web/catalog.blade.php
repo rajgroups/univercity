@@ -15,14 +15,29 @@
                 <nav aria-label="breadcrumb" class="mb-3">
                     <ol class="breadcrumb mb-0">
                         <li class="breadcrumb-item"><a href="" class="text-white-50">Home</a></li>
-                        <li class="breadcrumb-item active text-white" aria-current="page">Catalog</li>
+                        <li class="breadcrumb-item active text-white" aria-current="page">
+                            @if(isset($pageType) && $pageType === 'projects') Projects
+                            @elseif(isset($pageType) && $pageType === 'announcements') Programs & Schemes
+                            @else Catalog
+                            @endif
+                        </li>
                     </ol>
                 </nav>
-                <h1 class="display-4 fw-bold mb-3 text-white">Initiatives <span class="text-warning">&</span> Impact</h1>
-                <p class="lead text-white-50 mb-4">Explore our growing catalog of projects, government schemes, and educational programs across India.</p>
+                <h1 class="display-4 fw-bold mb-3 text-white">
+                    @if(isset($pageType) && $pageType === 'projects') Our <span class="text-warning">Projects</span>
+                    @elseif(isset($pageType) && $pageType === 'announcements') Programs <span class="text-warning">&</span> Schemes
+                    @else Initiatives <span class="text-warning">&</span> Impact
+                    @endif
+                </h1>
+                <p class="lead text-white-50 mb-4">
+                    @if(isset($pageType) && $pageType === 'projects') Explore our ongoing, upcoming and completed projects.
+                    @elseif(isset($pageType) && $pageType === 'announcements') Discover government schemes and educational programs.
+                    @else Explore our growing catalog of projects, government schemes, and educational programs across India.
+                    @endif
+                </p>
 
                 <!-- Hero Search -->
-                <form method="GET" action="{{ route('web.catalog') }}" class="hero-search-wrapper shadow-lg rounded-pill bg-white p-2 d-flex">
+                <form method="GET" action="{{ url()->current() }}" class="hero-search-wrapper shadow-lg rounded-pill bg-white p-2 d-flex">
                     <div class="flex-grow-1 px-3 d-flex align-items-center">
                         <i class="bi bi-search text-muted me-2"></i>
                         <input type="text" name="search" value="{{ request('search') }}"
@@ -56,13 +71,18 @@
                         </h5>
                     </div>
                     <div class="card-body px-4 pb-4">
-                        <form method="GET" action="{{ route('web.catalog') }}" id="catalogFilters">
+                        <form method="GET" action="{{ url()->current() }}" id="catalogFilters">
                             <!-- Preserve Search if current -->
                             @if(request('search')) <input type="hidden" name="search" value="{{ request('search') }}"> @endif
 
                             <!-- Initiative Type -->
                             <div class="mb-4">
-                                <label class="form-label small fw-bold text-uppercase text-muted mb-3">Initiative Type</label>
+                                <label class="form-label small fw-bold text-uppercase text-muted mb-3">
+                                    @if($pageType === 'projects') Project Status
+                                    @elseif($pageType === 'announcements') Announcement Type
+                                    @else Initiative Type
+                                    @endif
+                                </label>
                                 <div class="filter-pills d-flex flex-column gap-2">
                                     <label class="filter-pill-label">
                                         <input type="radio" name="type" value="" {{ !request('type') ? 'checked' : '' }} onchange="this.form.submit()">
@@ -70,6 +90,7 @@
                                             <i class="bi bi-grid me-2"></i>All Results
                                         </span>
                                     </label>
+                                    @if($pageType === 'projects' || !$pageType)
                                     <label class="filter-pill-label">
                                         <input type="radio" name="type" value="project_1" {{ request('type') == 'project_1' ? 'checked' : '' }} onchange="this.form.submit()">
                                         <span class="pill-content">
@@ -83,6 +104,15 @@
                                         </span>
                                     </label>
                                     <label class="filter-pill-label">
+                                        <input type="radio" name="type" value="project_3" {{ request('type') == 'project_3' ? 'checked' : '' }} onchange="this.form.submit()">
+                                        <span class="pill-content">
+                                            <i class="bi bi-check-circle me-2"></i>Completed Projects
+                                        </span>
+                                    </label>
+                                    @endif
+
+                                    @if($pageType === 'announcements' || !$pageType)
+                                    <label class="filter-pill-label">
                                         <input type="radio" name="type" value="announcement_1" {{ request('type') == 'announcement_1' ? 'checked' : '' }} onchange="this.form.submit()">
                                         <span class="pill-content">
                                             <i class="bi bi-book me-2"></i>Programs
@@ -94,6 +124,7 @@
                                             <i class="bi bi-patch-check me-2"></i>Schemes
                                         </span>
                                     </label>
+                                    @endif
                                 </div>
                             </div>
 
@@ -110,7 +141,7 @@
                                 </select>
                             </div>
 
-                            <a href="{{ route('web.catalog') }}" class="btn btn-outline-danger btn-sm w-100 rounded-pill">
+                            <a href="{{ url()->current() }}" class="btn btn-outline-danger btn-sm w-100 rounded-pill">
                                 <i class="bi bi-arrow-counterclockwise me-1"></i>Reset All
                             </a>
                         </form>

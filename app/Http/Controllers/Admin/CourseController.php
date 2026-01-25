@@ -411,9 +411,25 @@ class CourseController extends Controller
             return response()->json([], 200);
         }
 
-        $courses = Course::whereIn('sector_id', $sectorIds)
+        $courses = Course::with('sector:id,name')
+                        ->whereIn('sector_id', $sectorIds)
                         ->where('status', 1) // Active courses only
-                        ->select('id', 'name', 'level', 'image', 'course_code') // optimize select
+                        ->select(
+                            'id', 
+                            'name', 
+                            'level', 
+                            'image', 
+                            'course_code',
+                            'mode_of_study',
+                            'paid_type',
+                            'provider',
+                            'language',
+                            'duration_number',
+                            'duration_unit',
+                            'enrollment_count',
+                            'slug',
+                            'sector_id'
+                        )
                         ->get();
 
         return response()->json($courses);
