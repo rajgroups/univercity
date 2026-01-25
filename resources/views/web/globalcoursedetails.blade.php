@@ -411,24 +411,84 @@
                     </div>
                     
                     <!-- Additional Info Cards -->
-                    @if($course->visa_notes || $course->accommodation_notes)
-                    <div class="bg-white rounded-4 shadow-sm p-4 mb-4">
-                        <div class="row g-4">
-                            @if($course->visa_support_included && $course->visa_notes)
-                            <div class="col-md-6">
-                                <h5 class="fw-bold mb-3"><i class="bi bi-passport text-danger me-2"></i>Visa Support</h5>
-                                <p class="text-muted small mb-0">{!! strip_tags($course->visa_notes) !!}</p>
+                    <div class="row g-4 mb-4">
+                        @if($course->certification_type || $course->accreditation_recognition)
+                        <div class="col-12">
+                            <div class="bg-white rounded-4 shadow-sm p-4">
+                                <h5 class="fw-bold mb-3">Accreditation & Certification</h5>
+                                <div class="row g-4">
+                                    @if($course->certification_type)
+                                    <div class="col-md-6">
+                                        <div class="d-flex align-items-center p-3 bg-light rounded-3">
+                                            <i class="bi bi-patch-check-fill text-warning fs-3 me-3"></i>
+                                            <div>
+                                                <small class="text-muted d-block text-uppercase fw-bold">Certification</small>
+                                                <span class="fw-bold">{{ $course->certification_type }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @endif
+                                    @if($course->accreditation_recognition)
+                                    <div class="col-md-6">
+                                        <div class="d-flex align-items-center p-3 bg-light rounded-3">
+                                            <i class="bi bi-award fs-3 text-info me-3"></i>
+                                            <div>
+                                                <small class="text-muted d-block text-uppercase fw-bold">Accreditation</small>
+                                                <span class="fw-bold">{{ $course->accreditation_recognition }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @endif
+                                </div>
                             </div>
-                            @endif
-                            @if($course->accommodation_support && $course->accommodation_notes)
-                            <div class="col-md-6">
-                                <h5 class="fw-bold mb-3"><i class="bi bi-house-heart text-purple me-2"></i>Accommodation</h5>
-                                <p class="text-muted small mb-0">{!! strip_tags($course->accommodation_notes) !!}</p>
-                            </div>
-                            @endif
                         </div>
+                        @endif
+
+                        @if($course->visa_notes || $course->accommodation_notes)
+                        <div class="col-12">
+                            <div class="bg-white rounded-4 shadow-sm p-4">
+                                <div class="row g-4">
+                                    @if($course->visa_support_included && $course->visa_notes)
+                                    <div class="col-md-6">
+                                        <h5 class="fw-bold mb-3"><i class="bi bi-passport text-danger me-2"></i>Visa Support</h5>
+                                        <p class="text-muted small mb-0">{!! strip_tags($course->visa_notes) !!}</p>
+                                    </div>
+                                    @endif
+                                    @if($course->accommodation_support && $course->accommodation_notes)
+                                    <div class="col-md-6">
+                                        <h5 class="fw-bold mb-3"><i class="bi bi-house-heart text-purple me-2"></i>Accommodation</h5>
+                                        <p class="text-muted small mb-0">{!! strip_tags($course->accommodation_notes) !!}</p>
+                                    </div>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                        @endif
+                        
+                        @if($course->faqs && count($course->faqs) > 0)
+                        <div class="col-12">
+                            <div class="bg-white rounded-4 shadow-sm p-4">
+                                <h5 class="fw-bold mb-4">Frequently Asked Questions</h5>
+                                <div class="accordion accordion-modern" id="faqAccordion">
+                                    @foreach($course->faqs as $index => $faq)
+                                        <div class="accordion-item">
+                                            <h2 class="accordion-header">
+                                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq{{ $index }}">
+                                                    {{ $faq['question'] }}
+                                                </button>
+                                            </h2>
+                                            <div id="faq{{ $index }}" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                                <div class="accordion-body">
+                                                    {{ $faq['answer'] }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+                        @endif
                     </div>
-                    @endif
                 </div>
 
                 <!-- Right Sidebar Column -->
@@ -466,6 +526,18 @@
                                             On-Campus
                                         @endif
                                     </span>
+                                </li>
+                                <li class="d-flex justify-content-between py-2 border-bottom">
+                                    <span class="text-muted">Intakes</span>
+                                    <div class="text-end">
+                                        @if($course->intake_months)
+                                            @foreach((array)$course->intake_months as $month)
+                                                <span class="badge bg-light text-dark border me-1 mb-1">{{ $month }}</span>
+                                            @endforeach
+                                        @else
+                                            <span class="fw-bold text-dark">Rolling</span>
+                                        @endif
+                                    </div>
                                 </li>
                                 <li class="d-flex justify-content-between py-2 pt-3">
                                     <span class="text-muted">Fee Type</span>
