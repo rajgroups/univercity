@@ -93,7 +93,7 @@
                                 @error('short_description')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
-                          
+                            </div>
 
                             <!-- Add this section after the Gallery Images field and before the submit button -->
 
@@ -281,7 +281,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                
                                 
                                 <div id="competition-fields" class="{{ old('type') == '2' ? '' : 'd-none' }}">
                                 <div class="row">
