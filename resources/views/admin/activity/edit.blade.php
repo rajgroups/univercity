@@ -333,7 +333,6 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
 
                             <!-- Competition Specific Fields -->
                             <div id="competition-fields"
