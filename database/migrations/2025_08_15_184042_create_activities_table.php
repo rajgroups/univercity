@@ -34,6 +34,8 @@ return new class extends Migration
             $table->json('highlights')->nullable();
             $table->integer('max_participants')->nullable();
             $table->decimal('entry_fee', 8, 2)->nullable()->default(0);
+            $table->boolean('is_free')->default(false);
+            $table->boolean('unlimited_spots')->default(false);
 
             // Relationships
             $table->unsignedBigInteger('organizer_id')->nullable();

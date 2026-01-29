@@ -769,9 +769,10 @@ class WebController extends Controller
         $end_date = $request->input('end_date');
         $sort = $request->input('sort', 'newest_first');
 
-        // Base query for upcoming events
+        // Base query - Show all published events (status != 0 and != 4 if needed, or just status 1,2,3)
+        // Assuming status: 0=Draft, 1=Upcoming, 2=Ongoing, 3=Completed, 4=Cancelled
         $events = Activity::query()
-            ->where('start_date', '>=', now())
+            ->whereIn('status', [1, 2, 3]) // Show Upcoming, Ongoing, Completed
             ->with('category');
 
         // Apply search filter
@@ -800,20 +801,20 @@ class WebController extends Controller
 
         // Apply date range filter
         if ($start_date) {
-            $events->where('start_date', '>=', $start_date);
+            $events->whereDate('start_date', '>=', $start_date);
         }
         if ($end_date) {
-            $events->where('start_date', '<=', $end_date);
+            $events->whereDate('start_date', '<=', $end_date);
         }
 
         // Apply sorting
         switch ($sort) {
             case 'date_soonest':
-                $events->orderBy('start_date')->orderBy('start_time');
+                $events->orderBy('start_date', 'asc');
                 break;
             case 'popular':
-                // Assuming you have a 'views' or 'registrations_count' column
-                $events->orderBy('registrations_count', 'desc');
+                // Use max_participants as a proxy for size/popularity if no view count
+                $events->orderBy('max_participants', 'desc');
                 break;
             case 'newest_first':
             default:
@@ -825,7 +826,7 @@ class WebController extends Controller
         $categories = Category::get();
 
         // Paginate results (15 items per page)
-        $events = $events->paginate(15);
+        $events = $events->paginate(15)->appends($request->all());
 
         return view('web.activity', [
             'events' => $events,
@@ -868,9 +869,14 @@ class WebController extends Controller
         }
 
         // Prepare rules if competition
-        $rules = null;
+        // Prepare rules if competition
+        $rules = $event->rules;
         if ($event->is_competition && $event->rules) {
-            $rules = json_decode($event->rules, true);
+             // Try to decode if it looks like JSON, otherwise keep as string
+             $decoded = json_decode($event->rules, true);
+             if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+                 $rules = $decoded;
+             }
         }
 
         // Prepare meta data

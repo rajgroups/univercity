@@ -128,9 +128,9 @@
                                 </svg>
                             </div>
                             <ul class="topbar-dropdown">
-                                <li class="item">Newest First</li>
-                                <li class="item">Date (Soonest)</li>
-                                <li class="item">Popular</li>
+                                <li class="item" data-value="newest_first">Newest First</li>
+                                <li class="item" data-value="date_soonest">Date (Soonest)</li>
+                                <li class="item" data-value="popular">Popular</li>
                             </ul>
                         </div>
                     </div>
@@ -140,6 +140,7 @@
             <div class="row">
                 <div class="col-md-3 d-none d-md-block">
                     <form action="{{ route('web.activity') }}" method="GET" id="eventFiltersDesktop">
+                        <input type="hidden" name="sort" id="sortInput" value="{{ request('sort', 'newest_first') }}">
                         <div class="mb-4">
                             <label for="search_desktop" class="form-label small text-muted">Search Events</label>
                             <div class="input-group">
@@ -154,99 +155,38 @@
                             <div class="accordion-item border-0 mb-3 shadow-sm">
                                 <h2 class="accordion-header" id="headingTypeDesktop">
                                     <button class="accordion-button collapsed shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTypeDesktop" aria-expanded="false" data-bs-parent="#filterAccordionDesktop">
-                                        <i class="bi bi-tag me-2"></i> Event Type
+                                        <i class="bi bi-tag me-2"></i> Activity Type
                                         <span class="badge bg-primary ms-auto">{{ count(request('types', [])) }}</span>
                                     </button>
-                                </h2>
-                               <div id="collapseTypeDesktop" class="accordion-collapse collapse {{ count(request('types', [])) ? 'show' : '' }}" aria-labelledby="headingTypeDesktop" data-bs-parent="#filterAccordionDesktop">
-                                    <div class="accordion-body pt-2">
-                                        @foreach ([1 => 'Event', 2 => 'Competition'] as $value => $label)
-                                            <div class="form-check mb-2">
-                                                <input
-                                                    class="form-check-input"
-                                                    type="checkbox"
-                                                    name="types[]"
-                                                    id="typeDesktop{{ $value }}"
-                                                    value="{{ $value }}"
-                                                    {{ in_array($value, request('types', [])) ? 'checked' : '' }}>
-                                                <label class="form-check-label" for="typeDesktop{{ $value }}">
-                                                    {{ $label }}
-                                                </label>
-                                            </div>
-                                        @endforeach
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="accordion-item border-0 mb-3 shadow-sm">
-                                <h2 class="accordion-header" id="headingDateDesktop">
-                                    <button class="accordion-button collapsed shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDateDesktop" aria-expanded="false" data-bs-parent="#filterAccordionDesktop">
-                                        <i class="bi bi-calendar me-2"></i> Date Range
-                                    </button>
-                                </h2>
-                                <div id="collapseDateDesktop" class="accordion-collapse collapse" aria-labelledby="headingDateDesktop" data-bs-parent="#filterAccordionDesktop">
-                                    <div class="accordion-body pt-2">
-                                        <div class="mb-3">
-                                            <label class="form-label small">From</label>
-                                            <input type="date" class="form-control form-control-sm" name="start_date" value="{{ request('start_date') }}">
-                                        </div>
-                                        <div class="mb-2">
-                                            <label class="form-label small">To</label>
-                                            <input type="date" class="form-control form-control-sm" name="end_date" value="{{ request('end_date') }}">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="accordion-item border-0 mb-3 shadow-sm">
-                                <h2 class="accordion-header" id="headingCategoryDesktop">
-                                    <button class="accordion-button collapsed shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCategoryDesktop" aria-expanded="false" data-bs-parent="#filterAccordionDesktop">
-                                        <i class="bi bi-collection me-2"></i> Category
-                                        <span class="badge bg-primary ms-auto">{{ count(request('categories', [])) }}</span>
-                                    </button>
-                                </h2>
-                                <div id="collapseCategoryDesktop" class="accordion-collapse collapse {{ count(request('categories', [])) ? 'show' : '' }}" aria-labelledby="headingCategoryDesktop" data-bs-parent="#filterAccordionDesktop">
-                                    <div class="accordion-body pt-2">
-                                        @foreach ($categories as $category)
-                                            <div class="form-check mb-2">
-                                                <input class="form-check-input" type="checkbox" name="categories[]" id="catDesktop{{ $category->id }}" value="{{ $category->id }}" {{ in_array($category->id, request('categories', [])) ? 'checked' : '' }}>
-                                                <label class="form-check-label d-flex justify-content-between w-100" for="catDesktop{{ $category->id }}">
-                                                    <span>{{ $category->name }}</span>
-                                                    <span class="text-muted small">{{ $category->events_count ?? 0 }}</span>
-                                                </label>
-                                            </div>
-                                        @endforeach
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="d-grid gap-2 mt-4">
-                            <button type="submit" class="btn btn-primary">
-                                <i class="bi bi-funnel me-1"></i> Apply Filters
-                            </button>
-                            <a href="{{ route('web.activity') }}" class="btn btn-outline-secondary">
-                                <i class="bi bi-arrow-counterclockwise me-1"></i> Reset All
-                            </a>
-                        </div>
-                    </form>
-                </div>
-
-                <div class="col-12 col-md-9">
-                    <div class="row g-4">
-                        @forelse ($events as $event)
-                            <div class="col-sm-6 col-lg-4 mb-4">
+                                
+                                {{-- ... inside loop ... --}}
+                                
                                 <div class="event-card position-relative bg-white">
                                     <img src="{{ asset($event->thumbnail_image) }}" class="w-100 event-image" alt="{{ $event->title }}">
 
                                     <span class="badge badge-type bg-primary">
                                         {{ $event->type == 1 ? 'Event' : 'Competition' }}
                                     </span>
-                                    @if($event->is_competition)
-                                        <span class="badge badge-competition bg-danger">
-                                            Competition
-                                        </span>
-                                    @endif
+                                    
+                                    @php
+                                        $statusLabel = match($event->status) {
+                                            1 => 'Upcoming',
+                                            2 => 'Ongoing',
+                                            3 => 'Completed',
+                                            4 => 'Cancelled',
+                                            default => 'Draft'
+                                        };
+                                        $statusClass = match($event->status) {
+                                            1 => 'bg-info',
+                                            2 => 'bg-success',
+                                            3 => 'bg-secondary',
+                                            4 => 'bg-danger',
+                                            default => 'bg-secondary'
+                                        };
+                                    @endphp
+                                    <span class="badge position-absolute top-0 end-0 m-2 {{ $statusClass }}">
+                                        {{ $statusLabel }}
+                                    </span>
 
                                     <div class="event-date">
                                         <span class="event-day">{{ $event->start_date->format('d') }}</span>
@@ -479,5 +419,21 @@
             $('#mobileFilterOffcanvas').append($offcanvasFooter);
         }
     });
+        }
+    });
+
+    // Sorting Dropdown Logic
+    $('.topbar-dropdown .item').on('click', function() {
+        var sortValue = $(this).data('value');
+        $('#sortInput').val(sortValue);
+        $('#eventFiltersDesktop').submit();
+    });
+
+    // Update dropdown display on load
+    var currentSort = "{{ request('sort', 'newest_first') }}";
+    var currentLabel = $('.topbar-dropdown .item[data-value="' + currentSort + '"]').text();
+    if(currentLabel) {
+        $('.selected-display').text(currentLabel);
+    }
 </script>
 @endpush

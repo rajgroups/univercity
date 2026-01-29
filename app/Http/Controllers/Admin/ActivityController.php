@@ -11,6 +11,7 @@ use Flasher\Prime\FlasherInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Image;
 
 class ActivityController extends Controller
 {
@@ -63,6 +64,8 @@ class ActivityController extends Controller
             'category_id'           => 'required|exists:category,id',
             'max_participants'      => 'nullable|integer|min:1',
             'entry_fee'             => 'nullable|numeric|min:0',
+            'is_free'               => 'nullable|boolean',
+            'unlimited_spots'       => 'nullable|boolean',
             'rules'                 => 'nullable|string',
             'highlights'            => 'nullable|array',
             'highlights.*'          => 'string|max:255',
@@ -160,15 +163,50 @@ class ActivityController extends Controller
             'category_id'               => 'required|exists:category,id',
             'max_participants'          => 'nullable|integer|min:1',
             'entry_fee'                 => 'nullable|numeric|min:0',
+            'is_free'                   => 'nullable|boolean',
+            'unlimited_spots'           => 'nullable|boolean',
             'rules'                     => 'nullable|string',
             'highlights'                => 'nullable|array',
             'highlights.*'              => 'string|max:255',
         ]);
 
-        // Handle file uploads
+        // Handle manual removal of Single Images
+        if ($request->has('remove_thumbnail_image') && $activity->thumbnail_image) {
+            if (file_exists(public_path($activity->thumbnail_image))) {
+                unlink(public_path($activity->thumbnail_image));
+            }
+            $validated['thumbnail_image'] = null;
+        }
+
+        if ($request->has('remove_banner_image') && $activity->banner_image) {
+            if (file_exists(public_path($activity->banner_image))) {
+                unlink(public_path($activity->banner_image));
+            }
+            $validated['banner_image'] = null;
+        }
+
+        if ($request->has('remove_sponsor_logo') && $activity->sponsor_logo) {
+            if (file_exists(public_path($activity->sponsor_logo))) {
+                unlink(public_path($activity->sponsor_logo));
+            }
+            $validated['sponsor_logo'] = null;
+        }
+
+        // Handle manual removal of Gallery Images
+        if ($request->has('remove_gallery_images')) {
+            $imagesToRemove = Image::whereIn('id', $request->remove_gallery_images)->get();
+            foreach ($imagesToRemove as $img) {
+                if (file_exists(public_path($img->file_name))) {
+                    unlink(public_path($img->file_name));
+                }
+                $img->delete();
+            }
+        }
+
+        // Handle file uploads (Thumbnail)
         if ($request->hasFile('thumbnail_image')) {
-            // Delete old thumbnail if exists
-            if ($activity->thumbnail_image && file_exists(public_path($activity->thumbnail_image))) {
+            // Delete old thumbnail if exists & wasn't just removed
+            if ($activity->thumbnail_image && file_exists(public_path($activity->thumbnail_image)) && !isset($validated['thumbnail_image'])) {
                 unlink(public_path($activity->thumbnail_image));
             }
 
@@ -178,9 +216,10 @@ class ActivityController extends Controller
             $validated['thumbnail_image'] = 'uploads/activity/' . $thumbnailName;
         }
 
+        // Handle file uploads (Banner)
         if ($request->hasFile('banner_image')) {
-            // Delete old banner if exists
-            if ($activity->banner_image && file_exists(public_path($activity->banner_image))) {
+            // Delete old banner if exists & wasn't just removed
+            if ($activity->banner_image && file_exists(public_path($activity->banner_image)) && !isset($validated['banner_image'])) {
                 unlink(public_path($activity->banner_image));
             }
 
@@ -190,10 +229,11 @@ class ActivityController extends Controller
             $validated['banner_image'] = 'uploads/activity/' . $bannerName;
         }
 
+        // Handle file uploads (Sponsor Logo)
         if ($request->hasFile('sponsor_logo')) {
-            // Delete old banner if exists
-            if ($activity->banner_image && file_exists(public_path($activity->banner_image))) {
-                unlink(public_path($activity->banner_image));
+            // Delete old logo if exists & wasn't just removed
+            if ($activity->sponsor_logo && file_exists(public_path($activity->sponsor_logo)) && !isset($validated['sponsor_logo'])) {
+                unlink(public_path($activity->sponsor_logo));
             }
 
             $bannerName = time() . '_' . $request->file('sponsor_logo')->getClientOriginalName();
@@ -202,17 +242,8 @@ class ActivityController extends Controller
             $validated['sponsor_logo'] = 'uploads/activity/' . $bannerName;
         }
 
-        // ✅ Handle gallery images (delete old + upload new)
+        // Handle gallery images (Append new ones)
         if ($request->hasFile('images')) {
-            // Delete old images from DB + filesystem
-            foreach ($activity->images as $oldImage) {
-                if (file_exists(public_path($oldImage->file_name))) {
-                    unlink(public_path($oldImage->file_name));
-                }
-                $oldImage->delete();
-            }
-
-            // Save new gallery images
             foreach ($request->file('images') as $image) {
                 $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
                 $image->move(public_path('uploads/gallery'), $imageName);

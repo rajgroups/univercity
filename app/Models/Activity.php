@@ -51,6 +51,9 @@ class Activity extends Model
         'max_participants',
         'entry_fee',
         'rules',
+        'rules',
+        'is_free',
+        'unlimited_spots',
         'highlights' // if stored as JSON
     ];
     /**
@@ -64,6 +67,8 @@ class Activity extends Model
         'registration_deadline' => 'datetime',
         'highlights' => 'array', // if storing as JSON
         'entry_fee' => 'decimal:2',
+        'is_free' => 'boolean',
+        'unlimited_spots' => 'boolean',
     ];
 
     /**

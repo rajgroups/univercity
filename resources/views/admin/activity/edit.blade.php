@@ -149,7 +149,11 @@
                                                 <img src="{{ asset($activity->sponsor_logo) }}" class="img-thumbnail"
                                                     width="100">
                                                 <a href="{{ asset($activity->sponsor_logo) }}" target="_blank"
-                                                    class="ms-2">View Current</a>
+                                                    class="ms-2">View</a>
+                                                <div class="form-check d-inline-block ms-3">
+                                                    <input class="form-check-input" type="checkbox" name="remove_sponsor_logo" value="1" id="remove_sponsor_logo">
+                                                    <label class="form-check-label text-danger" for="remove_sponsor_logo">Remove</label>
+                                                </div>
                                             </div>
                                         @endif
                                     </div>
@@ -224,7 +228,11 @@
                                                 <img src="{{ asset($activity->thumbnail_image) }}" class="img-thumbnail"
                                                     width="100">
                                                 <a href="{{ asset($activity->thumbnail_image) }}" target="_blank"
-                                                    class="ms-2">View Current</a>
+                                                    class="ms-2">View</a>
+                                                <div class="form-check d-inline-block ms-3">
+                                                    <input class="form-check-input" type="checkbox" name="remove_thumbnail_image" value="1" id="remove_thumbnail_image">
+                                                    <label class="form-check-label text-danger" for="remove_thumbnail_image">Remove</label>
+                                                </div>
                                             </div>
                                         @endif
                                     </div>
@@ -244,7 +252,11 @@
                                                 <img src="{{ asset($activity->banner_image) }}" class="img-thumbnail"
                                                     width="200">
                                                 <a href="{{ asset($activity->banner_image) }}" target="_blank"
-                                                    class="ms-2">View Current</a>
+                                                    class="ms-2">View</a>
+                                                <div class="form-check d-inline-block ms-3">
+                                                    <input class="form-check-input" type="checkbox" name="remove_banner_image" value="1" id="remove_banner_image">
+                                                    <label class="form-check-label text-danger" for="remove_banner_image">Remove</label>
+                                                </div>
                                             </div>
                                         @endif
                                     </div>
@@ -334,6 +346,16 @@
                                 </div>
                             </div>
 
+                                    <div class="col-sm-6 col-12">
+                                        <div class="mb-3">
+                                            <div class="form-check form-switch mt-4">
+                                                <input class="form-check-input" type="checkbox" role="switch" id="is_free" name="is_free" value="1" {{ old('is_free', $activity->is_free) ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="is_free">Free Event (No Entry Fee)</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
                             <!-- Competition Specific Fields -->
                             <div id="competition-fields"
                                 class="{{ old('type', $activity->type) == '2' ? '' : 'd-none' }}">
@@ -349,6 +371,10 @@
                                             @error('max_participants')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
+                                        </div>
+                                        <div class="form-check form-switch mt-2">
+                                            <input class="form-check-input" type="checkbox" role="switch" id="unlimited_spots" name="unlimited_spots" value="1" {{ old('unlimited_spots', $activity->unlimited_spots) ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="unlimited_spots">Unlimited Spots</label>
                                         </div>
                                     </div>
                                     <div class="col-sm-6 col-12">
@@ -436,6 +462,23 @@
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                     <small class="form-text text-muted">Recommended: 1200×400px (Max 3MB)</small>
+                                    @if($activity->images && $activity->images->count() > 0)
+                                        <div class="row mt-2">
+                                            @foreach($activity->images as $image)
+                                                <div class="col-md-3 col-sm-4 col-6 mb-2">
+                                                    <div class="card p-2">
+                                                        <img src="{{ asset($image->file_name) }}" class="img-fluid mb-2" style="height: 100px; object-fit: cover;">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="remove_gallery_images[]" value="{{ $image->id }}" id="remove_img_{{ $image->id }}">
+                                                            <label class="form-check-label text-danger" for="remove_img_{{ $image->id }}">
+                                                                Remove
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    @endif
                                 </div>
                             </div>
 

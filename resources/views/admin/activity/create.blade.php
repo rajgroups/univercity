@@ -280,8 +280,17 @@
                                 </div>
                             </div>
 
-                            <!-- Competition Specific Fields -->
-                            <div id="competition-fields" class="{{ old('type') == '2' ? '' : 'd-none' }}">
+                                    <div class="col-sm-6 col-12">
+                                        <div class="mb-3">
+                                            <div class="form-check form-switch mt-4">
+                                                <input class="form-check-input" type="checkbox" role="switch" id="is_free" name="is_free" value="1" {{ old('is_free') ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="is_free">Free Event (No Entry Fee)</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div id="competition-fields" class="{{ old('type') == '2' ? '' : 'd-none' }}">
                                 <div class="row">
                                     <div class="col-sm-6 col-12">
                                         <div class="mb-3">
@@ -291,6 +300,10 @@
                                             @error('max_participants')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
+                                        </div>
+                                        <div class="form-check form-switch mt-2">
+                                            <input class="form-check-input" type="checkbox" role="switch" id="unlimited_spots" name="unlimited_spots" value="1" {{ old('unlimited_spots') ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="unlimited_spots">Unlimited Spots</label>
                                         </div>
                                     </div>
                                     <div class="col-sm-6 col-12">

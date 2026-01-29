@@ -226,15 +226,27 @@
                         </span>
                         
                         <span class="event-badge text-white" style="background: rgba(255,255,255,0.15); backdrop-filter: blur(4px);">
-                            <i class="fas fa-users me-2"></i> {{ $event->max_participants ?? 'Unlimited' }} Spots
+                            <i class="fas fa-users me-2"></i> {{ $event->unlimited_spots ? 'Unlimited' : ($event->max_participants ?? 'Unlimited') }} Spots
                         </span>
                     </div>
 
                     <!-- Title & Subtitle -->
                     <h1 class="display-4 fw-bold text-white mb-2" style="text-shadow: 0 2px 4px rgba(0,0,0,0.3);">{{ $event->title }}</h1>
+                    @if($event->short_description)
+                         <p class="lead text-white opacity-90 mb-3" style="font-size: 1.1rem; max-width: 800px;">{{ $event->short_description }}</p>
+                    @endif
                     @if($event->subtitle)
                         <h4 class="h5 text-white opacity-75 mb-4 fw-normal" style="max-width: 800px; line-height: 1.6;">{{ $event->subtitle }}</h4>
                     @endif
+                    
+                    <!-- Social Share -->
+                    <div class="mb-4">
+                        <span class="text-white me-2">Share:</span>
+                        <a href="https://www.facebook.com/sharer/sharer.php?u={{ url()->current() }}" target="_blank" class="btn btn-sm btn-outline-light rounded-circle me-1"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://twitter.com/intent/tweet?url={{ url()->current() }}&text={{ urlencode($event->title) }}" target="_blank" class="btn btn-sm btn-outline-light rounded-circle me-1"><i class="fab fa-twitter"></i></a>
+                        <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ url()->current() }}&title={{ urlencode($event->title) }}" target="_blank" class="btn btn-sm btn-outline-light rounded-circle me-1"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="https://api.whatsapp.com/send?text={{ urlencode($event->title . ' ' . url()->current()) }}" target="_blank" class="btn btn-sm btn-outline-light rounded-circle"><i class="fab fa-whatsapp"></i></a>
+                    </div>
 
                     <!-- Quick Info Glass Panel -->
                     <div class="glass-panel">
@@ -399,7 +411,7 @@
                                                 d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z" />
                                         </svg>
                                         <div>
-                                            <h6 class="mb-1">Event Type</h6>
+                                            <h6 class="mb-1">Activity Type</h6>
                                             <p class="mb-0">
                                                 @if ($event->type == 1)
                                                     Event
@@ -529,12 +541,18 @@
                             <div class="card-body">
                                 <h3 class="fw-bold mb-4">Competition Rules</h3>
                                 <ul class="list-group list-group-flush">
-                                    @foreach (json_decode($event->rules, true) as $rule)
-                                        <li class="list-group-item d-flex">
-                                            <span class="badge bg-primary me-3">{{ $loop->iteration }}</span>
-                                            {{ $rule }}
+                                    @if(is_array($rules))
+                                        @foreach ($rules as $rule)
+                                            <li class="list-group-item d-flex">
+                                                <span class="badge bg-primary me-3">{{ $loop->iteration }}</span>
+                                                {{ $rule }}
+                                            </li>
+                                        @endforeach
+                                    @else
+                                        <li class="list-group-item">
+                                            {!! nl2br(e($rules)) !!}
                                         </li>
-                                    @endforeach
+                                    @endif
                                 </ul>
                             </div>
                         </div>
@@ -584,14 +602,39 @@
                                     </strong>
                                 </div>
 
-                                <div class="d-flex justify-content-between">
-                                    <span
-                                        class="event-badge text-white {{ $event->entry_fee > 0 ? 'bg-success' : 'bg-warning' }}">
-                                        <i class="fas {{ $event->entry_fee > 0 ? 'fa-ticket-alt' : 'fa-gift' }} me-2"></i>
-                                        {{ $event->entry_fee > 0 ? 'Paid: ₹' . number_format($event->entry_fee, 2) : 'Free' }}
-                                    </span>
+                                    <div class="d-flex justify-content-between">
+                                        <span class="event-badge text-white {{ $event->entry_fee > 0 ? 'bg-success' : 'bg-warning' }}">
+                                            <i class="fas {{ $event->entry_fee > 0 ? 'fa-ticket-alt' : 'fa-gift' }} me-2"></i>
+                                            {{ $event->entry_fee > 0 ? 'Paid: ₹' . number_format($event->entry_fee, 2) : 'Free' }}
+                                        </span>
+                                        <span class="event-badge text-white bg-info">
+                                            <i class="fas fa-users me-2"></i> 
+                                            {{ $event->unlimited_spots ? 'Unlimited' : ($event->max_participants ?? 'Unlimited') }} Spots
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
+
+                            <!-- Newsletter Subscription -->
+                            <div class="card mb-4 bg-light">
+                                <div class="card-body">
+                                    <h5 class="fw-bold mb-3"><i class="bi bi-envelope-paper me-2"></i>Newsletter</h5>
+                                    <p class="small text-muted mb-3">Subscribe to get latest updates about events and competitions.</p>
+                                    <form action="{{ route('web.enquiry') }}" method="POST">
+                                        @csrf
+                                        <input type="hidden" name="type" value="10"> {{-- 10 for Newsletter --}}
+                                        <input type="hidden" name="name" value="Subscriber">
+                                        <input type="hidden" name="mobile" value="0000000000">
+                                        <input type="hidden" name="message" value="Newsletter Subscription from Event Page: {{ $event->title }}">
+                                        
+                                        <div class="input-group mb-3">
+                                            <input type="email" class="form-control" name="email" placeholder="Your Email Address" required>
+                                            <button class="btn btn-primary" type="submit">Subscribe</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+
                             @if ($event->organizer || $event->organizer_description || $event->organizer_logo)
                                 <!-- Organizer Info -->
                                 <div class="card mb-4">
