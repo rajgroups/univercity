@@ -151,6 +151,24 @@
         .blog-card:hover .card-img img {
             transform: scale(1.1); /* Smooth zoom effect */
         }
+        /* Vertical Marquee Animation */
+        .news-marquee-container {
+            height: 450px;
+            overflow-y: auto; /* Allow manual scrolling */
+            position: relative;
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none;  /* IE 10+ */
+        }
+        
+        .news-marquee-container::-webkit-scrollbar { 
+            width: 0;
+            height: 0;
+            display: none; /* Chrome/Safari/Webkit */
+        }
+
+        .news-marquee-content {
+            /* No CSS animation needed - handled by JS */
+        }
     </style> <!-- About Section Start -->
 
     @include('layouts.web.partition.slider')
@@ -170,9 +188,44 @@
                                                 alt="" srcset="" width="50px"> <span
                                                 class="color-primary">Latest News</span> Feed</h3>
                                     </div>
-                                    <div class="post-inner">
-                                        <ul style="list-style: none">
+                                    <div class="post-inner news-marquee-container">
+                                        <ul class="news-marquee-content" style="list-style: none">
                                             {{-- @dd($blogs) --}}
+                                            @foreach ($blogs as $blog)
+                                                <li>
+                                                    <div class="post">
+                                                        <div class="post-date">
+                                                            <p>{{ \Carbon\Carbon::parse($blog->created_at)->format('d') }}
+                                                            </p>
+                                                            <span>{{ \Carbon\Carbon::parse($blog->created_at)->format('F') }}</span>
+                                                        </div>
+                                                        @php
+                                                            $typeSlug = match($blog->type) {
+                                                                1 => 'blog',
+                                                                2 => 'news',
+                                                                3 => 'collaboration',
+                                                                4 => 'training',
+                                                                5 => 'research',
+                                                                6 => 'case-study',
+                                                                7 => 'resource',
+                                                                default => 'blog',
+                                                            };
+                                                        @endphp
+                                                        <div class="file-box">
+                                                            <i class="far fa-folder-open"></i>
+                                                            <a href="{{ route('web.blog.show', [$typeSlug, $blog->slug]) }}" class="d-inline-block">
+                                                                <p class="mb-0">{{ $blog->title ?? null }}</p>
+                                                            </a>
+                                                        </div>
+                                                        <h5 class="text-light-gray mt-2">
+                                                            <a href="{{ route('web.blog.show', [$typeSlug, $blog->slug]) }}">
+                                                                {!! Str::words(strip_tags($blog->short_description), 12, '...') !!}
+                                                            </a>
+                                                        </h5>
+                                                    </div>
+                                                </li>
+                                            @endforeach
+                                            {{-- Duplicate for seamless scrolling --}}
                                             @foreach ($blogs as $blog)
                                                 <li>
                                                     <div class="post">
@@ -224,7 +277,7 @@
                             </div>
                             <h2 class="fw-bold mb-3">{{ $settings->about_title ?? null }}</h2>
                         </div>
-                        <p class="mb-36">{!! $settings->about_description ?? null !!}</p>
+                        <p class="mb-36" style="text-align: justify;">{!! $settings->about_description ?? null !!}</p>
                         <div class="d-flex align-items-center gap-24 mb-36">
                             <div class="d-flex align-items-center gap-16"> <img
                                     src="{{ asset('resource/web/assets/media/vector/unique-course-vec.png') }}"
@@ -289,6 +342,82 @@
             </div>
         </div>
     </section> <!-- How We Operate Section End -->
+     <!-- Upcoming Projects -->
+    <div class="blog-sec mt-10 ai-background-section">
+        <div class="container-fluid">
+            <div class="heading mb-10 text-start">
+                <div class="text-white">{{ $settings->upcoming_project_title ?? null }}</div>
+                <h3 class="fw-bold text-white mt-2 mb-2">{!! $settings->upcoming_project_main_sub_title ?? null !!}</h3>
+                <p class="text-white">{{ $settings->upcoming_final_title ?? null }}</p>
+            </div> <!-- Swiper -->
+            <div class="row align-items-center">
+                <div class="col-md-12 col-lg-4">
+                    <div class="wow zoomIn animated mt-5 mb-5" data-wow-delay="590ms">
+                        <div class="heading text-start justify-content-start mb-8">
+                            <div class="tagblock mb-16 mt-1 mb-4"> <img
+                                    src="{{ asset('resource/web/assets/media/hero/buld-vec.png') }}" class="bulb-vec"
+                                    alt="">
+                                <p class="black">Upcoming Projects</p>
+                            </div>
+                            <h3 class="fw-bold text-white">{!! $settings->upcoming_secondary_title ?? null !!}</h3>
+                        </div>
+                        <p class="text-white">{{ $settings->upcoming_secondary_desc ?? null }}</p>
+                    </div>
+                </div>
+                <div class="col-md-12 col-lg-8">
+                    @if ($upcomingProjects->isEmpty())
+                        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                            <strong>No upcoming projects found.</strong> Please check back later.
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                aria-label="Close"></button>
+                        </div>
+                    @else
+                        <div class="swiper upcomingproject">
+                            <div class="swiper-wrapper">
+                                @foreach ($upcomingProjects as $project)
+                                    @if (!$project->category)
+                                        @continue
+                                    @endif
+                                    <div class="swiper-slide">
+                                        <div class="blog-card">
+                                            {{-- {{ route('project.details', $project->slug) }} --}}
+                                            <a href="{{ route('web.project.show', [$project->category?->slug ?? 'uncategorized', $project->slug]) }}"
+                                                class="card-img">
+                                                <img src="{{ asset($project->thumbnail_image) }}" alt="{{ $project->title }}">
+                                                <span class="date-block">
+                                                    <span
+                                                        class="h6 fw-400 light-black">{{ \Carbon\Carbon::parse($project->created_at)->format('d') }}</span>
+                                                    <span
+                                                        class="h6 fw-400 light-black">{{ \Carbon\Carbon::parse($project->created_at)->format('M') }}</span>
+                                                </span>
+                                            </a>
+                                            <div class="card-content bg-white">
+                                                {{-- <div class="d-flex align-items-center gap-8 mb-20">
+                                                <img src="{{ asset('upload/project/'.$project->image) }}" class="card-user" alt="">
+                                                <p>By Admin</p>
+                                            </div> --}}
+                                                <a href="{{ route('web.project.show', [$project->category?->slug ?? 'uncategorized', $project->slug]) }}"
+                                                    class="h6 fw-500 mb-8">{{ $project->title }}</a>
+                                                <p class="light-gray mb-24">
+                                                    {{ \Illuminate\Support\Str::limit(strip_tags($project->description), 100) }}
+                                                </p>
+                                                <a href="{{ route('web.project.show', [$project->category?->slug ?? 'uncategorized', $project->slug]) }}"
+                                                    class="card-btn"> Read More</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+
+                            <!-- Pagination -->
+                            <div class="swiper-pagination"></div>
+                        </div>
+                    @endif
+
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="blog-sec mt-80 mb-5">
         <div class="container-fluid">
             <div class="heading mb-10 text-start">
@@ -412,82 +541,7 @@
                 transform: translateY(20px);
             }
         }
-    </style> <!-- Upcoming Projects -->
-    <div class="blog-sec mt-10 ai-background-section">
-        <div class="container-fluid">
-            <div class="heading mb-10 text-start">
-                <div class="text-white">{{ $settings->upcoming_project_title ?? null }}</div>
-                <h3 class="fw-bold text-white mt-2 mb-2">{!! $settings->upcoming_project_main_sub_title ?? null !!}</h3>
-                <p class="text-white">{{ $settings->upcoming_final_title ?? null }}</p>
-            </div> <!-- Swiper -->
-            <div class="row align-items-center">
-                <div class="col-md-12 col-lg-4">
-                    <div class="wow zoomIn animated mt-5 mb-5" data-wow-delay="590ms">
-                        <div class="heading text-start justify-content-start mb-8">
-                            <div class="tagblock mb-16 mt-1 mb-4"> <img
-                                    src="{{ asset('resource/web/assets/media/hero/buld-vec.png') }}" class="bulb-vec"
-                                    alt="">
-                                <p class="black">Upcoming Projects</p>
-                            </div>
-                            <h3 class="fw-bold text-white">{!! $settings->upcoming_secondary_title ?? null !!}</h3>
-                        </div>
-                        <p class="text-white">{{ $settings->upcoming_secondary_desc ?? null }}</p>
-                    </div>
-                </div>
-                <div class="col-md-12 col-lg-8">
-                    @if ($upcomingProjects->isEmpty())
-                        <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                            <strong>No upcoming projects found.</strong> Please check back later.
-                            <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                aria-label="Close"></button>
-                        </div>
-                    @else
-                        <div class="swiper upcomingproject">
-                            <div class="swiper-wrapper">
-                                @foreach ($upcomingProjects as $project)
-                                    @if (!$project->category)
-                                        @continue
-                                    @endif
-                                    <div class="swiper-slide">
-                                        <div class="blog-card">
-                                            {{-- {{ route('project.details', $project->slug) }} --}}
-                                            <a href="{{ route('web.project.show', [$project->category?->slug ?? 'uncategorized', $project->slug]) }}"
-                                                class="card-img">
-                                                <img src="{{ asset($project->thumbnail_image) }}" alt="{{ $project->title }}">
-                                                <span class="date-block">
-                                                    <span
-                                                        class="h6 fw-400 light-black">{{ \Carbon\Carbon::parse($project->created_at)->format('d') }}</span>
-                                                    <span
-                                                        class="h6 fw-400 light-black">{{ \Carbon\Carbon::parse($project->created_at)->format('M') }}</span>
-                                                </span>
-                                            </a>
-                                            <div class="card-content bg-white">
-                                                {{-- <div class="d-flex align-items-center gap-8 mb-20">
-                                                <img src="{{ asset('upload/project/'.$project->image) }}" class="card-user" alt="">
-                                                <p>By Admin</p>
-                                            </div> --}}
-                                                <a href="{{ route('web.project.show', [$project->category?->slug ?? 'uncategorized', $project->slug]) }}"
-                                                    class="h6 fw-500 mb-8">{{ $project->title }}</a>
-                                                <p class="light-gray mb-24">
-                                                    {{ \Illuminate\Support\Str::limit(strip_tags($project->description), 100) }}
-                                                </p>
-                                                <a href="{{ route('web.project.show', [$project->category?->slug ?? 'uncategorized', $project->slug]) }}"
-                                                    class="card-btn"> Read More</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endforeach
-                            </div>
-
-                            <!-- Pagination -->
-                            <div class="swiper-pagination"></div>
-                        </div>
-                    @endif
-
-                </div>
-            </div>
-        </div>
-    </div>
+    </style>
     <!-- Our Programmes -->
     <section class="out-team-sec mt-80 mb-120 wow fadeInUp animated" data-wow-delay="540ms"
         style="visibility: visible; animation-delay: 540ms; animation-name: fadeInUp;">
@@ -1397,6 +1451,52 @@
         </style>
     @endif
     </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const container = document.querySelector('.news-marquee-container');
+            const speed = 1; // Pixels per interval - "Light Fast"
+            const intervalTime = 30; // Milliseconds
+            let scrollInterval;
+            let isHovered = false;
 
+            function startScrolling() {
+                if (scrollInterval) clearInterval(scrollInterval);
+                
+                scrollInterval = setInterval(() => {
+                    if (!isHovered) {
+                        container.scrollTop += speed;
+                        
+                        // Check if we've scrolled halfway (assuming duplication)
+                        // Using scrollHeight / 2 is approximate if content is exactly duplicated.
+                        // A more robust check: reset when near bottom
+                        if (container.scrollTop >= (container.scrollHeight / 2)) {
+                            // Reset to 0 smoothly? No, jump to 0. 
+                            // Since content is duplicated, 0 should look identical to scrollHeight/2
+                            container.scrollTop = 0;
+                        }
+                    }
+                }, intervalTime);
+            }
+
+            // Start automatically
+            startScrolling();
+
+            // Pause on hover
+            container.addEventListener('mouseenter', () => {
+                isHovered = true; 
+            });
+
+            // Resume on mouse leave
+            container.addEventListener('mouseleave', () => {
+                isHovered = false;
+            });
+            
+            // Optional: Detect manual scroll interaction if we want to get fancy,
+            // but the simplified hover-pause logic handles the "manual scroll" requirement:
+            // When user hovers, it stops. They can then wheel-scroll. 
+            // When they leave, it resumes from that spot.
+        });
+    </script>
     <!-- content @e -->
 @endsection

@@ -123,10 +123,10 @@
 									</ul>
 								</li>	
 								<li class="submenu">
-									<a href="javascript:void(0);" class=""><i class="ti ti-device-desktop fs-16 me-2"></i><span>Announcement</span><span class="menu-arrow"></span></a>
+									<a href="javascript:void(0);" class=""><i class="ti ti-device-desktop fs-16 me-2"></i><span>Scheme and Program</span><span class="menu-arrow"></span></a>
 									<ul style="display: none;">
-										<li><a href="{{ route('admin.announcement.index') }}">Announcement List</a></li>
-										<li><a href="{{ route('admin.announcement.create') }}">Add Announcement</a></li>
+										<li><a href="{{ route('admin.announcement.index') }}">List</a></li>
+										<li><a href="{{ route('admin.announcement.create') }}">Add</a></li>
 									</ul>
 								</li>
 								<li class="submenu">
