@@ -305,7 +305,7 @@
                 <article class="blog-card">
                     <div class="blog-card-img-wrapper">
                         @php
-                            $typeText = match($blog->type) {
+                            $typeText = match((int)$blog->type) {
                                 1 => 'CSR Initiatives',
                                 2 => 'News',
                                 3 => 'Collaboration',
@@ -316,7 +316,7 @@
                                 8 => 'CSR Initiatives',
                                 default => 'Blog',
                             };
-                            $typeSlug = match($blog->type) {
+                            $typeSlug = match((int)$blog->type) {
                                 1 => 'CSR Initiatives',
                                 2 => 'news',
                                 // 3 => 'collaboration',
