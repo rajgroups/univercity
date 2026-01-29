@@ -106,6 +106,14 @@ class Activity extends Model
     }
 
     /**
+     * Get is_competition attribute.
+     */
+    public function getIsCompetitionAttribute()
+    {
+        return $this->type === self::TYPE_COMPETITION;
+    }
+
+    /**
      * Get the status as a readable string.
      */
     public function getStatusTextAttribute()
