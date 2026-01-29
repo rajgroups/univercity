@@ -436,61 +436,48 @@
                     </div>
 
                     <!-- Sponsor Details -->
-@if($event->sponsor_name || $event->sponsor_details || $event->sponsor_logo)
-<div class="card mb-4">
-    <div class="card-body">
-        <h3 class="fw-bold mb-4">Sponsor Details</h3>
-        <div class="row">
-            <div class="col-md-6">
-                @if($event->sponsor_name)
-                <div class="event-detail-item">
-                    <svg class="event-detail-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#6c757d">
-                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.31-8.86c-1.77-.45-2.34-.94-2.34-1.67 0-.84.79-1.43 2.1-1.43 1.38 0 1.9.66 1.94 1.64h1.71c-.05-1.34-.87-2.57-2.49-2.97V5H10.9v1.69c-1.51.32-2.72 1.3-2.72 2.81 0 1.79 1.49 2.69 3.66 3.21 1.95.46 2.34 1.24 2.34 1.9 0 .53-.39 1.39-2.1 1.39-1.6 0-2.23-.72-2.32-1.64H8.04c.1 1.7 1.36 2.66 2.86 2.97V19h2.34v-1.67c1.52-.29 2.72-1.16 2.73-2.77-.01-2.2-1.9-2.96-3.66-3.42z"/>
-                    </svg>
-                    <div>
-                        <h6 class="mb-1">Sponsor Name</h6>
-                        <p class="mb-0">{{ $event->sponsor_name }}</p>
-                    </div>
-                </div>
-                @endif
-            </div>
+                    <!-- Sponsor Details -->
+                    @php
+                        $sponsors = collect($event->sponsors ?? []);
+                        // Fallback for legacy single sponsor
+                        if ($sponsors->isEmpty() && ($event->sponsor_name || $event->sponsor_details || $event->sponsor_logo)) {
+                            $sponsors->push([
+                                'name' => $event->sponsor_name,
+                                'details' => $event->sponsor_details,
+                                'logo' => $event->sponsor_logo
+                            ]);
+                        }
+                    @endphp
 
-            <div class="col-md-6">
-                @if($event->sponsor_details)
-                <div class="event-detail-item">
-                    <svg class="event-detail-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#6c757d">
-                        <path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-7 9h-2V5h2v6zm0 4h-2v-2h2v2z"/>
-                    </svg>
-                    <div>
-                        <h6 class="mb-1">Sponsor Details</h6>
-                        <p class="mb-0">{{ $event->sponsor_details }}</p>
-                    </div>
-                </div>
-                @endif
-            </div>
-        </div>
-
-        @if($event->sponsor_logo)
-        <div class="row mt-3">
-            <div class="col-12">
-                <div class="event-detail-item">
-                    <svg class="event-detail-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#6c757d">
-                        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zm-5-7l-3 3.72L9 13l-3 4h12l-4-5z"/>
-                    </svg>
-                    <div>
-                        <h6 class="mb-3">Sponsor Logo</h6>
-                        <div class="sponsor-logo-container">
-                            <img src="{{ asset($event->sponsor_logo) }}" alt="{{ $event->sponsor_name }} Logo"
-                                 class="sponsor-logo img-fluid rounded" style="max-height: 150px; max-width: 300px;">
+                    @if($sponsors->isNotEmpty())
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h3 class="fw-bold mb-4">Sponsors</h3>
+                            <div class="row g-4">
+                                @foreach($sponsors as $sponsor)
+                                <div class="col-md-6 col-lg-4">
+                                    <div class="border rounded p-3 h-100 bg-light">
+                                        @if(!empty($sponsor['logo']))
+                                        <div class="text-center mb-3 sponsor-logo-container bg-white rounded p-2">
+                                            <img src="{{ asset($sponsor['logo']) }}" alt="{{ $sponsor['name'] ?? 'Sponsor' }}" 
+                                                 class="img-fluid" style="max-height: 80px; object-fit: contain;">
+                                        </div>
+                                        @endif
+                                        
+                                        @if(!empty($sponsor['name']))
+                                        <h6 class="fw-bold text-center text-dark mb-1">{{ $sponsor['name'] }}</h6>
+                                        @endif
+                                        
+                                        @if(!empty($sponsor['details']))
+                                        <p class="small text-muted text-center mb-0">{{ $sponsor['details'] }}</p>
+                                        @endif
+                                    </div>
+                                </div>
+                                @endforeach
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-        @endif
-    </div>
-</div>
-@endif
+                    @endif
 
                     <div class="card mb-4">
                         <div class="card-body">

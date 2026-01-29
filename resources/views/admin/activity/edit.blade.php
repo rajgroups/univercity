@@ -101,64 +101,43 @@
                                 @enderror
                             </div>
 
-                            <!-- Sponsor Information -->
-                            <div class="row">
-                                <div class="col-12">
-                                    <h6 class="mb-3">Sponsor Information</h6>
-                                </div>
+    <!-- Sponsor Information Repeater -->
+    <div class="col-12">
+        <h6 class="mb-3">Sponsors</h6>
+        <div id="sponsor-repeater"></div>
+        <button type="button" class="btn btn-outline-secondary btn-sm mb-3" id="add-sponsor-btn">
+            <i class="ti ti-plus"></i> Add Sponsor
+        </button>
+    </div>
 
-                                <div class="col-sm-6 col-12">
-                                    <div class="mb-3">
-                                        <label class="form-label">Sponsor Name</label>
-                                        <input type="text"
-                                            class="form-control @error('sponsor_name') is-invalid @enderror"
-                                            name="sponsor_name" value="{{ old('sponsor_name', $activity->sponsor_name) }}"
-                                            placeholder="Enter sponsor name">
-                                        @error('sponsor_name')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div>
-
-                                <div class="col-sm-6 col-12">
-                                    <div class="mb-3">
-                                        <label class="form-label">Sponsor Details</label>
-                                        <input type="text"
-                                            class="form-control @error('sponsor_details') is-invalid @enderror"
-                                            name="sponsor_details"
-                                            value="{{ old('sponsor_details', $activity->sponsor_details) }}"
-                                            placeholder="e.g., Gold Sponsor, CSR Partner">
-                                        @error('sponsor_details')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div>
-
-                                <div class="col-sm-6 col-12">
-                                    <div class="mb-3">
-                                        <label class="form-label">Sponsor Logo/Image</label>
-                                        <input type="file"
-                                            class="form-control @error('sponsor_logo') is-invalid @enderror"
-                                            name="sponsor_logo" accept="image/*">
-                                        @error('sponsor_logo')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                        <small class="form-text text-muted">Recommended: 300×150px (Max 1MB)</small>
-                                        @if ($activity->sponsor_logo)
-                                            <div class="mt-2">
-                                                <img src="{{ asset($activity->sponsor_logo) }}" class="img-thumbnail"
-                                                    width="100">
-                                                <a href="{{ asset($activity->sponsor_logo) }}" target="_blank"
-                                                    class="ms-2">View</a>
-                                                <div class="form-check d-inline-block ms-3">
-                                                    <input class="form-check-input" type="checkbox" name="remove_sponsor_logo" value="1" id="remove_sponsor_logo">
-                                                    <label class="form-check-label text-danger" for="remove_sponsor_logo">Remove</label>
-                                                </div>
-                                            </div>
-                                        @endif
-                                    </div>
-                                </div>
-                            </div>
+    <!-- Hidden Template for Sponsor Item -->
+    <template id="sponsor-template">
+        <div class="row sponsor-item border rounded p-3 mb-3 bg-light position-relative">
+            <button type="button" class="btn-close position-absolute top-0 end-0 m-2 remove-sponsor-btn" aria-label="Remove"></button>
+            <div class="col-md-4">
+                <div class="mb-3">
+                    <label class="form-label small">Sponsor Name</label>
+                    <input type="text" class="form-control" name="sponsors[INDEX][name]" placeholder="Enter Name">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="mb-3">
+                    <label class="form-label small">Details</label>
+                    <input type="text" class="form-control" name="sponsors[INDEX][details]" placeholder="e.g. Gold Partner">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="mb-3">
+                    <label class="form-label small">Logo</label>
+                    <input type="file" class="form-control" name="sponsors[INDEX][logo]" accept="image/*">
+                    <div class="existing-logo-container mt-2 d-none">
+                        <img src="" class="img-thumbnail existing-logo-img" width="80">
+                        <input type="hidden" name="sponsors[INDEX][existing_logo]" class="existing-logo-input">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
 
                             <div class="row">
                                 <div class="col-sm-6 col-12">
@@ -546,6 +525,59 @@
             $(document).on('click', '.remove-highlight', function() {
                 $(this).closest('.input-group').remove();
             });
+
+            // Sponsor Repeater Logic
+            let sponsorIndex = 0;
+            const $sponsorRepeater = $('#sponsor-repeater');
+            const $sponsorTemplate = $('#sponsor-template');
+
+            function addSponsor(data = null) {
+                const templateContent = $sponsorTemplate.html();
+                let newItem = templateContent.replace(/INDEX/g, sponsorIndex);
+                const $item = $(newItem);
+
+                if (data) {
+                    $item.find('input[name^="sponsors"][name$="[name]"]').val(data.name);
+                    $item.find('input[name^="sponsors"][name$="[details]"]').val(data.details);
+                    if (data.logo) {
+                        $item.find('.existing-logo-container').removeClass('d-none');
+                        $item.find('.existing-logo-img').attr('src', assetBaseUrl + '/' + data.logo);
+                        $item.find('.existing-logo-input').val(data.logo);
+                    }
+                }
+
+                $sponsorRepeater.append($item);
+                sponsorIndex++;
+            }
+
+            $('#add-sponsor-btn').on('click', function() {
+                addSponsor();
+            });
+
+            $(document).on('click', '.remove-sponsor-btn', function() {
+                $(this).closest('.sponsor-item').remove();
+            });
+
+            // Populate existing sponsors
+            const existingSponsors = @json($activity->sponsors ?? []);
+            const assetBaseUrl = "{{ asset('') }}".replace(/\/$/, ''); // Remove trailing slash
+
+            if (existingSponsors.length > 0) {
+                existingSponsors.forEach(sponsor => addSponsor(sponsor));
+            } else {
+                // If no JSON sponsors, check for legacy single sponsor
+                const legacyName = "{{ $activity->sponsor_name }}";
+                const legacyDetails = "{{ $activity->sponsor_details }}";
+                const legacyLogo = "{{ $activity->sponsor_logo }}";
+
+                if (legacyName || legacyDetails || legacyLogo) {
+                    addSponsor({
+                        name: legacyName,
+                        details: legacyDetails,
+                        logo: legacyLogo
+                    });
+                }
+            }
         });
     </script>
 @endpush

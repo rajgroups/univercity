@@ -54,7 +54,8 @@ class Activity extends Model
         'rules',
         'is_free',
         'unlimited_spots',
-        'highlights' // if stored as JSON
+        'highlights', // if stored as JSON
+        'sponsors', // JSON array of sponsors
     ];
     /**
      * The attributes that should be cast.
@@ -65,10 +66,11 @@ class Activity extends Model
         'start_date' => 'datetime',
         'end_date' => 'datetime',
         'registration_deadline' => 'datetime',
-        'highlights' => 'array', // if storing as JSON
+        'highlights' => 'array',
         'entry_fee' => 'decimal:2',
         'is_free' => 'boolean',
         'unlimited_spots' => 'boolean',
+        'sponsors' => 'array',
     ];
 
     /**

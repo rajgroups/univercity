@@ -93,52 +93,45 @@
                                 @error('short_description')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
-                            </div>
+                          
 
                             <!-- Add this section after the Gallery Images field and before the submit button -->
 
-<!-- Sponsor Information -->
-<div class="row">
+    <!-- Sponsor Information Repeater -->
     <div class="col-12">
-        <h6 class="mb-3">Sponsor Information</h6>
+        <h6 class="mb-3">Sponsors</h6>
+        <div id="sponsor-repeater">
+            <!-- Template for JS -->
+        </div>
+        <button type="button" class="btn btn-outline-secondary btn-sm mb-3" id="add-sponsor-btn">
+            <i class="ti ti-plus"></i> Add Sponsor
+        </button>
     </div>
 
-    <div class="col-sm-6 col-12">
-        <div class="mb-3">
-            <label class="form-label">Sponsor Name</label>
-            <input type="text" class="form-control @error('sponsor_name') is-invalid @enderror"
-                name="sponsor_name" value="{{ old('sponsor_name') }}"
-                placeholder="Enter sponsor name">
-            @error('sponsor_name')
-                <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
+    <!-- Hidden Template for Sponsor Item -->
+    <template id="sponsor-template">
+        <div class="row sponsor-item border rounded p-3 mb-3 bg-light position-relative">
+            <button type="button" class="btn-close position-absolute top-0 end-0 m-2 remove-sponsor-btn" aria-label="Remove"></button>
+            <div class="col-md-4">
+                <div class="mb-3">
+                    <label class="form-label small">Sponsor Name</label>
+                    <input type="text" class="form-control" name="sponsors[INDEX][name]" placeholder="Enter Name">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="mb-3">
+                    <label class="form-label small">Details</label>
+                    <input type="text" class="form-control" name="sponsors[INDEX][details]" placeholder="e.g. Gold Partner">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="mb-3">
+                    <label class="form-label small">Logo</label>
+                    <input type="file" class="form-control" name="sponsors[INDEX][logo]" accept="image/*">
+                </div>
+            </div>
         </div>
-    </div>
-
-    <div class="col-sm-6 col-12">
-        <div class="mb-3">
-            <label class="form-label">Sponsor Details</label>
-            <input type="text" class="form-control @error('sponsor_details') is-invalid @enderror"
-                name="sponsor_details" value="{{ old('sponsor_details') }}"
-                placeholder="e.g., Gold Sponsor, CSR Partner">
-            @error('sponsor_details')
-                <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
-        </div>
-    </div>
-
-    <div class="col-sm-6 col-12">
-        <div class="mb-3">
-            <label class="form-label">Sponsor Logo/Image</label>
-            <input type="file" class="form-control @error('sponsor_logo') is-invalid @enderror"
-                name="sponsor_logo" accept="image/*">
-            @error('sponsor_logo')
-                <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
-            <small class="form-text text-muted">Recommended: 300×150px (Max 1MB)</small>
-        </div>
-    </div>
-</div>
+    </template>
 
 
                             <div class="row">
@@ -448,6 +441,25 @@
             $(document).on('click', '.remove-highlight', function() {
                 $(this).closest('.input-group').remove();
             });
+
+            // Sponsor Repeater Logic
+            let sponsorIndex = 0;
+            const $sponsorRepeater = $('#sponsor-repeater');
+            const $sponsorTemplate = $('#sponsor-template');
+
+            $('#add-sponsor-btn').on('click', function() {
+                const templateContent = $sponsorTemplate.html();
+                const newItem = templateContent.replace(/INDEX/g, sponsorIndex);
+                $sponsorRepeater.append(newItem);
+                sponsorIndex++;
+            });
+
+            $(document).on('click', '.remove-sponsor-btn', function() {
+                $(this).closest('.sponsor-item').remove();
+            });
+
+            // Add one empty sponsor by default if needed (optional)
+            // $('#add-sponsor-btn').click();
         });
     </script>
 @endpush

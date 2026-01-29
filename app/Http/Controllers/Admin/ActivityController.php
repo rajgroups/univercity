@@ -87,13 +87,38 @@ class ActivityController extends Controller
             $validated['banner_image'] = 'uploads/activity/' . $bannerName;
         }
 
-        // Handle banner sponcer image upload
+        // Handle banner sponcer image upload (Legacy/Fallback)
         if ($request->hasFile('sponsor_logo')) {
             $banner = $request->file('sponsor_logo');
             $bannerName = time() . 'sponsor_logo.' . $banner->getClientOriginalExtension();
             $banner->move(public_path('uploads/activity'), $bannerName);
             $validated['sponsor_logo'] = 'uploads/activity/' . $bannerName;
+            $validated['sponsor_name'] = $request->sponsor_name;
+            $validated['sponsor_details'] = $request->sponsor_details;
         }
+
+        // Handle Multiple Sponsors (JSON)
+        $sponsors = [];
+        if ($request->has('sponsors') && is_array($request->sponsors)) {
+            foreach ($request->sponsors as $index => $sponsorData) {
+                $sponsorItem = [
+                    'name' => $sponsorData['name'] ?? null,
+                    'details' => $sponsorData['details'] ?? null,
+                    'logo' => null
+                ];
+
+                // Handle logo upload for this sponsor
+                if ($request->hasFile("sponsors.{$index}.logo")) {
+                    $logo = $request->file("sponsors.{$index}.logo");
+                    $logoName = time() . "_sponsor_{$index}." . $logo->getClientOriginalExtension();
+                    $logo->move(public_path('uploads/activity/sponsors'), $logoName);
+                    $sponsorItem['logo'] = 'uploads/activity/sponsors/' . $logoName;
+                }
+
+                $sponsors[] = $sponsorItem;
+            }
+        }
+        $validated['sponsors'] = $sponsors;
 
         // Create the activity
         $activity = Activity::create($validated);
@@ -229,7 +254,7 @@ class ActivityController extends Controller
             $validated['banner_image'] = 'uploads/activity/' . $bannerName;
         }
 
-        // Handle file uploads (Sponsor Logo)
+        // Handle file uploads (Sponsor Logo - Legacy)
         if ($request->hasFile('sponsor_logo')) {
             // Delete old logo if exists & wasn't just removed
             if ($activity->sponsor_logo && file_exists(public_path($activity->sponsor_logo)) && !isset($validated['sponsor_logo'])) {
@@ -241,6 +266,36 @@ class ActivityController extends Controller
 
             $validated['sponsor_logo'] = 'uploads/activity/' . $bannerName;
         }
+
+        // Handle Multiple Sponsors (Update)
+        $sponsors = $activity->sponsors ?? []; // Existing sponsors
+        $updatedSponsors = [];
+        
+        if ($request->has('sponsors') && is_array($request->sponsors)) {
+            foreach ($request->sponsors as $index => $sponsorData) {
+                $sponsorItem = [
+                    'name' => $sponsorData['name'] ?? null,
+                    'details' => $sponsorData['details'] ?? null,
+                    'logo' => $sponsorData['existing_logo'] ?? null // Keep existing logo by default
+                ];
+
+                // Check for new logo upload
+                if ($request->hasFile("sponsors.{$index}.logo")) {
+                    // Remove old logo if replacing
+                    if (!empty($sponsorItem['logo']) && file_exists(public_path($sponsorItem['logo']))) {
+                        unlink(public_path($sponsorItem['logo']));
+                    }
+
+                    $logo = $request->file("sponsors.{$index}.logo");
+                    $logoName = time() . "_sponsor_{$index}_" . uniqid() . "." . $logo->getClientOriginalExtension();
+                    $logo->move(public_path('uploads/activity/sponsors'), $logoName);
+                    $sponsorItem['logo'] = 'uploads/activity/sponsors/' . $logoName;
+                }
+
+                $updatedSponsors[] = $sponsorItem;
+            }
+        }
+        $validated['sponsors'] = $updatedSponsors;
 
         // Handle gallery images (Append new ones)
         if ($request->hasFile('images')) {
