@@ -21,12 +21,12 @@
 @section('content')
 <style>
     :root {
-        --prog-primary: #6a1b9a;
-        --prog-secondary: #4a148c;
-        --prog-accent: #FFD54F;
-        --prog-light: #faf4ff;
+        --prog-primary: #66bb6a;
+        --prog-secondary: #2e7d32;
+        --prog-accent: #ffeb3b;
+        --prog-light: #f1f8e9;
         --prog-glass: rgba(255, 255, 255, 0.9);
-        --prog-shadow: 0 10px 30px rgba(106, 27, 154, 0.08);
+        --prog-shadow: 0 10px 30px rgba(46, 125, 50, 0.1);
         --transition-soft: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
@@ -51,7 +51,7 @@
     .prog-hero-overlay {
         position: absolute;
         top: 0; left: 0; right: 0; bottom: 0;
-        background: linear-gradient(135deg, rgba(106, 27, 154, 0.9) 0%, rgba(74, 20, 140, 0.4) 100%);
+        background: linear-gradient(135deg, rgba(76, 175, 80, 0.9) 0%, rgba(46, 125, 50, 0.6) 100%);
         z-index: 2;
     }
 
@@ -418,7 +418,7 @@
                         <i class="bi bi-clock"></i>
                         <div class="prog-meta-text">
                             <span>Duration</span>
-                            <strong>Self-Paced / Guided</strong>
+                            <strong>{{ $program->duration ?? 'Self-Paced / Guided' }}</strong>
                         </div>
                     </div>
                 </div>
@@ -457,6 +457,11 @@
                 <div class="prog-card-main" id="overview">
                     <span class="section-label">Program Overview</span>
                     <h2 class="prog-heading-section">About the Program</h2>
+                    @if(!empty($program->short_description))
+                        <div class="mb-4 p-3 bg-light rounded-3 border-start border-4 border-success">
+                            <p class="mb-0 fw-medium text-secondary">{{ $program->short_description }}</p>
+                        </div>
+                    @endif
                     <div class="rich-text-content">
                         {!! $program->description ?? '<p class="text-muted">No description available for this program.</p>' !!}
                     </div>

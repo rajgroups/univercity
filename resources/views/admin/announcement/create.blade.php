@@ -160,9 +160,16 @@
                                 <div class="col-md-6">
                                     <!-- /Editor -->
                                     <div class="mb-3">
-                                        <label for="subtitle" class="form-label">Sub Title</label>
-                                        <input type="text" name="subtitle" id="subtitle" class="form-control @error('subtitle') is-invalid @enderror" value="{{ old('subtitle') }}" placeholder="Enter program sub title" test>
+                                        <label for="subtitle" class="form-label">Sub Title <span class="text-danger">*</span></label>
+                                        <input type="text" name="subtitle" id="subtitle" class="form-control @error('subtitle') is-invalid @enderror" value="{{ old('subtitle') }}" placeholder="Enter program sub title" required>
                                         @error('subtitle')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="duration" class="form-label">Duration</label>
+                                        <input type="text" name="duration" id="duration" class="form-control @error('duration') is-invalid @enderror" value="{{ old('duration') }}" placeholder="e.g. 6 Months / Self-Paced">
+                                        @error('duration')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                                     </div>

@@ -29,9 +29,14 @@ class AppServiceProvider extends ServiceProvider
         Paginator::useBootstrap();
         Schema::defaultStringLength(191);
         // Load the first HomeSetting record
-        $settings = HomeSetting::first();
-        $defaultSettings = Settings::first();
-        // Share it with all views
-        View::share(['settings' => $settings,'defaultSettings'=>$defaultSettings]);
+        // Load the first HomeSetting record
+        try {
+            $settings = HomeSetting::first();
+            $defaultSettings = Settings::first();
+            // Share it with all views
+            View::share(['settings' => $settings,'defaultSettings'=>$defaultSettings]);
+        } catch (\Exception $e) {
+            // Database not available or migration not run
+        }
     }
 }

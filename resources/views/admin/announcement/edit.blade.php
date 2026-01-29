@@ -140,10 +140,16 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="mb-3">
-                                        <label class="form-label">Sub Title</label>
+                                        <label class="form-label">Sub Title <span class="text-danger">*</span></label>
                                         <input type="text" name="subtitle" class="form-control @error('subtitle') is-invalid @enderror"
-                                            value="{{ old('subtitle', $announcement->subtitle) }}">
+                                            value="{{ old('subtitle', $announcement->subtitle) }}" required>
                                         @error('subtitle')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Duration</label>
+                                        <input type="text" name="duration" class="form-control @error('duration') is-invalid @enderror"
+                                            value="{{ old('duration', $announcement->duration) }}" placeholder="e.g. 6 Months / Self-Paced">
+                                        @error('duration')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -201,13 +207,30 @@
 
                             <div class="col-sm-6 col-12">
                                 <div class="mb-3">
-                                    <label class="form-label">Gallery Images </label>
-                                    <input type="file" class="form-control @error('gallery') is-invalid @enderror" name="gallery[]" accept="image/*" multiple>
-                                    @error('gallery')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                    <small class="form-text text-muted">Recommended: 1200×400px (Max 3MB)</small>
-                                </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Gallery Images (Append New)</label>
+                                        <input type="file" class="form-control @error('gallery') is-invalid @enderror" name="gallery[]" accept="image/*" multiple>
+                                        @error('gallery')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                        <small class="form-text text-muted">Recommended: 1200×400px (Max 3MB)</small>
+                                    </div>
+
+                                    @if($announcement->images && $announcement->images->count() > 0)
+                                        <div class="mb-3">
+                                            <label class="form-label d-block">Existing Gallery Images (Check to Delete)</label>
+                                            <div class="d-flex flex-wrap gap-3">
+                                                @foreach($announcement->images as $img)
+                                                    <div class="position-relative border p-1 rounded">
+                                                        <img src="{{ asset($img->file_name) }}" alt="Gallery Image" style="height: 100px; width: auto; object-fit: cover;">
+                                                        <div class="form-check position-absolute top-0 end-0 m-1 bg-white rounded shadow-sm p-1">
+                                                            <input class="form-check-input m-0" type="checkbox" name="delete_images[]" value="{{ $img->id }}" id="del_img_{{ $img->id }}" title="Delete this image">
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                    @endif
                             </div>
 
                             <div class="col-lg-12">

@@ -42,7 +42,7 @@ class AnnouncementController extends Controller
             'title'             => 'required|string',
             'slug'              => 'required|string|unique:announcement,slug',
             'short_description' => 'required|string',
-            'subtitle'          => 'nullable|string',
+            'subtitle'          => 'required|string',
             'image'             => 'required|image|mimes:jpeg,png,jpg,webp|max:2048',
             'banner_image'      => 'required|image|mimes:jpeg,png,jpg,webp|max:2048',
             'gallery.*'         => 'nullable|image|mimes:jpeg,png,jpg,gif|max:3072', // gallery images
@@ -57,6 +57,7 @@ class AnnouncementController extends Controller
                 'regex:/^[^-\n]+ - [^-\n]+$/'
             ],
             'category_id'       => 'nullable|exists:category,id',
+            'duration'          => 'nullable|string|max:191',
         ]);
 
 
@@ -131,6 +132,7 @@ class AnnouncementController extends Controller
         // Update the Announcement
         $request->validate([
             'title'                 => 'required|string|max:255',
+            'subtitle'          => 'required|string',
             'slug'                  => 'required|string|max:255|unique:announcement,slug,' . $announcement->id,
             'type'                  => 'required|in:1,2',
             'status'                => 'required|in:0,1',
@@ -147,6 +149,7 @@ class AnnouncementController extends Controller
                 'regex:/^[^-\n]+ - [^-\n]+$/'
             ],
             'category_id'       => 'nullable|exists:category,id',
+            'duration'          => 'nullable|string|max:191',
         ]);
 
         // Handle image upload
@@ -171,16 +174,21 @@ class AnnouncementController extends Controller
         }
 
         // ✅ Handle gallery images (delete old + upload new)
-        if ($request->hasFile('gallery')) {
-            // Delete old images from DB + filesystem
-            foreach ($announcement->images as $oldImage) {
-                if (file_exists(public_path($oldImage->file_name))) {
-                    unlink(public_path($oldImage->file_name));
+        // ✅ Handle gallery images (delete selected + upload new)
+        if ($request->has('delete_images')) {
+            foreach ($request->delete_images as $imageId) {
+                $imageToDelete = $announcement->images()->find($imageId);
+                if ($imageToDelete) {
+                    if (file_exists(public_path($imageToDelete->file_name))) {
+                        unlink(public_path($imageToDelete->file_name));
+                    }
+                    $imageToDelete->delete();
                 }
-                $oldImage->delete();
             }
+        }
 
-            // Save new gallery images
+        if ($request->hasFile('gallery')) {
+            // Append new gallery images
             foreach ($request->file('gallery') as $image) {
                 $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
                 $image->move(public_path('uploads/gallery'), $imageName);
@@ -200,6 +208,8 @@ class AnnouncementController extends Controller
         $announcement->status           = $request->status;
         $announcement->description      = $request->description;
         $announcement->short_description= $request->short_description;
+        $announcement->subtitle         = $request->subtitle;
+        $announcement->duration         = $request->duration;
         $announcement->category_id      = $request->category_id;
 
         // Save bullet points as JSON

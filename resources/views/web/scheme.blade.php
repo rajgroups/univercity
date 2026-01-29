@@ -548,7 +548,7 @@
                         <i class="bi bi-building"></i>
                         <div class="scheme-meta-text">
                             <span>Department</span>
-                            <strong>{{ $announcement->category?->name ?? 'Government of India' }}</strong>
+                            <strong>{{ $announcement->category?->name ?? 'Policy' }}</strong>
                         </div>
                     </div>
                     <div class="scheme-meta-item">
@@ -594,6 +594,11 @@
                 <div class="scheme-card-main" id="overview">
                     <span class="section-label">Overview</span>
                     <h2 class="scheme-heading-section">About the Scheme</h2>
+                    @if(!empty($announcement->short_description))
+                        <div class="mb-4 p-3 bg-light rounded-3 border-start border-4 border-primary">
+                            <p class="mb-0 fw-medium text-secondary">{{ $announcement->short_description }}</p>
+                        </div>
+                    @endif
                     <div class="rich-text-content">
                         {!! $announcement->description ?? '<p class="text-muted">No description available for this scheme.</p>' !!}
                     </div>
@@ -680,12 +685,12 @@
                                     <img src="{{ asset($similar->image ?? 'assets/images/placeholder.jpg') }}" class="similar-img" alt="{{ $similar->title ?? 'Scheme' }}">
                                     <div class="position-absolute top-0 end-0 m-3">
                                         <span class="badge bg-white text-primary rounded-pill px-3 py-2 shadow-sm small">
-                                            {{ $similar->category?->name ?? 'Government' }}
+                                            {{ $similar->category?->name ?? 'Policy' }}
                                         </span>
                                     </div>
                                 </div>
                                 <div class="similar-body">
-                                    <span class="similar-category">{{ $similar->category?->name ?? 'General' }}</span>
+                                    <span class="similar-category">{{ $similar->category?->name ?? 'Policy' }}</span>
                                     <h4 class="similar-title">{{ $similar->title ?? 'Untitled Scheme' }}</h4>
                                     <p class="text-muted small mb-4 line-clamp-2">
                                         {{ Str::limit(strip_tags($similar->description ?? ''), 100) }}

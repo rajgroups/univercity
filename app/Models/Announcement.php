@@ -24,6 +24,7 @@ class Announcement extends Model
         'banner_image',
         'type',
         'status',
+        'duration',
     ];
 
     // Auto-generate slug from title if not provided

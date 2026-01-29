@@ -98,6 +98,7 @@ class WebController extends Controller
         // Find the program by slug and type (1)
         $program = Announcement::where('slug', $slug)
                     ->where('type', 1)
+                    ->where('status', 1)
                     ->with('category')
                     ->firstOrFail();
 
@@ -115,8 +116,10 @@ class WebController extends Controller
 
     public function scheme($category, $slug){
         // Find the scheme by slug and type (2)
+        // Find the scheme by slug and type (2)
         $announcement = Announcement::where('slug', $slug)
                     ->where('type', 2)
+                    ->where('status', 1)
                     ->with('category')
                     ->firstOrFail();
 
@@ -601,8 +604,8 @@ class WebController extends Controller
 
     public function catalog(Request $request, $mode = null)
     {
-        $projects = Project::query();
-        $announcements = Announcement::query();
+        $projects = Project::query()->where('status', 1);
+        $announcements = Announcement::query()->where('status', 1);
 
         // 1. Base Scope based on mode (or legacy URL fallback)
         if ($mode === 'projects') {
