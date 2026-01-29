@@ -21,12 +21,12 @@
 @section('content')
 <style>
     :root {
-        --scheme-primary: #1565c0;
-        --scheme-secondary: #0d47a1;
-        --scheme-accent: #FFC107;
-        --scheme-light: #f8fbff;
+        --scheme-primary: #66bb6a;
+        --scheme-secondary: #2e7d32;
+        --scheme-accent: #ffeb3b;
+        --scheme-light: #f1f8e9;
         --scheme-glass: rgba(255, 255, 255, 0.9);
-        --scheme-shadow: 0 10px 30px rgba(13, 71, 161, 0.08);
+        --scheme-shadow: 0 10px 30px rgba(46, 125, 50, 0.1);
         --transition-soft: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
@@ -51,7 +51,7 @@
     .scheme-hero-overlay {
         position: absolute;
         top: 0; left: 0; right: 0; bottom: 0;
-        background: linear-gradient(135deg, rgba(21, 101, 192, 0.9) 0%, rgba(13, 71, 161, 0.4) 100%);
+        background: linear-gradient(135deg, rgba(76, 175, 80, 0.9) 0%, rgba(46, 125, 50, 0.6) 100%);
         z-index: 2;
     }
 
@@ -595,7 +595,7 @@
                     <span class="section-label">Overview</span>
                     <h2 class="scheme-heading-section">About the Scheme</h2>
                     @if(!empty($announcement->short_description))
-                        <div class="mb-4 p-3 bg-light rounded-3 border-start border-4 border-primary">
+                        <div class="mb-4 p-3 bg-light rounded-3 border-start border-4 border-success">
                             <p class="mb-0 fw-medium text-secondary">{{ $announcement->short_description }}</p>
                         </div>
                     @endif
