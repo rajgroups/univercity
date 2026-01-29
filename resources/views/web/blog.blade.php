@@ -1,6 +1,6 @@
 @extends('layouts.web.app')
 @push('meta')
-    <title>Blog - Indian Skill Institute Co-operation (ISICO)</title>
+    <title>CSR Initiatives - Indian Skill Institute Co-operation (ISICO)</title>
     {{-- ... (Your existing meta tags) ... --}}
     <meta name="description" content="Read the latest blogs from the Indian Skill Institute Co-operation (ISICO). Explore insights on education, skill development, entrepreneurship, innovation, and national growth initiatives.">
     <meta name="keywords" content="ISICO blog, Indian Skill Institute, skill development articles, education blogs, entrepreneurship insights, innovation, socio-economic growth, NEP 2020, Skill India, Make in India">
@@ -9,15 +9,15 @@
 
     <link rel="canonical" href="{{ url()->current() }}">
 
-    <meta property="og:title" content="Blog - Indian Skill Institute Co-operation (ISICO)">
-    <meta property="og:description" content="Stay updated with ISICO’s blogs covering education, skill enhancement, entrepreneurship, and India’s socio-economic development.">
+    <meta property="og:title" content="CSR Initiatives - Indian Skill Institute Co-operation (ISICO)">
+    <meta property="og:description" content="Stay updated with ISICO’s CSR Initiatives covering education, skill enhancement, entrepreneurship, and India’s socio-economic development.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ url()->current() }}">
     <meta property="og:image" content="{{ asset('default-blog.jpg') }}">
 
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Blog - Indian Skill Institute Co-operation (ISICO)">
-    <meta name="twitter:description" content="Explore the ISICO blog for articles and insights on skill development, innovation, entrepreneurship, and education in India.">
+    <meta name="twitter:title" content="CSR Initiatives - Indian Skill Institute Co-operation (ISICO)">
+    <meta name="twitter:description" content="Explore the ISICO CSR Initiatives for articles and insights on skill development, innovation, entrepreneurship, and education in India.">
     <meta name="twitter:image" content="{{ asset('default-blog.jpg') }}">
 @endpush
 
@@ -262,13 +262,14 @@
                     <label for="type_desktop" class="form-label-custom">Content Type</label>
                     <select name="type" id="type_desktop" class="form-select form-select-custom">
                         <option value="">All Types</option>
-                        <option value="1" {{ request('type') == '1' ? 'selected' : '' }}>Blog</option>
+                        <option value="1" {{ request('type') == '1' ? 'selected' : '' }}>CSR Initiatives</option>
                         <option value="2" {{ request('type') == '2' ? 'selected' : '' }}>News</option>
-                        <option value="3" {{ request('type') == '3' ? 'selected' : '' }}>Collaboration</option>
+                        {{-- <option value="3" {{ request('type') == '3' ? 'selected' : '' }}>Collaboration</option> --}}
                         <option value="4" {{ request('type') == '4' ? 'selected' : '' }}>Training Model</option>
                         <option value="5" {{ request('type') == '5' ? 'selected' : '' }}>Research and Publication</option>
                         <option value="6" {{ request('type') == '6' ? 'selected' : '' }}>Case Studies</option>
-                        <option value="7" {{ request('type') == '7' ? 'selected' : '' }}>Resource</option>
+                        {{-- <option value="7" {{ request('type') == '7' ? 'selected' : '' }}>Resource</option> --}}
+                        <option value="8" {{ request('type') == '8' ? 'selected' : '' }}>CSR Initiatives</option>
                     </select>
                 </div>
 
@@ -315,13 +316,14 @@
                                 default => 'Blog',
                             };
                             $typeSlug = match($blog->type) {
-                                1 => 'blog',
+                                1 => 'CSR Initiatives',
                                 2 => 'news',
-                                3 => 'collaboration',
+                                // 3 => 'collaboration',
                                 4 => 'training',
                                 5 => 'research',
                                 6 => 'case-study',
-                                7 => 'resource',
+                                // 7 => 'resource',
+                                8 => 'csr-initiatives',
                                 default => 'blog',
                             };
                         @endphp
@@ -374,7 +376,7 @@
 <div class="offcanvas offcanvas-start" tabindex="-1" id="mobileBlogFilterOffcanvas" aria-labelledby="mobileBlogFilterOffcanvasLabel">
     <div class="offcanvas-header border-bottom">
         <h5 class="offcanvas-title" id="mobileBlogFilterOffcanvasLabel">
-            <i class="bi bi-funnel me-2"></i> Filter Blog Posts
+            <i class="bi bi-funnel me-2"></i> Filter CSR Initiatives
         </h5>
         <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>

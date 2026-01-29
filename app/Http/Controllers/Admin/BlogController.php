@@ -175,36 +175,42 @@ class BlogController extends Controller
 
         try {
             // Handle image uploads/removal
-            $imagePath = $blog->image;
+            // Handle image uploads/removal
             if ($request->hasFile('image')) {
-                if ($blog->image && file_exists(public_path('uploads/blogs/'.$blog->image))) {
-                    unlink(public_path('uploads/blogs/'.$blog->image));
+                // Delete old image
+                if ($blog->image && file_exists(public_path($blog->image))) {
+                    @unlink(public_path($blog->image));
+                } else if ($blog->image && file_exists(public_path('uploads/blogs/'.$blog->image))) {
+                     // Fallback check
+                    @unlink(public_path('uploads/blogs/'.$blog->image));
                 }
+
                 $image = $request->file('image');
                 $imageName = 'blog_'.time().'.'.$image->getClientOriginalExtension();
                 $image->move(public_path('uploads/blogs'), $imageName);
-                $imagePath = $imageName;
-            } elseif ($request->remove_image) {
-                if ($blog->image && file_exists(public_path('uploads/blogs/'.$blog->image))) {
-                    unlink(public_path('uploads/blogs/'.$blog->image));
+                $blog->image = 'uploads/blogs/'.$imageName;
+            } elseif ($request->remove_image == 1) {
+                 if ($blog->image && file_exists(public_path($blog->image))) {
+                    @unlink(public_path($blog->image));
                 }
-                $imagePath = null;
+                $blog->image = null;
             }
 
-            $bannerPath = $blog->banner_image;
             if ($request->hasFile('banner_image')) {
-                if ($blog->banner_image && file_exists(public_path('uploads/blogs/'.$blog->banner_image))) {
-                    unlink(public_path('uploads/blogs/'.$blog->banner_image));
+                 // Delete old banner
+                if ($blog->banner_image && file_exists(public_path($blog->banner_image))) {
+                    @unlink(public_path($blog->banner_image));
                 }
+
                 $banner = $request->file('banner_image');
                 $bannerName = 'banner_'.time().'.'.$banner->getClientOriginalExtension();
                 $banner->move(public_path('uploads/blogs'), $bannerName);
-                $bannerPath = $bannerName;
-            } elseif ($request->remove_banner_image) {
-                if ($blog->banner_image && file_exists(public_path('uploads/blogs/'.$blog->banner_image))) {
-                    unlink(public_path('uploads/blogs/'.$blog->banner_image));
+                $blog->banner_image = 'uploads/blogs/'.$bannerName;
+            } elseif ($request->remove_banner_image == 1) {
+                 if ($blog->banner_image && file_exists(public_path($blog->banner_image))) {
+                    @unlink(public_path($blog->banner_image));
                 }
-                $bannerPath = null;
+                $blog->banner_image = null;
             }
 
             // Filter out empty points and allow only one "-"
@@ -234,13 +240,16 @@ class BlogController extends Controller
                 'subtitle'          => $validated['subtitle'],
                 'short_description' => $validated['short_description'],
                 'slug'              => $validated['slug'],
-                'image'             => $imagePath,
-                'banner_image'      => $bannerPath,
+                // Images are handled above by modifying the model instance directly
+                // 'image'             => $imagePath,
+                // 'banner_image'      => $bannerPath,
                 'type'              => $validated['type'],
                 'description'       => $validated['description'],
                 'points'            => $filteredPoints ? json_encode($filteredPoints) : null,
                 'status'            => $validated['status'],
             ]);
+
+            $blog->save(); // Save the model with potential image changes
 
             notyf()->addSuccess('Blog/News updated successfully!');
             return redirect()->route('admin.blog.index')

@@ -282,7 +282,7 @@
                                                 <ul>
                                                     @foreach ($collaborations as $collaboration)
                                                         <li><a
-                                                                href="{{ route('web.blog.filter', ['category_id' => '', 'type' => 3]) }}">{{ $collaboration->menu_title }}</a>
+                                                                href="{{ route('web.blog.filter', ['category_id' => '', 'type' => 3]) }}">{{ $collaboration->menu_title ?? $collaboration->title }}</a>
                                                         </li>
                                                     @endforeach
                                                 </ul>

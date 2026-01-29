@@ -690,7 +690,7 @@ class WebController extends Controller
 
     public function blog(Request $request)
     {
-        $query = Blog::query()->with('category');
+        $query = Blog::query()->with('category')->where('status', 1);
 
         // Filter by category
         if ($request->filled('category_id')) {
@@ -727,7 +727,8 @@ class WebController extends Controller
             'training' => 4,
             'research' => 5,
             'case-study' => 6,
-            'resource' => 7
+            'resource' => 7,
+            'csr-initiatives' => 8
         ];
 
         $typeId = $typeMap[$typeSlug] ?? null;
@@ -736,14 +737,14 @@ class WebController extends Controller
         $query = Blog::where('slug', $slug);
         
         if ($typeId) {
-            $blog = (clone $query)->where('type', $typeId)->with(['category'])->first();
+            $blog = (clone $query)->where('type', $typeId)->where('status', 1)->with(['category'])->first();
         } else {
             $blog = null;
         }
 
         // Fallback: search by slug only (for legacy URLs or type-mismatch)
         if (!$blog) {
-            $blog = $query->with(['category'])->firstOrFail();
+            $blog = $query->where('status', 1)->with(['category'])->firstOrFail();
         }
 
         // Get similar blogs from the same category
