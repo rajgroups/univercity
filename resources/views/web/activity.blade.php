@@ -353,7 +353,7 @@
 
                 <!-- Events Grid Column -->
                 <div class="col-12 col-md-9">
-                    <div class="row g-4">
+                    <div class="row g-2">
                         @forelse ($events as $event)
                             <div class="col-sm-6 col-lg-4 mb-4">
                                 <!-- Event Card Container -->
