@@ -291,10 +291,10 @@
                                                 <a href="javascript:void(0);">Resources </a>
                                                 <ul>
                                                     <li><a
-                                                            href="{{ route('web.blog.filter', ['category_id' => '', 'type' => 1]) }}">Blogs</a>
+                                                            href="{{ route('web.blog.filter', ['category_id' => '', 'type' => '']) }}">Blogs</a>
                                                     </li>
                                                     <li><a
-                                                            href="{{ route('web.blog.filter', ['category_id' => '', 'type' => 7]) }}">Training
+                                                            href="{{ route('web.blog.filter', ['category_id' => '', 'type' => 4]) }}">Training
                                                             Models</a></li>
                                                     <li><a
                                                             href="{{ route('web.blog.filter', ['category_id' => '', 'type' => 5]) }}">Research

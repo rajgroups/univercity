@@ -31,7 +31,14 @@
         --glass-bg: rgba(255, 255, 255, 0.8);
         --glass-border: rgba(255, 255, 255, 0.3);
         --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
         --card-hover-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Fix Header Z-Index */
+    .header-wrapper, .main-menu {
+        position: relative;
+        z-index: 1000 !important;
     }
 
     /* Hero Section */
