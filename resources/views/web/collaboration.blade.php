@@ -113,7 +113,7 @@
                 <span class="text-white">Collaborations</span>
             </div>
             <h1 class="modern-banner-title">Building Strategic Alliances</h1>
-            <p class="modern-banner-subtitle">Fostering partnerships with corporate, government, and academic leaders to drive impactful skill development.</p>
+            <p class="modern-banner-subtitle">Fostering partnerships with <span class="text-warning fw-bold">corporate, government, and academic leaders</span> to drive impactful skill development.</p>
         </div>
     </section>
     <!-- Title Banner Section End -->
@@ -1156,6 +1156,69 @@
         </div>
     </section>
     <!-- Main Content Section End -->
+
+    <!-- Contact/Enquiry Section -->
+    <section id="contact" class="py-5 bg-light">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="card shadow-sm border-0">
+                        <div class="card-body p-5">
+                            <h2 class="text-center mb-4 text-primary">Partner With Us</h2>
+                            <p class="text-center mb-5 text-muted">Interested in collaborating? Fill out the form below and our team will get back to you.</p>
+                            
+                            <form action="{{ route('web.enquiry') }}" method="POST">
+                                @csrf
+                                <input type="hidden" name="type" value="collaboration">
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <div class="form-floating">
+                                            <input type="text" class="form-control" id="name" name="name" placeholder="Your Name" required>
+                                            <label for="name">Your Name</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-floating">
+                                            <input type="email" class="form-control" id="email" name="email" placeholder="Your Email" required>
+                                            <label for="email">Your Email</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-floating">
+                                            <input type="text" class="form-control" id="organization" name="subject" placeholder="Organization Name">
+                                            <label for="organization">Organization Name</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-floating">
+                                            <select class="form-select" id="collaborationType" name="message_type" aria-label="Collaboration Type">
+                                                <option selected>Select Collaboration Type</option>
+                                                <option value="Corporate">Corporate Partnership</option>
+                                                <option value="Government">Government Collaboration</option>
+                                                <option value="Academic">Academic Collaboration</option>
+                                                <option value="International">International Partnership</option>
+                                                <option value="Other">Other</option>
+                                            </select>
+                                            <label for="collaborationType">Interested In</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-floating">
+                                            <textarea class="form-control" placeholder="Leave a message here" id="message" name="message" style="height: 150px" required></textarea>
+                                            <label for="message">Message/Proposal</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 text-center">
+                                        <button class="btn btn-primary btn-lg px-5" type="submit">Submit Enquiry</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 @endsection
 
 @push('styles')
@@ -1289,8 +1352,12 @@
 
                 const targetElement = document.querySelector(targetId);
                 if (targetElement) {
+                    const headerOffset = 100;
+                    const elementPosition = targetElement.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
                     window.scrollTo({
-                        top: targetElement.offsetTop - 80,
+                        top: offsetPosition,
                         behavior: 'smooth'
                     });
 
