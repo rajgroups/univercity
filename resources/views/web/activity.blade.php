@@ -158,7 +158,8 @@
                                         <i class="bi bi-tag me-2"></i> Activity Type
                                         <span class="badge bg-primary ms-auto">{{ count(request('types', [])) }}</span>
                                     </button>
-                                
+                                </h2>
+                                <div id="collapseTypeDesktop" class="accordion-collapse collapse {{ count(request('types', [])) ? 'show' : '' }}" aria-labelledby="headingTypeDesktop" data-bs-parent="#filterAccordionDesktop">
                                     <div class="accordion-body pt-2">
                                         @foreach ([1 => 'Event', 2 => 'Competition'] as $value => $label)
                                             <div class="form-check mb-2">
