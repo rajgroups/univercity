@@ -306,13 +306,14 @@
                     <div class="blog-card-img-wrapper">
                         @php
                             $typeText = match($blog->type) {
-                                1 => 'Blog',
+                                1 => 'CSR Initiatives',
                                 2 => 'News',
                                 3 => 'Collaboration',
                                 4 => 'Training Model',
                                 5 => 'Research and Publication',
                                 6 => 'Case Studies',
                                 7 => 'Resource',
+                                8 => 'CSR Initiatives',
                                 default => 'Blog',
                             };
                             $typeSlug = match($blog->type) {
