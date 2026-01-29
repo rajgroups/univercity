@@ -355,7 +355,6 @@
                                             <input class="form-check-input" type="checkbox" role="switch" id="unlimited_spots" name="unlimited_spots" value="1" {{ old('unlimited_spots', $activity->unlimited_spots) ? 'checked' : '' }}>
                                             <label class="form-check-label" for="unlimited_spots">Unlimited Spots</label>
                                         </div>
-                                    </div>
                                     <div class="col-sm-6 col-12">
                                         <div class="mb-3">
                                             <label class="form-label">Entry Fee</label>
