@@ -4,7 +4,7 @@
         <div class="add-item d-flex">
             <div class="page-title">
                 <h4 class="fw-bold">Create Activity</h4>
-                <h6>Create new Activity (Event or Competition)</h6>
+                <h6>Create new Activity Details</h6>
             </div>
         </div>
         <ul class="table-top-head">
@@ -65,7 +65,7 @@
                             <div class="row">
                                 <div class="col-sm-6 col-12">
                                     <div class="mb-3">
-                                        <label class="form-label">Title(Event & competition) <span class="text-danger">*</span></label>
+                                        <label class="form-label">Activity Title <span class="text-danger">*</span></label>
                                         <input type="text" class="form-control @error('title') is-invalid @enderror"
                                             name="title" value="{{ old('title') }}" placeholder="Enter Activity title" id="activity-title">
                                         @error('title')
@@ -283,7 +283,8 @@
                                     </div>
                                 
                                 
-                                <div id="competition-fields" class="{{ old('type') == '2' ? '' : 'd-none' }}">
+                            <!-- Generic Rules & Fees Section -->
+                            <div id="activity-rules-fees">
                                 <div class="row">
                                     <div class="col-sm-6 col-12">
                                         <div class="mb-3">
@@ -314,7 +315,7 @@
                                     </div>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label">Competition Rules</label>
+                                    <label class="form-label">Rules & Guidelines</label>
                                     <textarea class="form-control @error('rules') is-invalid @enderror" name="rules"
                                         rows="3">{{ old('rules') }}</textarea>
                                     @error('rules')
@@ -419,6 +420,8 @@
             });
 
             // Toggle competition fields based on activity type
+            // Toggle competition fields - REMOVED
+            /*
             $('#activity-type').change(function() {
                 if ($(this).val() == '2') {
                     $('#competition-fields').removeClass('d-none');
@@ -426,6 +429,7 @@
                     $('#competition-fields').addClass('d-none');
                 }
             });
+            */
 
             // Highlight points management
             $(document).on('click', '.add-highlight', function() {
