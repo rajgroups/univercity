@@ -159,9 +159,83 @@
                                         <span class="badge bg-primary ms-auto">{{ count(request('types', [])) }}</span>
                                     </button>
                                 
-                                {{-- ... inside loop ... --}}
-                                
-                                <div class="event-card position-relative bg-white">
+                                    <div class="accordion-body pt-2">
+                                        @foreach ([1 => 'Event', 2 => 'Competition'] as $value => $label)
+                                            <div class="form-check mb-2">
+                                                <input
+                                                    class="form-check-input"
+                                                    type="checkbox"
+                                                    name="types[]"
+                                                    id="typeDesktop{{ $value }}"
+                                                    value="{{ $value }}"
+                                                    {{ in_array($value, request('types', [])) ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="typeDesktop{{ $value }}">
+                                                    {{ $label }}
+                                                </label>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="accordion-item border-0 mb-3 shadow-sm">
+                                <h2 class="accordion-header" id="headingDateDesktop">
+                                    <button class="accordion-button collapsed shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDateDesktop" aria-expanded="false" data-bs-parent="#filterAccordionDesktop">
+                                        <i class="bi bi-calendar me-2"></i> Date Range
+                                    </button>
+                                </h2>
+                                <div id="collapseDateDesktop" class="accordion-collapse collapse" aria-labelledby="headingDateDesktop" data-bs-parent="#filterAccordionDesktop">
+                                    <div class="accordion-body pt-2">
+                                        <div class="mb-3">
+                                            <label class="form-label small">From</label>
+                                            <input type="date" class="form-control form-control-sm" name="start_date" value="{{ request('start_date') }}">
+                                        </div>
+                                        <div class="mb-2">
+                                            <label class="form-label small">To</label>
+                                            <input type="date" class="form-control form-control-sm" name="end_date" value="{{ request('end_date') }}">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="accordion-item border-0 mb-3 shadow-sm">
+                                <h2 class="accordion-header" id="headingCategoryDesktop">
+                                    <button class="accordion-button collapsed shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCategoryDesktop" aria-expanded="false" data-bs-parent="#filterAccordionDesktop">
+                                        <i class="bi bi-collection me-2"></i> Category
+                                        <span class="badge bg-primary ms-auto">{{ count(request('categories', [])) }}</span>
+                                    </button>
+                                </h2>
+                                <div id="collapseCategoryDesktop" class="accordion-collapse collapse {{ count(request('categories', [])) ? 'show' : '' }}" aria-labelledby="headingCategoryDesktop" data-bs-parent="#filterAccordionDesktop">
+                                    <div class="accordion-body pt-2">
+                                        @foreach ($categories as $category)
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input" type="checkbox" name="categories[]" id="catDesktop{{ $category->id }}" value="{{ $category->id }}" {{ in_array($category->id, request('categories', [])) ? 'checked' : '' }}>
+                                                <label class="form-check-label d-flex justify-content-between w-100" for="catDesktop{{ $category->id }}">
+                                                    <span>{{ $category->name }}</span>
+                                                    <span class="text-muted small">{{ $category->events_count ?? 0 }}</span>
+                                                </label>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-funnel me-1"></i> Apply Filters
+                            </button>
+                            <a href="{{ route('web.activity') }}" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-counterclockwise me-1"></i> Reset All
+                            </a>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="col-12 col-md-9">
+                    <div class="row g-4">
+                        @forelse ($events as $event)
+                            <div class="col-sm-6 col-lg-4 mb-4">
                                     <img src="{{ asset($event->thumbnail_image) }}" class="w-100 event-image" alt="{{ $event->title }}">
 
                                     <span class="badge badge-type bg-primary">
