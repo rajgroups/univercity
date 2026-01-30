@@ -51,6 +51,10 @@ class Course extends Model
         'start_date',
         'end_date',
         'enrollment_count',
+        'availability_status',
+        'review_stars',
+        'review_count',
+        'internship_note',
     ];
 
     protected $casts = [

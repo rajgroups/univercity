@@ -449,6 +449,29 @@ class WebController extends Controller
             $query->whereIn('sector_id', (array)$sectors);
         }
 
+        // Mode of Study filter
+        if ($request->has('modes') && !empty($request->modes)) {
+            $query->whereIn('mode_of_study', $request->modes);
+        }
+
+        // Sorting
+        $sort = $request->input('sort', 'newest');
+        switch ($sort) {
+            case 'oldest':
+                $query->orderBy('created_at', 'asc');
+                break;
+            case 'name':
+                $query->orderBy('name', 'asc');
+                break;
+            case 'name_desc':
+                $query->orderBy('name', 'desc');
+                break;
+            case 'newest':
+            default:
+                $query->orderBy('created_at', 'desc');
+                break;
+        }
+
         $courses = $query->paginate(10);
         $sectors = Sector::where('type', 1)->get();
 

@@ -78,6 +78,10 @@ class CourseController extends Controller
             'other_specifications'      => 'nullable|array',
             'other_specifications.*.label' => 'nullable|string|max:255',
             'other_specifications.*.description' => 'nullable|string',
+            'availability_status'       => 'nullable|in:available,not_available',
+            'review_stars'              => 'nullable|numeric|min:0|max:5',
+            'review_count'              => 'nullable|integer|min:0',
+            'internship_note'           => 'nullable|string',
         ]);
 
 
@@ -214,7 +218,7 @@ class CourseController extends Controller
         $sectors = Sector::where('status', 1)->where('type', 1)->get();
 
         // Decode JSON fields for editing
-        $jsonFields = ['language', 'location', 'occupations', 'minimum_education', 'learning_tools', 'topics', 'other_specifications', 'gallery'];
+        $jsonFields = ['language', 'location', 'occupations', 'minimum_education', 'learning_tools', 'topics', 'other_specifications'];
         foreach ($jsonFields as $field) {
             $value = $course->$field;
             if ($value && is_string($value)) {
@@ -278,6 +282,10 @@ class CourseController extends Controller
             'other_specifications'      => 'nullable|array',
             'other_specifications.*.label' => 'nullable|string|max:255',
             'other_specifications.*.description' => 'nullable|string',
+            'availability_status'       => 'nullable|in:available,not_available',
+            'review_stars'              => 'nullable|numeric|min:0|max:5',
+            'review_count'              => 'nullable|integer|min:0',
+            'internship_note'           => 'nullable|string',
         ]);
 
         try {
@@ -294,10 +302,13 @@ class CourseController extends Controller
             // Handle gallery images upload
             if ($request->hasFile('gallery')) {
                 // Delete old gallery images
+                // Delete old gallery images
                 if ($course->gallery) {
-                    $oldGallery = json_decode($course->gallery, true);
-                    foreach ($oldGallery as $oldImage) {
-                        $this->deleteImage($oldImage);
+                    $oldGallery = $course->gallery; // Already array due to casts
+                    if (is_array($oldGallery)) {
+                        foreach ($oldGallery as $oldImage) {
+                            $this->deleteImage($oldImage);
+                        }
                     }
                 }
 
@@ -308,9 +319,11 @@ class CourseController extends Controller
                 $validated['gallery'] = $galleryPaths;
             } elseif ($request->boolean('remove_gallery')) {
                 if ($course->gallery) {
-                    $oldGallery = json_decode($course->gallery, true);
-                    foreach ($oldGallery as $oldImage) {
-                        $this->deleteImage($oldImage);
+                    $oldGallery = $course->gallery; // Already array due to casts
+                    if (is_array($oldGallery)) {
+                        foreach ($oldGallery as $oldImage) {
+                            $this->deleteImage($oldImage);
+                        }
                     }
                 }
                 $validated['gallery'] = null;
@@ -369,7 +382,7 @@ class CourseController extends Controller
 
             // Delete gallery images
             if ($course->gallery) {
-                $galleryImages = json_decode($course->gallery, true);
+                $galleryImages = $course->gallery; // Already array
                 if (is_array($galleryImages)) {
                     foreach ($galleryImages as $image) {
                         $this->deleteImage($image);

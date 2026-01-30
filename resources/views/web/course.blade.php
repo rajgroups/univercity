@@ -101,6 +101,36 @@
                 font-size: 2.5rem;
             }
         }
+            }
+        }
+
+        /* Course Availability Styling */
+        .course-card.unavailable {
+            user-select: none;
+        }
+
+        .course-card.unavailable .card-img-top,
+        .course-card.unavailable .card-body {
+            filter: blur(3px) grayscale(100%);
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        .unavailable-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            white-space: nowrap;
+        }
     </style>
 
     <!-- Title Banner Section Start -->
@@ -362,7 +392,10 @@
                         <div class="row g-4">
                             @foreach ($courses as $course)
                                 <div class="col-md-6 col-xl-4">
-                                    <div class="course-card card h-100 border-0 shadow-sm hover-lift">
+                                    <div class="course-card card h-100 border-0 shadow-sm hover-lift {{ $course->availability_status == 'not_available' ? 'unavailable' : '' }}">
+                                        @if($course->availability_status == 'not_available')
+                                            <div class="unavailable-overlay">Currently Not Available</div>
+                                        @endif
                                         <div class="position-relative">
                                             <img src="{{ asset($course->image ?? 'default-course.jpg') }}"
                                                 class="card-img-top" alt="{{ $course->name }}"
@@ -440,7 +473,10 @@
                                                 <div class="d-flex justify-content-between align-items-center mb-3">
                                                     <div class="rating">
                                                         <i class="bi bi-star-fill text-warning"></i>
-                                                        <small class="text-muted">4.5 (120 reviews)</small>
+                                                        <small class="text-muted">
+                                                            {{ $course->review_stars ?? '4.5' }} 
+                                                            ({{ $course->review_count ?? '120' }} reviews)
+                                                        </small>
                                                     </div>
                                                     <div class="enrollment">
                                                         <small class="text-muted">

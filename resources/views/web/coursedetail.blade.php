@@ -1,4 +1,4 @@
-{{-- @dd($course->paid_type); --}}
+@extends('layouts.web.app')
 @push('meta')
     <title>
         {{ $metaTitle ?? $course->name . ' - ' . ($course->sector->name ?? 'Professional Course') . ' | ' . config('app.name') }}
@@ -33,12 +33,15 @@
     <meta name="twitter:image" content="{{ $metaTwitterImage ?? asset($course->image ?? 'default-og.jpg') }}">
     <meta name="twitter:site" content="{{ config('app.name') }}">
 @endpush
-
-@extends('layouts.web.app')
 @section('content')
     <!-- Course Hero Section -->
     <section class="course-hero position-relative overflow-hidden mb-5">
         <div class="container-fluid">
+            @if($course->availability_status == 'not_available')
+                <div class="alert alert-danger text-center mb-0 mt-3 rounded-3">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i><strong>Note:</strong> This course is currently not available for enrollment.
+                </div>
+            @endif
             <div class="row align-items-center min-vh-50 py-5">
                 <div class="col-lg-6 mb-4 mb-lg-0">
                     <div class="hero-content pe-lg-5">
@@ -51,22 +54,25 @@
                             </div>
 
                             {{-- Internship Badge --}}
-                            <div class="badge
-                                {{ $course->internship ? 'bg-success' : 'bg-secondary' }}
-                                text-white px-3 py-2 rounded-pill d-flex align-items-center gap-1">
-                                <i class="bi {{ $course->internship ? 'bi-check-circle' : 'bi-x-circle' }}"></i>
-                                {{ $course->internship ? 'Internship Available' : 'No Internship' }}
-                            </div>
+                            @if($course->internship)
+                                <div class="badge bg-success text-white px-3 py-2 rounded-pill d-flex align-items-center gap-1">
+                                    <i class="bi bi-check-circle"></i>
+                                    Internship Available
+                                </div>
+                            @endif
 
                         </div>
 
 
                         <h1 class="display-5 fw-bold mb-3">{{ $course->name }}</h1>
 
-                        <!-- Level and Languages -->
                         <div class="d-flex justify-content-between align-items-center mb-4">
-                            <span class="text-muted">{{ $course->level ?? 'Professional Level' }}</span>
-                            <span class="text-primary">
+                            <span class="text-muted d-flex align-items-center gap-1">
+                                <i class="bi bi-bar-chart-fill text-primary"></i> 
+                                {{ $course->level ?? 'Professional Level' }}
+                            </span>
+                            <span class="text-primary d-flex align-items-center gap-1">
+                                <i class="bi bi-translate"></i>
                                 @php
                                     $languages = is_array($course->language) ? $course->language : [];
                                     echo count($languages) > 0
@@ -93,6 +99,12 @@
                             <div class="d-flex align-items-center">
                                 <i class="bi bi-people-fill text-primary me-2"></i>
                                 <span>{{ ($course->enrollment_count ?? 0) }}+ Enrolled</span>
+                            </div>
+                            
+                            <!-- Reviews -->
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-star-fill text-warning me-2"></i>
+                                <span>{{ $course->review_stars ?? '0' }} ({{ $course->review_count ?? '0' }} Reviews)</span>
                             </div>
                            <div class="d-flex align-items-center">
                                 @if ($course->paid_type->value === 'free')
@@ -121,44 +133,56 @@
                         </div>
 
                         <div class="d-flex flex-wrap gap-2">
-                            <button class="btn btn-primary btn-lg px-4">Enroll Now</button>
+                            @if($course->availability_status == 'not_available')
+                                <button class="btn btn-secondary btn-lg px-4" disabled>Not Available</button>
+                            @else
+                                <button class="btn btn-primary btn-lg px-4">Enroll Now</button>
+                            @endif
                             <button class="btn btn-outline-primary btn-lg px-4">Share Course</button>
                         </div>
                     </div>
                 </div>
 
-                <!-- Course Image with Gallery -->
+                <!-- Course Image with Gallery Carousel -->
                 <div class="col-lg-6">
                     <div class="course-visual">
-                        <!-- Main Image -->
-                        <div class="course-image-wrapper rounded-4 overflow-hidden shadow-lg mb-3">
-                            <img src="{{ $course->image ? asset($course->image) : asset('resource/web/assets/media/default/default-img.png') }}"
-                                 alt="{{ $course->name }}"
-                                 class="img-fluid w-100"
-                                 id="mainCourseImage"
-                                 onerror="this.src='{{ asset('resource/web/assets/media/default/default-img.png') }}'">
-                        </div>
-
-                        <!-- Gallery Thumbnails -->
-                        @if (count($course->gallery) > 0)
-                            <div class="gallery-thumbnails d-flex gap-2 justify-content-center">
-                                @foreach (array_slice($course->gallery, 0, 4) as $index => $galleryImage)
-                                    <div class="thumbnail-wrapper position-relative">
-                                        <img src="{{ asset($galleryImage) }}"
-                                             alt="Gallery image {{ $index + 1 }}"
-                                             class="img-thumbnail rounded-3 cursor-pointer"
-                                             style="width: 80px; height: 60px; object-fit: cover;"
-                                             onclick="document.getElementById('mainCourseImage').src = this.src"
-                                             onerror="this.src='{{ asset('resource/web/assets/media/default/default-img.png') }}'">
-                                        @if ($index === 3 && count($course->gallery) > 4)
-                                            <div class="thumbnail-overlay position-absolute top-0 start-0 w-100 h-100 bg-dark bg-opacity-50 rounded-3 d-flex align-items-center justify-content-center">
-                                                <span class="text-white fw-bold">+{{ count($course->gallery) - 4 }}</span>
-                                            </div>
-                                        @endif
-                                    </div>
-                                @endforeach
+                        <div id="courseGalleryCarousel" class="carousel slide rounded-4 overflow-hidden shadow-lg" data-bs-ride="carousel">
+                            <div class="carousel-inner">
+                                <!-- Main Image (First Slide) -->
+                                <div class="carousel-item active">
+                                    <img src="{{ $course->image ? asset($course->image) : asset('resource/web/assets/media/default/default-img.png') }}"
+                                         class="d-block w-100"
+                                         alt="{{ $course->name }}"
+                                         style="height: 400px; object-fit: cover;"
+                                         onerror="this.src='{{ asset('resource/web/assets/media/default/default-img.png') }}'">
+                                </div>
+                                
+                                <!-- Gallery Images -->
+                                @if (count($course->gallery) > 0)
+                                    @foreach ($course->gallery as $galleryImage)
+                                        <div class="carousel-item">
+                                            <img src="{{ asset($galleryImage) }}"
+                                                 class="d-block w-100"
+                                                 alt="Gallery Image"
+                                                 style="height: 400px; object-fit: cover;"
+                                                 onerror="this.src='{{ asset('resource/web/assets/media/default/default-img.png') }}'">
+                                        </div>
+                                    @endforeach
+                                @endif
                             </div>
-                        @endif
+                            
+                            <!-- Navigation Controls -->
+                            @if (count($course->gallery) > 0)
+                                <button class="carousel-control-prev" type="button" data-bs-target="#courseGalleryCarousel" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true" style="background-color: rgba(0,0,0,0.5); border-radius: 50%;"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#courseGalleryCarousel" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true" style="background-color: rgba(0,0,0,0.5); border-radius: 50%;"></span>
+                                    <span class="visually-hidden">Next</span>
+                                </button>
+                            @endif
+                        </div>
                     </div>
                 </div>
             </div>
@@ -202,7 +226,7 @@
                                 <li class="nav-item" role="presentation">
                                     <button class="nav-link py-3" id="gallery-tab" data-bs-toggle="tab"
                                         data-bs-target="#gallery" type="button" role="tab">
-                                        <i class="bi bi-window-dock me-2"></i>Other Spacification
+                                        <i class="bi bi-window-dock me-2"></i>Learning Outcomes
                                     </button>
                                 </li>
                             </ul>
@@ -222,6 +246,16 @@
                                             </div>
                                         @endif
                                     </div>
+                                    
+                                    @if($course->internship && $course->internship_note)
+                                        <div class="alert alert-success d-flex align-items-center mb-4" role="alert">
+                                            <i class="bi bi-briefcase-fill flex-shrink-0 me-3 fs-3"></i>
+                                            <div>
+                                                <h5 class="alert-heading mb-1">Internship Opportunity</h5>
+                                                <p class="mb-0">{{ $course->internship_note }}</p>
+                                            </div>
+                                        </div>
+                                    @endif
                                 </div>
 
                                 <!-- Curriculum Tab -->
@@ -301,13 +335,7 @@
                                                     <div class="list-group-item d-flex justify-content-between align-items-center px-0">
                                                         <span>Mode of Study</span>
                                                         <span class="fw-medium">
-                                                            @switch($course->mode_of_study->value)
-                                                                @case('1') Online @break
-                                                                @case('2') Offline @break
-                                                                @case('3') Hybrid @break
-                                                                @case('4') Flexible @break
-                                                                @default {{ $course->mode_of_study }}
-                                                            @endswitch
+                                                            {{ $course->mode_of_study->label() }}
                                                         </span>
                                                     </div>
                                                 @endif
@@ -402,6 +430,26 @@
                                                 </div>
                                             </div>
                                         @endif
+
+                                        @if ($course->industry_experience_years || $course->industry_experience_desc)
+                                            <div class="col-md-6">
+                                                <div class="card border-0 bg-light h-100">
+                                                    <div class="card-body text-center p-4">
+                                                        <i class="bi bi-briefcase display-4 text-primary mb-3"></i>
+                                                        <h5>Industry Experience</h5>
+                                                        <p class="mb-0 fw-medium">
+                                                            @if($course->industry_experience_years)
+                                                                {{ $course->industry_experience_years }} Years
+                                                            @endif
+                                                            @if($course->industry_experience_desc)
+                                                                <br><small class="text-muted">({{ $course->industry_experience_desc }})</small>
+                                                            @endif
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endif
+
                                         @if (!empty($course->learning_tools) && count($course->learning_tools) > 0)
                                             <div class="col-md-6">
                                                 <div class="card border-0 bg-light h-100">
@@ -515,6 +563,23 @@
                                     </div>
                                 @endif
 
+                                @if ($course->start_date || $course->end_date)
+                                    <div class="list-group-item d-flex align-items-center">
+                                        <i class="bi bi-calendar-event text-primary me-3 fs-5"></i>
+                                        <div>
+                                            <h6 class="mb-0">Course Dates</h6>
+                                            <small class="text-muted">
+                                                @if($course->start_date)
+                                                    Start: {{ $course->start_date->format('d M, Y') }}<br>
+                                                @endif
+                                                @if($course->end_date)
+                                                    End: {{ $course->end_date->format('d M, Y') }}
+                                                @endif
+                                            </small>
+                                        </div>
+                                    </div>
+                                @endif
+
                                 @if ($course->paid_type)
                                     <div class="list-group-item d-flex align-items-center">
                                         <i class="bi bi-currency-rupee text-primary me-3 fs-5"></i>
@@ -538,7 +603,7 @@
                                         <i class="bi bi-briefcase text-primary me-3 fs-5"></i>
                                         <div>
                                             <h6 class="mb-0">Internship</h6>
-                                            <small class="text-muted">Included</small>
+                                            <small class="text-muted">{{ $course->internship_note ?? 'Included' }}</small>
                                         </div>
                                     </div>
                                 @endif
@@ -709,22 +774,7 @@
         </div>
     </div>
 </div>
-    <!-- Gallery Modal -->
-    @if (count($course->gallery) > 0)
-        <div class="modal fade" id="galleryModal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-lg modal-dialog-centered">
-                <div class="modal-content border-0">
-                    <div class="modal-header border-0">
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body text-center p-0">
-                        <img id="modalGalleryImage" src="" alt="Gallery image" class="img-fluid rounded-3">
-                    </div>
-                </div>
-            </div>
-        </div>
-    @endif
-@endsection
+
 @push('scripts')
     <script>
         // Form validation
@@ -750,10 +800,7 @@
             });
         })()
 
-        // Gallery modal function
-        function openGalleryModal(imageSrc) {
-            document.getElementById('modalGalleryImage').src = imageSrc;
-        }
+
 
         // Auto-rotate banners every 5 seconds
         document.addEventListener('DOMContentLoaded', function() {
@@ -767,3 +814,4 @@
         });
     </script>
 @endpush
+@endsection
