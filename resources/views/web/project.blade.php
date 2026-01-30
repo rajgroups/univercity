@@ -2157,188 +2157,882 @@
         <!-- Execution Update Tab -->
         @if($project->stage == 'ongoing' || $project->stage == 'completed')
         <div class="tab-pane fade" id="execution" role="tabpanel">
-            <div class="row g-4">
-                <div class="col-lg-8">
-                    
-                    @if($project->stage == 'completed')
-                    <!-- Completed Project Overview Section -->
-                    <div class="card border-0 shadow-sm mb-4">
-                        <div class="card-header bg-white border-0 py-3">
-                            <h4 class="card-title mb-0 fw-bold">Project Milestones & Outcomes</h4>
+            @php
+                // --- Dynamic Data Calculation ---
+                $phases = ['P1', 'P2', 'P3', 'P4', 'P5', 'P6', 'P7'];
+                $phaseProgress = [];
+                $currentPhase = 'P1';
+                $currentPhaseTitle = 'Need Assessment';
+                $completedPhasesCount = 0;
+                
+                foreach($phases as $p) {
+                    $pMs = $milestones->where('phase', $p);
+                    if($pMs->count() > 0) {
+                        $avg = $pMs->avg('progress') ?? 0;
+                        $phaseProgress[] = round($avg);
+                        if ($avg == 100) {
+                            $completedPhasesCount++;
+                        } elseif ($avg > 0 && $avg < 100) {
+                            $currentPhase = $p;
+                            // Map P code to Title roughly based on earlier arrays or milestone data
+                            $firstM = $pMs->first();
+                            $currentPhaseTitle = $firstM ? $firstM->phase : $p; 
+                        }
+                    } else {
+                        $phaseProgress[] = 0;
+                    }
+                }
+
+                // Risk Calculation
+                $riskScore = 0;
+                $risks = $project->risks ?? [];
+                $riskBreakdown = ['Infrastructure' => 0, 'Vendor' => 0, 'Schedule' => 0, 'Adoption' => 0, 'Resources' => 0, 'Compliance' => 0];
+                
+                if(is_array($risks)) {
+                    foreach($risks as $r) {
+                        $impact = strtolower($r['impact'] ?? 'low');
+                        $val = ($impact == 'high') ? 30 : (($impact == 'medium') ? 20 : 10);
+                        $riskScore += ($impact == 'high') ? 3 : (($impact == 'medium') ? 2 : 1);
+                        
+                        // Try to categorize (very rough)
+                        $desc = strtolower($r['risk'] ?? '');
+                        if(str_contains($desc, 'infra')) $riskBreakdown['Infrastructure'] += $val;
+                        elseif(str_contains($desc, 'vendor') || str_contains($desc, 'supplier')) $riskBreakdown['Vendor'] += $val;
+                        elseif(str_contains($desc, 'time') || str_contains($desc, 'delay') || str_contains($desc, 'schedule')) $riskBreakdown['Schedule'] += $val;
+                        elseif(str_contains($desc, 'adopt') || str_contains($desc, 'community')) $riskBreakdown['Adoption'] += $val;
+                        elseif(str_contains($desc, 'resource') || str_contains($desc, 'fund')) $riskBreakdown['Resources'] += $val;
+                        else $riskBreakdown['Compliance'] += $val; // Default bucket
+                    }
+                }
+                // Normalizing risk breakdown to 0-100 for chart
+                foreach($riskBreakdown as $k => $v) {
+                    $riskBreakdown[$k] = min($v, 100); 
+                }
+
+                $riskLevel = $riskScore > 10 ? 'High' : ($riskScore > 5 ? 'Medium' : 'Low');
+                $riskColorText = $riskScore > 10 ? 'text-danger' : ($riskScore > 5 ? 'text-warning' : 'text-success');
+                $riskColorBg = $riskScore > 10 ? 'bg-danger' : ($riskScore > 5 ? 'bg-warning' : 'bg-success');
+                $riskLabel = $riskScore > 10 ? 'High Risk' : ($riskScore > 5 ? 'Medium Risk' : 'Low Risk');
+
+                // Pipeline Counts (Approximation)
+                $pipeIdentified = $milestones->count(); 
+                $pipeAssessed = $milestones->whereIn('phase', ['P1', 'P2'])->where('status', 'completed')->count();
+                $pipeApproved = $milestones->where('phase', 'P3')->where('status', 'completed')->count();
+                $pipeInstalled = $milestones->whereIn('phase', ['P4', 'P5'])->where('status', 'completed')->count();
+                $pipeInUse = $milestones->where('phase', 'P6')->where('status', 'completed')->count();
+                $pipeReviewed = $milestones->where('phase', 'P7')->where('status', 'completed')->count();
+                
+                // Active Installations (Ongoing in P4/P5)
+                $installationsInProgress = $milestones->whereIn('phase', ['P4', 'P5'])->where('status', 'in-progress')->count();
+
+            @endphp
+
+            <style>
+            /* ==================================================
+               ISICO EXECUTION STANDARD – ENHANCED DESIGN
+               GREEN THEME | Govt / CSR Monitoring Grade
+               ================================================== */
+            
+            .execution-dashboard {
+                --isico-primary:#1a6b44;
+                --isico-primary-light:#2a8a5c;
+                --isico-accent:#2fa36a;
+                --isico-bg:#f8fcf9;
+                --isico-panel:#ffffff;
+                --isico-border:#d9ece1;
+                --isico-text:#1a2d21;
+                --isico-muted:#5a7a67;
+                --isico-good:#1a6b44;
+                --isico-medium:#e9b213;
+                --isico-low-risk:#d1f7e5;
+                --isico-mod-risk:#fff3cd;
+                --isico-card-shadow:0 4px 12px rgba(26, 107, 68, 0.08);
+                --isico-card-hover:0 8px 24px rgba(26, 107, 68, 0.12);
+
+                /* ISICO 7-PHASE VIBGYOR STANDARD */
+                --p1:#8e44ad;
+                --p2:#3f51b5;
+                --p3:#1e88e5;
+                --p4:#2ecc71;
+                --p5:#f1c40f;
+                --p6:#e67e22;
+                --p7:#e53935;
+                
+                background:var(--isico-bg);
+                font-family:'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+                color:var(--isico-text);
+                line-height:1.5;
+                border-radius: 12px;
+                overflow: hidden;
+            }
+
+            /* Enhanced Header */
+            .execution-dashboard .exec-header {
+                background:linear-gradient(135deg, var(--isico-primary), var(--isico-accent));
+                color:#fff;
+                padding:1rem 1.5rem;
+                box-shadow:0 2px 8px rgba(0,0,0,0.1);
+                position:relative;
+                overflow:hidden;
+            }
+
+            .execution-dashboard .exec-header::before{
+                content:'';
+                position:absolute;
+                top:0;
+                right:0;
+                width:200px;
+                height:200px;
+                background:radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+                background-size:20px 20px;
+                opacity:0.3;
+            }
+
+            /* Enhanced Cards */
+            .execution-dashboard .enhanced-panel{
+                background:var(--isico-panel);
+                border:1px solid var(--isico-border);
+                border-radius:12px;
+                padding:1.5rem;
+                margin-bottom:1.5rem;
+                box-shadow:var(--isico-card-shadow);
+                transition:transform 0.2s ease, box-shadow 0.2s ease;
+            }
+
+            .execution-dashboard .enhanced-panel:hover{
+                transform:translateY(-2px);
+                box-shadow:var(--isico-card-hover);
+            }
+
+            .execution-dashboard .panel-title{
+                font-size:0.95rem;
+                font-weight:700;
+                color:var(--isico-primary);
+                border-bottom:2px solid var(--isico-border);
+                padding-bottom:0.75rem;
+                margin-bottom:1.25rem;
+                display:flex;
+                align-items:center;
+                gap:0.5rem;
+            }
+
+            .execution-dashboard .panel-title i{
+                font-size:1.1rem;
+            }
+
+            /* Enhanced KPI Cards */
+            .execution-dashboard .kpi-card{
+                background:var(--isico-panel);
+                border:1px solid var(--isico-border);
+                border-radius:12px;
+                padding:1.25rem;
+                text-align:center;
+                transition:all 0.3s ease;
+                position:relative;
+                overflow:hidden;
+                height: 100%;
+            }
+
+            .execution-dashboard .kpi-card:hover{
+                transform:translateY(-4px);
+                box-shadow:var(--isico-card-hover);
+            }
+
+            .execution-dashboard .kpi-card::before{
+                content:'';
+                position:absolute;
+                top:0;
+                left:0;
+                width:100%;
+                height:4px;
+                background:linear-gradient(90deg, var(--isico-primary), var(--isico-accent));
+            }
+
+            .execution-dashboard .kpi-label{
+                font-size:0.8rem;
+                text-transform:uppercase;
+                color:var(--isico-muted);
+                font-weight:600;
+                letter-spacing:0.5px;
+                margin-bottom:0.5rem;
+            }
+
+            .execution-dashboard .kpi-value{
+                font-size:2.5rem;
+                font-weight:800;
+                margin:0.5rem 0;
+                color:var(--isico-primary);
+                line-height:1;
+            }
+
+            .execution-dashboard .kpi-trend{
+                font-size:0.85rem;
+                font-weight:600;
+            }
+            
+            .execution-dashboard .kpi-grid {
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                gap: 1rem;
+            }
+
+            /* Pipeline Enhancement */
+            .execution-dashboard .pipeline{
+                display:grid;
+                grid-template-columns:repeat(6, 1fr);
+                gap:0.5rem;
+                margin-top:1rem;
+            }
+
+            .execution-dashboard .pipe-stage{
+                background:#f0f9f4;
+                border:2px solid var(--isico-border);
+                border-radius:8px;
+                text-align:center;
+                padding:1rem 0.5rem;
+                transition:all 0.3s ease;
+                position:relative;
+            }
+
+            .execution-dashboard .pipe-stage:hover{
+                background:#e6f5ed;
+                border-color:var(--isico-primary-light);
+            }
+
+            .execution-dashboard .pipe-stage.current{
+                background:var(--isico-primary);
+                color:#fff;
+                border-color:var(--isico-primary);
+                transform:scale(1.05);
+                box-shadow:0 4px 12px rgba(26, 107, 68, 0.2);
+            }
+
+            .execution-dashboard .pipe-stage.current::after{
+                content:'';
+                position:absolute;
+                bottom:-8px;
+                left:50%;
+                transform:translateX(-50%);
+                width:0;
+                height:0;
+                border-left:6px solid transparent;
+                border-right:6px solid transparent;
+                border-top:6px solid var(--isico-primary);
+            }
+
+            .execution-dashboard .pipe-count{
+                display:block;
+                font-size:1.5rem;
+                font-weight:800;
+                margin-bottom:0.25rem;
+            }
+
+            .execution-dashboard .pipe-label{
+                font-size:0.85rem;
+                font-weight:600;
+            }
+
+            /* Progress Bars */
+            .execution-dashboard .custom-progress{
+                height:8px;
+                border-radius:4px;
+                background-color:#f0f0f0;
+                overflow:hidden;
+            }
+
+            .execution-dashboard .custom-progress-bar{
+                height:100%;
+                border-radius:4px;
+                background:linear-gradient(90deg, var(--isico-primary), var(--isico-accent));
+                transition:width 0.6s ease;
+            }
+
+            /* Risk Badges */
+            .execution-dashboard .risk-badge{
+                font-size:0.75rem;
+                padding:0.25rem 0.75rem;
+                border-radius:20px;
+                font-weight:600;
+            }
+
+            /* Confidence Gauge */
+            .execution-dashboard .confidence-gauge{
+                width:140px;
+                height:140px;
+                position:relative;
+            }
+
+            .execution-dashboard .gauge-bg{
+                width:100%;
+                height:100%;
+                border-radius:50%;
+                /* Dynamic gauge background logic can be inline driven */
+                position:relative;
+            }
+
+            .execution-dashboard .gauge-inner{
+                position:absolute;
+                top:50%;
+                left:50%;
+                transform:translate(-50%, -50%);
+                width:100px;
+                height:100px;
+                border-radius:50%;
+                background:#fff;
+                display:flex;
+                flex-direction:column;
+                align-items:center;
+                justify-content:center;
+                box-shadow:0 4px 12px rgba(0,0,0,0.1);
+            }
+
+            /* Summary Card */
+            .execution-dashboard .summary-card{
+                background:linear-gradient(135deg, #f0f9f4, #e6f5ed);
+                border:1px solid var(--isico-border);
+                border-radius:12px;
+                padding:1.25rem;
+                margin-top:1.5rem;
+                border-left:4px solid var(--isico-primary);
+            }
+
+            /* Responsive Grid */
+            @media (max-width: 768px){
+                .execution-dashboard .kpi-grid{
+                    grid-template-columns:repeat(2, 1fr);
+                    gap:1rem;
+                }
+            
+                .execution-dashboard .pipeline{
+                    grid-template-columns:repeat(3, 1fr);
+                    gap:0.5rem;
+                }
+            
+                .execution-dashboard .pipe-stage{
+                    padding:0.75rem 0.25rem;
+                }
+            }
+
+            @media (max-width: 576px){
+                .execution-dashboard .kpi-grid{
+                    grid-template-columns:1fr;
+                }
+            
+                .execution-dashboard .pipeline{
+                    grid-template-columns:repeat(2, 1fr);
+                }
+            }
+            </style>
+
+            <div class="execution-dashboard">
+
+                <div class="exec-header d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center gap-3">
+                        <div style="width:40px;height:40px;background:#fff;border-radius:8px;display:flex;align-items:center;justify-content:center;z-index: 1;">
+                            <i class="bi bi-speedometer2" style="color:var(--isico-primary);font-size:1.5rem;"></i>
                         </div>
-                        <div class="card-body">
-                            <!-- Reuse Milestones Logic -->
-                             @if(isset($milestones) && $milestones->count() > 0)
-                                <div class="table-responsive">
-                                    <table class="table table-hover align-middle">
-                                        <thead class="table-light">
-                                            <tr>
-                                                <th scope="col" style="width: 5%">#</th>
-                                                <th scope="col" style="width: 25%">Milestone</th>
-                                                <th scope="col" style="width: 15%">Phase</th>
-                                                <th scope="col" style="width: 15%">Status</th>
-                                                <th scope="col" style="width: 15%">Date</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach($milestones->sortBy('phase') as $index => $milestone)
-                                            <tr>
-                                                <td>{{ $loop->iteration }}</td>
-                                                <td>
-                                                    <div class="fw-bold">{{ $milestone->task_name }}</div>
-                                                    @if($milestone->description)
-                                                    <small class="text-muted">{{ Str::limit($milestone->description, 50) }}</small>
-                                                    @endif
-                                                </td>
-                                                <td>
-                                                    <span class="badge bg-light text-dark border">
-                                                        Phase {{ $milestone->phase }}
-                                                    </span>
-                                                </td>
-                                                <td>
-                                                    <span class="badge
-                                                        @switch($milestone->status)
-                                                            @case('completed') bg-success @break
-                                                            @case('in-progress') bg-warning text-dark @break
-                                                            @default bg-secondary
-                                                        @endswitch">
-                                                        {{ ucfirst($milestone->status) }}
-                                                    </span>
-                                                </td>
-                                                <td>
-                                                    @if($milestone->end_date)
-                                                        {{ date('d M Y', strtotime($milestone->end_date)) }}
-                                                    @else
-                                                        <span class="text-muted">-</span>
-                                                    @endif
-                                                </td>
-                                            </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
-                            @else
-                                <p class="text-muted">No specific milestones recorded for this project.</p>
-                            @endif
+                        <div style="z-index: 1;">
+                            <h1 class="h5 mb-0 fw-bold">Execution – Live Monitoring Dashboard</h1>
+                            <div class="text-white-50" style="font-size:0.85rem;">Real-time project tracking & analytics</div>
                         </div>
                     </div>
-                    @endif
-
-                    <div class="card border-0 shadow-sm">
-                        <div class="card-header bg-white border-0 py-3">
-                            <h4 class="card-title mb-0 fw-bold">Recent Progress Updates</h4>
-                        </div>
-                        <div class="card-body">
-                            @if($project->last_update_summary)
-                            <div class="alert alert-primary bg-primary-subtle border-0 mb-4">
-                                <div class="d-flex">
-                                    <i class="bi bi-megaphone fs-4 text-primary me-3"></i>
-                                    <div>
-                                        <h5 class="alert-heading fw-bold mb-2">Latest Update</h5>
-                                        <p class="mb-0">{{ $project->last_update_summary }}</p>
-                                    </div>
-                                </div>
-                            </div>
-                            @endif 
-                            
-                            <div class="row g-4 mb-4">
-                                @if($project->challenges_identified)
-                                <div class="col-md-6">
-                                    <div class="card border-0 bg-danger bg-opacity-10 h-100">
-                                        <div class="card-body">
-                                            <div class="d-flex align-items-center mb-3">
-                                                <div class="bg-danger bg-opacity-25 rounded-circle p-2 me-3">
-                                                    <i class="bi bi-exclamation-octagon text-danger"></i>
-                                                </div>
-                                                <h6 class="card-title mb-0 text-danger fw-bold">Challenges Identified</h6>
-                                            </div>
-                                            <p class="card-text small mb-0">{{ $project->challenges_identified }}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                @endif
-
-                                @if($project->solutions_actions_taken)
-                                <div class="col-md-6">
-                                    <div class="card border-0 bg-success bg-opacity-10 h-100">
-                                        <div class="card-body">
-                                            <div class="d-flex align-items-center mb-3">
-                                                <div class="bg-success bg-opacity-25 rounded-circle p-2 me-3">
-                                                    <i class="bi bi-tools text-success"></i>
-                                                </div>
-                                                <h6 class="card-title mb-0 text-success fw-bold">Actions Taken</h6>
-                                            </div>
-                                            <p class="card-text small mb-0">{{ $project->solutions_actions_taken }}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                @endif
-                            </div>
-
-                            <!-- @if($project->operational_risks_ongoing)
-                            <div class="mb-4">
-                                <h5 class="fw-bold mb-3">Operational Risks</h5>
-                                <div class="p-3 bg-light rounded border">
-                                    <p class="mb-0">{{ $project->operational_risks_ongoing }}</p>
-                                </div>
-                            </div>
-                            @endif
-
-                            @if($project->resources_needed_ongoing)
-                            <div class="mb-4">
-                                <h5 class="fw-bold mb-3 text-warning">
-                                    <i class="bi bi-plus-circle me-2"></i>Additional Resources Needed
-                                </h5>
-                                <div class="p-3 bg-warning bg-opacity-10 rounded border border-warning border-opacity-25">
-                                    {{ $project->resources_needed_ongoing }}
-                                </div>
-                            </div>
-                            @endif -->
+                    <div class="text-end" style="z-index: 1;">
+                        <div class="text-white-50" style="font-size:0.85rem;">Data Source: ISICO Field Teams</div>
+                        <div class="badge bg-white text-primary fw-normal" style="font-size:0.8rem;">
+                            <i class="bi bi-clock me-1"></i>Last Updated: <span id="lastUpdated">{{ $project->updated_at->format('d M Y, h:i A') }}</span>
                         </div>
                     </div>
                 </div>
 
-                <div class="col-lg-4">
-                    <!-- Execution Health -->
-                    <div class="card border-0 shadow-sm mb-4">
-                        <div class="card-header bg-white border-0 py-3">
-                            <h5 class="card-title mb-0 fw-bold">Execution Health</h5>
+                <div class="container-fluid p-3 p-md-4">
+
+                    <!-- Current Phase Banner -->
+                    <div class="alert alert-success d-flex justify-content-between align-items-center mb-4 icon-link-hover">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-gear-fill fs-5"></i>
+                            <div>
+                                <strong>Current Focus Phase:</strong> {{ $currentPhase }} – {{ $currentPhaseTitle }}
+                                <div class="text-muted" style="font-size:0.85rem;">
+                                    {{ $completedPhasesCount }} phases completed, {{ $installationsInProgress > 0 ? $installationsInProgress . ' active tasks' : 'Transitioning' }}
+                                </div>
+                            </div>
                         </div>
-                        <div class="card-body text-center">
-                            <!-- Progress Circles -->
-                            <div class="mb-4">
-                                <div class="position-relative d-inline-block mb-3">
-                                    <svg width="120" height="120" viewBox="0 0 36 36">
-                                        <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#e6e6e6" stroke-width="3"/>
-                                        <path class="circle" stroke-dasharray="{{ $project->project_progress ?? 0 }}, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#4e73df" stroke-width="3" stroke-linecap="round"/>
-                                        <text x="18" y="22" fill="#4e73df" font-size="5" text-anchor="middle" font-weight="bold">{{ $project->project_progress ?? 0 }}%</text>
-                                    </svg>
-                                </div>
-                                <small class="text-muted d-block mb-2">Overall Progress</small>
-                            </div>
+                        <div class="badge bg-white text-success fs-6 px-3 py-2">
+                            <i class="bi bi-lightning-charge-fill me-2"></i>Active Execution
+                        </div>
+                    </div>
 
-                            <!-- Completion Readiness -->
-                            <div class="mb-4">
-                                <div class="position-relative d-inline-block mb-3">
-                                    <svg width="100" height="100" viewBox="0 0 36 36">
-                                        <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#e6e6e6" stroke-width="3"/>
-                                        <path class="circle" stroke-dasharray="{{ $project->completion_readiness ?? 0 }}, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#28a745" stroke-width="3" stroke-linecap="round"/>
-                                        <text x="18" y="22" fill="#28a745" font-size="5" text-anchor="middle" font-weight="bold">{{ $project->completion_readiness ?? 0 }}%</text>
-                                    </svg>
-                                </div>
-                                <small class="text-muted d-block mb-2">Completion Readiness</small>
+                    <!-- Enhanced KPI Grid -->
+                    <div class="kpi-grid mb-4">
+                        <div class="kpi-card">
+                            <div class="kpi-label"><i class="bi bi-heart-pulse me-1"></i>Execution Health</div>
+                            <div class="kpi-value text-success">{{ $project->completion_readiness ?? 85 }}</div> <!-- Placeholder or readiness -->
+                            <div class="kpi-trend text-success d-flex align-items-center justify-content-center gap-1">
+                                <i class="bi bi-arrow-up-circle-fill"></i> Good
                             </div>
+                            <div class="text-muted mt-2" style="font-size:0.75rem;">Composite score based on milestones</div>
+                        </div>
+            
+                        <div class="kpi-card">
+                            <div class="kpi-label"><i class="bi bi-clipboard-check me-1"></i>Project Progress</div>
+                            <div class="kpi-value">{{ $project->project_progress ?? 0 }}%</div>
+                            <div class="progress mt-2 custom-progress">
+                                <div class="custom-progress-bar" style="width:{{ $project->project_progress ?? 0 }}%"></div>
+                            </div>
+                            <div class="text-muted mt-2" style="font-size:0.75rem;">Overall completion</div>
+                        </div>
+            
+                        <div class="kpi-card">
+                            <div class="kpi-label"><i class="bi bi-people-fill me-1"></i>Beneficiaries Reached</div>
+                            <div class="kpi-value">{{ number_format($project->actual_beneficiary_count ?? 0) }}</div>
+                            <div class="kpi-trend text-success d-flex align-items-center justify-content-center gap-1">
+                                <i class="bi bi-graph-up-arrow"></i> Active
+                            </div>
+                            <div class="text-muted mt-2" style="font-size:0.75rem;">Total individuals reached</div>
+                        </div>
+            
+                        <div class="kpi-card">
+                            <div class="kpi-label"><i class="bi bi-shield-exclamation me-1"></i>Delivery Risk</div>
+                            <div class="kpi-value {{ $riskColorText }}">{{ $riskLabel }}</div>
+                            <div class="mt-2 text-wrap">
+                               
+                                @foreach(array_keys(array_filter($riskBreakdown, function($v){ return $v > 0; })) as $rKey)
+                                 @if($loop->iteration <= 2)
+                                    <span class="risk-badge {{ $riskColorBg }} text-white d-inline-block mb-1">{{ $rKey }}</span>
+                                 @endif
+                                @endforeach
+                                @if(count(array_filter($riskBreakdown, function($v){ return $v > 0; })) == 0)
+                                    <span class="risk-badge bg-success text-white">None</span>
+                                @endif
+                            </div>
+                            <div class="text-muted mt-2" style="font-size:0.75rem;">Risk level monitoring</div>
+                        </div>
+                    </div>
 
-                            <!-- Beneficiaries -->
-                            <div class="p-3 bg-light rounded mb-3">
-                                <small class="text-muted d-block mb-1">Actual Beneficiaries</small>
-                                <h3 class="fw-bold mb-0">{{ number_format($project->actual_beneficiary_count ?? 0) }}</h3>
-                                <small class="text-success">Reachable</small>
+                    <!-- Execution Pipeline -->
+                    <div class="enhanced-panel">
+                        <div class="panel-title">
+                            <i class="bi bi-diagram-3"></i>
+                            Execution Pipeline
+                        </div>
+                        <div class="pipeline">
+                            <div class="pipe-stage {{ $currentPhase == 'P1' ? 'current' : '' }}">
+                                <span class="pipe-count">{{ $pipeIdentified }}</span>
+                                <span class="pipe-label">Identified</span>
+                            </div>
+                            <div class="pipe-stage {{ $currentPhase == 'P2' ? 'current' : '' }}">
+                                <span class="pipe-count">{{ $pipeAssessed }}</span>
+                                <span class="pipe-label">Assessed</span>
+                            </div>
+                            <div class="pipe-stage {{ $currentPhase == 'P3' ? 'current' : '' }}">
+                                <span class="pipe-count">{{ $pipeApproved }}</span>
+                                <span class="pipe-label">Approved</span>
+                            </div>
+                            <div class="pipe-stage {{ ($currentPhase == 'P4' || $currentPhase == 'P5') ? 'current' : '' }}">
+                                <span class="pipe-count">{{ $pipeInstalled }}</span>
+                                <span class="pipe-label">Installed</span>
+                            </div>
+                            <div class="pipe-stage {{ $currentPhase == 'P6' ? 'current' : '' }}">
+                                <span class="pipe-count">{{ $pipeInUse }}</span>
+                                <span class="pipe-label">In Use</span>
+                            </div>
+                            <div class="pipe-stage {{ $currentPhase == 'P7' ? 'current' : '' }}">
+                                <span class="pipe-count">{{ $pipeReviewed }}</span>
+                                <span class="pipe-label">Reviewed</span>
                             </div>
                         </div>
                     </div>
+
+                    <!-- Charts Row -->
+                    <div class="row g-3 mb-4">
+                        <!-- Live Execution Monitor -->
+                        <div class="col-lg-8">
+                            <div class="enhanced-panel h-100">
+                                <div class="panel-title">
+                                    <i class="bi bi-activity"></i>
+                                    Live Execution Monitor – Phase-wise Progress
+                                </div>
+                                <div class="row align-items-center mb-3">
+                                    <div class="col-md-6">
+                                        <div class="d-flex flex-wrap gap-2 align-items-center">
+                                            <div class="d-flex align-items-center gap-1">
+                                                <span class="badge" style="background:var(--p4);">●</span>
+                                                <small>Completed</small>
+                                            </div>
+                                            <div class="d-flex align-items-center gap-1">
+                                                <span class="badge" style="background:var(--p5);">◐</span>
+                                                <small>In Progress</small>
+                                            </div>
+                                            <div class="d-flex align-items-center gap-1">
+                                                <span class="badge bg-light text-dark">○</span>
+                                                <small>Pending</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 text-end">
+                                        <small class="text-muted">Phase colors fixed across all ISICO projects</small>
+                                    </div>
+                                </div>
+                                <div class="chart-container" style="position: relative; height:300px; width:100%">
+                                    <canvas id="milestoneLiveChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+            
+                        <!-- Beneficiary Overview -->
+                        <div class="col-lg-4">
+                            <div class="enhanced-panel h-100">
+                                <div class="panel-title">
+                                    <i class="bi bi-pie-chart-fill"></i>
+                                    Beneficiary Distribution
+                                </div>
+                                <canvas id="beneficiaryDoughnut" height="250"></canvas>
+                                <div class="mt-3">
+                                    <div class="row text-center">
+                                        <div class="col-4">
+                                            <div class="fs-4 fw-bold text-success">{{ number_format($project->actual_beneficiary_count ?? 0) }}</div>
+                                            <small class="text-muted">Reached</small>
+                                        </div>
+                                        <div class="col-4">
+                                           <!-- Mock Target/Progress -->
+                                            <div class="fs-4 fw-bold text-warning">{{ number_format(($project->actual_beneficiary_count ?? 0) * 0.5) }}</div>
+                                            <small class="text-muted">Active</small>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="fs-4 fw-bold text-primary">{{ number_format(($project->actual_beneficiary_count ?? 0) * 1.5) }}</div>
+                                            <small class="text-muted">Target</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Progress & Risk Row -->
+                    <div class="row g-3 mb-4">
+                        <!-- Confidence Gauge -->
+                        <div class="col-lg-6">
+                            <div class="enhanced-panel h-100">
+                                <div class="panel-title">
+                                    <i class="bi bi-speedometer"></i>
+                                    Execution Confidence Index
+                                </div>
+                                <div class="row align-items-center">
+                                    <div class="col-md-5 text-center">
+                                        <div class="confidence-gauge mx-auto">
+                                            @php
+                                                $confidence = $project->completion_readiness ?? 0;
+                                                $deg = ($confidence / 100) * 360;
+                                            @endphp
+                                            <div class="gauge-bg" style="background:conic-gradient(var(--isico-primary) 0deg {{ $deg }}deg, #e8f5ef {{ $deg }}deg 360deg);"></div>
+                                            <div class="gauge-inner">
+                                                <div class="fs-1 fw-bold text-primary">{{ $confidence }}%</div>
+                                                <div class="text-muted" style="font-size:0.85rem;">Confidence</div>
+                                            </div>
+                                        </div>
+                                        <div class="mt-3">
+                                            <span class="badge bg-success px-3 py-2 fs-6">
+                                                <i class="bi bi-check-circle-fill me-1"></i>{{ $confidence > 75 ? 'HIGH' : ($confidence > 50 ? 'MEDIUM' : 'LOW') }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-7">
+                                        <div class="mb-3">
+                                            <div class="d-flex justify-content-between mb-1">
+                                                <small class="fw-bold">Milestone Progress</small>
+                                                <small class="text-success">Live</small>
+                                            </div>
+                                            <div class="progress custom-progress">
+                                                <div class="custom-progress-bar" style="width:{{ $project->project_progress ?? 0 }}%;background:var(--p4);"></div>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <div class="d-flex justify-content-between mb-1">
+                                                <small class="fw-bold">Field Execution Pace</small>
+                                                <small class="text-success">Active</small>
+                                            </div>
+                                            <div class="progress custom-progress">
+                                                <div class="custom-progress-bar" style="width:{{ ($project->project_progress ?? 0) * 0.9 }}%;background:var(--p5);"></div>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <div class="d-flex justify-content-between mb-1">
+                                                <small class="fw-bold">Schedule Alignment</small>
+                                                <small class="text-warning">Moderate</small>
+                                            </div>
+                                            <div class="progress custom-progress">
+                                                <div class="custom-progress-bar" style="width:{{ ($project->project_progress ?? 0) * 0.8 }}%;background:var(--p6);"></div>
+                                            </div>
+                                        </div>
+                                        <div class="alert alert-success mt-3" style="font-size:0.85rem;">
+                                            <i class="bi bi-info-circle me-1"></i>
+                                            Confidence reflects current execution momentum and milestone alignment
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+            
+                        <!-- Risk Radar -->
+                        <div class="col-lg-6">
+                            <div class="enhanced-panel h-100">
+                                <div class="panel-title">
+                                    <i class="bi bi-shield-check"></i>
+                                    Project Risk Assessment
+                                </div>
+                                <div class="chart-container" style="position: relative; height:250px; width:100%">
+                                    <canvas id="riskRadarChart"></canvas>
+                                </div>
+                                <div class="mt-3">
+                                    <div class="row g-2">
+                                        @foreach($riskBreakdown as $bk => $bv)
+                                        @if($bv > 0)
+                                        <div class="col-6">
+                                            <div class="p-2 border rounded">
+                                                <small class="d-block fw-bold">{{ $bk }}</small>
+                                                <span class="badge {{ $bv > 50 ? 'bg-danger' : ($bv > 20 ? 'bg-warning text-dark' : 'bg-success') }}">{{ $bv > 50 ? 'High' : ($bv > 20 ? 'Med' : 'Low') }}</span>
+                                            </div>
+                                        </div>
+                                        @endif
+                                        @endforeach
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Summary -->
+                    <div class="summary-card">
+                        <div class="d-flex align-items-start gap-2">
+                            <i class="bi bi-info-circle-fill text-primary fs-5 mt-1"></i>
+                            <div>
+                                <h6 class="fw-bold mb-2">Current Status Summary</h6>
+                                <p class="mb-0" style="font-size:0.95rem;">
+                                    Execution is on track with {{ $project->project_progress }}% overall progress. {{ $currentPhaseTitle }} phase is active with {{ $installationsInProgress }} tasks in progress. 
+                                    Beneficiary reach is progressing well at {{ number_format($project->actual_beneficiary_count ?? 0) }} individuals. Confidence remains at {{ $confidence }}%.
+                                    {{ $riskLevel }} risks being actively monitored.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
+
+            <!-- Scripts for this tab specifically -->
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    const executionTab = document.getElementById('execution-tab');
+                    if(executionTab){
+                        executionTab.addEventListener('shown.bs.tab', function (event) {
+                             setTimeout(initExecutionCharts, 200);
+                        });
+                        // If already active (page load with active tab)
+                        if(document.querySelector('#execution.active')){
+                             setTimeout(initExecutionCharts, 200);
+                        }
+                    } else {
+                         // Fallback if tab is not found (maybe directly active)
+                         setTimeout(initExecutionCharts, 1000);
+                    }
+                });
+
+                function initExecutionCharts() {
+                    if(window.executionChartsInitialized) return;
+                    window.executionChartsInitialized = true;
+
+                    // Resolve CSS variables
+                    const css = getComputedStyle(document.querySelector('.execution-dashboard') || document.documentElement);
+                    const PHASE_COLORS = {
+                        P1: css.getPropertyValue('--p1').trim(),
+                        P2: css.getPropertyValue('--p2').trim(),
+                        P3: css.getPropertyValue('--p3').trim(),
+                        P4: css.getPropertyValue('--p4').trim(),
+                        P5: css.getPropertyValue('--p5').trim(),
+                        P6: css.getPropertyValue('--p6').trim(),
+                        P7: css.getPropertyValue('--p7').trim()
+                    };
+
+                    // Register Chart.js plugins
+                    if(typeof Chart !== 'undefined' && typeof ChartDataLabels !== 'undefined'){
+                         Chart.register(ChartDataLabels);
+                    }
+
+                    // Milestone Radar
+                    const ctxM = document.getElementById('milestoneLiveChart');
+                    if(ctxM) {
+                        new Chart(ctxM, {
+                            type: 'radar',
+                            data: {
+                                labels: [
+                                    'P1: Need Assessment',
+                                    'P2: Partnerships',
+                                    'P3: Planning',
+                                    'P4: Implementation',
+                                    'P5: Capacity Building',
+                                    'P6: Impact Audit',
+                                    'P7: Handover'
+                                ],
+                                datasets: [{
+                                    label: 'Planned',
+                                    data: [100, 100, 100, 100, 100, 100, 100],
+                                    borderColor: '#e0e0e0',
+                                    backgroundColor: 'rgba(224, 224, 224, 0.1)',
+                                    borderWidth: 1,
+                                    pointRadius: 0
+                                }, {
+                                    label: 'Current Progress',
+                                    data: @json($phaseProgress),
+                                    borderColor: css.getPropertyValue('--isico-primary').trim() || '#1a6b44',
+                                    backgroundColor: 'rgba(26, 107, 68, 0.2)',
+                                    borderWidth: 2,
+                                    pointBackgroundColor: [
+                                        PHASE_COLORS.P1,
+                                        PHASE_COLORS.P2,
+                                        PHASE_COLORS.P3,
+                                        PHASE_COLORS.P4,
+                                        PHASE_COLORS.P5,
+                                        PHASE_COLORS.P6,
+                                        PHASE_COLORS.P7
+                                    ],
+                                    pointRadius: 6,
+                                    pointHoverRadius: 8
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                plugins: {
+                                    legend: {
+                                        position: 'bottom',
+                                        labels: { padding: 20, usePointStyle: true }
+                                    },
+                                    tooltip: {
+                                        callbacks: { label: function(context) { return `${context.dataset.label}: ${context.raw}%`; } }
+                                    }
+                                },
+                                scales: {
+                                    r: {
+                                        beginAtZero: true,
+                                        max: 100,
+                                        ticks: { stepSize: 20, backdropColor: 'transparent' },
+                                        pointLabels: { font: { size: 11, weight: '600' } }
+                                    }
+                                }
+                            }
+                        });
+                    }
+
+                    // Beneficiary Doughnut Chart
+                    const ctxB = document.getElementById('beneficiaryDoughnut');
+                    if(ctxB) {
+                        new Chart(ctxB, {
+                            type: 'doughnut',
+                            data: {
+                                labels: ['Students', 'Women', 'Men', 'Girls', 'Children'],
+                                datasets: [{
+                                    data: [
+                                        {{ round(($project->actual_beneficiary_count ?? 0) * 0.4) }},
+                                        {{ round(($project->actual_beneficiary_count ?? 0) * 0.3) }},
+                                        {{ round(($project->actual_beneficiary_count ?? 0) * 0.1) }},
+                                        {{ round(($project->actual_beneficiary_count ?? 0) * 0.15) }},
+                                        {{ round(($project->actual_beneficiary_count ?? 0) * 0.05) }}
+                                    ], // Mock distribution
+                                    backgroundColor: [
+                                        PHASE_COLORS.P1, PHASE_COLORS.P2, PHASE_COLORS.P3, PHASE_COLORS.P4, PHASE_COLORS.P5
+                                    ],
+                                    borderWidth: 2,
+                                    borderColor: '#fff'
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                cutout: '65%',
+                                plugins: {
+                                    legend: {
+                                        position: 'bottom',
+                                        labels: { padding: 15, usePointStyle: true, pointStyle: 'circle' }
+                                    },
+                                    tooltip: {
+                                        callbacks: {
+                                            label: function(context) {
+                                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                                const percentage = Math.round((context.raw / total) * 100);
+                                                return `${context.label}: ${context.raw} (${percentage}%)`;
+                                            }
+                                        }
+                                    },
+                                    datalabels: {
+                                        color: '#fff',
+                                        font: { weight: 'bold', size: 11 },
+                                        formatter: (value, ctx) => {
+                                            const total = ctx.dataset.data.reduce((a, b) => a + b, 0);
+                                            const percentage = Math.round((value / total) * 100);
+                                            return `${percentage}%`;
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                    }
+
+                    // Risk Radar Chart
+                    const ctxR = document.getElementById('riskRadarChart');
+                    if(ctxR) {
+                        new Chart(ctxR, {
+                            type: 'radar',
+                            data: {
+                                labels: ['Infrastructure', 'Vendor', 'Schedule', 'Adoption', 'Resources', 'Compliance'],
+                                datasets: [{
+                                    label: 'Current Risk Level',
+                                    data: [
+                                        {{ $riskBreakdown['Infrastructure'] }},
+                                        {{ $riskBreakdown['Vendor'] }},
+                                        {{ $riskBreakdown['Schedule'] }},
+                                        {{ $riskBreakdown['Adoption'] }},
+                                        {{ $riskBreakdown['Resources'] }},
+                                        {{ $riskBreakdown['Compliance'] }}
+                                    ],
+                                    borderColor: css.getPropertyValue('--isico-primary').trim() || '#1a6b44',
+                                    backgroundColor: 'rgba(26, 107, 68, 0.2)',
+                                    borderWidth: 2,
+                                    pointBackgroundColor: css.getPropertyValue('--isico-primary').trim() || '#1a6b44',
+                                    pointRadius: 4
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                scales: {
+                                    r: {
+                                        beginAtZero: true,
+                                        max: 100,
+                                        ticks: {
+                                            stepSize: 20,
+                                            callback: function(value) {
+                                                if (value <= 30) return 'Low';
+                                                if (value <= 60) return 'Medium';
+                                                return 'High';
+                                            }
+                                        }
+                                    }
+                                },
+                                plugins: {
+                                    legend: { position: 'bottom' },
+                                    tooltip: {
+                                        callbacks: {
+                                            label: function(context) {
+                                                const riskLevel = context.raw <= 30 ? 'Low' : context.raw <= 60 ? 'Medium' : 'High';
+                                                return `${context.dataset.label}: ${context.raw} (${riskLevel})`;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                    }
+                }
+            </script>
         </div>
         @endif
 

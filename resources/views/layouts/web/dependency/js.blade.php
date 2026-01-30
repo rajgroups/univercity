@@ -1,6 +1,9 @@
     <!-- Jquery Js -->
     <script src="{{ asset('resource/web/assets/js/vendor/bootstrap.min.js')}}"></script>
     <script src="{{ asset('resource/web/assets/js/vendor/jquery-3.6.3.min.js')}}"></script>
+    <!-- Chart.js and Plugins -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
     <script src="{{ asset('resource/web/assets/js/vendor/slick.min.js')}}"></script>
     <script src="{{ asset('resource/web/assets/js/vendor/wow.js')}}"></script>
     <script src="{{ asset('resource/web/assets/js/vendor/jquery-validator.js')}}"></script>
