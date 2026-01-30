@@ -1868,14 +1868,8 @@
                             <div class="card-body">
                                 <!-- Budget Chart -->
                                 <div class="mb-4">
-                                    @if(isset($estimation) && $estimation->items->count() > 0)
                                     <canvas id="budgetChart" height="200"></canvas>
-                                    @else
-                                    <div class="text-center py-4">
-                                        <i class="bi bi-pie-chart display-6 text-muted opacity-25"></i>
-                                        <p class="text-muted mt-2 small mb-0">No budget data available</p>
-                                    </div>
-                                    @endif
+                                </div>
 
                                 <!-- Funding Status -->
                                 <div class="list-group list-group-flush">
@@ -2680,16 +2674,8 @@
                                     </div>
                                 </div>
                                 <div class="chart-container" style="position: relative; height:300px; width:100%">
-                                    @isset($milestones)
-                                        @if($milestones->count() > 0)
-                                        <canvas id="milestoneLiveChart"></canvas>
-                                        @else
-                                        <div class="d-flex flex-column align-items-center justify-content-center h-100 text-muted">
-                                            <i class="bi bi-bar-chart-line display-4 opacity-25 mb-2"></i>
-                                            <small>No milestones tracked yet</small>
-                                        </div>
-                                        @endif
-                                    @endisset
+                                    <canvas id="milestoneLiveChart"></canvas>
+                                </div>
                             </div>
                         </div>
             
@@ -2700,14 +2686,7 @@
                                     <i class="bi bi-pie-chart-fill"></i>
                                     Beneficiary Distribution
                                 </div>
-                                @if(($project->actual_beneficiary_count ?? 0) > 0)
                                 <canvas id="beneficiaryDoughnut" height="250"></canvas>
-                                @else
-                                <div class="text-center py-5">
-                                    <i class="bi bi-people display-4 text-muted opacity-25"></i>
-                                    <p class="text-muted mt-2 small">No beneficiary data</p>
-                                </div>
-                                @endif
                                 <div class="mt-3">
                                     <div class="row text-center">
                                         <div class="col-4">
@@ -2750,7 +2729,7 @@
                                             @endphp
                                             <div class="gauge-bg" style="background:conic-gradient(var(--isico-primary) 0deg {{ $deg }}deg, #e8f5ef {{ $deg }}deg 360deg);"></div>
                                             <div class="gauge-inner">
-                                                <div class="fs-6 fw-bold text-primary">{{ $confidence }}%</div>
+                                                <div class="fs-1 fw-bold text-primary">{{ $confidence }}%</div>
                                                 <div class="text-muted" style="font-size:0.85rem;">Confidence</div>
                                             </div>
                                         </div>
@@ -2808,14 +2787,7 @@
                                     </button>
                                 </div>
                                 <div class="chart-container" style="position: relative; height:250px; width:100%">
-                                    @if(isset($riskBreakdown) && array_sum($riskBreakdown) > 0)
                                     <canvas id="riskRadarChart"></canvas>
-                                    @else
-                                    <div class="d-flex flex-column align-items-center justify-content-center h-100 text-muted">
-                                        <i class="bi bi-shield-slash display-4 opacity-25 mb-2"></i>
-                                        <small>No risk factors identified</small>
-                                    </div>
-                                    @endif
                                 </div>
                                 <div class="mt-3">
                                     <div class="row g-2">
@@ -3198,14 +3170,7 @@
                         </div>
                         <div class="card-body text-center">
                             <div style="height: 200px; position: relative;">
-                                @if(isset($surveys) && $surveys->count() > 0 && isset($surveyStats['satisfaction']) && array_sum($surveyStats['satisfaction']) > 0)
-                               <canvas id="satisfactionChart"></canvas>
-                               @else
-                               <div class="d-flex flex-column align-items-center justify-content-center h-100 pb-4">
-                                   <i class="bi bi-emoji-neutral display-4 text-muted opacity-25 mb-2"></i>
-                                   <p class="text-muted small mb-0">No satisfaction data collected yet</p>
-                               </div>
-                               @endif
+                                <canvas id="satisfactionChart"></canvas>
                             </div>
                             <div class="mt-3">
                                 <div class="d-flex flex-wrap justify-content-center gap-2 small">
@@ -3805,14 +3770,7 @@
                             <h6 class="fw-bold mb-3">Funding Sources</h6>
                             <div class="row align-items-center">
                                 <div class="col-8">
-                                    @if($donors->count() > 0)
-                                   <canvas id="fundingChart" height="120"></canvas>
-                                   @else
-                                   <div class="text-center py-4">
-                                       <i class="bi bi-piggy-bank display-6 text-muted opacity-25"></i>
-                                       <p class="text-muted mt-2 small mb-0">No funding data</p>
-                                   </div>
-                                   @endif
+                                    <canvas id="fundingChart" height="120"></canvas>
                                 </div>
                                 <div class="col-4">
                                     <div class="list-group list-group-flush">
@@ -4958,15 +4916,14 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
             <div class="modal-body p-4">
                 <div class="mb-4">
-                    <h6 class="fw-bold text-dark border-bottom pb-2 mb-3">1. Execution Health</h6>
+                    <h6 class="fw-bold text-dark border-bottom pb-2 mb-3">1. Execution Confidence Index</h6>
                     <p class="small text-muted mb-2">
-                        A composite score reflecting the project's overall health and unique readiness factors.
+                        This index reflects the project's readiness and momentum. It is directly controlled by the Admin based on milestone completion and resource availability.
                     </p>
                     <div class="alert alert-light border-start border-primary border-3">
                         <small>
-                            <strong>Formula:</strong> Direct input from Admin Panel (Completion Readiness).<br>
-                            <strong>Meaning:</strong> Represents a composite score based on milestones and resource availability.<br>
-                            <strong>Example:</strong> 100% = <strong>Good</strong>
+                            <strong>Formula:</strong> Direct input from Admin Panel ("Completion Readiness").<br>
+                            <strong>Example:</strong> If the admin sets readiness to <strong>85%</strong>, the gauge shows 85%.
                         </small>
                     </div>
                 </div>
