@@ -1868,8 +1868,14 @@
                             <div class="card-body">
                                 <!-- Budget Chart -->
                                 <div class="mb-4">
+                                    @if(isset($estimation) && $estimation->items->count() > 0)
                                     <canvas id="budgetChart" height="200"></canvas>
-                                </div>
+                                    @else
+                                    <div class="text-center py-4">
+                                        <i class="bi bi-pie-chart display-6 text-muted opacity-25"></i>
+                                        <p class="text-muted mt-2 small mb-0">No budget data available</p>
+                                    </div>
+                                    @endif
 
                                 <!-- Funding Status -->
                                 <div class="list-group list-group-flush">
@@ -2674,8 +2680,16 @@
                                     </div>
                                 </div>
                                 <div class="chart-container" style="position: relative; height:300px; width:100%">
-                                    <canvas id="milestoneLiveChart"></canvas>
-                                </div>
+                                    @isset($milestones)
+                                        @if($milestones->count() > 0)
+                                        <canvas id="milestoneLiveChart"></canvas>
+                                        @else
+                                        <div class="d-flex flex-column align-items-center justify-content-center h-100 text-muted">
+                                            <i class="bi bi-bar-chart-line display-4 opacity-25 mb-2"></i>
+                                            <small>No milestones tracked yet</small>
+                                        </div>
+                                        @endif
+                                    @endisset
                             </div>
                         </div>
             
@@ -2686,7 +2700,14 @@
                                     <i class="bi bi-pie-chart-fill"></i>
                                     Beneficiary Distribution
                                 </div>
+                                @if(($project->actual_beneficiary_count ?? 0) > 0)
                                 <canvas id="beneficiaryDoughnut" height="250"></canvas>
+                                @else
+                                <div class="text-center py-5">
+                                    <i class="bi bi-people display-4 text-muted opacity-25"></i>
+                                    <p class="text-muted mt-2 small">No beneficiary data</p>
+                                </div>
+                                @endif
                                 <div class="mt-3">
                                     <div class="row text-center">
                                         <div class="col-4">
@@ -2787,7 +2808,14 @@
                                     </button>
                                 </div>
                                 <div class="chart-container" style="position: relative; height:250px; width:100%">
+                                    @if(isset($riskBreakdown) && array_sum($riskBreakdown) > 0)
                                     <canvas id="riskRadarChart"></canvas>
+                                    @else
+                                    <div class="d-flex flex-column align-items-center justify-content-center h-100 text-muted">
+                                        <i class="bi bi-shield-slash display-4 opacity-25 mb-2"></i>
+                                        <small>No risk factors identified</small>
+                                    </div>
+                                    @endif
                                 </div>
                                 <div class="mt-3">
                                     <div class="row g-2">
@@ -3170,7 +3198,14 @@
                         </div>
                         <div class="card-body text-center">
                             <div style="height: 200px; position: relative;">
-                                <canvas id="satisfactionChart"></canvas>
+                                @if(isset($surveys) && $surveys->count() > 0 && isset($surveyStats['satisfaction']) && array_sum($surveyStats['satisfaction']) > 0)
+                               <canvas id="satisfactionChart"></canvas>
+                               @else
+                               <div class="d-flex flex-column align-items-center justify-content-center h-100 pb-4">
+                                   <i class="bi bi-emoji-neutral display-4 text-muted opacity-25 mb-2"></i>
+                                   <p class="text-muted small mb-0">No satisfaction data collected yet</p>
+                               </div>
+                               @endif
                             </div>
                             <div class="mt-3">
                                 <div class="d-flex flex-wrap justify-content-center gap-2 small">
@@ -3770,7 +3805,14 @@
                             <h6 class="fw-bold mb-3">Funding Sources</h6>
                             <div class="row align-items-center">
                                 <div class="col-8">
-                                    <canvas id="fundingChart" height="120"></canvas>
+                                    @if($donors->count() > 0)
+                                   <canvas id="fundingChart" height="120"></canvas>
+                                   @else
+                                   <div class="text-center py-4">
+                                       <i class="bi bi-piggy-bank display-6 text-muted opacity-25"></i>
+                                       <p class="text-muted mt-2 small mb-0">No funding data</p>
+                                   </div>
+                                   @endif
                                 </div>
                                 <div class="col-4">
                                     <div class="list-group list-group-flush">
