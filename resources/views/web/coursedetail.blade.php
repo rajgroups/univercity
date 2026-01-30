@@ -37,7 +37,9 @@
 @section('content')
     <style>
         :root {
-            --primary-color: #0d6efd;
+            --primary-color: #2e7d32; /* Green 800 */
+            --primary-light: #4caf50; /* Green 500 */
+            --primary-soft: rgba(76, 175, 80, 0.1);
             --secondary-color: #6c757d;
             --light-bg: #f8f9fa;
             --dark-text: #212529;
@@ -48,7 +50,7 @@
 
         /* Hero Section */
         .course-hero {
-            background: linear-gradient(135deg, #f0f4ff 0%, #eef1f5 100%);
+            background: linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 100%);
             padding: 80px 0;
             position: relative;
             overflow: hidden;
@@ -60,7 +62,7 @@
             right: -10%;
             width: 600px;
             height: 600px;
-            background: radial-gradient(circle, rgba(13, 110, 253, 0.05) 0%, rgba(255, 255, 255, 0) 70%);
+            background: radial-gradient(circle, rgba(76, 175, 80, 0.08) 0%, rgba(255, 255, 255, 0) 70%);
             border-radius: 50%;
             z-index: 1;
         }
@@ -73,7 +75,7 @@
             margin-bottom: 1.5rem;
         }
 
-        .badge-soft-primary { background: rgba(13, 110, 253, 0.1); color: var(--primary-color); }
+        .badge-soft-primary { background: var(--primary-soft); color: var(--primary-color); }
         .badge-soft-success { background: rgba(25, 135, 84, 0.1); color: #198754; }
         .badge-soft-warning { background: rgba(255, 193, 7, 0.1); color: #856404; }
 
@@ -117,7 +119,7 @@
         }
         .modern-tabs .nav-link:hover {
             color: var(--primary-color);
-            background: rgba(13, 110, 253, 0.02);
+            background: var(--primary-soft);
         }
         .modern-tabs .nav-link.active {
             color: var(--primary-color);
@@ -147,7 +149,8 @@
         }
         .feature-box:hover {
             background: #fff;
-            border-color: rgba(13, 110, 253, 0.2);
+            border-color: rgba(76, 175, 80, 0.3);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.08);
             box-shadow: 0 5px 15px rgba(0,0,0,0.05);
             transform: translateY(-3px);
         }
@@ -174,7 +177,7 @@
             padding: 1.2rem;
         }
         .custom-accordion .accordion-button:not(.collapsed) {
-            background: rgba(13, 110, 253, 0.05);
+            background: rgba(76, 175, 80, 0.05);
             color: var(--primary-color);
         }
 
@@ -196,6 +199,17 @@
             top: 15px;
             left: 15px;
             z-index: 2;
+        }
+        /* Overrides */
+        .bg-primary { background-color: var(--primary-color) !important; }
+        .text-primary { color: var(--primary-color) !important; }
+        .btn-primary { 
+            background-color: var(--primary-color) !important; 
+            border-color: var(--primary-color) !important; 
+        }
+        .btn-primary:hover {
+            background-color: #1b5e20 !important; /* Darker Green */
+            border-color: #1b5e20 !important;
         }
     </style>
 
