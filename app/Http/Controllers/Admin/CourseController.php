@@ -82,6 +82,8 @@ class CourseController extends Controller
             'review_stars'              => 'nullable|numeric|min:0|max:5',
             'review_count'              => 'nullable|integer|min:0',
             'internship_note'           => 'nullable|string',
+            'stipend_status'            => 'nullable|boolean',
+            'stipend_amount'            => 'nullable|required_if:stipend_status,1|string',
         ]);
 
 
@@ -122,6 +124,7 @@ class CourseController extends Controller
             }
 
             // Set default values
+            $validated['stipend_status'] = $request->boolean('stipend_status');
             $validated['internship'] = $request->boolean('internship');
             $validated['is_featured'] = $request->boolean('is_featured');
             $validated['status'] = $request->boolean('status');
@@ -286,6 +289,8 @@ class CourseController extends Controller
             'review_stars'              => 'nullable|numeric|min:0|max:5',
             'review_count'              => 'nullable|integer|min:0',
             'internship_note'           => 'nullable|string',
+            'stipend_status'            => 'nullable|boolean',
+            'stipend_amount'            => 'nullable|required_if:stipend_status,1|string',
         ]);
 
         try {
@@ -352,6 +357,7 @@ class CourseController extends Controller
             }
 
             // Set boolean values
+            $validated['stipend_status'] = $request->boolean('stipend_status');
             $validated['internship'] = $request->boolean('internship');
             $validated['is_featured'] = $request->boolean('is_featured');
             $validated['status'] = $request->boolean('status');

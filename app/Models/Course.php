@@ -55,6 +55,8 @@ class Course extends Model
         'review_stars',
         'review_count',
         'internship_note',
+        'stipend_status',
+        'stipend_amount',
     ];
 
     protected $casts = [
@@ -63,6 +65,7 @@ class Course extends Model
         'topics' => 'array',
         'other_specifications' => 'array',
         'internship' => 'boolean',
+        'stipend_status' => 'boolean',
         'is_featured' => 'boolean',
         'status' => 'boolean',
         'start_date' => 'date',

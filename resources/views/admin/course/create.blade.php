@@ -619,6 +619,46 @@
                                     </div>
                                 @enderror
                             </div>
+                            
+                            <div class="col-md-6 mb-4">
+                                <label class="form-label fw-semibold">
+                                    Stipend Available
+                                    <small class="text-muted d-block fw-normal">Is a stipend provided?</small>
+                                </label>
+                                <div class="btn-group w-100" role="group">
+                                    <input type="radio" class="btn-check" name="stipend_status" id="stipend_no" 
+                                           value="0" {{ old('stipend_status', 0) == 0 ? 'checked' : '' }}>
+                                    <label class="btn btn-outline-danger" for="stipend_no">
+                                        <i class="feather feather-x-circle me-1"></i> No
+                                    </label>
+                                    
+                                    <input type="radio" class="btn-check" name="stipend_status" id="stipend_yes" 
+                                           value="1" {{ old('stipend_status') == 1 ? 'checked' : '' }}>
+                                    <label class="btn btn-outline-success" for="stipend_yes">
+                                        <i class="feather feather-check-circle me-1"></i> Yes
+                                    </label>
+                                </div>
+                                @error('stipend_status')
+                                    <div class="invalid-feedback d-flex align-items-center">
+                                        <i class="feather feather-alert-circle me-1"></i> {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+
+                            <div class="col-md-6 mb-4" id="stipend_amount_div" style="display: {{ old('stipend_status', 0) == 1 ? 'block' : 'none' }}">
+                                <label class="form-label fw-semibold">
+                                    Stipend Amount
+                                    <small class="text-muted d-block fw-normal">Amount provided</small>
+                                </label>
+                                <input type="text" class="form-control form-control-lg @error('stipend_amount') is-invalid @enderror"
+                                       name="stipend_amount" value="{{ old('stipend_amount') }}" 
+                                       placeholder="e.g., ₹5,000/month">
+                                @error('stipend_amount')
+                                    <div class="invalid-feedback d-flex align-items-center">
+                                        <i class="feather feather-alert-circle me-1"></i> {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
                         </div>
                     </div>
 
@@ -1458,6 +1498,16 @@
                 } else {
                     $('#internship_note_div').hide();
                     $('input[name="internship_note"]').val('');
+                }
+            });
+
+            // Toggle stipend amount
+            $('input[name="stipend_status"]').change(function() {
+                if ($(this).val() == '1') {
+                    $('#stipend_amount_div').show().addClass('animate__animated animate__fadeIn');
+                } else {
+                    $('#stipend_amount_div').hide();
+                    $('input[name="stipend_amount"]').val('');
                 }
             });
 
