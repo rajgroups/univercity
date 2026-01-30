@@ -2715,7 +2715,10 @@
                             <div class="enhanced-panel h-100">
                                 <div class="panel-title">
                                     <i class="bi bi-speedometer"></i>
-                                    Execution Confidence Index
+                                    Execution Health
+                                    <button class="btn btn-sm btn-link text-muted p-0 ms-2" data-bs-toggle="modal" data-bs-target="#calculationGuideModal" title="How is this calculated?">
+                                        <i class="bi bi-info-circle"></i>
+                                    </button>
                                 </div>
                                 <div class="row align-items-center">
                                     <div class="col-md-5 text-center">
@@ -2726,7 +2729,7 @@
                                             @endphp
                                             <div class="gauge-bg" style="background:conic-gradient(var(--isico-primary) 0deg {{ $deg }}deg, #e8f5ef {{ $deg }}deg 360deg);"></div>
                                             <div class="gauge-inner">
-                                                <div class="fs-1 fw-bold text-primary">{{ $confidence }}%</div>
+                                                <div class="fs-6 fw-bold text-primary">{{ $confidence }}%</div>
                                                 <div class="text-muted" style="font-size:0.85rem;">Confidence</div>
                                             </div>
                                         </div>
@@ -2779,6 +2782,9 @@
                                 <div class="panel-title">
                                     <i class="bi bi-shield-check"></i>
                                     Project Risk Assessment
+                                    <button class="btn btn-sm btn-link text-muted p-0 ms-2" data-bs-toggle="modal" data-bs-target="#calculationGuideModal" title="How is this calculated?">
+                                        <i class="bi bi-info-circle"></i>
+                                    </button>
                                 </div>
                                 <div class="chart-container" style="position: relative; height:250px; width:100%">
                                     <canvas id="riskRadarChart"></canvas>
@@ -4899,5 +4905,56 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 @endpush
+
+<!-- Execution Calculation Guide Modal -->
+<div class="modal fade" id="calculationGuideModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header bg-light">
+                <h5 class="modal-title fw-bold text-primary"><i class="bi bi-calculator me-2"></i>Dashboard Metrics Guide</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="mb-4">
+                    <h6 class="fw-bold text-dark border-bottom pb-2 mb-3">1. Execution Health</h6>
+                    <p class="small text-muted mb-2">
+                        A composite score reflecting the project's overall health and unique readiness factors.
+                    </p>
+                    <div class="alert alert-light border-start border-primary border-3">
+                        <small>
+                            <strong>Formula:</strong> Direct input from Admin Panel (Completion Readiness).<br>
+                            <strong>Meaning:</strong> Represents a composite score based on milestones and resource availability.<br>
+                            <strong>Example:</strong> 100% = <strong>Good</strong>
+                        </small>
+                    </div>
+                </div>
+                
+                <div>
+                    <h6 class="fw-bold text-dark border-bottom pb-2 mb-3">2. Project Risk Assessment</h6>
+                    <p class="small text-muted mb-2">
+                        The risk score is a weighted sum of all identified risks. Each risk type has a severity multiplier.
+                    </p>
+                    <ul class="list-unstyled small text-muted mb-3">
+                        <li><span class="badge bg-danger">High</span> Impact = 3 points</li>
+                        <li><span class="badge bg-warning text-dark">Medium</span> Impact = 2 points</li>
+                        <li><span class="badge bg-success">Low</span> Impact = 1 point</li>
+                    </ul>
+                    <div class="alert alert-light border-start border-warning border-3">
+                        <small>
+                            <strong>Calculation Example:</strong><br>
+                            1 High Risk (3) + 2 Medium Risks (2+2) + 1 Low Risk (1)<br>
+                            <strong>Total Score = 8</strong> (Medium Risk Level)
+                        </small>
+                    </div>
+                    <div class="d-flex justify-content-between small text-muted mt-2">
+                        <span>Low Risk: < 5</span>
+                        <span>Medium Risk: 5 - 10</span>
+                        <span>High Risk: > 10</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 @endsection

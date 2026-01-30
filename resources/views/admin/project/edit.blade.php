@@ -1391,6 +1391,63 @@
                         <i class="feather feather-info me-2"></i> This section is only relevant for Ongoing or Completed
                         projects.
                     </div>
+                    
+                    <!-- Execution Dashboard Guide -->
+        <div class="alert alert-light border-primary border-start border-4 mb-4 shadow-sm">
+            <h6 class="text-primary fw-bold mb-3"><i class="feather feather-activity me-2"></i>Live Monitoring Dashboard Input Guide</h6>
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <div class="p-3 bg-white rounded border h-100">
+                        <strong class="text-dark d-block mb-2">1. Execution Health</strong>
+                        <p class="small text-muted mb-2">Determines the "health" gauge on the dashboard.</p>
+                        <ul class="small text-muted mb-0 list-unstyled">
+                            <li><strong>Source:</strong> <code>Completion Readiness (%)</code> field below.</li>
+                            <li><strong>Frontend Label:</strong> "Execution Health"</li>
+                            <li class="mt-2 text-dark bg-light p-2 rounded">
+                                <strong>Example:</strong><br>
+                                Input: <code>100</code> &rarr; Frontend: <strong>100.00 (Good)</strong><br>
+                                <em>"Composite score based on milestones"</em>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="p-3 bg-white rounded border h-100">
+                        <strong class="text-dark d-block mb-2">2. Project Risk Assessment</strong>
+                        <p class="small text-muted mb-2">Calculates the overall risk level based on "Risks" below.</p>
+                        <ul class="small text-muted mb-0 list-unstyled">
+                            <li><strong>Source:</strong> Weighted sum of Risks & Impacts.</li>
+                            <li><strong>Formula:</strong> High(3) + Medium(2) + Low(1)</li>
+                            <li class="mt-2 text-dark bg-light p-2 rounded">
+                                <strong>Example:</strong><br>
+                                1x High, 1x Med, 1x Low &rarr; Score: <strong>6 (Medium Risk)</strong><br>
+                                <em>"Risk level monitoring"</em>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="p-3 bg-white rounded border h-100">
+                        <strong class="text-dark d-block mb-2">3. Project Progress</strong>
+                        <ul class="small text-muted mb-0 list-unstyled">
+                            <li><strong>Source:</strong> <code>Project Progress</code> (Basic Details Tab).</li>
+                            <li class="mt-1"><strong>Example:</strong> 89% &rarr; "89.00% Overall completion"</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="p-3 bg-white rounded border h-100">
+                        <strong class="text-dark d-block mb-2">4. Beneficiaries Reached</strong>
+                        <ul class="small text-muted mb-0 list-unstyled">
+                            <li><strong>Source:</strong> <code>Actual Beneficiary Count</code> field below.</li>
+                            <li class="mt-1"><strong>Example:</strong> 111 &rarr; "111 - Total individuals reached"</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+                    </div>
+
                     <h5 class="mb-4 text-primary"><i class="feather feather-clock me-2"></i> Ongoing Project Updates &
                         Progress Tracking</h5>
                     <div class="row">
@@ -1664,7 +1721,7 @@
                                         @foreach ($risks as $index => $risk)
                                             <div class="border p-3 mb-3 risk-item">
                                                 <div class="row">
-                                                    <div class="col-md-4">
+                                                    <div class="col-md-3">
                                                         <div class="mb-3">
                                                             <label class="form-label">Risk</label>
                                                             <input type="text"
@@ -1678,7 +1735,17 @@
                                                             @enderror
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-4">
+                                                    <div class="col-md-2">
+                                                        <div class="mb-3">
+                                                            <label class="form-label">Impact</label>
+                                                            <select name="risks[{{ $index }}][impact]" class="form-select select2">
+                                                                <option value="low" {{ ($risk['impact'] ?? '') == 'low' ? 'selected' : '' }}>Low</option>
+                                                                <option value="medium" {{ ($risk['impact'] ?? '') == 'medium' ? 'selected' : '' }}>Medium</option>
+                                                                <option value="high" {{ ($risk['impact'] ?? '') == 'high' ? 'selected' : '' }}>High</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
                                                         <div class="mb-3">
                                                             <label class="form-label">Mitigation</label>
                                                             <input type="text"
@@ -1717,7 +1784,7 @@
                                         @foreach (old('risks') as $index => $risk)
                                             <div class="border p-3 mb-3 risk-item">
                                                 <div class="row">
-                                                    <div class="col-md-4">
+                                                    <div class="col-md-3">
                                                         <div class="mb-3">
                                                             <label class="form-label">Risk</label>
                                                             <input type="text"
@@ -1731,7 +1798,17 @@
                                                             @enderror
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-4">
+                                                    <div class="col-md-2">
+                                                        <div class="mb-3">
+                                                            <label class="form-label">Impact</label>
+                                                            <select name="risks[{{ $index }}][impact]" class="form-select select2">
+                                                                <option value="low" {{ ($risk['impact'] ?? '') == 'low' ? 'selected' : '' }}>Low</option>
+                                                                <option value="medium" {{ ($risk['impact'] ?? '') == 'medium' ? 'selected' : '' }}>Medium</option>
+                                                                <option value="high" {{ ($risk['impact'] ?? '') == 'high' ? 'selected' : '' }}>High</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
                                                         <div class="mb-3">
                                                             <label class="form-label">Mitigation</label>
                                                             <input type="text"
@@ -2882,14 +2959,24 @@
                 let html = `
                 <div class="border p-3 mb-3 risk-item">
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <div class="mb-3">
                                 <label class="form-label">Risk</label>
                                 <input type="text" name="risks[${riskCounter}][risk]"
                                     class="form-control" placeholder="e.g., Funding delay">
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-2">
+                            <div class="mb-3">
+                                <label class="form-label">Impact</label>
+                                <select name="risks[${riskCounter}][impact]" class="form-select select2">
+                                    <option value="low">Low</option>
+                                    <option value="medium">Medium</option>
+                                    <option value="high">High</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
                             <div class="mb-3">
                                 <label class="form-label">Mitigation</label>
                                 <input type="text" name="risks[${riskCounter}][mitigation]"
@@ -2909,6 +2996,14 @@
                     </div>
                 </div>`;
                 $('#risks_wrapper').append(html);
+                
+                // Re-initialize Select2 for the new dropdown
+                 $('#risks_wrapper .select2:last').select2({
+                    placeholder: "Select Impact",
+                    minimumResultsForSearch: Infinity, // No search box for small lists
+                    width: '100%'
+                });
+
                 riskCounter++;
             });
 
