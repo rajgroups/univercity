@@ -146,19 +146,23 @@
                                 </div>
                             </form>
                             <!-- Logos -->
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <a href="/"> <img src="{{ asset($defaultSettings->site_logo ?? null) }}"
                                         alt="{{ $defaultSettings->site_title ?? null }}" style="height: 54px;"></a>
                             </div>
+
                             <!-- Search Bar (Visible on md+ screens only) -->
-                            <div class="col-md-4 my-2 d-none d-md-block order-md-2 mt-2">
+                            <div class="col-md-6 my-2 d-none d-md-block order-md-2 mt-2">
                                 <form method="GET" action="{{ route('web.course.index') }}">
-                                    <div class="input-group mt-2 rounded-1">
-                                        <span class="input-group-text bg-white border-end-0">
-                                            <i class="fa fa-search"></i>
+                                    <div class="input-group rounded-pill overflow-hidden shadow-sm border" style="background: #fff;">
+                                        <span class="input-group-text bg-white border-0 ps-3">
+                                            <i class="fa fa-search text-muted"></i>
                                         </span>
-                                        <input type="text" name="search" class="form-control border-start-0 p-2"
-                                            placeholder="Search Skill Courses" value="{{ request('search') }}">
+                                        <input type="text" name="search" class="form-control border-0 py-2 shadow-none"
+                                            placeholder="Search Skill Courses..." value="{{ request('search') }}" style="font-size: 0.95rem;">
+                                        <button class="btn btn-primary px-4 fw-bold" type="submit" style="background-color: {{ $defaultSettings->primary_color ?? '#0d6efd' }}; border: none;">
+                                            Search
+                                        </button>
                                     </div>
                             </div>
 
@@ -172,18 +176,18 @@
                             </form>
 
                             <!-- Right Buttons -->
-                            <div class="col-md-4 text-end gap-3 order-3 d-flex fs-sm-12 d-none-mobile">
+                            <div class="col-md-3 text-end gap-2 order-3 d-flex justify-content-end align-items-center d-none-mobile">
                                 <!-- Register Button -->
-                                <button class="btn btn-warning text-white btn-sm fw-bold px-3 py-2 fs-sm-12"
-                                    data-bs-toggle="modal" data-bs-target="#registerModal" style="background-color: #FF671F">
-                                    <i class="fas fa-user me-2"></i> REGISTER
+                                <button class="btn btn-warning text-white btn-sm fw-bold px-3 py-2 rounded-pill shadow-sm"
+                                    data-bs-toggle="modal" data-bs-target="#registerModal" style="background-color: #FF671F; border: none; font-size: 0.85rem;">
+                                    <i class="fas fa-user me-1"></i> Register
                                 </button>
 
                                 <!-- Login Button -->
                                 <a href="#"
-                                    class="btn btn-outline-success btn-sm px-3 py-2 fs-sm-12"
-                                    data-bs-toggle="modal" data-bs-target="#comingSoonModal">
-                                    <i class="fas fa-sign-in-alt me-2"></i> LOGIN
+                                    class="btn btn-outline-success btn-sm px-3 py-2 rounded-pill fw-bold shadow-sm"
+                                    data-bs-toggle="modal" data-bs-target="#comingSoonModal" style="font-size: 0.85rem;">
+                                    <i class="fas fa-sign-in-alt me-1"></i> Login
                                 </a>
                             </div>
                         </div>
