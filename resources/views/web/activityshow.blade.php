@@ -366,9 +366,13 @@
                                         <div>
                                             <h6 class="mb-1">Date & Time</h6>
                                             <p class="mb-0">
-                                                {{ \Carbon\Carbon::parse($event->start_date)->format('l, F j, Y') }}<br>
-                                                {{ \Carbon\Carbon::parse($event->start_time)->format('g:i A') }} -
-                                                {{ \Carbon\Carbon::parse($event->end_time)->format('g:i A') }}
+                                                @if(\Carbon\Carbon::parse($event->start_date)->format('Y-m-d') == \Carbon\Carbon::parse($event->end_date)->format('Y-m-d'))
+                                                    {{ \Carbon\Carbon::parse($event->start_date)->format('l, F j, Y') }}<br>
+                                                    {{ \Carbon\Carbon::parse($event->start_time)->format('g:i A') }} - {{ \Carbon\Carbon::parse($event->end_time)->format('g:i A') }}
+                                                @else
+                                                    {{ \Carbon\Carbon::parse($event->start_date)->format('M j, Y') }} - {{ \Carbon\Carbon::parse($event->end_date)->format('M j, Y') }}<br>
+                                                    {{ \Carbon\Carbon::parse($event->start_time)->format('g:i A') }}
+                                                @endif
                                             </p>
                                         </div>
                                     </div>
@@ -481,7 +485,7 @@
 
                     <div class="card mb-4">
                         <div class="card-body">
-                            <h3 class="fw-bold mb-4">About This {{ $event->is_competition ? 'Competition' : 'Event' }}
+                            <h3 class="fw-bold mb-4">About This {{ $event->is_competition ? 'Competition' : 'Activity' }}
                             </h3>
                             {!! $event->description !!}
                         </div>
@@ -568,8 +572,14 @@
                                 <hr>
 
                                 <div class="d-flex justify-content-between mb-2">
-                                    <span>Start Date:</span>
-                                    <strong>{{ \Carbon\Carbon::parse($event->start_date)->format('M j, Y') }}</strong>
+                                    <span>Date:</span>
+                                    <strong>
+                                        @if(\Carbon\Carbon::parse($event->start_date)->format('Y-m-d') == \Carbon\Carbon::parse($event->end_date)->format('Y-m-d'))
+                                            {{ \Carbon\Carbon::parse($event->start_date)->format('M j, Y') }}
+                                        @else
+                                            {{ \Carbon\Carbon::parse($event->start_date)->format('M j') }} - {{ \Carbon\Carbon::parse($event->end_date)->format('M j, Y') }}
+                                        @endif
+                                    </strong>
                                 </div>
                                 <div class="d-flex justify-content-between mb-2">
                                     <span>Location:</span>

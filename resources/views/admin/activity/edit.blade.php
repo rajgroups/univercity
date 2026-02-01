@@ -263,20 +263,11 @@
                                     <div class="mb-3">
                                         <label class="form-label">Status <span class="text-danger">*</span></label>
                                         <select name="status" class="form-select @error('status') is-invalid @enderror">
-                                            <option value="0"
-                                                {{ old('status', $activity->status) == '0' ? 'selected' : '' }}>Draft
-                                            </option>
                                             <option value="1"
-                                                {{ old('status', $activity->status) == '1' ? 'selected' : '' }}>Upcoming
+                                                {{ old('status', $activity->status) >= 1 ? 'selected' : '' }}>Active
                                             </option>
-                                            <option value="2"
-                                                {{ old('status', $activity->status) == '2' ? 'selected' : '' }}>Ongoing
-                                            </option>
-                                            <option value="3"
-                                                {{ old('status', $activity->status) == '3' ? 'selected' : '' }}>Completed
-                                            </option>
-                                            <option value="4"
-                                                {{ old('status', $activity->status) == '4' ? 'selected' : '' }}>Cancelled
+                                            <option value="0"
+                                                {{ old('status', $activity->status) == 0 ? 'selected' : '' }}>Inactive
                                             </option>
                                         </select>
                                         @error('status')
@@ -370,7 +361,7 @@
                                     </div>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label">Rules & Guidelines</label>
+                                    <label class="form-label">Rules & Guidelines (Competition)</label>
                                     <textarea class="form-control @error('rules') is-invalid @enderror" name="rules" rows="3">{{ old('rules', $activity->rules) }}</textarea>
                                     @error('rules')
                                         <div class="invalid-feedback">{{ $message }}</div>

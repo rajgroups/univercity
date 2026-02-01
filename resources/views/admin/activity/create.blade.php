@@ -225,11 +225,8 @@
                                     <div class="mb-3">
                                         <label class="form-label">Status <span class="text-danger">*</span></label>
                                         <select name="status" class="form-select @error('status') is-invalid @enderror">
-                                            <option value="0" {{ old('status') == '0' ? 'selected' : '' }}>Draft</option>
-                                            <option value="1" {{ old('status') == '1' ? 'selected' : '' }}>Upcoming</option>
-                                            <option value="2" {{ old('status') == '2' ? 'selected' : '' }}>Ongoing</option>
-                                            <option value="3" {{ old('status') == '3' ? 'selected' : '' }}>Completed</option>
-                                            <option value="4" {{ old('status') == '4' ? 'selected' : '' }}>Cancelled</option>
+                                            <option value="1" {{ old('status') == '1' ? 'selected' : '' }}>Active</option>
+                                            <option value="0" {{ old('status') == '0' ? 'selected' : '' }}>Inactive</option>
                                         </select>
                                         @error('status')
                                             <div class="invalid-feedback">{{ $message }}</div>
@@ -315,7 +312,7 @@
                                     </div>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label">Rules & Guidelines</label>
+                                    <label class="form-label">Rules & Guidelines (Competition)</label>
                                     <textarea class="form-control @error('rules') is-invalid @enderror" name="rules"
                                         rows="3">{{ old('rules') }}</textarea>
                                     @error('rules')
