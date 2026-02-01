@@ -15,12 +15,12 @@
                 <nav aria-label="breadcrumb" class="mb-3">
                     <ol class="breadcrumb mb-0">
                         <li class="breadcrumb-item"><a href="{{ url('/') }}" class="text-white-50">Home</a></li>
-                        <li class="breadcrumb-item active text-white" aria-current="page">
+                        {{-- <li class="breadcrumb-item active text-white" aria-current="page">
                             @if(isset($pageType) && $pageType === 'projects') Projects
                             @elseif(isset($pageType) && $pageType === 'announcements') Programs & Schemes
                             @else Catalog
                             @endif
-                        </li>
+                        </li> --}}
                     </ol>
                 </nav>
                 <h1 class="display-4 fw-bold mb-3 text-white">
