@@ -128,7 +128,7 @@
             letter-spacing: 0.5px;
             text-transform: uppercase;
         }
-        
+
         .event-badge.modern-primary {
             background: rgba(13, 110, 253, 0.2);
             color: #6ea8fe;
@@ -224,7 +224,7 @@
                             <i class="fas {{ $event->entry_fee > 0 ? 'fa-ticket-alt' : 'fa-gift' }} me-2"></i>
                             {{ $event->entry_fee > 0 ? 'Paid: ₹' . number_format($event->entry_fee, 2) : 'Free' }}
                         </span>
-                        
+
                         <span class="event-badge text-white" style="background: rgba(255,255,255,0.15); backdrop-filter: blur(4px);">
                             <i class="fas fa-users me-2"></i> {{ $event->unlimited_spots ? 'Unlimited' : ($event->max_participants ?? 'Unlimited') }} Spots
                         </span>
@@ -238,7 +238,7 @@
                     @if($event->subtitle)
                         <h4 class="h5 text-white opacity-75 mb-4 fw-normal" style="max-width: 800px; line-height: 1.6;">{{ $event->subtitle }}</h4>
                     @endif
-                    
+
                     <!-- Social Share -->
                     <div class="mb-4">
                         <span class="text-white me-2">Share:</span>
@@ -453,6 +453,21 @@
                         }
                     @endphp
 
+                    @if(!empty($event->rules))
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h3 class="fw-bold mb-3">Rules & Guidelines</h3>
+
+                            <div class="border rounded bg-light p-3">
+                                <p class="mb-0 text-dark">
+                                    {!! nl2br(e($event->rules)) !!}
+                                </p>
+                            </div>
+
+                        </div>
+                    </div>
+                    @endif
+
                     @if($sponsors->isNotEmpty())
                     <div class="card mb-4">
                         <div class="card-body">
@@ -463,15 +478,15 @@
                                     <div class="border rounded p-3 h-100 bg-light">
                                         @if(!empty($sponsor['logo']))
                                         <div class="text-center mb-3 sponsor-logo-container bg-white rounded p-2">
-                                            <img src="{{ asset($sponsor['logo']) }}" alt="{{ $sponsor['name'] ?? 'Sponsor' }}" 
+                                            <img src="{{ asset($sponsor['logo']) }}" alt="{{ $sponsor['name'] ?? 'Sponsor' }}"
                                                  class="img-fluid" style="max-height: 80px; object-fit: contain;">
                                         </div>
                                         @endif
-                                        
+
                                         @if(!empty($sponsor['name']))
                                         <h6 class="fw-bold text-center text-dark mb-1">{{ $sponsor['name'] }}</h6>
                                         @endif
-                                        
+
                                         @if(!empty($sponsor['details']))
                                         <p class="small text-muted text-center mb-0">{{ $sponsor['details'] }}</p>
                                         @endif
@@ -605,7 +620,7 @@
                                             {{ $event->entry_fee > 0 ? 'Paid: ₹' . number_format($event->entry_fee, 2) : 'Free' }}
                                         </span>
                                         <span class="event-badge text-white bg-info">
-                                            <i class="fas fa-users me-2"></i> 
+                                            <i class="fas fa-users me-2"></i>
                                             {{ $event->unlimited_spots ? 'Unlimited' : ($event->max_participants ?? 'Unlimited') }} Spots
                                         </span>
                                     </div>
@@ -623,7 +638,7 @@
                                         <input type="hidden" name="name" value="Subscriber">
                                         <input type="hidden" name="mobile" value="0000000000">
                                         <input type="hidden" name="message" value="Newsletter Subscription from Event Page: {{ $event->title }}">
-                                        
+
                                         <div class="input-group mb-3">
                                             <input type="email" class="form-control" name="email" placeholder="Your Email Address" required>
                                             <button class="btn btn-primary" type="submit">Subscribe</button>
