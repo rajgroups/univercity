@@ -159,8 +159,8 @@
             scrollbar-width: none; /* Firefox */
             -ms-overflow-style: none;  /* IE 10+ */
         }
-        
-        .news-marquee-container::-webkit-scrollbar { 
+
+        .news-marquee-container::-webkit-scrollbar {
             width: 0;
             height: 0;
             display: none; /* Chrome/Safari/Webkit */
@@ -379,7 +379,7 @@
                                     <div class="swiper-slide">
                                         <div class="blog-card">
                                             {{-- {{ route('project.details', $project->slug) }} --}}
-                                            <a href="{{ route('web.project.show', [$project->category?->slug ?? 'policy', $project->slug]) }}"
+                                            <a href="{{ route('web.project.show', [$project->category?->slug ?? 'N/A', $project->slug]) }}"
                                                 class="card-img">
                                                 <img src="{{ asset($project->thumbnail_image) }}" alt="{{ $project->title }}">
                                                 <span class="date-block">
@@ -394,12 +394,12 @@
                                                 <img src="{{ asset('upload/project/'.$project->image) }}" class="card-user" alt="">
                                                 <p>By Admin</p>
                                             </div> --}}
-                                                <a href="{{ route('web.project.show', [$project->category?->slug ?? 'policy', $project->slug]) }}"
+                                                <a href="{{ route('web.project.show', [$project->category?->slug ?? 'N/A', $project->slug]) }}"
                                                     class="h6 fw-500 mb-8">{{ $project->title }}</a>
                                                 <p class="light-gray mb-24">
                                                     {{ \Illuminate\Support\Str::limit(strip_tags($project->description), 100) }}
                                                 </p>
-                                                <a href="{{ route('web.project.show', [$project->category?->slug ?? 'policy', $project->slug]) }}"
+                                                <a href="{{ route('web.project.show', [$project->category?->slug ?? 'N/A', $project->slug]) }}"
                                                     class="card-btn"> Read More</a>
                                             </div>
                                         </div>
@@ -444,7 +444,7 @@
                             <div class="swiper-slide" data-swiper-autoplay="2000">
                                 <div class="blog-card">
 
-                                    <a href="{{ route('web.project.show', [$project->category?->slug ?? 'policy', $project->slug]) }}"
+                                    <a href="{{ route('web.project.show', [$project->category?->slug ?? 'N/A', $project->slug]) }}"
                                         class="card-img">
                                         <img src="{{ asset($project->thumbnail_image) }}" alt="{{ $project->title }}">
                                         <span class="date-block">
@@ -459,12 +459,12 @@
                                         <img src="{{ asset('upload/project/'.$project->image) }}" class="card-user" alt="">
                                         <p>By Admin</p>
                                     </div> --}}
-                                        <a href="{{ route('web.project.show', [$project->category?->slug ?? 'policy', $project->slug]) }}"
+                                        <a href="{{ route('web.project.show', [$project->category?->slug ?? 'N/A', $project->slug]) }}"
                                             class="h6 fw-500 mb-8">{{ $project->title }}</a>
                                         <p class="light-gray mb-24">
                                             {{ \Illuminate\Support\Str::limit(strip_tags($project->description), 100) }}
                                         </p>
-                                        <a href="{{ route('web.project.show', [$project->category?->slug ?? 'policy', $project->slug]) }}"
+                                        <a href="{{ route('web.project.show', [$project->category?->slug ?? 'N/A', $project->slug]) }}"
                                             class="card-btn"> Read More</a>
                                     </div>
                                 </div>
@@ -559,13 +559,13 @@
                         <div class="swiper-wrapper">
                             @foreach ($programes as $program)
                                 @php
-                                    $progCategorySlug = $program->category?->slug ?? 'policy';
+                                    $progCategorySlug = $program->category?->slug ?? 'N/A';
                                 @endphp
                                 <div class="swiper-slide mb-4">
                                     <div class="scheme-card">
                                         <div class="scheme-image-wrapper">
                                             <img src="{{ $program->image ? asset($program->image) : asset('resource/web/assets/media/default/default-img.png') }}" alt="{{ $program->title }}">
-                                            <div class="scheme-badge">{{ $program->category->name ?? 'Policy' }}</div>
+                                            <div class="scheme-badge">{{ $program->category->name ?? 'N/A' }}</div>
                                         </div>
                                         <div class="p-4 flex-grow-1 d-flex flex-column">
                                             <h6 class="fw-bold mb-2">
@@ -889,7 +889,7 @@
                                     <div class="scheme-card">
                                         <div class="scheme-image-wrapper">
                                             <img src="{{ asset($scheme->image) }}" alt="{{ $scheme->title }}">
-                                            <div class="scheme-badge">{{ $scheme->category->name ?? 'Policy' }}</div>
+                                            <div class="scheme-badge">{{ $scheme->category->name ?? 'N/A' }}</div>
                                         </div>
                                         <div class="p-4 flex-grow-1">
                                             <h6 class="fw-bold mb-2">
@@ -1449,7 +1449,7 @@
         </style>
     @endif
     </div>
-    
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const container = document.querySelector('.news-marquee-container');
@@ -1460,16 +1460,16 @@
 
             function startScrolling() {
                 if (scrollInterval) clearInterval(scrollInterval);
-                
+
                 scrollInterval = setInterval(() => {
                     if (!isHovered) {
                         container.scrollTop += speed;
-                        
+
                         // Check if we've scrolled halfway (assuming duplication)
                         // Using scrollHeight / 2 is approximate if content is exactly duplicated.
                         // A more robust check: reset when near bottom
                         if (container.scrollTop >= (container.scrollHeight / 2)) {
-                            // Reset to 0 smoothly? No, jump to 0. 
+                            // Reset to 0 smoothly? No, jump to 0.
                             // Since content is duplicated, 0 should look identical to scrollHeight/2
                             container.scrollTop = 0;
                         }
@@ -1482,17 +1482,17 @@
 
             // Pause on hover
             container.addEventListener('mouseenter', () => {
-                isHovered = true; 
+                isHovered = true;
             });
 
             // Resume on mouse leave
             container.addEventListener('mouseleave', () => {
                 isHovered = false;
             });
-            
+
             // Optional: Detect manual scroll interaction if we want to get fancy,
             // but the simplified hover-pause logic handles the "manual scroll" requirement:
-            // When user hovers, it stops. They can then wheel-scroll. 
+            // When user hovers, it stops. They can then wheel-scroll.
             // When they leave, it resumes from that spot.
         });
     </script>

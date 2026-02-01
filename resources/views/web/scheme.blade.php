@@ -548,7 +548,7 @@
                         <i class="bi bi-building"></i>
                         <div class="scheme-meta-text">
                             <span>Department</span>
-                            <strong>{{ $announcement->category?->name ?? 'Policy' }}</strong>
+                            <strong>{{ $announcement->category?->name ?? 'N/A' }}</strong>
                         </div>
                     </div>
                     <div class="scheme-meta-item">
@@ -685,18 +685,18 @@
                                     <img src="{{ asset($similar->image ?? 'assets/images/placeholder.jpg') }}" class="similar-img" alt="{{ $similar->title ?? 'Scheme' }}">
                                     <div class="position-absolute top-0 end-0 m-3">
                                         <span class="badge bg-white text-primary rounded-pill px-3 py-2 shadow-sm small">
-                                            {{ $similar->category?->name ?? 'Policy' }}
+                                            {{ $similar->category?->name ?? 'N/A' }}
                                         </span>
                                     </div>
                                 </div>
                                 <div class="similar-body">
-                                    <span class="similar-category">{{ $similar->category?->name ?? 'Policy' }}</span>
+                                    <span class="similar-category">{{ $similar->category?->name ?? 'N/A' }}</span>
                                     <h4 class="similar-title">{{ $similar->title ?? 'Untitled Scheme' }}</h4>
                                     <p class="text-muted small mb-4 line-clamp-2">
                                         {{ Str::limit(strip_tags($similar->description ?? ''), 100) }}
                                     </p>
                                     <hr class="opacity-10 my-4">
-                                    <a href="{{ route('web.announcement.scheme', [$similar->category?->slug ?? 'policy', $similar->slug]) }}"
+                                    <a href="{{ route('web.announcement.scheme', [$similar->category?->slug ?? 'N/A', $similar->slug]) }}"
                                        class="btn-scheme-link">
                                         View Details <i class="bi bi-arrow-right"></i>
                                     </a>

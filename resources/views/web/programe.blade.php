@@ -411,7 +411,7 @@
                         <i class="bi bi-bookmarks"></i>
                         <div class="prog-meta-text">
                             <span>Category</span>
-                            <strong>{{ $category->name ?? 'Policy' }}</strong>
+                            <strong>{{ $category->name ?? 'N/A' }}</strong>
                         </div>
                     </div>
                     <div class="prog-meta-item">
@@ -513,7 +513,7 @@
                         <i class="bi bi-collection-play text-primary"></i> Similar Programs
                     </h5>
                     @forelse($similars as $similar)
-                        <a href="{{ route('web.announcement.program', [$similar->category?->slug ?? 'policy', $similar->slug]) }}" class="prog-mini-card">
+                        <a href="{{ route('web.announcement.program', [$similar->category?->slug ?? 'N/A', $similar->slug]) }}" class="prog-mini-card">
                             <img src="{{ asset($similar->image ?? 'assets/images/placeholder.jpg') }}" class="prog-mini-img" alt="{{ $similar->title }}">
                             <div>
                                 <h6 class="prog-mini-title">{{ Str::limit($similar->title, 50) }}</h6>
@@ -535,7 +535,7 @@
                     <div class="prog-tag-cloud">
                         @foreach($similars as $similar)
                             @php $tagTitle = explode(' ', $similar->title)[0] ?? 'Tag'; @endphp
-                            <a href="{{ route('web.announcement.program', [$similar->category?->slug ?? 'policy', $similar->slug]) }}" class="prog-tag">
+                            <a href="{{ route('web.announcement.program', [$similar->category?->slug ?? 'N/A', $similar->slug]) }}" class="prog-tag">
                                 #{{ $tagTitle }}
                             </a>
                         @endforeach
