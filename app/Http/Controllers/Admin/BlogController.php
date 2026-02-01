@@ -46,6 +46,7 @@ class BlogController extends Controller
             'slug'              => 'required|string|max:255|unique:blog,slug',
             'image'             => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
             'banner_image'      => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
+            'gallery.*'         => 'nullable|image|mimes:jpeg,png,jpg,gif|max:3072',
             'type'              => 'required|in:1,2,3,4,5,6,7,8,9',
             'description'       => 'required|string',
             'points'            => 'nullable|array',
@@ -113,6 +114,19 @@ class BlogController extends Controller
                 'status'            => $request->has('status') ? 1 : 0,
             ]);
 
+            // Handle multiple gallery images
+            if ($request->hasFile('gallery')) {
+                foreach ($request->file('gallery') as $key => $imageFile) {
+                    $imageName = time() . '_' . $key . '.' . $imageFile->getClientOriginalExtension();
+                    $imageFile->move(public_path('uploads/gallery'), $imageName);
+
+                    $blog->images()->create([
+                        'file_name' => 'uploads/gallery/' . $imageName,
+                        'alt_text'  => $blog->title,
+                    ]);
+                }
+            }
+
             notyf()->addSuccess('Blog/News created successfully!');
             return redirect()->route('admin.blog.index')
                 ->with('success', 'Blog/News created successfully!');
@@ -157,6 +171,7 @@ class BlogController extends Controller
             'slug'                => 'required|string|max:255|unique:blog,slug,'.$blog->id,
             'image'               => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
             'banner_image'        => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
+            'gallery.*'           => 'nullable|image|mimes:jpeg,png,jpg,gif|max:3072',
             'type'                => 'required|in:1,2,3,4,5,6,7,8,9',
             'description'         => 'required|string',
             'points'              => 'nullable|array',
@@ -211,6 +226,33 @@ class BlogController extends Controller
                     @unlink(public_path($blog->banner_image));
                 }
                 $blog->banner_image = null;
+            }
+
+            // Handle gallery images (delete selected + upload new)
+            if ($request->has('delete_images')) {
+                foreach ($request->delete_images as $imageId) {
+                    $imageToDelete = $blog->images()->find($imageId);
+                    if ($imageToDelete) {
+                        if (file_exists(public_path($imageToDelete->file_name))) {
+                            unlink(public_path($imageToDelete->file_name));
+                        }
+                        $imageToDelete->delete();
+                    }
+                }
+            }
+
+            if ($request->hasFile('gallery')) {
+                // Append new gallery images
+                foreach ($request->file('gallery') as $image) {
+                    $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+                    $image->move(public_path('uploads/gallery'), $imageName);
+
+                    $blog->images()->create([
+                        'file_name' => 'uploads/gallery/' . $imageName,
+                        'is_featured' => false,
+                        'alt_text'  => $blog->title,
+                    ]);
+                }
             }
 
             // Filter out empty points and allow only one "-"

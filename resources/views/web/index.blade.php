@@ -375,13 +375,11 @@
                         <div class="swiper upcomingproject">
                             <div class="swiper-wrapper">
                                 @foreach ($upcomingProjects as $project)
-                                    @if (!$project->category)
-                                        @continue
-                                    @endif
+
                                     <div class="swiper-slide">
                                         <div class="blog-card">
                                             {{-- {{ route('project.details', $project->slug) }} --}}
-                                            <a href="{{ route('web.project.show', [$project->category?->slug ?? 'uncategorized', $project->slug]) }}"
+                                            <a href="{{ route('web.project.show', [$project->category?->slug ?? 'policy', $project->slug]) }}"
                                                 class="card-img">
                                                 <img src="{{ asset($project->thumbnail_image) }}" alt="{{ $project->title }}">
                                                 <span class="date-block">
@@ -396,12 +394,12 @@
                                                 <img src="{{ asset('upload/project/'.$project->image) }}" class="card-user" alt="">
                                                 <p>By Admin</p>
                                             </div> --}}
-                                                <a href="{{ route('web.project.show', [$project->category?->slug ?? 'uncategorized', $project->slug]) }}"
+                                                <a href="{{ route('web.project.show', [$project->category?->slug ?? 'policy', $project->slug]) }}"
                                                     class="h6 fw-500 mb-8">{{ $project->title }}</a>
                                                 <p class="light-gray mb-24">
                                                     {{ \Illuminate\Support\Str::limit(strip_tags($project->description), 100) }}
                                                 </p>
-                                                <a href="{{ route('web.project.show', [$project->category?->slug ?? 'uncategorized', $project->slug]) }}"
+                                                <a href="{{ route('web.project.show', [$project->category?->slug ?? 'policy', $project->slug]) }}"
                                                     class="card-btn"> Read More</a>
                                             </div>
                                         </div>
@@ -446,7 +444,7 @@
                             <div class="swiper-slide" data-swiper-autoplay="2000">
                                 <div class="blog-card">
 
-                                    <a href="{{ route('web.project.show', [$project->category?->slug ?? 'uncategorized', $project->slug]) }}"
+                                    <a href="{{ route('web.project.show', [$project->category?->slug ?? 'policy', $project->slug]) }}"
                                         class="card-img">
                                         <img src="{{ asset($project->thumbnail_image) }}" alt="{{ $project->title }}">
                                         <span class="date-block">
@@ -461,12 +459,12 @@
                                         <img src="{{ asset('upload/project/'.$project->image) }}" class="card-user" alt="">
                                         <p>By Admin</p>
                                     </div> --}}
-                                        <a href="{{ route('web.project.show', [$project->category?->slug ?? 'uncategorized', $project->slug]) }}"
+                                        <a href="{{ route('web.project.show', [$project->category?->slug ?? 'policy', $project->slug]) }}"
                                             class="h6 fw-500 mb-8">{{ $project->title }}</a>
                                         <p class="light-gray mb-24">
                                             {{ \Illuminate\Support\Str::limit(strip_tags($project->description), 100) }}
                                         </p>
-                                        <a href="{{ route('web.project.show', [$project->category?->slug ?? 'uncategorized', $project->slug]) }}"
+                                        <a href="{{ route('web.project.show', [$project->category?->slug ?? 'policy', $project->slug]) }}"
                                             class="card-btn"> Read More</a>
                                     </div>
                                 </div>
@@ -561,13 +559,13 @@
                         <div class="swiper-wrapper">
                             @foreach ($programes as $program)
                                 @php
-                                    $progCategorySlug = $program->category?->slug ?? 'general';
+                                    $progCategorySlug = $program->category?->slug ?? 'policy';
                                 @endphp
                                 <div class="swiper-slide mb-4">
                                     <div class="scheme-card">
                                         <div class="scheme-image-wrapper">
                                             <img src="{{ $program->image ? asset($program->image) : asset('resource/web/assets/media/default/default-img.png') }}" alt="{{ $program->title }}">
-                                            <div class="scheme-badge">{{ $program->category->name ?? 'Program' }}</div>
+                                            <div class="scheme-badge">{{ $program->category->name ?? 'Policy' }}</div>
                                         </div>
                                         <div class="p-4 flex-grow-1 d-flex flex-column">
                                             <h6 class="fw-bold mb-2">

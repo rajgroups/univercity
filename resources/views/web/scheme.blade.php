@@ -696,7 +696,7 @@
                                         {{ Str::limit(strip_tags($similar->description ?? ''), 100) }}
                                     </p>
                                     <hr class="opacity-10 my-4">
-                                    <a href="{{ route('web.announcement.scheme', [$similar->category?->slug ?? 'general', $similar->slug]) }}"
+                                    <a href="{{ route('web.announcement.scheme', [$similar->category?->slug ?? 'policy', $similar->slug]) }}"
                                        class="btn-scheme-link">
                                         View Details <i class="bi bi-arrow-right"></i>
                                     </a>

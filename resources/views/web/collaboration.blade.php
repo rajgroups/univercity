@@ -113,7 +113,7 @@
                 <span class="text-white">Collaborations</span>
             </div>
             <h1 class="modern-banner-title">Building Strategic Alliances</h1>
-            <p class="modern-banner-subtitle">Fostering partnerships with <span class="text-warning fw-bold">corporate, government, and academic leaders</span> to drive impactful skill development.</p>
+            <p class="modern-banner-subtitle text-white">Fostering partnerships with <span class="text-warning fw-bold">corporate, government, and academic leaders</span> to drive impactful skill development.</p>
         </div>
     </section>
     <!-- Title Banner Section End -->

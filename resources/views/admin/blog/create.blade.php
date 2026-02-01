@@ -169,6 +169,16 @@
                                         @enderror
                                     </div>
                                 </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-12">
+                                        <label class="form-label">Gallery Images</label>
+                                        <input type="file" class="form-control @error('gallery') is-invalid @enderror" name="gallery[]" accept="image/*" multiple>
+                                        @error('gallery')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                        <small class="form-text text-muted">Recommended: 1200×400px (Max 3MB)</small>
+                                    </div>
+                                </div>
 
                                 <div class="mb-3">
                                     <label for="type" class="form-label">Blog Type</label>

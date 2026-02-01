@@ -167,6 +167,32 @@
                                         @enderror
                                     </div>
                                 </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-12">
+                                        <label class="form-label">Gallery Images (Append New)</label>
+                                        <input type="file" class="form-control @error('gallery') is-invalid @enderror" name="gallery[]" accept="image/*" multiple>
+                                        @error('gallery')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                        <small class="form-text text-muted">Recommended: 1200×400px (Max 3MB)</small>
+                                    </div>
+                                </div>
+
+                                @if($blog->images && $blog->images->count() > 0)
+                                    <div class="mb-3">
+                                        <label class="form-label d-block">Existing Gallery Images (Check to Delete)</label>
+                                        <div class="d-flex flex-wrap gap-3">
+                                            @foreach($blog->images as $img)
+                                                <div class="position-relative border p-1 rounded">
+                                                    <img src="{{ asset($img->file_name) }}" alt="Gallery Image" style="height: 100px; width: auto; object-fit: cover;">
+                                                    <div class="form-check position-absolute top-0 end-0 m-1 bg-white rounded shadow-sm p-1">
+                                                        <input class="form-check-input m-0" type="checkbox" name="delete_images[]" value="{{ $img->id }}" id="del_img_{{ $img->id }}" title="Delete this image">
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                @endif
 
                                 <div class="mb-3">
                                     <label for="type" class="form-label">Blog Type</label>

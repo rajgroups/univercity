@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Blog extends Model
 {
-    use HasFactory;
+    use HasFactory, \App\Models\Traits\HasImages;
     protected $table = 'blog';
     protected $fillable = [
         'title',
