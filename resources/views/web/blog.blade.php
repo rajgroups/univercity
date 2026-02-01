@@ -43,7 +43,9 @@
 
     /* Hero Section */
     .blog-hero {
-        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        background: linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(30, 41, 59, 0.8) 100%), url('https://static.vecteezy.com/system/resources/previews/049/090/963/non_2x/abstract-indian-flag-with-ashoka-chakra-vector.jpg');
+        background-size: cover;
+        background-position: center;
         padding: 80px 0;
         margin-bottom: 60px;
         position: relative;
