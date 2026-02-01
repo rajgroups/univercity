@@ -14,7 +14,7 @@
             <div class="col-lg-7 text-white">
                 <nav aria-label="breadcrumb" class="mb-3">
                     <ol class="breadcrumb mb-0">
-                        <li class="breadcrumb-item"><a href="" class="text-white-50">Home</a></li>
+                        <li class="breadcrumb-item"><a href="{{ url('/') }}" class="text-white-50">Home</a></li>
                         <li class="breadcrumb-item active text-white" aria-current="page">
                             @if(isset($pageType) && $pageType === 'projects') Projects
                             @elseif(isset($pageType) && $pageType === 'announcements') Programs & Schemes
