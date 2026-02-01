@@ -2164,7 +2164,7 @@
                 $currentPhase = 'P1';
                 $currentPhaseTitle = 'Need Assessment';
                 $completedPhasesCount = 0;
-                
+
                 foreach($phases as $p) {
                     $pMs = $milestones->where('phase', $p);
                     if($pMs->count() > 0) {
@@ -2176,7 +2176,7 @@
                             $currentPhase = $p;
                             // Map P code to Title roughly based on earlier arrays or milestone data
                             $firstM = $pMs->first();
-                            $currentPhaseTitle = $firstM ? $firstM->phase : $p; 
+                            $currentPhaseTitle = $firstM ? $firstM->phase : $p;
                         }
                     } else {
                         $phaseProgress[] = 0;
@@ -2187,13 +2187,13 @@
                 $riskScore = 0;
                 $risks = $project->risks ?? [];
                 $riskBreakdown = ['Infrastructure' => 0, 'Vendor' => 0, 'Schedule' => 0, 'Adoption' => 0, 'Resources' => 0, 'Compliance' => 0];
-                
+
                 if(is_array($risks)) {
                     foreach($risks as $r) {
                         $impact = strtolower($r['impact'] ?? 'low');
                         $val = ($impact == 'high') ? 30 : (($impact == 'medium') ? 20 : 10);
                         $riskScore += ($impact == 'high') ? 3 : (($impact == 'medium') ? 2 : 1);
-                        
+
                         // Try to categorize (very rough)
                         $desc = strtolower($r['risk'] ?? '');
                         if(str_contains($desc, 'infra')) $riskBreakdown['Infrastructure'] += $val;
@@ -2206,7 +2206,7 @@
                 }
                 // Normalizing risk breakdown to 0-100 for chart
                 foreach($riskBreakdown as $k => $v) {
-                    $riskBreakdown[$k] = min($v, 100); 
+                    $riskBreakdown[$k] = min($v, 100);
                 }
 
                 $riskLevel = $riskScore > 10 ? 'High' : ($riskScore > 5 ? 'Medium' : 'Low');
@@ -2215,13 +2215,13 @@
                 $riskLabel = $riskScore > 10 ? 'High Risk' : ($riskScore > 5 ? 'Medium Risk' : 'Low Risk');
 
                 // Pipeline Counts (Approximation)
-                $pipeIdentified = $milestones->count(); 
+                $pipeIdentified = $milestones->count();
                 $pipeAssessed = $milestones->whereIn('phase', ['P1', 'P2'])->where('status', 'completed')->count();
                 $pipeApproved = $milestones->where('phase', 'P3')->where('status', 'completed')->count();
                 $pipeInstalled = $milestones->whereIn('phase', ['P4', 'P5'])->where('status', 'completed')->count();
                 $pipeInUse = $milestones->where('phase', 'P6')->where('status', 'completed')->count();
                 $pipeReviewed = $milestones->where('phase', 'P7')->where('status', 'completed')->count();
-                
+
                 // Active Installations (Ongoing in P4/P5)
                 $installationsInProgress = $milestones->whereIn('phase', ['P4', 'P5'])->where('status', 'in-progress')->count();
 
@@ -2232,7 +2232,7 @@
                ISICO EXECUTION STANDARD – ENHANCED DESIGN
                GREEN THEME | Govt / CSR Monitoring Grade
                ================================================== */
-            
+
             .execution-dashboard {
                 --isico-primary:#1a6b44;
                 --isico-primary-light:#2a8a5c;
@@ -2257,7 +2257,7 @@
                 --p5:#f1c40f;
                 --p6:#e67e22;
                 --p7:#e53935;
-                
+
                 background:var(--isico-bg);
                 font-family:'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
                 color:var(--isico-text);
@@ -2369,7 +2369,7 @@
                 font-size:0.85rem;
                 font-weight:600;
             }
-            
+
             .execution-dashboard .kpi-grid {
                 display: grid;
                 grid-template-columns: repeat(4, 1fr);
@@ -2502,12 +2502,12 @@
                     grid-template-columns:repeat(2, 1fr);
                     gap:1rem;
                 }
-            
+
                 .execution-dashboard .pipeline{
                     grid-template-columns:repeat(3, 1fr);
                     gap:0.5rem;
                 }
-            
+
                 .execution-dashboard .pipe-stage{
                     padding:0.75rem 0.25rem;
                 }
@@ -2517,7 +2517,7 @@
                 .execution-dashboard .kpi-grid{
                     grid-template-columns:1fr;
                 }
-            
+
                 .execution-dashboard .pipeline{
                     grid-template-columns:repeat(2, 1fr);
                 }
@@ -2572,7 +2572,7 @@
                             </div>
                             <div class="text-muted mt-2" style="font-size:0.75rem;">Composite score based on milestones</div>
                         </div>
-            
+
                         <div class="kpi-card">
                             <div class="kpi-label"><i class="bi bi-clipboard-check me-1"></i>Project Progress</div>
                             <div class="kpi-value">{{ $project->project_progress ?? 0 }}%</div>
@@ -2581,7 +2581,7 @@
                             </div>
                             <div class="text-muted mt-2" style="font-size:0.75rem;">Overall completion</div>
                         </div>
-            
+
                         <div class="kpi-card">
                             <div class="kpi-label"><i class="bi bi-people-fill me-1"></i>Beneficiaries Reached</div>
                             <div class="kpi-value">{{ number_format($project->actual_beneficiary_count ?? 0) }}</div>
@@ -2590,12 +2590,12 @@
                             </div>
                             <div class="text-muted mt-2" style="font-size:0.75rem;">Total individuals reached</div>
                         </div>
-            
+
                         <div class="kpi-card">
                             <div class="kpi-label"><i class="bi bi-shield-exclamation me-1"></i>Delivery Risk</div>
                             <div class="kpi-value {{ $riskColorText }}">{{ $riskLabel }}</div>
                             <div class="mt-2 text-wrap">
-                               
+
                                 @foreach(array_keys(array_filter($riskBreakdown, function($v){ return $v > 0; })) as $rKey)
                                  @if($loop->iteration <= 2)
                                     <span class="risk-badge {{ $riskColorBg }} text-white d-inline-block mb-1">{{ $rKey }}</span>
@@ -2678,7 +2678,7 @@
                                 </div>
                             </div>
                         </div>
-            
+
                         <!-- Beneficiary Overview -->
                         <div class="col-lg-4">
                             <div class="enhanced-panel h-100">
@@ -2686,23 +2686,14 @@
                                     <i class="bi bi-pie-chart-fill"></i>
                                     Beneficiary Distribution
                                 </div>
-                                <canvas id="beneficiaryDoughnut" height="250"></canvas>
-                                <div class="mt-3">
-                                    <div class="row text-center">
-                                        <div class="col-4">
-                                            <div class="fs-4 fw-bold text-success">{{ number_format($project->actual_beneficiary_count ?? 0) }}</div>
-                                            <small class="text-muted">Reached</small>
-                                        </div>
-                                        <div class="col-4">
-                                           <!-- Mock Target/Progress -->
-                                            <div class="fs-4 fw-bold text-warning">{{ number_format(($project->actual_beneficiary_count ?? 0) * 0.5) }}</div>
-                                            <small class="text-muted">Active</small>
-                                        </div>
-                                        <div class="col-4">
-                                            <div class="fs-4 fw-bold text-primary">{{ number_format(($project->actual_beneficiary_count ?? 0) * 1.5) }}</div>
-                                            <small class="text-muted">Target</small>
-                                        </div>
-                                    </div>
+                                <h6 class="fw-bold small text-muted mb-2 text-uppercase">Target Groups</h6>
+                                <div class="chart-container" style="position: relative; height:180px; width:100%">
+                                    <canvas id="beneficiaryGroupsChart"></canvas>
+                                </div>
+
+                                <h6 class="fw-bold small text-muted mt-4 mb-2 text-uppercase">Target Individuals</h6>
+                                <div class="chart-container" style="position: relative; height:180px; width:100%">
+                                    <canvas id="beneficiaryIndividualsChart"></canvas>
                                 </div>
                             </div>
                         </div>
@@ -2718,7 +2709,7 @@
                                 </div>
                                 <div class="chart-container" style="position: relative; height:350px; width:100%">
                                     @if(isset($beneficiaryChartData['values']) && count($beneficiaryChartData['values']) > 0)
-                                        <canvas id="beneficiaryGrowthChart"></canvas>
+                                        <div id="beneficiaryGrowthChart"></div>
                                     @else
                                         <div class="d-flex flex-column align-items-center justify-content-center h-100 text-muted">
                                             <i class="bi bi-graph-up display-4 opacity-25 mb-2"></i>
@@ -2797,7 +2788,7 @@
                                 </div>
                             </div>
                         </div>
-            
+
                         <!-- Risk Radar -->
                         <div class="col-lg-6">
                             <div class="enhanced-panel h-100">
@@ -2847,7 +2838,7 @@
                             <div>
                                 <h6 class="fw-bold mb-2">Current Status Summary</h6>
                                 <p class="mb-0" style="font-size:0.95rem;">
-                                    Execution is on track with {{ $project->project_progress }}% overall progress. {{ $currentPhaseTitle }} phase is active with {{ $installationsInProgress }} tasks in progress. 
+                                    Execution is on track with {{ $project->project_progress }}% overall progress. {{ $currentPhaseTitle }} phase is active with {{ $installationsInProgress }} tasks in progress.
                                     Beneficiary reach is progressing well at {{ number_format($project->actual_beneficiary_count ?? 0) }} individuals. Confidence remains at {{ $confidence }}%.
                                     {{ $riskLevel }} risks being actively monitored.
                                 </p>
@@ -2857,6 +2848,9 @@
 
                 </div>
             </div>
+
+            <!-- ApexCharts CDN -->
+            <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
             <!-- Scripts for this tab specifically -->
             <script>
@@ -2877,8 +2871,19 @@
                 });
 
                 function initExecutionCharts() {
+
+                    initBeneficiaryGrowthChart();
+
+                    // Check if Chart.js is loaded
+                    if (typeof Chart === 'undefined') {
+                        console.error('Chart.js is not loaded. Cannot initialize execution charts.');
+                        return;
+                    }
+
                     if(window.executionChartsInitialized) return;
                     window.executionChartsInitialized = true;
+
+                    console.log('Initializing Execution Charts...');
 
                     // Resolve CSS variables
                     const css = getComputedStyle(document.querySelector('.execution-dashboard') || document.documentElement);
@@ -2893,243 +2898,415 @@
                     };
 
                     // Register Chart.js plugins
-                    if(typeof Chart !== 'undefined' && typeof ChartDataLabels !== 'undefined'){
+                    if(typeof ChartDataLabels !== 'undefined'){
                          Chart.register(ChartDataLabels);
                     }
 
                     // Milestone Radar
                     const ctxM = document.getElementById('milestoneLiveChart');
                     if(ctxM) {
-                        new Chart(ctxM, {
-                            type: 'radar',
-                            data: {
-                                labels: [
-                                    'P1: Need Assessment',
-                                    'P2: Partnerships',
-                                    'P3: Planning',
-                                    'P4: Implementation',
-                                    'P5: Capacity Building',
-                                    'P6: Impact Audit',
-                                    'P7: Handover'
-                                ],
-                                datasets: [{
-                                    label: 'Planned',
-                                    data: [100, 100, 100, 100, 100, 100, 100],
-                                    borderColor: '#e0e0e0',
-                                    backgroundColor: 'rgba(224, 224, 224, 0.1)',
-                                    borderWidth: 1,
-                                    pointRadius: 0
-                                }, {
-                                    label: 'Current Progress',
-                                    data: @json($phaseProgress),
-                                    borderColor: css.getPropertyValue('--isico-primary').trim() || '#1a6b44',
-                                    backgroundColor: 'rgba(26, 107, 68, 0.2)',
-                                    borderWidth: 2,
-                                    pointBackgroundColor: [
-                                        PHASE_COLORS.P1,
-                                        PHASE_COLORS.P2,
-                                        PHASE_COLORS.P3,
-                                        PHASE_COLORS.P4,
-                                        PHASE_COLORS.P5,
-                                        PHASE_COLORS.P6,
-                                        PHASE_COLORS.P7
+                        try {
+                            new Chart(ctxM, {
+                                type: 'radar',
+                                data: {
+                                    labels: [
+                                        'P1: Need Assessment',
+                                        'P2: Partnerships',
+                                        'P3: Planning',
+                                        'P4: Implementation',
+                                        'P5: Capacity Building',
+                                        'P6: Impact Audit',
+                                        'P7: Handover'
                                     ],
-                                    pointRadius: 6,
-                                    pointHoverRadius: 8
-                                }]
-                            },
-                            options: {
-                                responsive: true,
-                                maintainAspectRatio: false,
-                                plugins: {
-                                    legend: {
-                                        position: 'bottom',
-                                        labels: { padding: 20, usePointStyle: true }
-                                    },
-                                    tooltip: {
-                                        callbacks: { label: function(context) { return `${context.dataset.label}: ${context.raw}%`; } }
-                                    }
+                                    datasets: [{
+                                        label: 'Planned',
+                                        data: [100, 100, 100, 100, 100, 100, 100],
+                                        borderColor: '#e0e0e0',
+                                        backgroundColor: 'rgba(224, 224, 224, 0.1)',
+                                        borderWidth: 1,
+                                        pointRadius: 0
+                                    }, {
+                                        label: 'Current Progress',
+                                        data: @json($phaseProgress),
+                                        borderColor: css.getPropertyValue('--isico-primary').trim() || '#1a6b44',
+                                        backgroundColor: 'rgba(26, 107, 68, 0.2)',
+                                        borderWidth: 2,
+                                        pointBackgroundColor: [
+                                            PHASE_COLORS.P1,
+                                            PHASE_COLORS.P2,
+                                            PHASE_COLORS.P3,
+                                            PHASE_COLORS.P4,
+                                            PHASE_COLORS.P5,
+                                            PHASE_COLORS.P6,
+                                            PHASE_COLORS.P7
+                                        ],
+                                        pointRadius: 6,
+                                        pointHoverRadius: 8
+                                    }]
                                 },
-                                scales: {
-                                    r: {
-                                        beginAtZero: true,
-                                        max: 100,
-                                        ticks: { stepSize: 20, backdropColor: 'transparent' },
-                                        pointLabels: { font: { size: 11, weight: '600' } }
+                                options: {
+                                    responsive: true,
+                                    maintainAspectRatio: false,
+                                    plugins: {
+                                        legend: {
+                                            position: 'bottom',
+                                            labels: { padding: 20, usePointStyle: true }
+                                        },
+                                        tooltip: {
+                                            callbacks: { label: function(context) { return `${context.dataset.label}: ${context.raw}%`; } }
+                                        },
+                                        datalabels: { display: false }
+                                    },
+                                    scales: {
+                                        r: {
+                                            beginAtZero: true,
+                                            max: 100,
+                                            ticks: { stepSize: 20, backdropColor: 'transparent' },
+                                            pointLabels: { font: { size: 11, weight: '600' } }
+                                        }
                                     }
                                 }
-                            }
-                        });
+                            });
+                        } catch (e) {
+                            console.error('Error initializing milestoneLiveChart', e);
+                        }
                     }
 
-                    // Beneficiary Doughnut Chart
-                    const ctxB = document.getElementById('beneficiaryDoughnut');
-                    if(ctxB) {
-                        new Chart(ctxB, {
-                            type: 'doughnut',
-                            data: {
-                                labels: ['Students', 'Women', 'Men', 'Girls', 'Children'],
-                                datasets: [{
-                                    data: [
-                                        {{ round(($project->actual_beneficiary_count ?? 0) * 0.4) }},
-                                        {{ round(($project->actual_beneficiary_count ?? 0) * 0.3) }},
-                                        {{ round(($project->actual_beneficiary_count ?? 0) * 0.1) }},
-                                        {{ round(($project->actual_beneficiary_count ?? 0) * 0.15) }},
-                                        {{ round(($project->actual_beneficiary_count ?? 0) * 0.05) }}
-                                    ], // Mock distribution
-                                    backgroundColor: [
-                                        PHASE_COLORS.P1, PHASE_COLORS.P2, PHASE_COLORS.P3, PHASE_COLORS.P4, PHASE_COLORS.P5
-                                    ],
-                                    borderWidth: 2,
-                                    borderColor: '#fff'
-                                }]
-                            },
-                            options: {
-                                responsive: true,
-                                cutout: '65%',
-                                plugins: {
-                                    legend: {
-                                        position: 'bottom',
-                                        labels: { padding: 15, usePointStyle: true, pointStyle: 'circle' }
+                    // Beneficiary Groups Chart
+                    const ctxGroups = document.getElementById('beneficiaryGroupsChart');
+                    if(ctxGroups) {
+                        const groupsData = @json($beneficiaryGroupsData);
+                        try {
+                            new Chart(ctxGroups, {
+                                type: 'bar',
+                                data: {
+                                    labels: groupsData.labels,
+                                    datasets: [{
+                                        label: 'Target',
+                                        data: groupsData.targets,
+                                        backgroundColor: '#4e73df',
+                                        borderRadius: 4
+                                    }, {
+                                        label: 'Reached',
+                                        data: groupsData.reached,
+                                        backgroundColor: '#1cc88a',
+                                        borderRadius: 4
+                                    }]
+                                },
+                                options: {
+                                    indexAxis: 'y',
+                                    responsive: true,
+                                    maintainAspectRatio: false,
+                                    plugins: {
+                                        legend: { position: 'bottom', labels: { boxWidth: 10 } },
+                                        datalabels: { display: false }
                                     },
-                                    tooltip: {
-                                        callbacks: {
-                                            label: function(context) {
-                                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                                                const percentage = Math.round((context.raw / total) * 100);
-                                                return `${context.label}: ${context.raw} (${percentage}%)`;
-                                            }
-                                        }
-                                    },
-                                    datalabels: {
-                                        color: '#fff',
-                                        font: { weight: 'bold', size: 11 },
-                                        formatter: (value, ctx) => {
-                                            const total = ctx.dataset.data.reduce((a, b) => a + b, 0);
-                                            const percentage = Math.round((value / total) * 100);
-                                            return `${percentage}%`;
-                                        }
+                                    scales: {
+                                        x: { grid: { display: false } },
+                                        y: { grid: { display: false }, ticks: { autoSkip: false } }
                                     }
                                 }
-                            }
-                        });
+                            });
+                        } catch(e) { console.error('Error init groups chart', e); }
+                    }
+
+                    // Beneficiary Individuals Chart
+                    const ctxIndividuals = document.getElementById('beneficiaryIndividualsChart');
+                    if(ctxIndividuals) {
+                        const individualsData = @json($beneficiaryIndividualsData);
+                        try {
+                            new Chart(ctxIndividuals, {
+                                type: 'bar',
+                                data: {
+                                    labels: individualsData.labels,
+                                    datasets: [{
+                                        label: 'Target',
+                                        data: individualsData.targets,
+                                        backgroundColor: '#36b9cc',
+                                        borderRadius: 4
+                                    }, {
+                                        label: 'Reached',
+                                        data: individualsData.reached,
+                                        backgroundColor: '#1cc88a',
+                                        borderRadius: 4
+                                    }]
+                                },
+                                options: {
+                                    indexAxis: 'y',
+                                    responsive: true,
+                                    maintainAspectRatio: false,
+                                    plugins: {
+                                        legend: { position: 'bottom', labels: { boxWidth: 10 } },
+                                        datalabels: { display: false }
+                                    },
+                                    scales: {
+                                        x: { grid: { display: false } },
+                                        y: { grid: { display: false }, ticks: { autoSkip: false } }
+                                    }
+                                }
+                            });
+                        } catch(e) { console.error('Error init individuals chart', e); }
                     }
 
                     // Risk Radar Chart
                     const ctxR = document.getElementById('riskRadarChart');
                     if(ctxR) {
-                        new Chart(ctxR, {
-                            type: 'radar',
-                            data: {
-                                labels: ['Infrastructure', 'Vendor', 'Schedule', 'Adoption', 'Resources', 'Compliance'],
-                                datasets: [{
-                                    label: 'Current Risk Level',
-                                    data: [
-                                        {{ $riskBreakdown['Infrastructure'] }},
-                                        {{ $riskBreakdown['Vendor'] }},
-                                        {{ $riskBreakdown['Schedule'] }},
-                                        {{ $riskBreakdown['Adoption'] }},
-                                        {{ $riskBreakdown['Resources'] }},
-                                        {{ $riskBreakdown['Compliance'] }}
-                                    ],
-                                    borderColor: css.getPropertyValue('--isico-primary').trim() || '#1a6b44',
-                                    backgroundColor: 'rgba(26, 107, 68, 0.2)',
-                                    borderWidth: 2,
-                                    pointBackgroundColor: css.getPropertyValue('--isico-primary').trim() || '#1a6b44',
-                                    pointRadius: 4
-                                }]
-                            },
-                            options: {
-                                responsive: true,
-                                maintainAspectRatio: false,
-                                scales: {
-                                    r: {
-                                        beginAtZero: true,
-                                        max: 100,
-                                        ticks: {
-                                            stepSize: 20,
-                                            callback: function(value) {
-                                                if (value <= 30) return 'Low';
-                                                if (value <= 60) return 'Medium';
-                                                return 'High';
-                                            }
-                                        }
-                                    }
+                        try {
+                            new Chart(ctxR, {
+                                type: 'radar',
+                                data: {
+                                    labels: ['Infrastructure', 'Vendor', 'Schedule', 'Adoption', 'Resources', 'Compliance'],
+                                    datasets: [{
+                                        label: 'Current Risk Level',
+                                        data: [
+                                            {{ $riskBreakdown['Infrastructure'] }},
+                                            {{ $riskBreakdown['Vendor'] }},
+                                            {{ $riskBreakdown['Schedule'] }},
+                                            {{ $riskBreakdown['Adoption'] }},
+                                            {{ $riskBreakdown['Resources'] }},
+                                            {{ $riskBreakdown['Compliance'] }}
+                                        ],
+                                        borderColor: css.getPropertyValue('--isico-primary').trim() || '#1a6b44',
+                                        backgroundColor: 'rgba(26, 107, 68, 0.2)',
+                                        borderWidth: 2,
+                                        pointBackgroundColor: css.getPropertyValue('--isico-primary').trim() || '#1a6b44',
+                                        pointRadius: 4
+                                    }]
                                 },
-                                plugins: {
-                                    legend: { position: 'bottom' },
-                                    tooltip: {
-                                        callbacks: {
-                                            label: function(context) {
-                                                const riskLevel = context.raw <= 30 ? 'Low' : context.raw <= 60 ? 'Medium' : 'High';
-                                                return `${context.dataset.label}: ${context.raw} (${riskLevel})`;
+                                options: {
+                                    responsive: true,
+                                    maintainAspectRatio: false,
+                                    scales: {
+                                        r: {
+                                            beginAtZero: true,
+                                            max: 100,
+                                            ticks: {
+                                                stepSize: 20,
+                                                callback: function(value) {
+                                                    if (value <= 30) return 'Low';
+                                                    if (value <= 60) return 'Medium';
+                                                    return 'High';
+                                                }
                                             }
                                         }
+                                    },
+                                    plugins: {
+                                        legend: { position: 'bottom' },
+                                        tooltip: {
+                                            callbacks: {
+                                                label: function(context) {
+                                                    const riskLevel = context.raw <= 30 ? 'Low' : context.raw <= 60 ? 'Medium' : 'High';
+                                                    return `${context.dataset.label}: ${context.raw} (${riskLevel})`;
+                                                }
+                                            }
+                                        },
+                                        datalabels: { display: false }
                                     }
                                 }
-                            }
-                        });
+                            });
+                        } catch(e) { console.error('Error init risk chart', e); }
                     }
 
                     // Beneficiary Growth Line Chart
-                    const ctxG = document.getElementById('beneficiaryGrowthChart');
-                    if(ctxG) {
-                        const growthData = @json($beneficiaryChartData);
-                        
-                        new Chart(ctxG, {
-                            type: 'line',
-                            data: {
-                                labels: growthData.labels,
-                                datasets: [{
-                                    label: 'Total Beneficiaries Reached',
-                                    data: growthData.values,
-                                    borderColor: css.getPropertyValue('--isico-primary').trim() || '#1a6b44',
-                                    backgroundColor: 'rgba(26, 107, 68, 0.1)',
-                                    borderWidth: 2,
-                                    fill: true,
-                                    tension: 0.4,
-                                    pointRadius: 4,
-                                    pointBackgroundColor: '#fff',
-                                    pointBorderColor: css.getPropertyValue('--isico-primary').trim() || '#1a6b44',
-                                    pointBorderWidth: 2
-                                }]
+                    // const ctxG = document.getElementById('beneficiaryGrowthChart');
+                    // if(ctxG) {
+                    //     const growthData = @json($beneficiaryChartData);
+                    //     console.log('Growth Data:', growthData);
+
+                    //     try {
+                    //         new Chart(ctxG, {
+                    //             type: 'line',
+                    //             data: {
+                    //                 labels: growthData.labels,
+                    //                 datasets: [{
+                    //                     label: 'Total Beneficiaries Reached',
+                    //                     data: growthData.values,
+                    //                     borderColor: css.getPropertyValue('--isico-primary').trim() || '#1a6b44',
+                    //                     backgroundColor: 'rgba(26, 107, 68, 0.1)',
+                    //                     borderWidth: 2,
+                    //                     fill: true,
+                    //                     tension: 0.4,
+                    //                     pointRadius: 4,
+                    //                     pointBackgroundColor: '#fff',
+                    //                     pointBorderColor: css.getPropertyValue('--isico-primary').trim() || '#1a6b44',
+                    //                     pointBorderWidth: 2
+                    //                 }]
+                    //             },
+                    //             options: {
+                    //                 responsive: true,
+                    //                 maintainAspectRatio: false,
+                    //                 plugins: {
+                    //                     legend: {
+                    //                         position: 'top',
+                    //                         align: 'end'
+                    //                     },
+                    //                     tooltip: {
+                    //                         mode: 'index',
+                    //                         intersect: false,
+                    //                     },
+                    //                     datalabels: {
+                    //                         display: false
+                    //                     }
+                    //                 },
+                    //                 scales: {
+                    //                     y: {
+                    //                         beginAtZero: true,
+                    //                         grid: {
+                    //                             borderDash: [2, 4],
+                    //                             color: '#f0f0f0'
+                    //                         },
+                    //                         title: {
+                    //                             display: true,
+                    //                             text: 'Number of Individuals'
+                    //                         }
+                    //                     },
+                    //                     x: {
+                    //                         grid: {
+                    //                             display: false
+                    //                         }
+                    //                     }
+                    //                 }
+                    //             }
+                    //         });
+                    //     } catch (e) {
+                    //         console.error('Error initializing beneficiaryGrowthChart', e);
+                    //     }
+                    // }
+
+                }
+
+                function initBeneficiaryGrowthChart() {
+                    const chartElement = document.querySelector("#beneficiaryGrowthChart");
+                    if (!chartElement) return;
+
+                    const growthData = @json($beneficiaryChartData);
+                    console.log('Beneficiary Growth Data (Apex):', growthData);
+
+                    // Check if we have valid data
+                    if (!growthData.labels || growthData.labels.length === 0 ||
+                        !growthData.values || growthData.values.length === 0) {
+                        chartElement.innerHTML = `
+                            <div class="d-flex flex-column align-items-center justify-content-center h-100 text-muted p-4">
+                                <i class="bi bi-graph-up display-4 opacity-25 mb-3"></i>
+                                <h6 class="text-muted mb-2">No beneficiary data recorded yet</h6>
+                                <p class="text-muted small text-center">Beneficiary tracking will appear here once updates are added.</p>
+                            </div>
+                        `;
+                        return;
+                    }
+
+                    // Clear previous chart if any (ApexCharts handles this usually but good to be safe if ensuring clean state)
+                    chartElement.innerHTML = '';
+
+                    var options = {
+                        series: [{
+                            name: "Beneficiaries Reached",
+                            data: growthData.values
+                        }],
+                        chart: {
+                            type: 'area',
+                            height: 350,
+                            fontFamily: 'inherit',
+                            toolbar: {
+                                show: false
                             },
-                            options: {
-                                responsive: true,
-                                maintainAspectRatio: false,
-                                plugins: {
-                                    legend: {
-                                        position: 'top',
-                                        align: 'end'
+                            animations: {
+                                enabled: true,
+                                easing: 'easeinout',
+                                speed: 800
+                            }
+                        },
+                        dataLabels: {
+                            enabled: false
+                        },
+                        stroke: {
+                            curve: 'smooth',
+                            width: 3,
+                            colors: ['#1a6b44']
+                        },
+                        fill: {
+                            type: 'gradient',
+                            gradient: {
+                                shadeIntensity: 1,
+                                opacityFrom: 0.7,
+                                opacityTo: 0.3,
+                                stops: [0, 90, 100],
+                                colorStops: [
+                                    {
+                                        offset: 0,
+                                        color: "#1a6b44",
+                                        opacity: 0.4
                                     },
-                                    tooltip: {
-                                        mode: 'index',
-                                        intersect: false,
-                                    },
-                                    datalabels: {
-                                        display: false
+                                    {
+                                        offset: 100,
+                                        color: "#1a6b44",
+                                        opacity: 0.1
                                     }
+                                ]
+                            }
+                        },
+                        xaxis: {
+                            categories: growthData.labels,
+                            labels: {
+                                style: {
+                                    colors: '#6c757d',
+                                    fontSize: '12px'
+                                }
+                            },
+                             axisBorder: {
+                                show: false
+                            },
+                            axisTicks: {
+                                show: false
+                            }
+                        },
+                        yaxis: {
+                            labels: {
+                                style: {
+                                    colors: '#6c757d',
+                                    fontSize: '12px'
                                 },
-                                scales: {
-                                    y: {
-                                        beginAtZero: true,
-                                        grid: {
-                                            borderDash: [2, 4],
-                                            color: '#f0f0f0'
-                                        },
-                                        title: {
-                                            display: true,
-                                            text: 'Number of Individuals'
-                                        }
-                                    },
-                                    x: {
-                                        grid: {
-                                            display: false
-                                        }
-                                    }
+                                formatter: function (val) {
+                                    return val.toLocaleString();
                                 }
                             }
-                        });
+                        },
+                        grid: {
+                            borderColor: '#e9ecef',
+                            strokeDashArray: 4,
+                            yaxis: {
+                                lines: {
+                                    show: true
+                                }
+                            }
+                        },
+                        colors: ['#1a6b44'],
+                        tooltip: {
+                            theme: 'light',
+                            y: {
+                                formatter: function (val) {
+                                    return val.toLocaleString() + " Beneficiaries"
+                                }
+                            }
+                        },
+                        markers: {
+                            size: 5,
+                            colors: ['#1a6b44'],
+                            strokeColors: '#fff',
+                            strokeWidth: 2,
+                            hover: {
+                                size: 7
+                            }
+                        }
+                    };
+
+                    try {
+                        var chart = new ApexCharts(document.querySelector("#beneficiaryGrowthChart"), options);
+                        chart.render();
+                        console.log('ApexCharts Beneficiary Growth Chart rendered');
+                    } catch (error) {
+                        console.error('Error rendering ApexCharts:', error);
+                        chartElement.innerHTML = '<p class="text-danger text-center mt-5">Error loading chart</p>';
                     }
                 }
             </script>
@@ -4735,7 +4912,8 @@ document.addEventListener('DOMContentLoaded', function() {
                                 return label;
                             }
                         }
-                    }
+                    },
+                    datalabels: { display: false }
                 },
                 cutout: '60%'
             }
@@ -4780,7 +4958,8 @@ document.addEventListener('DOMContentLoaded', function() {
                             usePointStyle: true,
                             pointStyle: 'circle'
                         }
-                    }
+                    },
+                    datalabels: { display: false }
                 }
             }
         });
@@ -4828,150 +5007,49 @@ $('#interestForm').on('submit', function(e) {
     });
 });
 
-// Tab navigation with URL hash
+// Consolidated Tab navigation with URL hash
 document.addEventListener('DOMContentLoaded', function() {
     const hash = window.location.hash;
     if (hash) {
-        const tab = document.querySelector(`[href="${hash}"]`);
-        if (tab) {
-            tab.click();
+        // Try to find a button trigger first (Bootstrap 5)
+        const triggerEl = document.querySelector(`button[data-bs-target="${hash}"]`) ||
+                          document.querySelector(`[href="${hash}"]`);
+
+        if (triggerEl) {
+            // Activate the tab
+            const tab = new bootstrap.Tab(triggerEl);
+            tab.show();
+
+            // Scroll into view
+            setTimeout(() => {
+                triggerEl.scrollIntoView({behavior: 'smooth', block: 'center'});
+            }, 100);
         }
     }
 
     // Update URL hash when tab changes
-    document.querySelectorAll('[data-bs-toggle="pill"]').forEach(tab => {
+    const tabLinks = document.querySelectorAll('[data-bs-toggle="pill"], [data-bs-toggle="tab"]');
+    tabLinks.forEach(tab => {
         tab.addEventListener('shown.bs.tab', function(e) {
             const targetId = e.target.getAttribute('data-bs-target') || e.target.getAttribute('href');
             if (targetId) {
-                window.location.hash = targetId;
+                // Update hash without scrolling
+                history.replaceState(null, null, targetId);
 
-                // Close offcanvas if it's open
-                const mobileMenu = document.getElementById('mobileTabMenu');
-                if (mobileMenu && mobileMenu.classList.contains('show')) {
-                    const bsOffcanvas = bootstrap.Offcanvas.getInstance(mobileMenu);
-                    if (bsOffcanvas) bsOffcanvas.hide();
-                }
-
-                // Sync active state between mobile and desktop triggers
-                document.querySelectorAll(`[data-bs-target="${targetId}"], [href="${targetId}"]`).forEach(el => {
-                    const parent = el.closest('.nav, .list-group');
-                    if (parent) {
-                        parent.querySelectorAll('.active').forEach(a => a.classList.remove('active'));
-                        el.classList.add('active');
-                    }
+                // Helper: Sync active state for potential duplicate links (mobile/desktop)
+                const allLinks = document.querySelectorAll(`[data-bs-target="${targetId}"], [href="${targetId}"]`);
+                allLinks.forEach(link => {
+                     // Ensure parent navs update active state if needed
+                     const nav = link.closest('.nav, .list-group');
+                     if(nav){
+                         nav.querySelectorAll('.active').forEach(a => a.classList.remove('active'));
+                         link.classList.add('active');
+                     }
                 });
             }
         });
     });
-});
 
-// ========================================
-// SURVEY FEEDBACK SECTION - Chart & Functions
-// ========================================
-
-// Initialize Satisfaction Chart
-@if(isset($surveys) && $surveys->count() > 0)
-document.addEventListener('DOMContentLoaded', function() {
-    const satisfactionCtx = document.getElementById('satisfactionChart');
-    if (satisfactionCtx) {
-        new Chart(satisfactionCtx, {
-            type: 'doughnut',
-            data: {
-                labels: ['Very Satisfied', 'Satisfied', 'Neutral', 'Dissatisfied'],
-                datasets: [{
-                    data: [
-                        {{ $surveyStats['satisfaction']['Very Satisfied'] }},
-                        {{ $surveyStats['satisfaction']['Satisfied'] }},
-                        {{ $surveyStats['satisfaction']['Neutral'] }},
-                        {{ $surveyStats['satisfaction']['Dissatisfied'] }}
-                    ],
-                    backgroundColor: ['#28a745', '#17a2b8', '#6c757d', '#dc3545'],
-                    borderWidth: 0,
-                    hoverOffset: 10
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: true,
-                aspectRatio: 1,
-                cutout: '65%',
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                                const percentage = total > 0 ? Math.round((context.raw / total) * 100) : 0;
-                                return `${context.label}: ${context.raw} (${percentage}%)`;
-                            }
-                        }
-                    }
-                }
-            }
-        });
-    }
-});
-@endif
-
-// Filter Survey Cards
-function filterSurveys(filter) {
-    const cards = document.querySelectorAll('.survey-card-item');
-    cards.forEach(card => {
-        const satisfaction = card.dataset.satisfaction;
-        let show = false;
-
-        switch(filter) {
-            case 'all':
-                show = true;
-                break;
-            case 'satisfied':
-                show = satisfaction === 'very-satisfied' || satisfaction === 'satisfied';
-                break;
-            case 'neutral':
-                show = satisfaction === 'neutral';
-                break;
-            case 'dissatisfied':
-                show = satisfaction === 'dissatisfied';
-                break;
-        }
-
-        if (show) {
-            card.style.display = 'block';
-            card.classList.add('animate__animated', 'animate__fadeIn');
-        } else {
-            card.style.display = 'none';
-        }
-    });
-}
-
-// Expand Comment Text
-document.addEventListener('DOMContentLoaded', function() {
-    document.querySelectorAll('.expand-comment').forEach(btn => {
-        btn.addEventListener('click', function() {
-            const fullText = this.dataset.fullText;
-            const commentText = this.previousElementSibling;
-            if (commentText) {
-                commentText.textContent = fullText;
-                this.style.display = 'none';
-            }
-        });
-    });
-});
-
-// Show All Surveys (if using load more)
-function showAllSurveys() {
-    const cards = document.querySelectorAll('.survey-card-item');
-    cards.forEach((card, index) => {
-        card.style.display = 'block';
-        card.style.animationDelay = `${index * 50}ms`;
-        card.classList.add('animate__animated', 'animate__fadeInUp');
-    });
-    document.getElementById('loadMoreSurveys').style.display = 'none';
-}
-
-document.addEventListener('DOMContentLoaded', function() {
     // Read more/less functionality
     document.addEventListener('click', function(e) {
         if (e.target.classList.contains('read-more-btn')) {
@@ -4983,12 +5061,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
             if (previewElement && fullElement) {
                 if (previewElement.classList.contains('d-none')) {
-                    // Show preview, hide full
                     previewElement.classList.remove('d-none');
                     fullElement.classList.add('d-none');
                     button.textContent = 'Read more...';
                 } else {
-                    // Show full, hide preview
                     previewElement.classList.add('d-none');
                     fullElement.classList.remove('d-none');
                     button.textContent = 'Read less';
@@ -5021,7 +5097,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         </small>
                     </div>
                 </div>
-                
+
                 <div>
                     <h6 class="fw-bold text-dark border-bottom pb-2 mb-3">2. Project Risk Assessment</h6>
                     <p class="small text-muted mb-2">

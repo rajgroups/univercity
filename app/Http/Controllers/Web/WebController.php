@@ -18,6 +18,7 @@ use App\Models\Testimonial;
 use Carbon\Carbon;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class WebController extends Controller
@@ -217,6 +218,27 @@ class WebController extends Controller
 
         // 5.3 Benefit Chart Data
         $beneficiaryChartData = $this->getBeneficiaryChartData($project);
+        Log::info($beneficiaryChartData);
+        // 5.4 Beneficiary Breakdown Data
+        $beneficiaryGroups = $project->beneficiaries->filter(function ($value) {
+            return strtolower($value->type) === 'group';
+        })->values();
+
+        $beneficiaryIndividuals = $project->beneficiaries->filter(function ($value) {
+            return strtolower($value->type) === 'individual';
+        })->values();
+
+        $beneficiaryGroupsData = [
+            'labels' => $beneficiaryGroups->pluck('category'),
+            'targets' => $beneficiaryGroups->pluck('target_number'),
+            'reached' => $beneficiaryGroups->pluck('reached_number'),
+        ];
+
+        $beneficiaryIndividualsData = [
+            'labels' => $beneficiaryIndividuals->pluck('category'),
+            'targets' => $beneficiaryIndividuals->pluck('target_number'),
+            'reached' => $beneficiaryIndividuals->pluck('reached_number'),
+        ];
 
         // 6️⃣ Return view
         return view('web.project', compact(
@@ -235,7 +257,9 @@ class WebController extends Controller
             'totalRaised',
             'totalReceived',
             'govtSchemeTitles',
-            'beneficiaryChartData'
+            'beneficiaryChartData',
+            'beneficiaryGroupsData',
+            'beneficiaryIndividualsData'
         ));
     }
 
@@ -243,13 +267,14 @@ class WebController extends Controller
     {
         $allUpdates = collect();
 
+        // Collect all updates with their dates
         foreach ($project->beneficiaries as $ben) {
             foreach ($ben->updates as $update) {
                 $allUpdates->push([
                     'beneficiary_id' => $ben->id,
                     'date' => $update->date,
-                    'reached' => $update->reached_number,
-                    'created_at' => $update->created_at 
+                    'reached' => (int) $update->reached_number,
+                    'created_at' => $update->created_at
                 ]);
             }
         }
@@ -258,28 +283,36 @@ class WebController extends Controller
             return ['labels' => [], 'values' => []];
         }
 
-        $dates = $allUpdates->pluck('date')->unique()->sort()->values();
-        $labels = [];
-        $values = [];
+        // Sort all updates by date
+        $sortedUpdates = $allUpdates->sortBy('date');
 
-        foreach ($dates as $date) {
-            $total = 0;
-            foreach ($project->beneficiaries as $ben) {
-                // Find latest update for this ben on or before $date
-                $lastUpdate = $allUpdates->where('beneficiary_id', $ben->id)
-                                         ->where('date', '<=', $date)
-                                         ->sortByDesc('date')
-                                         ->sortByDesc('created_at') // Tie breaker
-                                         ->first();
-                if ($lastUpdate) {
-                    $total += $lastUpdate['reached'];
-                }
-            }
-            $labels[] = \Carbon\Carbon::parse($date)->format('d M Y');
-            $values[] = $total;
+        // Group updates by date and calculate daily totals
+        $dailyData = $sortedUpdates->groupBy('date')->map(function ($updates) {
+            return $updates->sum('reached');
+        });
+
+        // Convert to arrays
+        $dates = $dailyData->keys()->sort()->values();
+        $dailyValues = $dailyData->values();
+
+        // Calculate cumulative values
+        $cumulativeValues = [];
+        $runningTotal = 0;
+
+        foreach ($dailyValues as $value) {
+            $runningTotal += $value;
+            $cumulativeValues[] = $runningTotal;
         }
 
-        return ['labels' => $labels, 'values' => $values];
+        // Format labels
+        $labels = $dates->map(function ($date) {
+            return \Carbon\Carbon::parse($date)->format('d M Y');
+        })->toArray();
+
+        return [
+            'labels' => $labels,
+            'values' => $cumulativeValues
+        ];
     }
 
 
@@ -365,7 +398,7 @@ class WebController extends Controller
     // 🌍 Country filter
     if ($request->has('countries') && !empty($request->countries)) {
         $countries = $request->countries;
-        
+
         // Normalize to array if string (e.g. ?countries=IND or ?countries=IND,USA)
         if (is_string($countries)) {
             $countries = explode(',', $countries);
@@ -373,7 +406,7 @@ class WebController extends Controller
 
         // Resolve ISO3 codes to IDs
         $countryIds = Country::whereIn('iso3', $countries)->pluck('id');
-        
+
         if ($countryIds->isNotEmpty()) {
             $query->whereIn('country_id', $countryIds);
         } else {
@@ -823,7 +856,7 @@ class WebController extends Controller
 
         // Try to find by type and slug first
         $query = Blog::where('slug', $slug);
-        
+
         if ($typeId) {
             $blog = (clone $query)->where('type', $typeId)->where('status', 1)->with(['category'])->first();
         } else {
