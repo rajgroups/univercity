@@ -512,11 +512,7 @@
                 <i class="bi bi-diagram-3 me-2"></i>Pathways
             </button>
             @endif
-            @if(isset($surveys) && $surveys->count() > 0)
-            <button class="nav-link btn btn-outline-primary rounded-pill px-4" id="survey-tab" data-bs-toggle="pill" data-bs-target="#survey" type="button" role="tab" aria-controls="survey" aria-selected="false">
-                <i class="bi bi-clipboard-data me-2"></i>Surveys <span class="badge bg-success ms-1">{{ $surveys->count() }}</span>
-            </button>
-            @endif
+
             @if((isset($project->sdg_goals) && count($project->sdg_goals) > 0) || !empty($project->alignment_categories) || !empty($project->govt_schemes) || $project->alignment_notes)
             <button class="nav-link btn btn-outline-success rounded-pill px-4" id="alignment-tab" data-bs-toggle="pill" data-bs-target="#alignment" type="button" role="tab" aria-controls="alignment" aria-selected="false">
                 <i class="bi bi-globe-americas me-2"></i>SDG & Alignment
@@ -574,15 +570,7 @@
                     </div>
                 </button>
                 @endif
-                @if(isset($surveys) && $surveys->count() > 0)
-                <button class="list-group-item list-group-item-action py-3 d-flex align-items-center gap-3" data-bs-toggle="pill" data-bs-target="#survey" role="tab">
-                    <i class="bi bi-clipboard-data fs-5 text-success"></i>
-                    <div>
-                        <span class="d-block fw-bold text-success">Surveys <span class="badge bg-success rounded-pill ms-1">{{ $surveys->count() }}</span></span>
-                        <small class="text-muted">Participate in surveys</small>
-                    </div>
-                </button>
-                @endif
+
                 @if((isset($project->sdg_goals) && count($project->sdg_goals) > 0) || !empty($project->alignment_categories) || !empty($project->govt_schemes) || $project->alignment_notes)
                 <button class="list-group-item list-group-item-action py-3 d-flex align-items-center gap-3" data-bs-toggle="pill" data-bs-target="#alignment" role="tab">
                     <i class="bi bi-globe-americas fs-5 text-success"></i>
@@ -5125,5 +5113,170 @@ document.addEventListener('DOMContentLoaded', function() {
         </div>
     </div>
 </div>
+
+@if($project->stage == 'upcoming' && isset($surveys) && $surveys->count() > 0)
+<!-- Floating Survey Button -->
+<div class="position-fixed animate__animated animate__fadeInUp" style="bottom: 30px; right: 30px; z-index: 9999;">
+    <button type="button" 
+            class="btn btn-primary rounded-circle shadow-lg d-flex align-items-center justify-content-center position-relative"
+            style="width: 65px; height: 65px; border: 4px solid rgba(255,255,255,0.3);"
+            data-bs-toggle="modal" 
+            data-bs-target="#surveyModal">
+        <i class="bi bi-clipboard-data-fill fs-3"></i>
+        <span class="position-absolute top-0 start-100 translate-middle p-2 bg-danger border border-light rounded-circle animate__animated animate__pulse animate__infinite">
+            <span class="visually-hidden">New Survey</span>
+        </span>
+    </button>
+    <div class="bg-white px-3 py-1 rounded shadow-sm mt-2 text-center small fw-bold text-primary animate__animated animate__fadeIn animate__delay-1s border">
+        Participate
+    </div>
+</div>
+
+<!-- Survey Modal -->
+<div class="modal fade" id="surveyModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header bg-primary text-white border-0">
+                <h5 class="modal-title fw-bold text-white"><i class="bi bi-clipboard-data me-2"></i>Project Scrutiny Survey</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body bg-light">
+                <div class="accordion" id="surveyModalAccordion">
+                    @foreach($surveys as $index => $survey)
+                        @if($survey->is_active)
+                            <div class="accordion-item mb-3 border-0 shadow-sm rounded overflow-hidden">
+                                <h2 class="accordion-header" id="modalHeading{{ $survey->id }}">
+                                    <button class="accordion-button {{ $index !== 0 ? 'collapsed' : '' }} fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#modalCollapse{{ $survey->id }}" aria-expanded="{{ $index === 0 ? 'true' : 'false' }}" aria-controls="modalCollapse{{ $survey->id }}">
+                                        <i class="bi bi-caret-right-fill me-2 text-primary"></i> {{ $survey->title }}
+                                    </button>
+                                </h2>
+                                <div id="modalCollapse{{ $survey->id }}" class="accordion-collapse collapse {{ $index === 0 ? 'show' : '' }}" aria-labelledby="modalHeading{{ $survey->id }}" data-bs-parent="#surveyModalAccordion">
+                                    <div class="accordion-body p-4 bg-white">
+                                        @if($survey->description)
+                                            <p class="text-muted mb-4">{{ $survey->description }}</p>
+                                        @endif
+
+                                        @php
+                                            $userResponse = $survey->responses->first();
+                                        @endphp
+
+                                        @if($userResponse)
+                                            <div class="alert alert-success border-0 bg-success bg-opacity-10 mb-4 rounded-3 d-flex align-items-center">
+                                                <i class="bi bi-check-circle-fill text-success fs-4 me-3"></i>
+                                                <div>
+                                                    <h5 class="fw-bold text-success mb-1">Response Submitted</h5>
+                                                    <p class="mb-0 text-success text-opacity-75 small">You have already responded. Answers are shown below.</p>
+                                                </div>
+                                            </div>
+                                        @else
+                                            <form class="scrutiny-form" action="{{ route('web.project.survey.store') }}" method="POST">
+                                                @csrf
+                                                <input type="hidden" name="survey_id" value="{{ $survey->id }}">
+                                        @endif
+
+                                            <div class="survey-conversation">
+                                                @foreach($survey->questions as $qIndex => $question)
+                                                    <div class="mb-4 animate__animated animate__fadeInUp" style="animation-delay: {{ $qIndex * 100 }}ms;">
+                                                        <div class="mb-2 d-flex align-items-center">
+                                                            <span class="badge bg-primary me-2">Q{{ $qIndex + 1 }}</span>
+                                                            <span class="fw-bold text-dark">{{ $question->question_text }}</span>
+                                                            @if($question->is_required) <span class="text-danger ms-1">*</span> @endif
+                                                        </div>
+                                                        
+                                                        <div class="ms-0 ms-md-4">
+                                                            @if($userResponse)
+                                                                <div class="p-3 bg-light rounded text-muted border-start border-4 border-success">
+                                                                    @php
+                                                                        $ans = isset($userResponse->answers) && is_array($userResponse->answers)
+                                                                            ? ($userResponse->answers[$question->id] ?? null)
+                                                                            : null;
+                                                                        if(is_array($ans)) $ans = implode(', ', $ans);
+                                                                    @endphp
+                                                                    {{ $ans ?? 'No answer' }}
+                                                                </div>
+                                                            @else
+                                                                @switch($question->type)
+                                                                    @case('text')
+                                                                        <input type="text" class="form-control" name="answers[{{ $question->id }}]" placeholder="Your answer..." {{ $question->is_required ? 'required' : '' }}>
+                                                                        @break
+                                                                    @case('textarea')
+                                                                        <textarea class="form-control" name="answers[{{ $question->id }}]" rows="3" placeholder="Tell us more..." {{ $question->is_required ? 'required' : '' }}></textarea>
+                                                                        @break
+                                                                    @case('number')
+                                                                        <input type="number" class="form-control" name="answers[{{ $question->id }}]" placeholder="0" {{ $question->is_required ? 'required' : '' }}>
+                                                                        @break
+                                                                    @case('date')
+                                                                        <input type="date" class="form-control" name="answers[{{ $question->id }}]" {{ $question->is_required ? 'required' : '' }}>
+                                                                        @break
+                                                                    @case('select')
+                                                                        <select class="form-select" name="answers[{{ $question->id }}]" {{ $question->is_required ? 'required' : '' }}>
+                                                                            <option value="">Select option...</option>
+                                                                            @if($question->options)
+                                                                                @foreach(json_decode($question->options) as $opt)
+                                                                                    <option value="{{ $opt }}">{{ $opt }}</option>
+                                                                                @endforeach
+                                                                            @endif
+                                                                        </select>
+                                                                        @break
+                                                                    @case('radio')
+                                                                        <div class="bg-light p-3 rounded">
+                                                                            @if($question->options)
+                                                                                @foreach(json_decode($question->options) as $opt)
+                                                                                    <div class="form-check">
+                                                                                        <input class="form-check-input" type="radio" name="answers[{{ $question->id }}]" value="{{ $opt }}" {{ $question->is_required ? 'required' : '' }}>
+                                                                                        <label class="form-check-label">{{ $opt }}</label>
+                                                                                    </div>
+                                                                                @endforeach
+                                                                            @endif
+                                                                        </div>
+                                                                        @break
+                                                                    @case('checkbox')
+                                                                        <div class="bg-light p-3 rounded">
+                                                                            @if($question->options)
+                                                                                @foreach(json_decode($question->options) as $opt)
+                                                                                    <div class="form-check">
+                                                                                        <input class="form-check-input" type="checkbox" name="answers[{{ $question->id }}][]" value="{{ $opt }}">
+                                                                                        <label class="form-check-label">{{ $opt }}</label>
+                                                                                    </div>
+                                                                                @endforeach
+                                                                            @endif
+                                                                        </div>
+                                                                        @break
+                                                                    @case('rating')
+                                                                        <div class="d-flex gap-2">
+                                                                            @for($i=1; $i<=5; $i++)
+                                                                                <div class="form-check form-check-inline">
+                                                                                    <input class="form-check-input btn-check" type="radio" name="answers[{{ $question->id }}]" id="q{{$question->id}}_{{$i}}" value="{{ $i }}" {{ $question->is_required ? 'required' : '' }}>
+                                                                                    <label class="btn btn-outline-warning rounded-circle d-flex align-items-center justify-content-center" style="width:40px;height:40px;" for="q{{$question->id}}_{{$i}}">{{ $i }}</label>
+                                                                                </div>
+                                                                            @endfor
+                                                                        </div>
+                                                                        @break
+                                                                @endswitch
+                                                            @endif
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            </div>
+
+                                            @if(!$userResponse)
+                                                <div class="text-end mt-4 pt-3 border-top">
+                                                    <button type="submit" class="btn btn-primary rounded-pill px-5 shadow-sm">
+                                                        <i class="bi bi-send-fill me-2"></i>Submit Response
+                                                    </button>
+                                                </div>
+                                            </form>
+                                            @endif
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+                    @endforeach
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endif
 
 @endsection
