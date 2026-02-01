@@ -846,137 +846,179 @@
                         </div>
                     </div>
 
-                    <!-- Target Groups -->
+                    <!-- New Target Beneficiaries Section -->
                     <div class="row">
                         <div class="col-md-12">
-                            <div class="mb-3">
-                                <label class="form-label">Target Groups (with icons) <span
-                                        class="text-danger">*</span></label>
-                                <div id="target_groups_wrapper">
-                                    @php
-                                        $targetGroups = old('target_groups', $project->target_groups);
-                                    @endphp
+                            <h5 class="mb-3 text-primary"><i class="feather feather-users me-2"></i> Target Beneficiaries</h5>
+                            
+                            @php
+                                $isUpcoming = $project->stage === 'upcoming';
+                                $beneficiaries = $project->beneficiaries;
+                                $groups = $beneficiaries->where('type', 'group');
+                                $individuals = $beneficiaries->where('type', 'individual');
 
-                                    @if ($targetGroups && is_array($targetGroups) && count($targetGroups) > 0)
-                                        @foreach ($targetGroups as $index => $group)
-                                            <div class="row mb-2 target-group-item">
-                                                <div class="col-md-5">
-                                                    <select name="target_groups[{{ $index }}][group]"
-                                                        class="form-select select2 @error('target_groups.' . $index . '.group') is-invalid @enderror">
+                                // Dropdown Options
+                                $groupOptions = [
+                                    'Schools', 'Colleges / Higher Education Institutions', 'Women Self-Help Groups (SHGs)',
+                                    'Farmer Producer Organizations (FPOs)', 'Village Communities / Panchayats',
+                                    'Rural Areas', 'Urban Areas', 'Metro Cities', 'Taluk / Block Level',
+                                    'District Level', 'Training / Skill Development Centers',
+                                    'Community-Based Organizations (CBOs) / NGOs'
+                                ];
+
+                                $individualOptions = [
+                                    'Children', 'Students', 'Youth', 'Job Seekers / Unemployed', 'Women', 'Girls',
+                                    'Men', 'Farmers', 'Entrepreneurs / Micro-Enterprise Owners',
+                                    'Self-Employed / Informal Workers', 'Elderly Persons',
+                                    'Persons with Disabilities (PwD)', 'Economically Weaker Section (EWS)',
+                                    'Migrant / Returned Migrant Workers'
+                                ];
+                            @endphp
+
+                            {{-- GROUPS SECTION --}}
+                            <div class="mb-4 border p-3 rounded bg-light">
+                                <h6 class="fw-bold mb-3 text-secondary">Target Groups</h6>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered bg-white" id="beneficiary_groups_table">
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 40%">Group Category</th>
+                                                <th style="width: 20%">Target Numbers</th>
+                                                @if(!$isUpcoming)
+                                                <th style="width: 20%">Reached</th>
+                                                <th style="width: 20%">Current Date</th>
+                                                @endif
+                                                @if($isUpcoming)
+                                                <th style="width: 5%"></th>
+                                                @endif
+                                            </tr>
+                                        </thead>
+                                        <tbody id="beneficiary_groups_body">
+                                            @foreach($groups as $ben)
+                                            <tr>
+                                                <td>
+                                                    @if($isUpcoming)
+                                                    <select name="beneficiary_groups[{{ $loop->index }}][category]" class="form-select select2">
                                                         <option value="">Select Group</option>
-                                                        <option value="students"
-                                                            {{ ($group['group'] ?? '') == 'students' ? 'selected' : '' }}>
-                                                            Students</option>
-                                                        <option value="youth"
-                                                            {{ ($group['group'] ?? '') == 'youth' ? 'selected' : '' }}>
-                                                            Youth</option>
-                                                        <option value="women"
-                                                            {{ ($group['group'] ?? '') == 'women' ? 'selected' : '' }}>
-                                                            Women</option>
-                                                        <option value="girls"
-                                                            {{ ($group['group'] ?? '') == 'girls' ? 'selected' : '' }}>
-                                                            Girls</option>
-                                                        <option value="children"
-                                                            {{ ($group['group'] ?? '') == 'children' ? 'selected' : '' }}>
-                                                            Children</option>
-                                                        <option value="schools"
-                                                            {{ ($group['group'] ?? '') == 'schools' ? 'selected' : '' }}>
-                                                            Schools</option>
-                                                        <option value="colleges"
-                                                            {{ ($group['group'] ?? '') == 'colleges' ? 'selected' : '' }}>
-                                                            Colleges</option>
-                                                        <option value="shg"
-                                                            {{ ($group['group'] ?? '') == 'shg' ? 'selected' : '' }}>Women
-                                                            SHG</option>
+                                                        @foreach($groupOptions as $opt)
+                                                            <option value="{{ $opt }}" {{ $ben->category == $opt ? 'selected' : '' }}>{{ $opt }}</option>
+                                                        @endforeach
                                                     </select>
-                                                    @error('target_groups.' . $index . '.group')
-                                                        <div class="invalid-feedback">{{ $message }}</div>
-                                                    @enderror
-                                                </div>
-                                                <div class="col-md-2">
-                                                    <input type="number"
-                                                        name="target_groups[{{ $index }}][count]"
-                                                        class="form-control @error('target_groups.' . $index . '.count') is-invalid @enderror"
-                                                        placeholder="Count" value="{{ $group['count'] ?? '' }}">
-                                                    @error('target_groups.' . $index . '.count')
-                                                        <div class="invalid-feedback">{{ $message }}</div>
-                                                    @enderror
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <input type="text"
-                                                        name="target_groups[{{ $index }}][notes]"
-                                                        class="form-control" placeholder="Notes (e.g., Class 6-12)"
-                                                        value="{{ $group['notes'] ?? '' }}">
-                                                </div>
-                                                <div class="col-md-1">
-                                                    <button type="button"
-                                                        class="btn btn-outline-danger remove-target-group">−</button>
-                                                </div>
-                                            </div>
-                                        @endforeach
-                                    @elseif(old('target_groups') && is_array(old('target_groups')))
-                                        @foreach (old('target_groups') as $index => $group)
-                                            <div class="row mb-2 target-group-item">
-                                                <div class="col-md-5">
-                                                    <select name="target_groups[{{ $index }}][group]"
-                                                        class="form-select select2 @error('target_groups.' . $index . '.group') is-invalid @enderror">
-                                                        <option value="">Select Group</option>
-                                                        <option value="students"
-                                                            {{ ($group['group'] ?? '') == 'students' ? 'selected' : '' }}>
-                                                            Students</option>
-                                                        <option value="youth"
-                                                            {{ ($group['group'] ?? '') == 'youth' ? 'selected' : '' }}>
-                                                            Youth</option>
-                                                        <option value="women"
-                                                            {{ ($group['group'] ?? '') == 'women' ? 'selected' : '' }}>
-                                                            Women</option>
-                                                        <option value="girls"
-                                                            {{ ($group['group'] ?? '') == 'girls' ? 'selected' : '' }}>
-                                                            Girls</option>
-                                                        <option value="children"
-                                                            {{ ($group['group'] ?? '') == 'children' ? 'selected' : '' }}>
-                                                            Children</option>
-                                                        <option value="schools"
-                                                            {{ ($group['group'] ?? '') == 'schools' ? 'selected' : '' }}>
-                                                            Schools</option>
-                                                        <option value="colleges"
-                                                            {{ ($group['group'] ?? '') == 'colleges' ? 'selected' : '' }}>
-                                                            Colleges</option>
-                                                        <option value="shg"
-                                                            {{ ($group['group'] ?? '') == 'shg' ? 'selected' : '' }}>Women
-                                                            SHG</option>
-                                                    </select>
-                                                    @error('target_groups.' . $index . '.group')
-                                                        <div class="invalid-feedback">{{ $message }}</div>
-                                                    @enderror
-                                                </div>
-                                                <div class="col-md-2">
-                                                    <input type="number"
-                                                        name="target_groups[{{ $index }}][count]"
-                                                        class="form-control @error('target_groups.' . $index . '.count') is-invalid @enderror"
-                                                        placeholder="Count" value="{{ $group['count'] ?? '' }}">
-                                                    @error('target_groups.' . $index . '.count')
-                                                        <div class="invalid-feedback">{{ $message }}</div>
-                                                    @enderror
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <input type="text"
-                                                        name="target_groups[{{ $index }}][notes]"
-                                                        class="form-control" placeholder="Notes (e.g., Class 6-12)"
-                                                        value="{{ $group['notes'] ?? '' }}">
-                                                </div>
-                                                <div class="col-md-1">
-                                                    <button type="button"
-                                                        class="btn btn-outline-danger remove-target-group">−</button>
-                                                </div>
-                                            </div>
-                                        @endforeach
-                                    @endif
+                                                    @else
+                                                        {{ $ben->category }}
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    @if($isUpcoming)
+                                                    <input type="number" name="beneficiary_groups[{{ $loop->index }}][target]" class="form-control" value="{{ $ben->target_number }}">
+                                                    @else
+                                                        {{ $ben->target_number }}
+                                                    @endif
+                                                </td>
+                                                @if(!$isUpcoming)
+                                                <td>
+                                                    <input type="number" name="beneficiary_reached[{{ $ben->id }}]" class="form-control bg-light" value="{{ $ben->reached_number }}" placeholder="Enter reached">
+                                                </td>
+                                                <td>
+                                                    <input type="date" name="beneficiary_date[{{ $ben->id }}]" class="form-control" value="{{ date('Y-m-d') }}">
+                                                    <small class="text-muted d-block mt-1">Auto-updates history</small>
+                                                </td>
+                                                @endif
+                                                @if($isUpcoming)
+                                                <td>
+                                                    <button type="button" class="btn btn-sm btn-outline-danger remove-row"><i class="feather feather-trash-2"></i></button>
+                                                </td>
+                                                @endif
+                                            </tr>
+                                            @endforeach
+                                        </tbody>
+                                        @if($isUpcoming)
+                                        <tfoot>
+                                            <tr>
+                                                <td colspan="3">
+                                                    <button type="button" class="btn btn-sm btn-primary" id="add_group_btn">
+                                                        ➕ Add Group
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </tfoot>
+                                        @endif
+                                    </table>
                                 </div>
-                                <button type="button" class="btn btn-sm btn-primary mt-2" id="add_target_group">Add
-                                    Target Group</button>
-                                <div class="form-text">Add target beneficiary groups with count and notes</div>
                             </div>
+
+                            {{-- INDIVIDUALS SECTION --}}
+                            <div class="mb-4 border p-3 rounded bg-light">
+                                <h6 class="fw-bold mb-3 text-secondary">Target Individuals</h6>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered bg-white" id="beneficiary_individuals_table">
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 40%">Individual Category</th>
+                                                <th style="width: 20%">Target Numbers</th>
+                                                @if(!$isUpcoming)
+                                                <th style="width: 20%">Reached</th>
+                                                <th style="width: 20%">Current Date</th>
+                                                @endif
+                                                @if($isUpcoming)
+                                                <th style="width: 5%"></th>
+                                                @endif
+                                            </tr>
+                                        </thead>
+                                        <tbody id="beneficiary_individuals_body">
+                                            @foreach($individuals as $ben)
+                                            <tr>
+                                                <td>
+                                                    @if($isUpcoming)
+                                                    <select name="beneficiary_individuals[{{ $loop->index }}][category]" class="form-select select2">
+                                                        <option value="">Select Individual</option>
+                                                        @foreach($individualOptions as $opt)
+                                                            <option value="{{ $opt }}" {{ $ben->category == $opt ? 'selected' : '' }}>{{ $opt }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                    @else
+                                                        {{ $ben->category }}
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    @if($isUpcoming)
+                                                    <input type="number" name="beneficiary_individuals[{{ $loop->index }}][target]" class="form-control" value="{{ $ben->target_number }}">
+                                                    @else
+                                                        {{ $ben->target_number }}
+                                                    @endif
+                                                </td>
+                                                @if(!$isUpcoming)
+                                                <td>
+                                                    <input type="number" name="beneficiary_reached[{{ $ben->id }}]" class="form-control bg-light" value="{{ $ben->reached_number }}" placeholder="Enter reached">
+                                                </td>
+                                                <td>
+                                                    <input type="date" name="beneficiary_date[{{ $ben->id }}]" class="form-control" value="{{ date('Y-m-d') }}">
+                                                    <small class="text-muted d-block mt-1">Auto-updates history</small>
+                                                </td>
+                                                @endif
+                                                @if($isUpcoming)
+                                                <td>
+                                                    <button type="button" class="btn btn-sm btn-outline-danger remove-row"><i class="feather feather-trash-2"></i></button>
+                                                </td>
+                                                @endif
+                                            </tr>
+                                            @endforeach
+                                        </tbody>
+                                        @if($isUpcoming)
+                                        <tfoot>
+                                            <tr>
+                                                <td colspan="3">
+                                                    <button type="button" class="btn btn-sm btn-primary" id="add_individual_btn">
+                                                        ➕ Add Individual
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </tfoot>
+                                        @endif
+                                    </table>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
 
@@ -2816,6 +2858,26 @@
             let linkCounter =
                 {{ is_array(old('links', $project->links)) ? count(old('links', $project->links)) : 0 }};
 
+            // Beneficiary Counters
+            let benGroupCounter = {{ $project->beneficiaries->where('type', 'group')->count() }};
+            let benIndCounter = {{ $project->beneficiaries->where('type', 'individual')->count() }};
+
+            const groupOptions = [
+                'Schools', 'Colleges / Higher Education Institutions', 'Women Self-Help Groups (SHGs)',
+                'Farmer Producer Organizations (FPOs)', 'Village Communities / Panchayats',
+                'Rural Areas', 'Urban Areas', 'Metro Cities', 'Taluk / Block Level',
+                'District Level', 'Training / Skill Development Centers',
+                'Community-Based Organizations (CBOs) / NGOs'
+            ];
+
+            const individualOptions = [
+                'Children', 'Students', 'Youth', 'Job Seekers / Unemployed', 'Women', 'Girls',
+                'Men', 'Farmers', 'Entrepreneurs / Micro-Enterprise Owners',
+                'Self-Employed / Informal Workers', 'Elderly Persons',
+                'Persons with Disabilities (PwD)', 'Economically Weaker Section (EWS)',
+                'Migrant / Returned Migrant Workers'
+            ];
+
             // Add location
             $('#add_location').on('click', function() {
                 let html = `
@@ -2884,43 +2946,75 @@
                 metricCounter++;
             });
 
-            // Add target group
-            $('#add_target_group').on('click', function() {
+            // Add Beneficiary Group
+            $('#add_group_btn').on('click', function() {
+                let optionsHtml = '<option value="">Select Group</option>';
+                groupOptions.forEach(opt => {
+                    optionsHtml += `<option value="${opt}">${opt}</option>`;
+                });
+
                 let html = `
-                <div class="row mb-2 target-group-item">
-                    <div class="col-md-5">
-                        <select name="target_groups[${targetGroupCounter}][group]" class="form-select select2">
-                            <option value="">Select Group</option>
-                            <option value="students">Students</option>
-                            <option value="youth">Youth</option>
-                            <option value="women">Women</option>
-                            <option value="girls">Girls</option>
-                            <option value="children">Children</option>
-                            <option value="schools">Schools</option>
-                            <option value="colleges">Colleges</option>
-                            <option value="shg">Women SHG</option>
+                <tr>
+                    <td>
+                        <select name="beneficiary_groups[${benGroupCounter}][category]" class="form-select select2">
+                            ${optionsHtml}
                         </select>
-                    </div>
-                    <div class="col-md-2">
-                        <input type="number" name="target_groups[${targetGroupCounter}][count]"
-                            class="form-control" placeholder="Count">
-                    </div>
-                    <div class="col-md-4">
-                        <input type="text" name="target_groups[${targetGroupCounter}][notes]"
-                            class="form-control" placeholder="Notes (e.g., Class 6-12)">
-                    </div>
-                    <div class="col-md-1">
-                        <button type="button" class="btn btn-outline-danger remove-target-group">−</button>
-                    </div>
-                </div>`;
-                $('#target_groups_wrapper').append(html);
-                // Re-initialize Select2 for new dropdown
-                $('#target_groups_wrapper .select2:last').select2({
+                    </td>
+                    <td>
+                        <input type="number" name="beneficiary_groups[${benGroupCounter}][target]" class="form-control" placeholder="0">
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-sm btn-outline-danger remove-row"><i class="feather feather-trash-2"></i></button>
+                    </td>
+                </tr>`;
+                
+                $('#beneficiary_groups_body').append(html);
+                
+                 // Re-initialize Select2
+                $('#beneficiary_groups_body .select2:last').select2({
                     placeholder: "Select Group",
                     allowClear: true,
                     width: '100%'
                 });
-                targetGroupCounter++;
+                benGroupCounter++;
+            });
+
+            // Add Beneficiary Individual
+            $('#add_individual_btn').on('click', function() {
+                let optionsHtml = '<option value="">Select Individual</option>';
+                individualOptions.forEach(opt => {
+                    optionsHtml += `<option value="${opt}">${opt}</option>`;
+                });
+
+                let html = `
+                <tr>
+                    <td>
+                        <select name="beneficiary_individuals[${benIndCounter}][category]" class="form-select select2">
+                            ${optionsHtml}
+                        </select>
+                    </td>
+                    <td>
+                        <input type="number" name="beneficiary_individuals[${benIndCounter}][target]" class="form-control" placeholder="0">
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-sm btn-outline-danger remove-row"><i class="feather feather-trash-2"></i></button>
+                    </td>
+                </tr>`;
+
+                $('#beneficiary_individuals_body').append(html);
+
+                // Re-initialize Select2
+                $('#beneficiary_individuals_body .select2:last').select2({
+                    placeholder: "Select Individual",
+                    allowClear: true,
+                    width: '100%'
+                });
+                benIndCounter++;
+            });
+
+            // Generic Remove Row
+            $(document).on('click', '.remove-row', function() {
+                $(this).closest('tr').remove();
             });
 
             // Add objective
@@ -3056,9 +3150,8 @@
                 $(this).closest('.metric-item').remove();
             });
 
-            $(document).on('click', '.remove-target-group', function() {
-                $(this).closest('.target-group-item').remove();
-            });
+            // Old handlers removed
+
 
             $(document).on('click', '.remove-objective', function() {
                 $(this).closest('.input-group').remove();

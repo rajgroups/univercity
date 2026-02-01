@@ -8,6 +8,8 @@ use App\Models\Category;
 use App\Models\Announcement;
 use App\Models\ProjectMilestone;
 use App\Models\Stakeholder;
+use App\Models\ProjectBeneficiary;
+use App\Models\ProjectBeneficiaryUpdate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
@@ -137,6 +139,9 @@ class ProjectController extends Controller
                 'project_code' => $projectCode,
             ]);
 
+            // 🔹 STEP 4: SAVE BENEFICIARIES
+            $this->saveBeneficiaries($request, $project);
+
             DB::commit();
             notyf()->addSuccess('Project created successfully!');
             return redirect()->route('admin.project.index');
@@ -225,6 +230,9 @@ class ProjectController extends Controller
             ]);
 
             $project->update($projectData);
+
+            // Save Beneficiaries
+            $this->saveBeneficiaries($request, $project);
 
             DB::commit();
             // dd('hi');

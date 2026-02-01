@@ -112,6 +112,11 @@ class Project extends Model
         return $this->hasOne(LearningPathway::class);
     }
 
+    public function beneficiaries()
+    {
+        return $this->hasMany(ProjectBeneficiary::class);
+    }
+
     // Accessor for funding progress
     public function getFundingProgressAttribute()
     {

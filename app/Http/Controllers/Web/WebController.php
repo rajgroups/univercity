@@ -167,6 +167,7 @@ class WebController extends Controller
                 'learningPathway.flows.sector',
                 'learningPathway.courses.sector',
                 'learningPathway.roadmaps',
+                'beneficiaries.updates', // Eager load beneficiaries and updates
             ])
             ->firstOrFail();
 
@@ -214,6 +215,9 @@ class WebController extends Controller
             ->whereIn('slug', (array)$govtSchemeSlugs)
             ->pluck('title', 'slug');
 
+        // 5.3 Benefit Chart Data
+        $beneficiaryChartData = $this->getBeneficiaryChartData($project);
+
         // 6️⃣ Return view
         return view('web.project', compact(
             'project',
@@ -230,8 +234,52 @@ class WebController extends Controller
             'surveyStats',
             'totalRaised',
             'totalReceived',
-            'govtSchemeTitles'
+            'govtSchemeTitles',
+            'beneficiaryChartData'
         ));
+    }
+
+    private function getBeneficiaryChartData($project)
+    {
+        $allUpdates = collect();
+
+        foreach ($project->beneficiaries as $ben) {
+            foreach ($ben->updates as $update) {
+                $allUpdates->push([
+                    'beneficiary_id' => $ben->id,
+                    'date' => $update->date,
+                    'reached' => $update->reached_number,
+                    'created_at' => $update->created_at 
+                ]);
+            }
+        }
+
+        if ($allUpdates->isEmpty()) {
+            return ['labels' => [], 'values' => []];
+        }
+
+        $dates = $allUpdates->pluck('date')->unique()->sort()->values();
+        $labels = [];
+        $values = [];
+
+        foreach ($dates as $date) {
+            $total = 0;
+            foreach ($project->beneficiaries as $ben) {
+                // Find latest update for this ben on or before $date
+                $lastUpdate = $allUpdates->where('beneficiary_id', $ben->id)
+                                         ->where('date', '<=', $date)
+                                         ->sortByDesc('date')
+                                         ->sortByDesc('created_at') // Tie breaker
+                                         ->first();
+                if ($lastUpdate) {
+                    $total += $lastUpdate['reached'];
+                }
+            }
+            $labels[] = \Carbon\Carbon::parse($date)->format('d M Y');
+            $values[] = $total;
+        }
+
+        return ['labels' => $labels, 'values' => $values];
     }
 
 
@@ -345,10 +393,27 @@ class WebController extends Controller
     }
 
     // 📊 Get results with pagination and relationships
+    $sort = $request->input('sort', 'newest');
+    switch ($sort) {
+        case 'oldest':
+            $query->orderBy('created_at', 'asc');
+            break;
+        case 'name_asc':
+            $query->orderBy('course_title', 'asc');
+            break;
+        case 'name_desc':
+            $query->orderBy('course_title', 'desc');
+            break;
+        case 'newest':
+        default:
+            $query->orderBy('display_order', 'asc')
+                  ->orderBy('created_at', 'desc');
+            break;
+    }
+
     $courses = $query->with(['sector', 'country', 'category'])
-                    ->orderBy('display_order', 'asc')
-                    ->orderBy('created_at', 'desc')
-                    ->paginate(12);
+                    ->paginate(12)
+                    ->appends($request->all());
 
     // Dropdown filter options
     $sectors = Sector::where('status', 1)->where('type', 2)->get();

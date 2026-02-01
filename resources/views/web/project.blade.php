@@ -2708,6 +2708,28 @@
                         </div>
                     </div>
 
+                    <!-- Beneficiary Growth Row -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-12">
+                            <div class="enhanced-panel h-100">
+                                <div class="panel-title">
+                                    <i class="bi bi-graph-up"></i>
+                                    Cumulative Beneficiary Reach Over Time
+                                </div>
+                                <div class="chart-container" style="position: relative; height:350px; width:100%">
+                                    @if(isset($beneficiaryChartData['values']) && count($beneficiaryChartData['values']) > 0)
+                                        <canvas id="beneficiaryGrowthChart"></canvas>
+                                    @else
+                                        <div class="d-flex flex-column align-items-center justify-content-center h-100 text-muted">
+                                            <i class="bi bi-graph-up display-4 opacity-25 mb-2"></i>
+                                            <p class="mb-0">No beneficiary data recorded yet</p>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Progress & Risk Row -->
                     <div class="row g-3 mb-4">
                         <!-- Confidence Gauge -->
@@ -2787,7 +2809,18 @@
                                     </button>
                                 </div>
                                 <div class="chart-container" style="position: relative; height:250px; width:100%">
-                                    <canvas id="riskRadarChart"></canvas>
+                                    @php
+                                        $hasRiskData = collect($riskBreakdown)->sum() > 0;
+                                    @endphp
+
+                                    @if($hasRiskData)
+                                        <canvas id="riskRadarChart"></canvas>
+                                    @else
+                                        <div class="d-flex flex-column align-items-center justify-content-center h-100 text-muted">
+                                            <i class="bi bi-shield-check display-4 opacity-25 mb-2"></i>
+                                            <p class="mb-0">No risk factors identified</p>
+                                        </div>
+                                    @endif
                                 </div>
                                 <div class="mt-3">
                                     <div class="row g-2">
@@ -3031,6 +3064,67 @@
                                                 const riskLevel = context.raw <= 30 ? 'Low' : context.raw <= 60 ? 'Medium' : 'High';
                                                 return `${context.dataset.label}: ${context.raw} (${riskLevel})`;
                                             }
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                    }
+
+                    // Beneficiary Growth Line Chart
+                    const ctxG = document.getElementById('beneficiaryGrowthChart');
+                    if(ctxG) {
+                        const growthData = @json($beneficiaryChartData);
+                        
+                        new Chart(ctxG, {
+                            type: 'line',
+                            data: {
+                                labels: growthData.labels,
+                                datasets: [{
+                                    label: 'Total Beneficiaries Reached',
+                                    data: growthData.values,
+                                    borderColor: css.getPropertyValue('--isico-primary').trim() || '#1a6b44',
+                                    backgroundColor: 'rgba(26, 107, 68, 0.1)',
+                                    borderWidth: 2,
+                                    fill: true,
+                                    tension: 0.4,
+                                    pointRadius: 4,
+                                    pointBackgroundColor: '#fff',
+                                    pointBorderColor: css.getPropertyValue('--isico-primary').trim() || '#1a6b44',
+                                    pointBorderWidth: 2
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                plugins: {
+                                    legend: {
+                                        position: 'top',
+                                        align: 'end'
+                                    },
+                                    tooltip: {
+                                        mode: 'index',
+                                        intersect: false,
+                                    },
+                                    datalabels: {
+                                        display: false
+                                    }
+                                },
+                                scales: {
+                                    y: {
+                                        beginAtZero: true,
+                                        grid: {
+                                            borderDash: [2, 4],
+                                            color: '#f0f0f0'
+                                        },
+                                        title: {
+                                            display: true,
+                                            text: 'Number of Individuals'
+                                        }
+                                    },
+                                    x: {
+                                        grid: {
+                                            display: false
                                         }
                                     }
                                 }

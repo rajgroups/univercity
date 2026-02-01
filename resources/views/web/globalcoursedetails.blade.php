@@ -141,8 +141,8 @@
                             <i class="bi bi-mortarboard-fill text-primary me-1"></i>
                             {{ $course->pathway_type ?? 'Global Pathway' }}
                         </span>
-                        <h1 class="fw-bolder display-4 mb-3">{{ $course->course_title }}</h1>
-                        <p class="lead opacity-90 mb-4">{{ $course->short_description }}</p>
+                        <h1 class="fw-bolder display-4 mb-3 text-white">{{ $course->course_title }}</h1>
+                        <p class="lead opacity-90 mb-4 text-white">{{ $course->short_description }}</p>
                         
                         <div class="d-flex flex-wrap gap-2 gap-lg-4 text-white-50 small">
                             <div class="d-flex align-items-center">
@@ -223,6 +223,49 @@
                                 <div class="course-description text-secondary mb-5">
                                     {!! $course->course_details !!}
                                 </div>
+
+                                {{-- Program Structure (Internship & Local Training) --}}
+                                @if($course->internship_included || $course->local_training)
+                                <div class="mb-5">
+                                    <h5 class="fw-bold mb-3">Program Structure</h5>
+                                    <div class="row g-4">
+                                        @if($course->internship_included)
+                                        <div class="col-md-6">
+                                            <div class="bg-light p-4 rounded-4 h-100">
+                                                <div class="d-flex align-items-center mb-3">
+                                                    <div class="feature-icon-box bg-warning bg-opacity-10 text-warning me-3">
+                                                        <i class="bi bi-briefcase"></i>
+                                                    </div>
+                                                    <h6 class="fw-bold mb-0">Internship Included</h6>
+                                                </div>
+                                                <p class="text-muted small mb-2">
+                                                    <strong>Duration:</strong> {{ $course->internship_duration ?? 'Not specified' }}
+                                                </p>
+                                                @if($course->internship_summary)
+                                                <p class="text-muted small mb-0">{{ $course->internship_summary }}</p>
+                                                @endif
+                                            </div>
+                                        </div>
+                                        @endif
+
+                                        @if($course->local_training)
+                                        <div class="col-md-6">
+                                            <div class="bg-light p-4 rounded-4 h-100">
+                                                <div class="d-flex align-items-center mb-3">
+                                                    <div class="feature-icon-box bg-info bg-opacity-10 text-info me-3">
+                                                        <i class="bi bi-laptop"></i>
+                                                    </div>
+                                                    <h6 class="fw-bold mb-0">Local Training</h6>
+                                                </div>
+                                                <p class="text-muted small mb-0">
+                                                    <strong>Duration:</strong> {{ $course->local_training_duration ?? 'Not specified' }}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        @endif
+                                    </div>
+                                </div>
+                                @endif
                                 
                                 <!-- Gallery -->
                                 @if($course->gallery_images && count($course->gallery_images) > 0)
@@ -341,6 +384,53 @@
                                             <tr>
                                                 <td class="ps-4 py-3 fw-medium">{{ $fee['label'] }}</td>
                                                 <td class="pe-4 py-3 text-end fw-bold">{{ $fee['amount'] }} {{ $fee['currency'] ?? '' }}</td>
+                                            </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                                </div>
+                                @endif
+
+                                {{-- Local Training Fees --}}
+                                @if($course->local_training && $course->local_training_fee && count($course->local_training_fee) > 0)
+                                <h5 class="fw-bold mb-3">Local Training Fees</h5>
+                                <div class="table-responsive mb-4">
+                                    <table class="table table-borderless bg-light rounded-3 overflow-hidden">
+                                        <thead class="bg-light border-bottom">
+                                            <tr>
+                                                <th class="ps-4 py-3 text-muted text-uppercase small fw-bold">Item</th>
+                                                <th class="pe-4 py-3 text-end text-muted text-uppercase small fw-bold">Amount</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach($course->local_training_fee as $fee)
+                                            <tr>
+                                                <td class="ps-4 py-3 fw-medium">{{ $fee['label'] ?? 'Fee' }}</td>
+                                                <td class="pe-4 py-3 text-end fw-bold">{{ $fee['amount'] ?? '--' }} {{ $fee['currency'] ?? '' }}</td>
+                                            </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                                @endif
+
+                                {{-- Living Costs --}}
+                                @if($course->living_costs && count($course->living_costs) > 0)
+                                <h5 class="fw-bold mb-3">Estimated Living Costs</h5>
+                                <div class="table-responsive mb-4">
+                                    <table class="table table-borderless bg-light rounded-3 overflow-hidden">
+                                        <thead class="bg-light border-bottom">
+                                            <tr>
+                                                <th class="ps-4 py-3 text-muted text-uppercase small fw-bold">Expense</th>
+                                                <th class="pe-4 py-3 text-end text-muted text-uppercase small fw-bold">Estimated Cost</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach($course->living_costs as $cost)
+                                            <tr>
+                                                <td class="ps-4 py-3 fw-medium">{{ $cost['label'] ?? $cost['item'] ?? 'Expense' }}</td>
+                                                <td class="pe-4 py-3 text-end fw-bold">{{ $cost['amount'] ?? $cost['cost'] ?? '--' }} {{ $cost['currency'] ?? '' }}</td>
                                             </tr>
                                             @endforeach
                                         </tbody>

@@ -110,10 +110,28 @@
                 <span class="text-white">Courses</span>
             </div>
             <h1 class="modern-banner-title">International Courses</h1>
-            <p class="modern-banner-subtitle">Explore study abroad opportunities and global career pathways designed for your success.</p>
+            <p class="modern-banner-subtitle text-white">Explore study abroad opportunities and global career pathways designed for your success.</p>
         </div>
     </section>
     <!-- Title Banner Section End -->
+
+    @php
+        // Helper function to normalize inputs
+        $normalizeInput = function($input) {
+            if (is_string($input)) {
+                return explode(',', $input);
+            }
+            return is_array($input) ? $input : [];
+        };
+
+        $selectedSectors = $normalizeInput(request('sectors', []));
+        $selectedCountries = $normalizeInput(request('countries', []));
+        $selectedLanguages = $normalizeInput(request('languages', []));
+        $selectedDurations = $normalizeInput(request('durations', []));
+        $selectedCategories = $normalizeInput(request('categories', []));
+        $selectedPathways = $normalizeInput(request('pathways', []));
+        $selectedPrices = $normalizeInput(request('prices', []));
+    @endphp
 
     <section class="couses-sec mb-120">
         <div class="container-fluid">
@@ -126,19 +144,24 @@
                     </button>
 
                     {{-- Sort Dropdown --}}
-                    <div class="w-100 drop-container">
+                    <div class="w-100 drop-container" style="max-width: 250px;">
                         <div class="wrapper-dropdown form-control" id="dropdown-l2">
-                            <div class="d-flex align-items-center justify-content-between gap-64">
-                                <span class="selected-display black" id="desation112">Newest First</span>
-                                <svg id="drop-down2" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                                    <path d="M19.7337 4.81165C19.3788 4.45668 18.8031 4.45662 18.4481 4.81171L10.0002 13.2598L1.55191 4.81165C1.19694 4.45668 0.621303 4.45662 0.266273 4.81171C-0.0887576 5.16674 -0.0887576 5.74232 0.266273 6.09735L9.35742 15.1883C9.52791 15.3587 9.75912 15.4545 10.0002 15.4545C10.2413 15.4545 10.4726 15.3587 10.643 15.1882L19.7337 6.09729C20.0888 5.74232 20.0888 5.16668 19.7337 4.81165Z" fill="#92949F" />
-                                </svg>
+                            <div class="d-flex align-items-center justify-content-between gap-2">
+                                <span class="selected-display black" id="sort-display">
+                                    @switch(request('sort'))
+                                        @case('oldest') Oldest First @break
+                                        @case('name_asc') Name (A-Z) @break
+                                        @case('name_desc') Name (Z-A) @break
+                                        @default Newest First
+                                    @endswitch
+                                </span>
+                                <i class="bi bi-chevron-down"></i>
                             </div>
                             <ul class="topbar-dropdown">
-                                <li class="item">Newest First</li>
-                                <li class="item">Price: Low to High</li>
-                                <li class="item">Price: High to Low</li>
-                                <li class="item">Duration: Short to Long</li>
+                                <li class="item" data-value="newest">Newest First</li>
+                                <li class="item" data-value="oldest">Oldest First</li>
+                                <li class="item" data-value="name_asc">Name (A-Z)</li>
+                                <li class="item" data-value="name_desc">Name (Z-A)</li>
                             </ul>
                         </div>
                     </div>
@@ -149,23 +172,7 @@
                 {{-- Desktop Filters --}}
                 <div class="col-md-3 d-none d-md-block">
                     <form action="{{ route('web.global.course') }}" method="GET" id="courseFilters">
-                        @php
-                            // Helper function to normalize inputs
-                            $normalizeInput = function($input) {
-                                if (is_string($input)) {
-                                    return explode(',', $input);
-                                }
-                                return is_array($input) ? $input : [];
-                            };
-
-                            $selectedSectors = $normalizeInput(request('sectors', []));
-                            $selectedCountries = $normalizeInput(request('countries', []));
-                            $selectedLanguages = $normalizeInput(request('languages', []));
-                            $selectedDurations = $normalizeInput(request('durations', []));
-                            $selectedCategories = $normalizeInput(request('categories', []));
-                            $selectedPathways = $normalizeInput(request('pathways', []));
-                            $selectedPrices = $normalizeInput(request('prices', []));
-                        @endphp
+                        <input type="hidden" name="sort" id="sortInput" value="{{ request('sort', 'newest') }}">
                         <div class="mb-4">
                             <div class="input-group">
                                 <input type="text" class="form-control" name="search" placeholder="Search by course name..." value="{{ request('search') }}">
@@ -339,85 +346,88 @@
     @if($courses->count() > 0)
         <div class="row g-4">
             @foreach ($courses as $course)
-                <div class="col-md-6 col-lg-4 mb-4">
+                <div class="col-md-6 col-lg-4 d-flex align-items-stretch mb-4">
                     <div class="course-card card h-100 border-0 shadow-sm">
                         {{-- Course Image with Badges --}}
-                        <div class="position-relative">
-                            @if($course->thumbnail_image)
-                                <img src="{{ asset($course->thumbnail_image) }}" class="card-img-top" alt="{{ $course->course_title }}" style="height: 160px; object-fit: cover;">
-                            @else
-                                <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 160px;">
-                                    <i class="bi bi-book text-muted" style="font-size: 2.5rem;"></i>
-                                </div>
-                            @endif
+                        <div class="position-relative overflow-hidden">
+                            <a href="{{ route('web.global.course.show', $course->slug) }}" class="d-block h-100">
+                                @if($course->thumbnail_image)
+                                    <img src="{{ asset($course->thumbnail_image) }}" class="card-img-top course-thumbnail" alt="{{ $course->course_title }}">
+                                @else
+                                    <div class="card-img-top bg-light d-flex align-items-center justify-content-center course-thumbnail-placeholder">
+                                        <i class="bi bi-book text-muted display-4"></i>
+                                    </div>
+                                @endif
+                            </a>
 
-                            {{-- Badges --}}
-                            <div class="position-absolute top-0 start-0 end-0 p-2 d-flex justify-content-between">
-                                <span class="badge bg-primary">
+                            {{-- Badges - Top Left --}}
+                            <div class="position-absolute top-0 start-0 p-3 w-100 d-flex justify-content-between align-items-start pointer-events-none">
+                                <span class="badge badge-pathway shadow-sm">
                                     {{ $course->pathway_type }}
                                 </span>
-                                <span class="badge {{ $course->paid_type === 'Free' ? 'bg-success' : 'bg-warning' }}">
+                                <span class="badge {{ $course->paid_type === 'Free' ? 'badge-free' : 'badge-paid' }} shadow-sm">
                                     {{ $course->paid_type }}
                                 </span>
                             </div>
                         </div>
 
                         {{-- Card Content --}}
-                        <div class="card-body d-flex flex-column p-3">
-                            {{-- Course Title --}}
-                            <h6 class="card-title mb-3 fw-bold text-dark line-clamp-2" style="min-height: 2.5rem;">
-                                {{ $course->course_title }}
-                            </h6>
-
-                            {{-- Institution & Location --}}
-                            <div class="mb-3">
-                                <div class="d-flex align-items-start mb-2">
-                                    <i class="bi bi-building text-muted me-2 mt-1 flex-shrink-0"></i>
-                                    <span class="small text-muted">{{ Str::limit($course->overseas_partner_institution, 35) }}</span>
-                                </div>
-                                <div class="d-flex align-items-start mb-2">
-                                    <i class="bi bi-geo-alt text-primary me-2 mt-1 flex-shrink-0"></i>
-                                    <span class="small text-primary">{{ $course->country->name ?? 'International' }}</span>
-                                </div>
-                            </div>
-
+                        <div class="card-body p-4 d-flex flex-column">
                             {{-- Sector --}}
                             @if($course->sector)
-                            <div class="mb-3">
-                                <div class="d-flex align-items-center">
-                                    <i class="bi bi-tags text-warning me-2 flex-shrink-0"></i>
-                                    <span class="small text-dark">{{ $course->sector->name }}</span>
-                                </div>
+                            <div class="mb-2">
+                                <span class="text-uppercase text-primary fw-bold" style="font-size: 0.75rem; letter-spacing: 0.5px;">
+                                    {{ $course->sector->name }}
+                                </span>
                             </div>
                             @endif
 
-                            {{-- Course Details - Split left & right --}}
-                            <div class="mt-auto">
-                                <div class="d-flex justify-content-between align-items-center small text-muted mb-3">
-                                    {{-- Left Side: Language --}}
-                                    <div class="d-flex align-items-center">
-                                        <i class="bi bi-translate me-1"></i>
-                                        <span>
-                                            @if($course->language_of_instruction)
-                                                {{ implode(', ', array_slice($course->language_of_instruction, 0, 2)) }}
-                                                @if(count($course->language_of_instruction) > 2)+@endif
-                                            @else
-                                                English
-                                            @endif
-                                        </span>
-                                    </div>
+                            {{-- Course Title --}}
+                            <h5 class="card-title fw-bold text-dark mb-3">
+                                <a href="{{ route('web.global.course.show', $course->slug) }}" class="text-decoration-none text-dark stretched-link-custom">
+                                    {{ Str::limit($course->course_title, 55) }}
+                                </a>
+                            </h5>
 
-                                    {{-- Right Side: Duration --}}
-                                    <div class="d-flex align-items-center">
-                                        <i class="bi bi-clock me-1"></i>
-                                        <span>{{ $course->course_duration_overseas }}</span>
+                            {{-- Institution & Location --}}
+                            <div class="mb-3 text-muted small">
+                                <div class="d-flex align-items-center mb-2">
+                                    <i class="bi bi-building me-2 text-secondary"></i>
+                                    <span class="text-truncate">{{ Str::limit($course->overseas_partner_institution, 30) }}</span>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-geo-alt me-2 text-secondary"></i>
+                                    <span>{{ $course->country->name ?? 'International' }}</span>
+                                </div>
+                            </div>
+
+                            <hr class="my-3 opacity-10">
+
+                            {{-- Course Details Footer --}}
+                            <div class="mt-auto">
+                                <div class="row g-2 mb-3">
+                                    <div class="col-6">
+                                        <div class="d-flex align-items-center text-muted small">
+                                            <i class="bi bi-clock me-2 text-primary"></i>
+                                            <span class="fw-medium">{{ Str::limit($course->course_duration_overseas, 15) }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="d-flex align-items-center text-muted small">
+                                            <i class="bi bi-translate me-2 text-primary"></i>
+                                            <span class="fw-medium text-truncate">
+                                                @if($course->language_of_instruction)
+                                                    {{ implode(', ', array_slice($course->language_of_instruction, 0, 1)) }}
+                                                @else
+                                                    English
+                                                @endif
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
 
-                                {{-- Apply Button --}}
-                                <a href="{{ route('web.global.course.show', $course->slug) }}" class="btn btn-outline-primary w-100 btn-sm d-flex align-items-center justify-content-center">
-                                    View Details & Apply
-                                    <i class="bi bi-arrow-right ms-2"></i>
+                                <a href="{{ route('web.global.course.show', $course->slug) }}" class="btn btn-primary w-100 rounded-pill btn-sm fw-bold py-2 d-flex align-items-center justify-content-center course-btn">
+                                    View Details <i class="bi bi-arrow-right ms-2"></i>
                                 </a>
                             </div>
                         </div>
@@ -427,11 +437,12 @@
         </div>
     @else
         <div class="text-center py-5">
-            <i class="bi bi-search display-1 text-muted opacity-50"></i>
-            <h4 class="mt-3 text-dark">No courses found</h4>
+            <div class="mb-4">
+                <i class="bi bi-search display-1 text-muted opacity-25"></i>
+            </div>
+            <h4 class="text-dark fw-bold">No courses found</h4>
             <p class="text-muted mb-4">Try adjusting your search criteria or browse all courses.</p>
-            <a href="{{ route('web.global.course') }}" class="btn btn-primary px-4">
-                <i class="bi bi-grid me-2"></i>
+            <a href="{{ route('web.global.course') }}" class="btn btn-primary px-4 rounded-pill">
                 Browse All Courses
             </a>
         </div>
@@ -476,107 +487,297 @@
     </section>
 
     <style>
+        /* Course Card Modern Styling */
         .course-card {
-            border: 1px solid #dee2e6;
-            border-radius: 12px;
+            background: #fff;
+            border-radius: 16px;
             overflow: hidden;
-            transition: all 0.3s ease;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+            position: relative;
+            top: 0;
         }
 
         .course-card:hover {
             transform: translateY(-8px);
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
-            border-color: #007bff;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08); /* Soft, diffuse shadow */
+            border-color: transparent;
         }
 
         .course-thumbnail {
-            transition: transform 0.3s ease;
+            height: 200px;
+            object-fit: cover;
+            width: 100%;
+            transition: transform 0.6s ease;
+        }
+
+        .course-thumbnail-placeholder {
+            height: 200px;
+            width: 100%;
+            background-color: #f8f9fa;
         }
 
         .course-card:hover .course-thumbnail {
-            transform: scale(1.05);
+            transform: scale(1.08);
         }
 
+        .stretched-link-custom {
+            color: inherit;
+        }
+        .stretched-link-custom:hover {
+            color: #0d6efd; /* Bootstrap primary */
+        }
+
+        /* Badges */
         .badge-pathway {
-            position: absolute;
-            top: 12px;
-            left: 12px;
-            font-size: 0.7rem;
-            border-radius: 20px;
-            padding: 4px 12px;
+            background: rgba(255, 255, 255, 0.95);
+            color: #0d6efd;
             font-weight: 600;
-            background: rgba(0, 123, 255, 0.9) !important;
-        }
-
-        .badge-price {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            font-size: 0.7rem;
-            border-radius: 20px;
-            padding: 4px 12px;
-            font-weight: 600;
+            backdrop-filter: blur(4px);
         }
 
         .badge-free {
-            background-color: #28a745 !important;
+            background-color: #198754;
             color: #fff;
         }
 
         .badge-paid {
-            background-color: #dc3545 !important;
-            color: #fff;
+            background-color: #ffc107;
+            color: #000;
         }
 
-        .course-title {
-            font-weight: 600;
-            line-height: 1.3;
-            color: #2c3e50;
+        .pointer-events-none {
+            pointer-events: none;
         }
 
-        .apply-link {
-            color: #f27e00;
-            font-weight: 600;
-            font-size: 0.9rem;
-            text-decoration: none;
-            padding: 8px 16px;
-            border: 2px solid #f27e00;
-            border-radius: 6px;
+        /* Button Hover Effect */
+        .course-btn {
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .course-btn:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #0b5ed7;
+            border-radius: 50px;
+            z-index: -2;
+        }
+        .course-btn:before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0%;
+            height: 100%;
+            background-color: #0a58ca;
+            transition: all 0.3s;
+            border-radius: 50px;
+            z-index: -1;
+        }
+        .course-btn:hover:before {
+            width: 100%;
+        }
+
+        /* Dropdown Styling */
+        .drop-container {
+            position: relative;
+            z-index: 100;
+        }
+        .wrapper-dropdown {
+            background: #fff;
+            color: #333;
+            cursor: pointer;
+            position: relative;
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
             transition: all 0.3s ease;
         }
-
-        .apply-link:hover {
-            background-color: #f27e00;
-            color: white;
-            text-decoration: none;
+        .wrapper-dropdown:hover {
+            border-color: #0d6efd;
         }
-
-        .course-thumbnail-placeholder {
-            border-bottom: 1px solid #dee2e6;
+        .wrapper-dropdown.active {
+            border-color: #0d6efd;
+            border-radius: 8px 8px 0 0;
+        }
+        .wrapper-dropdown .topbar-dropdown {
+            position: absolute;
+            top: 100%;
+            left: -1px; /* Align with border */
+            right: -1px;
+            background: #fff;
+            border: 1px solid #0d6efd;
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: none;
+            z-index: 1000;
+            max-height: 200px;
+            overflow-y: auto;
+            box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+        }
+        .wrapper-dropdown.active .topbar-dropdown {
+            display: block;
+        }
+        .wrapper-dropdown .item {
+            padding: 10px 15px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .wrapper-dropdown .item:hover {
+            background: #f8f9fa;
+            color: #0d6efd;
+        }
+        .wrapper-dropdown .item.selected {
+            background: #e9ecef;
+            font-weight: 600;
         }
     </style>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Sort Dropdown Functionality
+            const dropdown = document.getElementById('dropdown-l2');
+            const hiddenInput = document.getElementById('sortInput');
+            const form = document.getElementById('courseFilters');
+
+            if (dropdown && hiddenInput && form) {
+                // Toggle dropdown
+                dropdown.addEventListener('click', function(e) {
+                    this.classList.toggle('active');
+                });
+
+                // Handle item selection
+                const items = dropdown.querySelectorAll('.item');
+                items.forEach(item => {
+                    item.addEventListener('click', function(e) {
+                        e.stopPropagation(); // Prevent closing immediately then reopening
+                        
+                        const value = this.getAttribute('data-value');
+                        const text = this.textContent;
+
+                        // Update display
+                        document.getElementById('sort-display').textContent = text;
+                        document.getElementById('sort-display').classList.add('selected-display'); // ensure styling
+
+                        // Close dropdown
+                        dropdown.classList.remove('active');
+
+                        // Update hidden input and submit form
+                        hiddenInput.value = value;
+                        form.submit();
+                    });
+                });
+
+                // Close dropdown when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!dropdown.contains(e.target)) {
+                        dropdown.classList.remove('active');
+                    }
+                });
+            }
+        });
+    </script>
+
+    {{-- Mobile Filter Offcanvas --}}
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="mobileFilterOffcanvas" aria-labelledby="mobileFilterOffcanvasLabel">
+        <div class="offcanvas-header border-bottom">
+            <h5 class="offcanvas-title" id="mobileFilterOffcanvasLabel"><i class="bi bi-funnel me-2"></i> Filter Courses</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            {{-- Copy of Desktop Filter Form with mobile ID --}}
+            <form action="{{ route('web.global.course') }}" method="GET" id="courseFiltersMobile">
+                <input type="hidden" name="sort" value="{{ request('sort', 'newest') }}">
+                
+                {{-- Search --}}
+                <div class="mb-4">
+                    <div class="input-group">
+                        <input type="text" class="form-control" name="search" placeholder="Search by course name..." value="{{ request('search') }}">
+                        <button class="btn btn-primary" type="submit">
+                            <i class="bi bi-search"></i>
+                        </button>
+                    </div>
+                </div>
+
+                {{-- Accordion --}}
+                <div class="accordion" id="filterAccordionMobile">
+                    {{-- Sector --}}
+                    <div class="accordion-item border-0 mb-3 shadow-sm">
+                        <h2 class="accordion-header" id="headingSectorM">
+                            <button class="accordion-button collapsed shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSectorM">
+                                <i class="bi bi-grid me-2"></i> Sector
+                            </button>
+                        </h2>
+                        <div id="collapseSectorM" class="accordion-collapse collapse show" data-bs-parent="#filterAccordionMobile">
+                            <div class="accordion-body pt-2">
+                                @foreach ($sectors as $sector)
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" name="sectors[]" id="sectorM{{ $sector->id }}" value="{{ $sector->id }}" {{ in_array($sector->id, $selectedSectors) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="sectorM{{ $sector->id }}">{{ $sector->name }}</label>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Country --}}
+                    <div class="accordion-item border-0 mb-3 shadow-sm">
+                        <h2 class="accordion-header" id="headingCountryM">
+                            <button class="accordion-button collapsed shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCountryM">
+                                <i class="bi bi-flag me-2"></i> Country
+                            </button>
+                        </h2>
+                        <div id="collapseCountryM" class="accordion-collapse collapse" data-bs-parent="#filterAccordionMobile">
+                            <div class="accordion-body pt-2">
+                                @foreach ($countries as $country)
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" name="countries[]" id="countryM{{ $country->id }}" value="{{ $country->iso3 }}" {{ in_array($country->iso3, $selectedCountries) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="countryM{{ $country->id }}">{{ $country->name }}</label>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Pathway Type --}}
+                    <div class="accordion-item border-0 mb-3 shadow-sm">
+                        <h2 class="accordion-header" id="headingPathwayM">
+                            <button class="accordion-button collapsed shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePathwayM">
+                                <i class="bi bi-diagram-3 me-2"></i> Study Mode
+                            </button>
+                        </h2>
+                        <div id="collapsePathwayM" class="accordion-collapse collapse" data-bs-parent="#filterAccordionMobile">
+                            <div class="accordion-body pt-2">
+                                @foreach (['Online', 'Onsite Abroad', 'Hybrid', 'Twinning', 'Dual Credit'] as $pathway)
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" name="pathways[]" id="pathwayM{{ $loop->index }}" value="{{ $pathway }}" {{ in_array($pathway, $selectedPathways) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="pathwayM{{ $loop->index }}">{{ $pathway }}</label>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="offcanvas-footer p-3 border-top d-grid gap-2">
+            <button type="submit" form="courseFiltersMobile" class="btn btn-primary">
+                <i class="bi bi-funnel me-1"></i> Apply Filters
+            </button>
+            <a href="{{ route('web.global.course') }}" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-counterclockwise me-1"></i> Reset All
+            </a>
+        </div>
+    </div>
 @endsection
 
-{{-- Mobile Filter Offcanvas (keep the same structure but update filter options to match desktop) --}}
-<div class="offcanvas offcanvas-start" tabindex="-1" id="mobileFilterOffcanvas" aria-labelledby="mobileFilterOffcanvasLabel">
-    <div class="offcanvas-header border-bottom">
-        <h5 class="offcanvas-title" id="mobileFilterOffcanvasLabel"><i class="bi bi-funnel me-2"></i> Filter Courses</h5>
-        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-    </div>
-    <div class="offcanvas-body">
-        {{-- Same filter form as desktop but with mobile-specific IDs --}}
-        {{-- Copy the entire desktop filter form here with mobile IDs --}}
-        {{-- For brevity, I'm showing the structure - you can copy the desktop form and update IDs --}}
-    </div>
-    <div class="offcanvas-footer p-3 border-top d-grid gap-2">
-        <button type="submit" form="courseFiltersMobile" class="btn btn-primary">
-            <i class="bi bi-funnel me-1"></i> Apply Filters
-        </button>
-        <a href="{{ route('web.global.course') }}" class="btn btn-outline-secondary">
-            <i class="bi bi-arrow-counterclockwise me-1"></i> Reset All
-        </a>
-    </div>
-</div>
