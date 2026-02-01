@@ -1067,7 +1067,7 @@
                                     <i class="bi bi-building text-primary"></i>
                                 </div>
                                 <div>
-                                    <h6 class="fw-bold mb-1">Government Schemes</h6>
+                                    <h6 class="fw-bold mb-1 text-white">Government Schemes</h6>
                                     <p class="small text-muted mb-0">Partnering with central programs for education and skills.</p>
                                 </div>
                             </div>
@@ -1076,7 +1076,7 @@
                                     <i class="bi bi-people text-primary"></i>
                                 </div>
                                 <div>
-                                    <h6 class="fw-bold mb-1">CSR Initiatives</h6>
+                                    <h6 class="fw-bold mb-1 text-white">CSR Initiatives</h6>
                                     <p class="small text-muted mb-0">Leveraging corporate support for community projects.</p>
                                 </div>
                             </div>
@@ -1085,7 +1085,7 @@
                                     <i class="bi bi-globe text-primary"></i>
                                 </div>
                                 <div>
-                                    <h6 class="fw-bold mb-1">International Body</h6>
+                                    <h6 class="fw-bold mb-1 text-white">International Body</h6>
                                     <p class="small text-muted mb-0">Exchanging global best practices with Indian expertise.</p>
                                 </div>
                             </div>
