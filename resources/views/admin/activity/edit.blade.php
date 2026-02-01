@@ -394,15 +394,11 @@
                                                 @enderror
                                             </div>
                                         @endforeach
-                                    @else
-                                        <div class="input-group mb-2">
-                                            <input type="text" name="highlights[]" class="form-control"
-                                                placeholder="Example: Keynote speech by industry leader">
-                                            <button type="button"
-                                                class="btn btn-outline-secondary add-highlight">+</button>
-                                        </div>
                                     @endif
                                 </div>
+                                <button type="button" class="btn btn-outline-secondary btn-sm mt-2 add-highlight">
+                                    <i class="ti ti-plus"></i> Add Highlight
+                                </button>
                                 @error('highlights')
                                     <div class="text-danger mt-1">{{ $message }}</div>
                                 @enderror

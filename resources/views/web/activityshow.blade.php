@@ -439,6 +439,32 @@
                         </div>
                     </div>
 
+                    <!-- Highlights -->
+                    @php
+                        $highlights = $event->highlights;
+                        if (is_string($highlights)) {
+                            $highlights = json_decode($highlights, true);
+                        }
+                    @endphp
+
+                    @if(!empty($highlights) && count($highlights) > 0)
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h3 class="fw-bold mb-4">{{ $event->type == 2 ? 'Competition' : 'Event' }} Highlights</h3>
+                            <div class="row g-3">
+                                @foreach($highlights as $highlight)
+                                    <div class="col-md-6">
+                                        <div class="d-flex align-items-center p-3 rounded bg-light h-100">
+                                            <i class="fas fa-check-circle text-primary me-3 fs-5"></i>
+                                            <span class="fw-500">{{ $highlight }}</span>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+                    @endif
+
                     <!-- Sponsor Details -->
                     <!-- Sponsor Details -->
                     @php
