@@ -160,7 +160,7 @@
                                         </span>
                                         <input type="text" name="search" class="form-control border-0 py-2 shadow-none"
                                             placeholder="Search Skill Courses..." value="{{ request('search') }}" style="font-size: 0.95rem;">
-                                        <button class="btn btn-primary px-4 fw-bold" type="submit" style="background-color: {{ $defaultSettings->primary_color ?? '#0d6efd' }}; border: none;">
+                                        <button class="btn btn-primary px-4 fw-bold" type="submit" style="background-color: {{ $defaultSettings->primary_color ?? '#018c01' }}; border: none;">
                                             Search
                                         </button>
                                     </div>
