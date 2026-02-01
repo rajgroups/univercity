@@ -342,6 +342,47 @@
                             </div>
                         @endif
                     </div>
+                    <!-- Sponsor Details -->
+                    @php
+                        $sponsors = collect($event->sponsors ?? []);
+                        // Fallback for legacy single sponsor
+                        if ($sponsors->isEmpty() && ($event->sponsor_name || $event->sponsor_details || $event->sponsor_logo)) {
+                            $sponsors->push([
+                                'name' => $event->sponsor_name,
+                                'details' => $event->sponsor_details,
+                                'logo' => $event->sponsor_logo
+                            ]);
+                        }
+                    @endphp
+                    @if($sponsors->isNotEmpty())
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h3 class="fw-bold mb-4">Sponsors</h3>
+                            <div class="row g-4">
+                                @foreach($sponsors as $sponsor)
+                                <div class="col-md-6 col-lg-4">
+                                    <div class="border rounded p-3 h-100 bg-light">
+                                        @if(!empty($sponsor['logo']))
+                                        <div class="text-center mb-3 sponsor-logo-container bg-white rounded p-2">
+                                            <img src="{{ asset($sponsor['logo']) }}" alt="{{ $sponsor['name'] ?? 'Sponsor' }}"
+                                                 class="img-fluid" style="max-height: 80px; object-fit: contain;">
+                                        </div>
+                                        @endif
+
+                                        @if(!empty($sponsor['name']))
+                                        <h6 class="fw-bold text-center text-dark mb-1">{{ $sponsor['name'] }}</h6>
+                                        @endif
+
+                                        @if(!empty($sponsor['details']))
+                                        <p class="small text-muted text-center mb-0">{{ $sponsor['details'] }}</p>
+                                        @endif
+                                    </div>
+                                </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+                    @endif
 
                     <!-- Event Highlights -->
                     <div class="card mb-4">
@@ -465,20 +506,6 @@
                     </div>
                     @endif
 
-                    <!-- Sponsor Details -->
-                    <!-- Sponsor Details -->
-                    @php
-                        $sponsors = collect($event->sponsors ?? []);
-                        // Fallback for legacy single sponsor
-                        if ($sponsors->isEmpty() && ($event->sponsor_name || $event->sponsor_details || $event->sponsor_logo)) {
-                            $sponsors->push([
-                                'name' => $event->sponsor_name,
-                                'details' => $event->sponsor_details,
-                                'logo' => $event->sponsor_logo
-                            ]);
-                        }
-                    @endphp
-
                     @if(!empty($event->rules))
                     <div class="card mb-4">
                         <div class="card-body">
@@ -493,37 +520,6 @@
                         </div>
                     </div>
                     @endif
-
-                    @if($sponsors->isNotEmpty())
-                    <div class="card mb-4">
-                        <div class="card-body">
-                            <h3 class="fw-bold mb-4">Sponsors</h3>
-                            <div class="row g-4">
-                                @foreach($sponsors as $sponsor)
-                                <div class="col-md-6 col-lg-4">
-                                    <div class="border rounded p-3 h-100 bg-light">
-                                        @if(!empty($sponsor['logo']))
-                                        <div class="text-center mb-3 sponsor-logo-container bg-white rounded p-2">
-                                            <img src="{{ asset($sponsor['logo']) }}" alt="{{ $sponsor['name'] ?? 'Sponsor' }}"
-                                                 class="img-fluid" style="max-height: 80px; object-fit: contain;">
-                                        </div>
-                                        @endif
-
-                                        @if(!empty($sponsor['name']))
-                                        <h6 class="fw-bold text-center text-dark mb-1">{{ $sponsor['name'] }}</h6>
-                                        @endif
-
-                                        @if(!empty($sponsor['details']))
-                                        <p class="small text-muted text-center mb-0">{{ $sponsor['details'] }}</p>
-                                        @endif
-                                    </div>
-                                </div>
-                                @endforeach
-                            </div>
-                        </div>
-                    </div>
-                    @endif
-
                     <div class="card mb-4">
                         <div class="card-body">
                             <h3 class="fw-bold mb-4">About This {{ $event->is_competition ? 'Competition' : 'Activity' }}
