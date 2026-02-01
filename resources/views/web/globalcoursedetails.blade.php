@@ -594,8 +594,8 @@
                                     <span class="fw-bold text-dark">{{ $course->course_code }}</span>
                                 </li>
                                 <li class="d-flex justify-content-between py-2 border-bottom">
-                                    <span class="text-muted">Duration</span>
-                                    <span class="fw-bold text-dark">{{ $course->total_duration ?? 'Flexible' }}</span>
+                                    <span class="text-muted">Overseas Duration</span>
+                                    <span class="fw-bold text-dark">{{ $course->course_duration_overseas ?? 'Flexible' }}</span>
                                 </li>
                                 <li class="d-flex justify-content-between py-2 border-bottom">
                                     <span class="text-muted">Language</span>

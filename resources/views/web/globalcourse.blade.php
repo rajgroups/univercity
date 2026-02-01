@@ -372,7 +372,7 @@
                         </div>
 
                         {{-- Card Content --}}
-                        <div class="card-body p-4 d-flex flex-column">
+                        <div class="card-body p-2 d-flex flex-column">
                             {{-- Sector --}}
                             @if($course->sector)
                             <div class="mb-2">
