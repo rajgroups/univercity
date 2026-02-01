@@ -128,12 +128,51 @@
             </ul>
 
             <div class="tab-content" id="projectTabContent">
+                @php
+                    $isUpcoming = $project->stage === 'upcoming';
+                    $beneficiaries = $project->beneficiaries;
+                    $groups = $beneficiaries->where('type', 'group');
+                    $individuals = $beneficiaries->where('type', 'individual');
+
+                    // Dropdown Options
+                    $groupOptions = [
+                        'Schools',
+                        'Colleges / Higher Education Institutions',
+                        'Women Self-Help Groups (SHGs)',
+                        'Farmer Producer Organizations (FPOs)',
+                        'Village Communities / Panchayats',
+                        'Rural Areas',
+                        'Urban Areas',
+                        'Metro Cities',
+                        'Taluk / Block Level',
+                        'District Level',
+                        'Training / Skill Development Centers',
+                        'Community-Based Organizations (CBOs) / NGOs',
+                    ];
+
+                    $individualOptions = [
+                        'Children',
+                        'Students',
+                        'Youth',
+                        'Job Seekers / Unemployed',
+                        'Women',
+                        'Girls',
+                        'Men',
+                        'Farmers',
+                        'Entrepreneurs / Micro-Enterprise Owners',
+                        'Self-Employed / Informal Workers',
+                        'Elderly Persons',
+                        'Persons with Disabilities (PwD)',
+                        'Economically Weaker Section (EWS)',
+                        'Migrant / Returned Migrant Workers',
+                    ];
+                @endphp
 
                 <!-- MOVED FIELDS from Section 0 (Project ID, Location Type, Status) to Basic Details or kept global above tabs?
-                         User said "form fields not realted filed only tab active others tab".
-                         Let's keep the global fields (Project ID, Location Type, Status) inside the Basic Details tab for cleaner UI, or separate.
-                         The current Section 0 had these fields. I will move them to Basic Tab (Tab 1).
-                    -->
+                                     User said "form fields not realted filed only tab active others tab".
+                                     Let's keep the global fields (Project ID, Location Type, Status) inside the Basic Details tab for cleaner UI, or separate.
+                                     The current Section 0 had these fields. I will move them to Basic Tab (Tab 1).
+                                -->
 
                 <div class="d-none">
                     <!-- Placeholder to swallow functionality of Section 0 -->
@@ -419,973 +458,1006 @@
                     </div>
                 </div>
 
-            <!-- Tab 2: Target Location -->
-            <div class="tab-pane" id="location_tab" role="tabpanel">
-                <div class="border p-4 rounded-3 bg-white mb-4">
-                    <h5 class="mb-4 text-primary"><i class="feather feather-map-pin me-2"></i> Target Location Details
-                    </h5>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label class="form-label">Location Type <span class="text-danger">*</span></label>
-                                <select name="target_location_type" id="target_location_type"
-                                    class="form-select select2 @error('target_location_type') is-invalid @enderror">
-                                    <option value="">Select Type</option>
-                                    <option value="single"
-                                        {{ old('target_location_type', $project->target_location_type) == 'single' ? 'selected' : '' }}>
-                                        Single Location</option>
-                                    <option value="multiple"
-                                        {{ old('target_location_type', $project->target_location_type) == 'multiple' ? 'selected' : '' }}>
-                                        Multiple Locations</option>
-                                </select>
-                                @error('target_location_type')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                                <div class="form-text">Select whether project has single or multiple locations</div>
+                <!-- Tab 2: Target Location -->
+                <div class="tab-pane" id="location_tab" role="tabpanel">
+                    <div class="border p-4 rounded-3 bg-white mb-4">
+                        <h5 class="mb-4 text-primary"><i class="feather feather-map-pin me-2"></i> Target Location Details
+                        </h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Location Type <span class="text-danger">*</span></label>
+                                    <select name="target_location_type" id="target_location_type"
+                                        class="form-select select2 @error('target_location_type') is-invalid @enderror">
+                                        <option value="">Select Type</option>
+                                        <option value="single"
+                                            {{ old('target_location_type', $project->target_location_type) == 'single' ? 'selected' : '' }}>
+                                            Single Location</option>
+                                        <option value="multiple"
+                                            {{ old('target_location_type', $project->target_location_type) == 'multiple' ? 'selected' : '' }}>
+                                            Multiple Locations</option>
+                                    </select>
+                                    @error('target_location_type')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                    <div class="form-text">Select whether project has single or multiple locations</div>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Single Location -->
-                    <div id="single_location_section"
-                        style="display: {{ old('target_location_type', $project->target_location_type) == 'single' ? 'block' : 'none' }};">
-                        <h6>Single Location Details</h6>
-                        <div class="row">
-                            <div class="col-md-3">
-                                <div class="mb-3">
-                                    <label class="form-label">Pin Code</label>
-                                    <input type="text" name="pincode"
-                                        class="form-control @error('pincode') is-invalid @enderror"
-                                        value="{{ old('pincode', $project->pincode) }}"
-                                        placeholder="Enter 6-digit PIN code">
-                                    @error('pincode')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
+                        <!-- Single Location -->
+                        <div id="single_location_section"
+                            style="display: {{ old('target_location_type', $project->target_location_type) == 'single' ? 'block' : 'none' }};">
+                            <h6>Single Location Details</h6>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="mb-3">
+                                        <label class="form-label">Pin Code</label>
+                                        <input type="text" name="pincode"
+                                            class="form-control @error('pincode') is-invalid @enderror"
+                                            value="{{ old('pincode', $project->pincode) }}"
+                                            placeholder="Enter 6-digit PIN code">
+                                        @error('pincode')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="mb-3">
+                                        <label class="form-label">State</label>
+                                        <input type="text" name="state"
+                                            class="form-control @error('state') is-invalid @enderror"
+                                            value="{{ old('state', $project->state) }}" placeholder="Enter state name">
+                                        @error('state')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="mb-3">
+                                        <label class="form-label">District</label>
+                                        <input type="text" name="district"
+                                            class="form-control @error('district') is-invalid @enderror"
+                                            value="{{ old('district', $project->district) }}"
+                                            placeholder="Enter district name">
+                                        @error('district')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="mb-3">
+                                        <label class="form-label">Taluk</label>
+                                        <input type="text" name="taluk"
+                                            class="form-control @error('taluk') is-invalid @enderror"
+                                            value="{{ old('taluk', $project->taluk) }}" placeholder="Enter taluk name">
+                                        @error('taluk')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-md-3">
-                                <div class="mb-3">
-                                    <label class="form-label">State</label>
-                                    <input type="text" name="state"
-                                        class="form-control @error('state') is-invalid @enderror"
-                                        value="{{ old('state', $project->state) }}" placeholder="Enter state name">
-                                    @error('state')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Panchayat</label>
+                                        <input type="text" name="panchayat"
+                                            class="form-control @error('panchayat') is-invalid @enderror"
+                                            value="{{ old('panchayat', $project->panchayat) }}"
+                                            placeholder="Enter panchayat name">
+                                        @error('panchayat')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Building Name</label>
+                                        <input type="text" name="building_name"
+                                            class="form-control @error('building_name') is-invalid @enderror"
+                                            value="{{ old('building_name', $project->building_name) }}"
+                                            placeholder="Enter building name">
+                                        @error('building_name')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-md-3">
-                                <div class="mb-3">
-                                    <label class="form-label">District</label>
-                                    <input type="text" name="district"
-                                        class="form-control @error('district') is-invalid @enderror"
-                                        value="{{ old('district', $project->district) }}"
-                                        placeholder="Enter district name">
-                                    @error('district')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="mb-3">
-                                    <label class="form-label">Taluk</label>
-                                    <input type="text" name="taluk"
-                                        class="form-control @error('taluk') is-invalid @enderror"
-                                        value="{{ old('taluk', $project->taluk) }}" placeholder="Enter taluk name">
-                                    @error('taluk')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="mb-3">
+                                        <label class="form-label">GPS Map DIGI PIN (optional)</label>
+                                        <input type="text" name="gps_coordinates"
+                                            class="form-control @error('gps_coordinates') is-invalid @enderror"
+                                            value="{{ old('gps_coordinates', $project->gps_coordinates) }}"
+                                            placeholder="e.g., 12.3456, 78.9012">
+                                        @error('gps_coordinates')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                        <div class="form-text">Optional: Enter latitude, longitude coordinates</div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label class="form-label">Panchayat</label>
-                                    <input type="text" name="panchayat"
-                                        class="form-control @error('panchayat') is-invalid @enderror"
-                                        value="{{ old('panchayat', $project->panchayat) }}"
-                                        placeholder="Enter panchayat name">
-                                    @error('panchayat')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
+
+                        <!-- Multiple Locations -->
+                        <div id="multiple_locations_section"
+                            style="display: {{ old('target_location_type', $project->target_location_type) == 'multiple' ? 'block' : 'none' }};">
+                            <h6>Multiple Locations</h6>
+                            <div id="multiple_locations_wrapper">
+                                @php
+                                    $multipleLocations = old('multiple_locations', $project->multiple_locations);
+                                @endphp
+
+                                @if ($multipleLocations && is_array($multipleLocations) && count($multipleLocations) > 0)
+                                    @foreach ($multipleLocations as $index => $location)
+                                        <div class="location-group mb-3 border p-3">
+                                            <div class="row">
+                                                <div class="col-md-3">
+                                                    <label class="form-label">Pin Code</label>
+                                                    <input type="text"
+                                                        name="multiple_locations[{{ $index }}][pincode]"
+                                                        class="form-control @error('multiple_locations.' . $index . '.pincode') is-invalid @enderror"
+                                                        value="{{ $location['pincode'] ?? '' }}"
+                                                        placeholder="6-digit PIN">
+                                                    @error('multiple_locations.' . $index . '.pincode')
+                                                        <div class="invalid-feedback">{{ $message }}</div>
+                                                    @enderror
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <label class="form-label">State</label>
+                                                    <input type="text"
+                                                        name="multiple_locations[{{ $index }}][state]"
+                                                        class="form-control @error('multiple_locations.' . $index . '.state') is-invalid @enderror"
+                                                        value="{{ $location['state'] ?? '' }}" placeholder="State name">
+                                                    @error('multiple_locations.' . $index . '.state')
+                                                        <div class="invalid-feedback">{{ $message }}</div>
+                                                    @enderror
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <label class="form-label">District</label>
+                                                    <input type="text"
+                                                        name="multiple_locations[{{ $index }}][district]"
+                                                        class="form-control @error('multiple_locations.' . $index . '.district') is-invalid @enderror"
+                                                        value="{{ $location['district'] ?? '' }}"
+                                                        placeholder="District name">
+                                                    @error('multiple_locations.' . $index . '.district')
+                                                        <div class="invalid-feedback">{{ $message }}</div>
+                                                    @enderror
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <label class="form-label">Taluk</label>
+                                                    <input type="text"
+                                                        name="multiple_locations[{{ $index }}][taluk]"
+                                                        class="form-control @error('multiple_locations.' . $index . '.taluk') is-invalid @enderror"
+                                                        value="{{ $location['taluk'] ?? '' }}" placeholder="Taluk name">
+                                                    @error('multiple_locations.' . $index . '.taluk')
+                                                        <div class="invalid-feedback">{{ $message }}</div>
+                                                    @enderror
+                                                </div>
+                                            </div>
+                                            <div class="row mt-2">
+                                                <div class="col-md-6">
+                                                    <label class="form-label">Panchayat</label>
+                                                    <input type="text"
+                                                        name="multiple_locations[{{ $index }}][panchayat]"
+                                                        class="form-control @error('multiple_locations.' . $index . '.panchayat') is-invalid @enderror"
+                                                        value="{{ $location['panchayat'] ?? '' }}"
+                                                        placeholder="Panchayat name">
+                                                    @error('multiple_locations.' . $index . '.panchayat')
+                                                        <div class="invalid-feedback">{{ $message }}</div>
+                                                    @enderror
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="form-label">Building Name</label>
+                                                    <input type="text"
+                                                        name="multiple_locations[{{ $index }}][building_name]"
+                                                        class="form-control @error('multiple_locations.' . $index . '.building_name') is-invalid @enderror"
+                                                        value="{{ $location['building_name'] ?? '' }}"
+                                                        placeholder="Building name">
+                                                    @error('multiple_locations.' . $index . '.building_name')
+                                                        <div class="invalid-feedback">{{ $message }}</div>
+                                                    @enderror
+                                                </div>
+                                            </div>
+                                            <button type="button"
+                                                class="btn btn-sm btn-danger mt-2 remove-location">Remove</button>
+                                        </div>
+                                    @endforeach
+                                @elseif(old('multiple_locations') && is_array(old('multiple_locations')))
+                                    @foreach (old('multiple_locations') as $index => $location)
+                                        <div class="location-group mb-3 border p-3">
+                                            <div class="row">
+                                                <div class="col-md-3">
+                                                    <label class="form-label">Pin Code</label>
+                                                    <input type="text"
+                                                        name="multiple_locations[{{ $index }}][pincode]"
+                                                        class="form-control @error('multiple_locations.' . $index . '.pincode') is-invalid @enderror"
+                                                        value="{{ $location['pincode'] ?? '' }}"
+                                                        placeholder="6-digit PIN">
+                                                    @error('multiple_locations.' . $index . '.pincode')
+                                                        <div class="invalid-feedback">{{ $message }}</div>
+                                                    @enderror
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <label class="form-label">State</label>
+                                                    <input type="text"
+                                                        name="multiple_locations[{{ $index }}][state]"
+                                                        class="form-control @error('multiple_locations.' . $index . '.state') is-invalid @enderror"
+                                                        value="{{ $location['state'] ?? '' }}" placeholder="State name">
+                                                    @error('multiple_locations.' . $index . '.state')
+                                                        <div class="invalid-feedback">{{ $message }}</div>
+                                                    @enderror
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <label class="form-label">District</label>
+                                                    <input type="text"
+                                                        name="multiple_locations[{{ $index }}][district]"
+                                                        class="form-control @error('multiple_locations.' . $index . '.district') is-invalid @enderror"
+                                                        value="{{ $location['district'] ?? '' }}"
+                                                        placeholder="District name">
+                                                    @error('multiple_locations.' . $index . '.district')
+                                                        <div class="invalid-feedback">{{ $message }}</div>
+                                                    @enderror
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <label class="form-label">Taluk</label>
+                                                    <input type="text"
+                                                        name="multiple_locations[{{ $index }}][taluk]"
+                                                        class="form-control @error('multiple_locations.' . $index . '.taluk') is-invalid @enderror"
+                                                        value="{{ $location['taluk'] ?? '' }}" placeholder="Taluk name">
+                                                    @error('multiple_locations.' . $index . '.taluk')
+                                                        <div class="invalid-feedback">{{ $message }}</div>
+                                                    @enderror
+                                                </div>
+                                            </div>
+                                            <div class="row mt-2">
+                                                <div class="col-md-6">
+                                                    <label class="form-label">Panchayat</label>
+                                                    <input type="text"
+                                                        name="multiple_locations[{{ $index }}][panchayat]"
+                                                        class="form-control @error('multiple_locations.' . $index . '.panchayat') is-invalid @enderror"
+                                                        value="{{ $location['panchayat'] ?? '' }}"
+                                                        placeholder="Panchayat name">
+                                                    @error('multiple_locations.' . $index . '.panchayat')
+                                                        <div class="invalid-feedback">{{ $message }}</div>
+                                                    @enderror
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="form-label">Building Name</label>
+                                                    <input type="text"
+                                                        name="multiple_locations[{{ $index }}][building_name]"
+                                                        class="form-control @error('multiple_locations.' . $index . '.building_name') is-invalid @enderror"
+                                                        value="{{ $location['building_name'] ?? '' }}"
+                                                        placeholder="Building name">
+                                                    @error('multiple_locations.' . $index . '.building_name')
+                                                        <div class="invalid-feedback">{{ $message }}</div>
+                                                    @enderror
+                                                </div>
+                                            </div>
+                                            <button type="button"
+                                                class="btn btn-sm btn-danger mt-2 remove-location">Remove</button>
+                                        </div>
+                                    @endforeach
+                                @endif
                             </div>
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label class="form-label">Building Name</label>
-                                    <input type="text" name="building_name"
-                                        class="form-control @error('building_name') is-invalid @enderror"
-                                        value="{{ old('building_name', $project->building_name) }}"
-                                        placeholder="Enter building name">
-                                    @error('building_name')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
+                            <button type="button" class="btn btn-primary" id="add_location">Add Location</button>
                         </div>
-                        <div class="row">
+
+                        <div class="row mt-3">
                             <div class="col-md-12">
                                 <div class="mb-3">
-                                    <label class="form-label">GPS Map DIGI PIN (optional)</label>
-                                    <input type="text" name="gps_coordinates"
-                                        class="form-control @error('gps_coordinates') is-invalid @enderror"
-                                        value="{{ old('gps_coordinates', $project->gps_coordinates) }}"
-                                        placeholder="e.g., 12.3456, 78.9012">
-                                    @error('gps_coordinates')
+                                    <label class="form-label">Target Location Summary (Optional)</label>
+                                    <textarea class="form-control @error('location_summary') is-invalid @enderror" name="location_summary"
+                                        rows="2" placeholder="e.g., We covered 10 schools across the Sivagangai district">{{ old('location_summary', $project->location_summary) }}</textarea>
+                                    @error('location_summary')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
-                                    <div class="form-text">Optional: Enter latitude, longitude coordinates</div>
+                                    <div class="form-text">Brief summary of geographical coverage</div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Multiple Locations -->
-                    <div id="multiple_locations_section"
-                        style="display: {{ old('target_location_type', $project->target_location_type) == 'multiple' ? 'block' : 'none' }};">
-                        <h6>Multiple Locations</h6>
-                        <div id="multiple_locations_wrapper">
-                            @php
-                                $multipleLocations = old('multiple_locations', $project->multiple_locations);
-                            @endphp
-
-                            @if ($multipleLocations && is_array($multipleLocations) && count($multipleLocations) > 0)
-                                @foreach ($multipleLocations as $index => $location)
-                                    <div class="location-group mb-3 border p-3">
-                                        <div class="row">
-                                            <div class="col-md-3">
-                                                <label class="form-label">Pin Code</label>
-                                                <input type="text"
-                                                    name="multiple_locations[{{ $index }}][pincode]"
-                                                    class="form-control @error('multiple_locations.' . $index . '.pincode') is-invalid @enderror"
-                                                    value="{{ $location['pincode'] ?? '' }}" placeholder="6-digit PIN">
-                                                @error('multiple_locations.' . $index . '.pincode')
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
-                                            </div>
-                                            <div class="col-md-3">
-                                                <label class="form-label">State</label>
-                                                <input type="text"
-                                                    name="multiple_locations[{{ $index }}][state]"
-                                                    class="form-control @error('multiple_locations.' . $index . '.state') is-invalid @enderror"
-                                                    value="{{ $location['state'] ?? '' }}" placeholder="State name">
-                                                @error('multiple_locations.' . $index . '.state')
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
-                                            </div>
-                                            <div class="col-md-3">
-                                                <label class="form-label">District</label>
-                                                <input type="text"
-                                                    name="multiple_locations[{{ $index }}][district]"
-                                                    class="form-control @error('multiple_locations.' . $index . '.district') is-invalid @enderror"
-                                                    value="{{ $location['district'] ?? '' }}"
-                                                    placeholder="District name">
-                                                @error('multiple_locations.' . $index . '.district')
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
-                                            </div>
-                                            <div class="col-md-3">
-                                                <label class="form-label">Taluk</label>
-                                                <input type="text"
-                                                    name="multiple_locations[{{ $index }}][taluk]"
-                                                    class="form-control @error('multiple_locations.' . $index . '.taluk') is-invalid @enderror"
-                                                    value="{{ $location['taluk'] ?? '' }}" placeholder="Taluk name">
-                                                @error('multiple_locations.' . $index . '.taluk')
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                        <div class="row mt-2">
-                                            <div class="col-md-6">
-                                                <label class="form-label">Panchayat</label>
-                                                <input type="text"
-                                                    name="multiple_locations[{{ $index }}][panchayat]"
-                                                    class="form-control @error('multiple_locations.' . $index . '.panchayat') is-invalid @enderror"
-                                                    value="{{ $location['panchayat'] ?? '' }}"
-                                                    placeholder="Panchayat name">
-                                                @error('multiple_locations.' . $index . '.panchayat')
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
-                                            </div>
-                                            <div class="col-md-6">
-                                                <label class="form-label">Building Name</label>
-                                                <input type="text"
-                                                    name="multiple_locations[{{ $index }}][building_name]"
-                                                    class="form-control @error('multiple_locations.' . $index . '.building_name') is-invalid @enderror"
-                                                    value="{{ $location['building_name'] ?? '' }}"
-                                                    placeholder="Building name">
-                                                @error('multiple_locations.' . $index . '.building_name')
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                        <button type="button"
-                                            class="btn btn-sm btn-danger mt-2 remove-location">Remove</button>
-                                    </div>
-                                @endforeach
-                            @elseif(old('multiple_locations') && is_array(old('multiple_locations')))
-                                @foreach (old('multiple_locations') as $index => $location)
-                                    <div class="location-group mb-3 border p-3">
-                                        <div class="row">
-                                            <div class="col-md-3">
-                                                <label class="form-label">Pin Code</label>
-                                                <input type="text"
-                                                    name="multiple_locations[{{ $index }}][pincode]"
-                                                    class="form-control @error('multiple_locations.' . $index . '.pincode') is-invalid @enderror"
-                                                    value="{{ $location['pincode'] ?? '' }}" placeholder="6-digit PIN">
-                                                @error('multiple_locations.' . $index . '.pincode')
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
-                                            </div>
-                                            <div class="col-md-3">
-                                                <label class="form-label">State</label>
-                                                <input type="text"
-                                                    name="multiple_locations[{{ $index }}][state]"
-                                                    class="form-control @error('multiple_locations.' . $index . '.state') is-invalid @enderror"
-                                                    value="{{ $location['state'] ?? '' }}" placeholder="State name">
-                                                @error('multiple_locations.' . $index . '.state')
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
-                                            </div>
-                                            <div class="col-md-3">
-                                                <label class="form-label">District</label>
-                                                <input type="text"
-                                                    name="multiple_locations[{{ $index }}][district]"
-                                                    class="form-control @error('multiple_locations.' . $index . '.district') is-invalid @enderror"
-                                                    value="{{ $location['district'] ?? '' }}"
-                                                    placeholder="District name">
-                                                @error('multiple_locations.' . $index . '.district')
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
-                                            </div>
-                                            <div class="col-md-3">
-                                                <label class="form-label">Taluk</label>
-                                                <input type="text"
-                                                    name="multiple_locations[{{ $index }}][taluk]"
-                                                    class="form-control @error('multiple_locations.' . $index . '.taluk') is-invalid @enderror"
-                                                    value="{{ $location['taluk'] ?? '' }}" placeholder="Taluk name">
-                                                @error('multiple_locations.' . $index . '.taluk')
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                        <div class="row mt-2">
-                                            <div class="col-md-6">
-                                                <label class="form-label">Panchayat</label>
-                                                <input type="text"
-                                                    name="multiple_locations[{{ $index }}][panchayat]"
-                                                    class="form-control @error('multiple_locations.' . $index . '.panchayat') is-invalid @enderror"
-                                                    value="{{ $location['panchayat'] ?? '' }}"
-                                                    placeholder="Panchayat name">
-                                                @error('multiple_locations.' . $index . '.panchayat')
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
-                                            </div>
-                                            <div class="col-md-6">
-                                                <label class="form-label">Building Name</label>
-                                                <input type="text"
-                                                    name="multiple_locations[{{ $index }}][building_name]"
-                                                    class="form-control @error('multiple_locations.' . $index . '.building_name') is-invalid @enderror"
-                                                    value="{{ $location['building_name'] ?? '' }}"
-                                                    placeholder="Building name">
-                                                @error('multiple_locations.' . $index . '.building_name')
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                        <button type="button"
-                                            class="btn btn-sm btn-danger mt-2 remove-location">Remove</button>
-                                    </div>
-                                @endforeach
-                            @endif
-                        </div>
-                        <button type="button" class="btn btn-primary" id="add_location">Add Location</button>
-                    </div>
-
-                    <div class="row mt-3">
-                        <div class="col-md-12">
-                            <div class="mb-3">
-                                <label class="form-label">Target Location Summary (Optional)</label>
-                                <textarea class="form-control @error('location_summary') is-invalid @enderror" name="location_summary"
-                                    rows="2" placeholder="e.g., We covered 10 schools across the Sivagangai district">{{ old('location_summary', $project->location_summary) }}</textarea>
-                                @error('location_summary')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                                <div class="form-text">Brief summary of geographical coverage</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="mb-3 form-check form-switch">
-                                <input class="form-check-input" type="checkbox" name="show_map_preview" value="1"
-                                    id="show_map_preview"
-                                    {{ old('show_map_preview', $project->show_map_preview) ? 'checked' : '' }}>
-                                <label class="form-check-label" for="show_map_preview">
-                                    Show Map Preview on Frontend
-                                </label>
-                                <div class="form-text">Enable to display map on the project page</div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="mb-3 form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" name="show_map_preview"
+                                        value="1" id="show_map_preview"
+                                        {{ old('show_map_preview', $project->show_map_preview) ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="show_map_preview">
+                                        Show Map Preview on Frontend
+                                    </label>
+                                    <div class="form-text">Enable to display map on the project page</div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <!-- End Location Tab -->
+                <!-- End Location Tab -->
 
-            <!-- Tab 3: Strategic Goals -->
-            <div class="tab-pane" id="strategic_tab" role="tabpanel">
-                <div class="border p-4 rounded-3 bg-white mb-4">
-                    <h5 class="mb-4 text-primary"><i class="feather feather-target me-2"></i> Strategic Goals, Objective &
-                        Impact</h5>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="mb-3">
-                                <label class="form-label">Problem / Need Statement <span
-                                        class="text-danger">*</span></label>
-                                <textarea class="form-control @error('problem_statement') is-invalid @enderror" name="problem_statement"
-                                    rows="3" placeholder="Describe the problem or need this project addresses">{{ old('problem_statement', $project->problem_statement) }}</textarea>
-                                @error('problem_statement')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                                <div class="form-text">Clear statement of the problem or need being addressed</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="mb-3">
-                                <label class="form-label">Baseline Survey - Metrics & Report</label>
-                                <textarea class="form-control @error('baseline_survey') is-invalid @enderror" name="baseline_survey" rows="3"
-                                    placeholder="Summary of baseline survey findings">{{ old('baseline_survey', $project->baseline_survey) }}</textarea>
-                                @error('baseline_survey')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                                <div class="form-text">Summary of initial survey or assessment findings</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Donut Chart Metrics -->
-                    <div class="mb-3">
-                        <label class="form-label">Donut Chart Metrics (Optional)</label>
-                        <div id="donut_metrics_wrapper">
-                            @php
-                                $donutMetrics = old('donut_metrics', $project->donut_metrics);
-                            @endphp
-
-                            @if ($donutMetrics && is_array($donutMetrics) && count($donutMetrics) > 0)
-                                @foreach ($donutMetrics as $index => $metric)
-                                    <div class="row mb-2 metric-item">
-                                        <div class="col-md-4">
-                                            <input type="text" name="donut_metrics[{{ $index }}][label]"
-                                                class="form-control @error('donut_metrics.' . $index . '.label') is-invalid @enderror"
-                                                placeholder="Label (e.g., Youth Interested)"
-                                                value="{{ $metric['label'] ?? '' }}">
-                                            @error('donut_metrics.' . $index . '.label')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                        <div class="col-md-3">
-                                            <input type="number" name="donut_metrics[{{ $index }}][value]"
-                                                class="form-control @error('donut_metrics.' . $index . '.value') is-invalid @enderror"
-                                                placeholder="Value % (e.g., 80)" value="{{ $metric['value'] ?? '' }}"
-                                                min="0" max="100" step="1">
-                                            @error('donut_metrics.' . $index . '.value')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                        <div class="col-md-4">
-                                            <input type="text" name="donut_metrics[{{ $index }}][notes]"
-                                                class="form-control" placeholder="Small Notes (optional)"
-                                                value="{{ $metric['notes'] ?? '' }}">
-                                        </div>
-                                        <div class="col-md-1">
-                                            <button type="button" class="btn btn-outline-danger remove-metric">−</button>
-                                        </div>
-                                    </div>
-                                @endforeach
-                            @elseif(old('donut_metrics') && is_array(old('donut_metrics')))
-                                @foreach (old('donut_metrics') as $index => $metric)
-                                    <div class="row mb-2 metric-item">
-                                        <div class="col-md-4">
-                                            <input type="text" name="donut_metrics[{{ $index }}][label]"
-                                                class="form-control @error('donut_metrics.' . $index . '.label') is-invalid @enderror"
-                                                placeholder="Label (e.g., Youth Interested)"
-                                                value="{{ $metric['label'] ?? '' }}">
-                                            @error('donut_metrics.' . $index . '.label')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                        <div class="col-md-3">
-                                            <input type="number" name="donut_metrics[{{ $index }}][value]"
-                                                class="form-control @error('donut_metrics.' . $index . '.value') is-invalid @enderror"
-                                                placeholder="Value % (e.g., 80)" value="{{ $metric['value'] ?? '' }}"
-                                                min="0" max="100" step="1">
-                                            @error('donut_metrics.' . $index . '.value')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                        <div class="col-md-4">
-                                            <input type="text" name="donut_metrics[{{ $index }}][notes]"
-                                                class="form-control" placeholder="Small Notes (optional)"
-                                                value="{{ $metric['notes'] ?? '' }}">
-                                        </div>
-                                        <div class="col-md-1">
-                                            <button type="button" class="btn btn-outline-danger remove-metric">−</button>
-                                        </div>
-                                    </div>
-                                @endforeach
-                            @endif
-                        </div>
-                        <button type="button" class="btn btn-sm btn-primary mt-2" id="add_metric">Add
-                            Metric</button>
-                        <div class="form-text">Add metrics for donut chart visualization (e.g., Youth Interested: 80%)
-                        </div>
-                    </div>
-
-                    <!-- New Target Beneficiaries Section -->
-                    <div class="row">
-                        <div class="col-md-12">
-                            <h5 class="mb-3 text-primary"><i class="feather feather-users me-2"></i> Target Beneficiaries</h5>
-                            
-                            @php
-                                $isUpcoming = $project->stage === 'upcoming';
-                                $beneficiaries = $project->beneficiaries;
-                                $groups = $beneficiaries->where('type', 'group');
-                                $individuals = $beneficiaries->where('type', 'individual');
-
-                                // Dropdown Options
-                                $groupOptions = [
-                                    'Schools', 'Colleges / Higher Education Institutions', 'Women Self-Help Groups (SHGs)',
-                                    'Farmer Producer Organizations (FPOs)', 'Village Communities / Panchayats',
-                                    'Rural Areas', 'Urban Areas', 'Metro Cities', 'Taluk / Block Level',
-                                    'District Level', 'Training / Skill Development Centers',
-                                    'Community-Based Organizations (CBOs) / NGOs'
-                                ];
-
-                                $individualOptions = [
-                                    'Children', 'Students', 'Youth', 'Job Seekers / Unemployed', 'Women', 'Girls',
-                                    'Men', 'Farmers', 'Entrepreneurs / Micro-Enterprise Owners',
-                                    'Self-Employed / Informal Workers', 'Elderly Persons',
-                                    'Persons with Disabilities (PwD)', 'Economically Weaker Section (EWS)',
-                                    'Migrant / Returned Migrant Workers'
-                                ];
-                            @endphp
-
-                            {{-- GROUPS SECTION --}}
-                            <div class="mb-4 border p-3 rounded bg-light">
-                                <h6 class="fw-bold mb-3 text-secondary">Target Groups</h6>
-                                <div class="table-responsive">
-                                    <table class="table table-bordered bg-white" id="beneficiary_groups_table">
-                                        <thead>
-                                            <tr>
-                                                <th style="width: 40%">Group Category</th>
-                                                <th style="width: 20%">Target Numbers</th>
-                                                @if(!$isUpcoming)
-                                                <th style="width: 20%">Reached</th>
-                                                <th style="width: 20%">Current Date</th>
-                                                @endif
-                                                @if($isUpcoming)
-                                                <th style="width: 5%"></th>
-                                                @endif
-                                            </tr>
-                                        </thead>
-                                        <tbody id="beneficiary_groups_body">
-                                            @foreach($groups as $ben)
-                                            <tr>
-                                                <td>
-                                                    @if($isUpcoming)
-                                                    <select name="beneficiary_groups[{{ $loop->index }}][category]" class="form-select select2">
-                                                        <option value="">Select Group</option>
-                                                        @foreach($groupOptions as $opt)
-                                                            <option value="{{ $opt }}" {{ $ben->category == $opt ? 'selected' : '' }}>{{ $opt }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                    @else
-                                                        {{ $ben->category }}
-                                                    @endif
-                                                </td>
-                                                <td>
-                                                    @if($isUpcoming)
-                                                    <input type="number" name="beneficiary_groups[{{ $loop->index }}][target]" class="form-control" value="{{ $ben->target_number }}">
-                                                    @else
-                                                        {{ $ben->target_number }}
-                                                    @endif
-                                                </td>
-                                                @if(!$isUpcoming)
-                                                <td>
-                                                    <input type="number" name="beneficiary_reached[{{ $ben->id }}]" class="form-control bg-light" value="{{ $ben->reached_number }}" placeholder="Enter reached">
-                                                </td>
-                                                <td>
-                                                    <input type="date" name="beneficiary_date[{{ $ben->id }}]" class="form-control" value="{{ date('Y-m-d') }}">
-                                                    <small class="text-muted d-block mt-1">Auto-updates history</small>
-                                                </td>
-                                                @endif
-                                                @if($isUpcoming)
-                                                <td>
-                                                    <button type="button" class="btn btn-sm btn-outline-danger remove-row"><i class="feather feather-trash-2"></i></button>
-                                                </td>
-                                                @endif
-                                            </tr>
-                                            @endforeach
-                                        </tbody>
-                                        @if($isUpcoming)
-                                        <tfoot>
-                                            <tr>
-                                                <td colspan="3">
-                                                    <button type="button" class="btn btn-sm btn-primary" id="add_group_btn">
-                                                        ➕ Add Group
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        </tfoot>
-                                        @endif
-                                    </table>
-                                </div>
-                            </div>
-
-                            {{-- INDIVIDUALS SECTION --}}
-                            <div class="mb-4 border p-3 rounded bg-light">
-                                <h6 class="fw-bold mb-3 text-secondary">Target Individuals</h6>
-                                <div class="table-responsive">
-                                    <table class="table table-bordered bg-white" id="beneficiary_individuals_table">
-                                        <thead>
-                                            <tr>
-                                                <th style="width: 40%">Individual Category</th>
-                                                <th style="width: 20%">Target Numbers</th>
-                                                @if(!$isUpcoming)
-                                                <th style="width: 20%">Reached</th>
-                                                <th style="width: 20%">Current Date</th>
-                                                @endif
-                                                @if($isUpcoming)
-                                                <th style="width: 5%"></th>
-                                                @endif
-                                            </tr>
-                                        </thead>
-                                        <tbody id="beneficiary_individuals_body">
-                                            @foreach($individuals as $ben)
-                                            <tr>
-                                                <td>
-                                                    @if($isUpcoming)
-                                                    <select name="beneficiary_individuals[{{ $loop->index }}][category]" class="form-select select2">
-                                                        <option value="">Select Individual</option>
-                                                        @foreach($individualOptions as $opt)
-                                                            <option value="{{ $opt }}" {{ $ben->category == $opt ? 'selected' : '' }}>{{ $opt }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                    @else
-                                                        {{ $ben->category }}
-                                                    @endif
-                                                </td>
-                                                <td>
-                                                    @if($isUpcoming)
-                                                    <input type="number" name="beneficiary_individuals[{{ $loop->index }}][target]" class="form-control" value="{{ $ben->target_number }}">
-                                                    @else
-                                                        {{ $ben->target_number }}
-                                                    @endif
-                                                </td>
-                                                @if(!$isUpcoming)
-                                                <td>
-                                                    <input type="number" name="beneficiary_reached[{{ $ben->id }}]" class="form-control bg-light" value="{{ $ben->reached_number }}" placeholder="Enter reached">
-                                                </td>
-                                                <td>
-                                                    <input type="date" name="beneficiary_date[{{ $ben->id }}]" class="form-control" value="{{ date('Y-m-d') }}">
-                                                    <small class="text-muted d-block mt-1">Auto-updates history</small>
-                                                </td>
-                                                @endif
-                                                @if($isUpcoming)
-                                                <td>
-                                                    <button type="button" class="btn btn-sm btn-outline-danger remove-row"><i class="feather feather-trash-2"></i></button>
-                                                </td>
-                                                @endif
-                                            </tr>
-                                            @endforeach
-                                        </tbody>
-                                        @if($isUpcoming)
-                                        <tfoot>
-                                            <tr>
-                                                <td colspan="3">
-                                                    <button type="button" class="btn btn-sm btn-primary" id="add_individual_btn">
-                                                        ➕ Add Individual
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        </tfoot>
-                                        @endif
-                                    </table>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-
-                    <!-- Strategic Objectives -->
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="mb-3">
-                                <label class="form-label">Strategic Objectives <span class="text-danger">*</span></label>
-                                <div id="objectives_wrapper">
-                                    @php
-                                        $objectives = old('objectives', $project->objectives);
-                                    @endphp
-
-                                    @if ($objectives && is_array($objectives) && count($objectives) > 0)
-                                        @foreach ($objectives as $index => $objective)
-                                            <div class="input-group mb-2">
-                                                <input type="text" name="objectives[]"
-                                                    class="form-control @error('objectives.' . $index) is-invalid @enderror"
-                                                    placeholder="Enter strategic objective" value="{{ $objective }}">
-                                                @error('objectives.' . $index)
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
-                                                <button type="button"
-                                                    class="btn btn-outline-danger remove-objective">−</button>
-                                            </div>
-                                        @endforeach
-                                    @elseif(old('objectives') && is_array(old('objectives')))
-                                        @foreach (old('objectives') as $index => $objective)
-                                            <div class="input-group mb-2">
-                                                <input type="text" name="objectives[]"
-                                                    class="form-control @error('objectives.' . $index) is-invalid @enderror"
-                                                    placeholder="Enter strategic objective" value="{{ $objective }}">
-                                                @error('objectives.' . $index)
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
-                                                <button type="button"
-                                                    class="btn btn-outline-danger remove-objective">−</button>
-                                            </div>
-                                        @endforeach
-                                    @endif
-                                </div>
-                                <button type="button" class="btn btn-sm btn-primary mt-2" id="add_objective">Add
-                                    Objective</button>
-                                <div class="form-text">Add high-level objectives for this project</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Expected Outcomes / Impact -->
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="mb-3">
-                                <label class="form-label">Expected Outcomes / Impact</label>
-                                <textarea class="form-control @error('expected_outcomes') is-invalid @enderror" name="expected_outcomes"
-                                    rows="4" placeholder="Transformation expected after implementation">{{ old('expected_outcomes', $project->expected_outcomes) }}</textarea>
-                                @error('expected_outcomes')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                                <div class="form-text">Describe the expected transformation and impact</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="mb-3">
-                                <label class="form-label">Expected Impact Image (Optional)</label>
-                                <input type="file" class="form-control @error('impact_image') is-invalid @enderror"
-                                    name="impact_image" accept="image/*">
-                                @error('impact_image')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-
-                                <!-- Existing Impact Image -->
-                                @if ($project->impact_image)
-                                    <div class="mt-2">
-                                        <label class="form-label small">Existing Impact Image:</label>
-                                        <div class="position-relative d-inline-block">
-                                            <img src="{{ asset($project->impact_image) }}" alt="Impact"
-                                                class="img-thumbnail"
-                                                style="width: 100px; height: 100px; object-fit: cover;">
-                                            <button type="button"
-                                                class="btn btn-sm btn-danger position-absolute top-0 end-0 p-0"
-                                                style="width: 20px; height: 20px; font-size: 10px;"
-                                                onclick="removeImage('impact', '{{ $project->impact_image }}')">×</button>
-                                        </div>
-                                        <input type="hidden" name="existing_impact_image"
-                                            value="{{ $project->impact_image }}">
-                                    </div>
-                                @endif
-                                <div class="form-text">AI generated image showing expected outcomes - Max 5MB</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="mb-3">
-                                <label class="form-label">Scalability Notes (Optional)</label>
-                                <textarea class="form-control @error('scalability_notes') is-invalid @enderror" name="scalability_notes"
-                                    rows="2" placeholder="Notes on repeatability in other regions">{{ old('scalability_notes', $project->scalability_notes) }}</textarea>
-                                @error('scalability_notes')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                                <div class="form-text">Notes on potential for replication in other regions</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Alignment Categories -->
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="mb-3">
-                                <label class="form-label">Alignment Categories</label>
-                                <select name="alignment_categories[]"
-                                    class="form-select select2-multiple @error('alignment_categories') is-invalid @enderror"
-                                    multiple>
-                                    <option value="sdg"
-                                        {{ in_array('sdg', old('alignment_categories', $project->alignment_categories ?? [])) ? 'selected' : 'selected' }}>
-                                        SDG Goals</option>
-                                    <option value="nep2020"
-                                        {{ in_array('nep2020', old('alignment_categories', $project->alignment_categories ?? [])) ? 'selected' : '' }}>
-                                        NEP 2020</option>
-                                    <option value="skill_india"
-                                        {{ in_array('skill_india', old('alignment_categories', $project->alignment_categories ?? [])) ? 'selected' : '' }}>
-                                        Skill India</option>
-                                    <option value="nsqf"
-                                        {{ in_array('nsqf', old('alignment_categories', $project->alignment_categories ?? [])) ? 'selected' : '' }}>
-                                        NSQF</option>
-                                    <option value="govt_schemes"
-                                        {{ in_array('govt_schemes', old('alignment_categories', $project->alignment_categories ?? [])) ? 'selected' : '' }}>
-                                        Govt Schemes</option>
-                                    <option value="csr_schedule_vii"
-                                        {{ in_array('csr_schedule_vii', old('alignment_categories', $project->alignment_categories ?? [])) ? 'selected' : '' }}>
-                                        CSR Schedule VII</option>
-                                </select>
-                                @error('alignment_categories')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                                <div class="form-text">Select applicable categories (hold Ctrl/Cmd to select multiple)
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- SDG Goals (conditional) -->
-                    <div id="sdg_section"
-                        style="display: {{ in_array('sdg', old('alignment_categories', $project->alignment_categories ?? [])) ? 'block' : 'none' }};">
+                <!-- Tab 3: Strategic Goals -->
+                <div class="tab-pane" id="strategic_tab" role="tabpanel">
+                    <div class="border p-4 rounded-3 bg-white mb-4">
+                        <h5 class="mb-4 text-primary"><i class="feather feather-target me-2"></i> Strategic Goals,
+                            Objective &
+                            Impact</h5>
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="mb-3">
-                                    <label class="form-label">Sustainable Development Goals (SDGs)</label>
-                                    <div class="form-text mb-3">Select multiple SDGs that align with this project. Click to
-                                        select/unselect.</div>
+                                    <label class="form-label">Problem / Need Statement <span
+                                            class="text-danger">*</span></label>
+                                    <textarea class="form-control @error('problem_statement') is-invalid @enderror" name="problem_statement"
+                                        rows="3" placeholder="Describe the problem or need this project addresses">{{ old('problem_statement', $project->problem_statement) }}</textarea>
+                                    @error('problem_statement')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                    <div class="form-text">Clear statement of the problem or need being addressed</div>
+                                </div>
+                            </div>
+                        </div>
 
-                                    <!-- Hidden input to store selected SDG IDs -->
-                                    <input type="hidden" name="sdg_goals" id="sdg_goals_input"
-                                        value="{{ is_array(old('sdg_goals', $project->sdg_goals)) ? implode(',', old('sdg_goals', $project->sdg_goals)) : '' }}">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="mb-3">
+                                    <label class="form-label">Baseline Survey - Metrics & Report</label>
+                                    <textarea class="form-control @error('baseline_survey') is-invalid @enderror" name="baseline_survey" rows="3"
+                                        placeholder="Summary of baseline survey findings">{{ old('baseline_survey', $project->baseline_survey) }}</textarea>
+                                    @error('baseline_survey')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                    <div class="form-text">Summary of initial survey or assessment findings</div>
+                                </div>
+                            </div>
+                        </div>
 
-                                    <!-- SDG Grid Container -->
-                                    <div id="sdg_grid"
-                                        class="row row-cols-2 row-cols-md-3 row-cols-lg-5 row-cols-xl-6 g-3">
+                        <!-- Donut Chart Metrics -->
+                        <div class="mb-3">
+                            <label class="form-label">Donut Chart Metrics (Optional)</label>
+                            <div id="donut_metrics_wrapper">
+                                @php
+                                    $donutMetrics = old('donut_metrics', $project->donut_metrics);
+                                @endphp
+
+                                @if ($donutMetrics && is_array($donutMetrics) && count($donutMetrics) > 0)
+                                    @foreach ($donutMetrics as $index => $metric)
+                                        <div class="row mb-2 metric-item">
+                                            <div class="col-md-4">
+                                                <input type="text" name="donut_metrics[{{ $index }}][label]"
+                                                    class="form-control @error('donut_metrics.' . $index . '.label') is-invalid @enderror"
+                                                    placeholder="Label (e.g., Youth Interested)"
+                                                    value="{{ $metric['label'] ?? '' }}">
+                                                @error('donut_metrics.' . $index . '.label')
+                                                    <div class="invalid-feedback">{{ $message }}</div>
+                                                @enderror
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input type="number" name="donut_metrics[{{ $index }}][value]"
+                                                    class="form-control @error('donut_metrics.' . $index . '.value') is-invalid @enderror"
+                                                    placeholder="Value % (e.g., 80)"
+                                                    value="{{ $metric['value'] ?? '' }}" min="0" max="100"
+                                                    step="1">
+                                                @error('donut_metrics.' . $index . '.value')
+                                                    <div class="invalid-feedback">{{ $message }}</div>
+                                                @enderror
+                                            </div>
+                                            <div class="col-md-4">
+                                                <input type="text" name="donut_metrics[{{ $index }}][notes]"
+                                                    class="form-control" placeholder="Small Notes (optional)"
+                                                    value="{{ $metric['notes'] ?? '' }}">
+                                            </div>
+                                            <div class="col-md-1">
+                                                <button type="button"
+                                                    class="btn btn-outline-danger remove-metric">−</button>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                @elseif(old('donut_metrics') && is_array(old('donut_metrics')))
+                                    @foreach (old('donut_metrics') as $index => $metric)
+                                        <div class="row mb-2 metric-item">
+                                            <div class="col-md-4">
+                                                <input type="text" name="donut_metrics[{{ $index }}][label]"
+                                                    class="form-control @error('donut_metrics.' . $index . '.label') is-invalid @enderror"
+                                                    placeholder="Label (e.g., Youth Interested)"
+                                                    value="{{ $metric['label'] ?? '' }}">
+                                                @error('donut_metrics.' . $index . '.label')
+                                                    <div class="invalid-feedback">{{ $message }}</div>
+                                                @enderror
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input type="number" name="donut_metrics[{{ $index }}][value]"
+                                                    class="form-control @error('donut_metrics.' . $index . '.value') is-invalid @enderror"
+                                                    placeholder="Value % (e.g., 80)"
+                                                    value="{{ $metric['value'] ?? '' }}" min="0" max="100"
+                                                    step="1">
+                                                @error('donut_metrics.' . $index . '.value')
+                                                    <div class="invalid-feedback">{{ $message }}</div>
+                                                @enderror
+                                            </div>
+                                            <div class="col-md-4">
+                                                <input type="text" name="donut_metrics[{{ $index }}][notes]"
+                                                    class="form-control" placeholder="Small Notes (optional)"
+                                                    value="{{ $metric['notes'] ?? '' }}">
+                                            </div>
+                                            <div class="col-md-1">
+                                                <button type="button"
+                                                    class="btn btn-outline-danger remove-metric">−</button>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                @endif
+                            </div>
+                            <button type="button" class="btn btn-sm btn-primary mt-2" id="add_metric">Add
+                                Metric</button>
+                            <div class="form-text">Add metrics for donut chart visualization (e.g., Youth Interested: 80%)
+                            </div>
+                        </div>
+
+                        <!-- New Target Beneficiaries Section -->
+@if ($isUpcoming)
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h5 class="mb-3 text-primary"><i class="feather feather-users me-2"></i> Target
+                                    Beneficiaries</h5>
+
+                                @php
+                                    // Variables are now defined globally at the top of tab-content
+                                @endphp
+
+                                {{-- GROUPS SECTION --}}
+                                <div class="mb-4 border p-3 rounded bg-light">
+                                    <h6 class="fw-bold mb-3 text-secondary">Target Groups</h6>
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered bg-white" id="beneficiary_groups_table">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width: 40%">Group Category</th>
+                                                    <th style="width: 20%">Target Numbers</th>
+                                                    @if (!$isUpcoming)
+                                                        <th style="width: 20%">Reached</th>
+                                                        <th style="width: 20%">Current Date</th>
+                                                    @endif
+                                                    @if ($isUpcoming)
+                                                        <th style="width: 5%"></th>
+                                                    @endif
+                                                </tr>
+                                            </thead>
+                                            <tbody id="beneficiary_groups_body">
+                                                @foreach ($groups as $ben)
+                                                    <tr>
+                                                        <td>
+                                                            @if ($isUpcoming)
+                                                                <select
+                                                                    name="beneficiary_groups[{{ $loop->index }}][category]"
+                                                                    class="form-select select2">
+                                                                    <option value="">Select Group</option>
+                                                                    @foreach ($groupOptions as $opt)
+                                                                        <option value="{{ $opt }}"
+                                                                            {{ $ben->category == $opt ? 'selected' : '' }}>
+                                                                            {{ $opt }}</option>
+                                                                    @endforeach
+                                                                </select>
+                                                            @else
+                                                                {{ $ben->category }}
+                                                            @endif
+                                                        </td>
+                                                        <td>
+                                                            @if ($isUpcoming)
+                                                                <input type="number"
+                                                                    name="beneficiary_groups[{{ $loop->index }}][target]"
+                                                                    class="form-control"
+                                                                    value="{{ $ben->target_number }}">
+                                                            @else
+                                                                {{ $ben->target_number }}
+                                                            @endif
+                                                        </td>
+                                                        @if (!$isUpcoming)
+                                                            <td>
+                                                                <input type="number"
+                                                                    name="beneficiary_reached[{{ $ben->id }}]"
+                                                                    class="form-control bg-light"
+                                                                    value="{{ $ben->reached_number }}"
+                                                                    placeholder="Enter reached">
+                                                            </td>
+                                                            <td>
+                                                                <input type="date"
+                                                                    name="beneficiary_date[{{ $ben->id }}]"
+                                                                    class="form-control" value="{{ date('Y-m-d') }}">
+                                                                <small class="text-muted d-block mt-1">Auto-updates
+                                                                    history</small>
+                                                            </td>
+                                                        @endif
+                                                        @if ($isUpcoming)
+                                                            <td>
+                                                                <button type="button"
+                                                                    class="btn btn-sm btn-outline-danger remove-row"><i
+                                                                        class="feather feather-trash-2"></i></button>
+                                                            </td>
+                                                        @endif
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                            @if ($isUpcoming)
+                                                <tfoot>
+                                                    <tr>
+                                                        <td colspan="3">
+                                                            <button type="button" class="btn btn-sm btn-primary"
+                                                                id="add_group_btn">
+                                                                ➕ Add Group
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                </tfoot>
+                                            @endif
+                                        </table>
+                                    </div>
+                                </div>
+
+                                {{-- INDIVIDUALS SECTION --}}
+                                <div class="mb-4 border p-3 rounded bg-light">
+                                    <h6 class="fw-bold mb-3 text-secondary">Target Individuals</h6>
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered bg-white" id="beneficiary_individuals_table">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width: 40%">Individual Category</th>
+                                                    <th style="width: 20%">Target Numbers</th>
+                                                    @if (!$isUpcoming)
+                                                        <th style="width: 20%">Reached</th>
+                                                        <th style="width: 20%">Current Date</th>
+                                                    @endif
+                                                    @if ($isUpcoming)
+                                                        <th style="width: 5%"></th>
+                                                    @endif
+                                                </tr>
+                                            </thead>
+                                            <tbody id="beneficiary_individuals_body">
+                                                @foreach ($individuals as $ben)
+                                                    <tr>
+                                                        <td>
+                                                            @if ($isUpcoming)
+                                                                <select
+                                                                    name="beneficiary_individuals[{{ $loop->index }}][category]"
+                                                                    class="form-select select2">
+                                                                    <option value="">Select Individual</option>
+                                                                    @foreach ($individualOptions as $opt)
+                                                                        <option value="{{ $opt }}"
+                                                                            {{ $ben->category == $opt ? 'selected' : '' }}>
+                                                                            {{ $opt }}</option>
+                                                                    @endforeach
+                                                                </select>
+                                                            @else
+                                                                {{ $ben->category }}
+                                                            @endif
+                                                        </td>
+                                                        <td>
+                                                            @if ($isUpcoming)
+                                                                <input type="number"
+                                                                    name="beneficiary_individuals[{{ $loop->index }}][target]"
+                                                                    class="form-control"
+                                                                    value="{{ $ben->target_number }}">
+                                                            @else
+                                                                {{ $ben->target_number }}
+                                                            @endif
+                                                        </td>
+                                                        @if (!$isUpcoming)
+                                                            <td>
+                                                                <input type="number"
+                                                                    name="beneficiary_reached[{{ $ben->id }}]"
+                                                                    class="form-control bg-light"
+                                                                    value="{{ $ben->reached_number }}"
+                                                                    placeholder="Enter reached">
+                                                            </td>
+                                                            <td>
+                                                                <input type="date"
+                                                                    name="beneficiary_date[{{ $ben->id }}]"
+                                                                    class="form-control" value="{{ date('Y-m-d') }}">
+                                                                <small class="text-muted d-block mt-1">Auto-updates
+                                                                    history</small>
+                                                            </td>
+                                                        @endif
+                                                        @if ($isUpcoming)
+                                                            <td>
+                                                                <button type="button"
+                                                                    class="btn btn-sm btn-outline-danger remove-row"><i
+                                                                        class="feather feather-trash-2"></i></button>
+                                                            </td>
+                                                        @endif
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                            @if ($isUpcoming)
+                                                <tfoot>
+                                                    <tr>
+                                                        <td colspan="3">
+                                                            <button type="button" class="btn btn-sm btn-primary"
+                                                                id="add_individual_btn">
+                                                                ➕ Add Individual
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                </tfoot>
+                                            @endif
+                                        </table>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        @else
+                            <div class="alert alert-info border-info">
+                                <i class="feather feather-info me-2"></i> Target Beneficiaries & Reached counts are available in the <strong>Ongoing Updates</strong> tab for tracking.
+                            </div>
+                        @endif
+
+                        <!-- Strategic Objectives -->
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="mb-3">
+                                    <label class="form-label">Strategic Objectives <span
+                                            class="text-danger">*</span></label>
+                                    <div id="objectives_wrapper">
                                         @php
-                                            $sdgs = App\Helpers\SDGHelper::getAllSDGs();
-                                            $selectedSDGs = is_array(old('sdg_goals', $project->sdg_goals))
-                                                ? old('sdg_goals', $project->sdg_goals)
-                                                : [];
+                                            $objectives = old('objectives', $project->objectives);
                                         @endphp
 
-                                        @foreach ($sdgs as $sdg)
-                                            @php
-                                                $isSelected = in_array($sdg['id'], $selectedSDGs);
-                                                $fallbackImage = "https://ui-avatars.com/api/?name=SDG+{$sdg['id']}&background={$sdg['color']}&color=fff&size=100&bold=true";
-                                            @endphp
-                                            <div class="col">
-                                                <div class="sdg-card card h-100 border rounded-3 p-2 position-relative
-                                       {{ $isSelected ? 'border-primary border-2 selected' : 'border-light' }}"
-                                                    data-sdg-id="{{ $sdg['id'] }}"
-                                                    data-sdg-name="{{ $sdg['name'] }}"
-                                                    data-sdg-description="{{ $sdg['description'] }}"
-                                                    data-sdg-color="{{ $sdg['color'] }}"
-                                                    style="cursor: pointer; transition: all 0.2s ease; min-height: 160px;">
-
-                                                    <!-- Selected Checkmark -->
-                                                    <div class="selected-check position-absolute top-0 end-0 m-2"
-                                                        style="display: {{ $isSelected ? 'block' : 'none' }};">
-                                                        <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center"
-                                                            style="width: 24px; height: 24px;">
-                                                            <i class="feather feather-check" style="font-size: 12px;"></i>
-                                                        </div>
-                                                    </div>
-
-                                                    <div
-                                                        class="card-body p-2 text-center d-flex flex-column justify-content-between">
-                                                        <!-- SDG Icon with Multiple Fallback Sources -->
-                                                        <div class="sdg-icon mb-2">
-                                                            <div class="position-relative"
-                                                                style="width: 80px; height: 80px; margin: 0 auto;">
-                                                                <!-- Primary Image -->
-                                                                <img src="{{ $sdg['image_url'] }}"
-                                                                    alt="SDG {{ $sdg['id'] }}: {{ $sdg['name'] }}"
-                                                                    class="sdg-img img-fluid rounded-circle"
-                                                                    style="width: 100%; height: 100%; object-fit: cover;"
-                                                                    loading="lazy" onerror="handleImageError(this)">
-
-                                                                <!-- SDG Number Badge -->
-                                                                <div class="position-absolute bottom-0 end-0">
-                                                                    <span class="badge bg-dark"
-                                                                        style="font-size: 0.7rem; padding: 2px 6px;">
-                                                                        {{ $sdg['id'] }}
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-
-                                                        <!-- SDG Name -->
-                                                        <div class="sdg-name mt-auto">
-                                                            <small class="card-title fw-semibold d-block"
-                                                                style="font-size: 0.75rem; line-height: 1.2;">
-                                                                {{ $sdg['name'] }}
-                                                            </small>
-                                                        </div>
-                                                    </div>
+                                        @if ($objectives && is_array($objectives) && count($objectives) > 0)
+                                            @foreach ($objectives as $index => $objective)
+                                                <div class="input-group mb-2">
+                                                    <input type="text" name="objectives[]"
+                                                        class="form-control @error('objectives.' . $index) is-invalid @enderror"
+                                                        placeholder="Enter strategic objective"
+                                                        value="{{ $objective }}">
+                                                    @error('objectives.' . $index)
+                                                        <div class="invalid-feedback">{{ $message }}</div>
+                                                    @enderror
+                                                    <button type="button"
+                                                        class="btn btn-outline-danger remove-objective">−</button>
                                                 </div>
-                                            </div>
-                                        @endforeach
+                                            @endforeach
+                                        @elseif(old('objectives') && is_array(old('objectives')))
+                                            @foreach (old('objectives') as $index => $objective)
+                                                <div class="input-group mb-2">
+                                                    <input type="text" name="objectives[]"
+                                                        class="form-control @error('objectives.' . $index) is-invalid @enderror"
+                                                        placeholder="Enter strategic objective"
+                                                        value="{{ $objective }}">
+                                                    @error('objectives.' . $index)
+                                                        <div class="invalid-feedback">{{ $message }}</div>
+                                                    @enderror
+                                                    <button type="button"
+                                                        class="btn btn-outline-danger remove-objective">−</button>
+                                                </div>
+                                            @endforeach
+                                        @endif
                                     </div>
-
-                                    <!-- Error Display -->
-                                    @error('sdg_goals')
-                                        <div class="invalid-feedback d-block">{{ $message }}</div>
-                                    @enderror
-
-                                    <!-- Selected SDGs Summary -->
-                                    <div class="mt-4" id="selected_sdg_summary"
-                                        style="display: {{ !empty($selectedSDGs) ? 'block' : 'none' }};">
-                                        <div class="card border-primary">
-                                            <div
-                                                class="card-header bg-primary bg-opacity-10 border-primary d-flex justify-content-between align-items-center py-2">
-                                                <h6 class="mb-0 text-primary">
-                                                    <i class="feather feather-check-circle me-2"></i>
-                                                    <strong>Selected SDGs ({{ count($selectedSDGs) }})</strong>
-                                                </h6>
-                                                <button type="button" class="btn btn-sm btn-outline-danger"
-                                                    id="clear_all_sdgs">
-                                                    <i class="feather feather-x me-1"></i> Clear All
-                                                </button>
-                                            </div>
-                                            <div class="card-body p-3">
-                                                <div id="selected_sdg_chips" class="d-flex flex-wrap gap-3">
-                                                    @if (!empty($selectedSDGs))
-                                                        @foreach ($selectedSDGs as $sdgId)
-                                                            @php
-                                                                $sdg = App\Helpers\SDGHelper::getSDGById($sdgId);
-                                                                $color = $sdg['color'] ?? '4C9F38';
-                                                                $fallback = "https://ui-avatars.com/api/?name=SDG+{$sdgId}&background={$color}&color=fff&size=60&bold=true";
-                                                            @endphp
-                                                            @if ($sdg)
-                                                                <div class="sdg-chip position-relative">
-                                                                    <div class="card border shadow-sm"
-                                                                        style="width: 100px;">
-                                                                        <div class="card-body p-2 text-center">
-                                                                            <img src="{{ $sdg['image_url'] }}"
-                                                                                alt="SDG {{ $sdgId }}"
-                                                                                class="img-fluid rounded-circle mb-2"
-                                                                                style="width: 60px; height: 60px; object-fit: cover;"
-                                                                                onerror="this.src='{{ $fallback }}'">
-                                                                            <small class="d-block fw-semibold"
-                                                                                style="font-size: 0.65rem;">
-                                                                                SDG {{ $sdgId }}
-                                                                            </small>
-                                                                            <small class="d-block text-muted"
-                                                                                style="font-size: 0.6rem;">
-                                                                                {{ Str::limit($sdg['name'], 10) }}
-                                                                            </small>
-                                                                            <button type="button"
-                                                                                class="btn-close btn-close-sm position-absolute top-0 end-0 m-1"
-                                                                                data-sdg-id="{{ $sdgId }}"
-                                                                                aria-label="Remove SDG {{ $sdgId }}"></button>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            @endif
-                                                        @endforeach
-                                                    @endif
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- SDG Preview Modal -->
-                                    <div class="modal fade" id="sdgPreviewModal" tabindex="-1" aria-hidden="true">
-                                        <div class="modal-dialog modal-dialog-centered">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="previewModalTitle"></h5>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                        aria-label="Close"></button>
-                                                </div>
-                                                <div class="modal-body text-center">
-                                                    <div id="previewModalImage" class="mb-3"
-                                                        style="width: 120px; height: 120px; margin: 0 auto;"></div>
-                                                    <p id="previewModalDescription" class="text-muted"></p>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary"
-                                                        data-bs-dismiss="modal">Close</button>
-                                                    <button type="button" class="btn btn-primary"
-                                                        id="toggleSelectBtn">Select</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-text mt-2">
-                                        <i class="feather feather-info text-info me-1"></i>
-                                        Click on SDG icons to select/unselect. Click and hold for details.
-                                    </div>
+                                    <button type="button" class="btn btn-sm btn-primary mt-2" id="add_objective">Add
+                                        Objective</button>
+                                    <div class="form-text">Add high-level objectives for this project</div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    </div>
-                    <!-- End SDG Section -->
-
-                    @php
-                        // Normalize alignment_categories
-                        $alignmentCategories = old('alignment_categories', $project->alignment_categories ?? []);
-                        $alignmentCategories = is_array($alignmentCategories)
-                            ? $alignmentCategories
-                            : (array) json_decode($alignmentCategories ?: '[]', true);
-
-                        // Normalize govt_schemes
-                        $govtSchemes = old('govt_schemes', $project->govt_schemes ?? []);
-                        $govtSchemes = is_array($govtSchemes)
-                            ? $govtSchemes
-                            : (array) json_decode($govtSchemes ?: '[]', true);
-                    @endphp
-
-
-                    <!-- Govt Schemes (conditional) -->
-                    <div id="govt_schemes_section"
-                        style="display: {{ in_array('govt_schemes', $alignmentCategories ?? []) ? 'block' : 'none' }};">
+                        <!-- Expected Outcomes / Impact -->
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="mb-3">
+                                    <label class="form-label">Expected Outcomes / Impact</label>
+                                    <textarea class="form-control @error('expected_outcomes') is-invalid @enderror" name="expected_outcomes"
+                                        rows="4" placeholder="Transformation expected after implementation">{{ old('expected_outcomes', $project->expected_outcomes) }}</textarea>
+                                    @error('expected_outcomes')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                    <div class="form-text">Describe the expected transformation and impact</div>
+                                </div>
+                            </div>
+                        </div>
 
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="mb-3">
-                                    <label class="form-label">Government Schemes / Policies</label>
-
-                                    <select name="govt_schemes[]"
-                                        class="form-select select2-multiple @error('govt_schemes') is-invalid @enderror"
-                                        multiple>
-
-                                        @foreach ($schemes as $scheme)
-                                            <option value="{{ $scheme->slug }}" @selected(in_array($scheme->slug, $govtSchemes ?? []))>
-                                                {{ $scheme->title }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-
-                                    @error('govt_schemes')
+                                    <label class="form-label">Expected Impact Image (Optional)</label>
+                                    <input type="file"
+                                        class="form-control @error('impact_image') is-invalid @enderror"
+                                        name="impact_image" accept="image/*">
+                                    @error('impact_image')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
 
-                                    <div class="form-text">
-                                        Select government schemes aligned with this project
+                                    <!-- Existing Impact Image -->
+                                    @if ($project->impact_image)
+                                        <div class="mt-2">
+                                            <label class="form-label small">Existing Impact Image:</label>
+                                            <div class="position-relative d-inline-block">
+                                                <img src="{{ asset($project->impact_image) }}" alt="Impact"
+                                                    class="img-thumbnail"
+                                                    style="width: 100px; height: 100px; object-fit: cover;">
+                                                <button type="button"
+                                                    class="btn btn-sm btn-danger position-absolute top-0 end-0 p-0"
+                                                    style="width: 20px; height: 20px; font-size: 10px;"
+                                                    onclick="removeImage('impact', '{{ $project->impact_image }}')">×</button>
+                                            </div>
+                                            <input type="hidden" name="existing_impact_image"
+                                                value="{{ $project->impact_image }}">
+                                        </div>
+                                    @endif
+                                    <div class="form-text">AI generated image showing expected outcomes - Max 5MB</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="mb-3">
+                                    <label class="form-label">Scalability Notes (Optional)</label>
+                                    <textarea class="form-control @error('scalability_notes') is-invalid @enderror" name="scalability_notes"
+                                        rows="2" placeholder="Notes on repeatability in other regions">{{ old('scalability_notes', $project->scalability_notes) }}</textarea>
+                                    @error('scalability_notes')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                    <div class="form-text">Notes on potential for replication in other regions</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Alignment Categories -->
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="mb-3">
+                                    <label class="form-label">Alignment Categories</label>
+                                    <select name="alignment_categories[]"
+                                        class="form-select select2-multiple @error('alignment_categories') is-invalid @enderror"
+                                        multiple>
+                                        <option value="sdg"
+                                            {{ in_array('sdg', old('alignment_categories', $project->alignment_categories ?? [])) ? 'selected' : 'selected' }}>
+                                            SDG Goals</option>
+                                        <option value="nep2020"
+                                            {{ in_array('nep2020', old('alignment_categories', $project->alignment_categories ?? [])) ? 'selected' : '' }}>
+                                            NEP 2020</option>
+                                        <option value="skill_india"
+                                            {{ in_array('skill_india', old('alignment_categories', $project->alignment_categories ?? [])) ? 'selected' : '' }}>
+                                            Skill India</option>
+                                        <option value="nsqf"
+                                            {{ in_array('nsqf', old('alignment_categories', $project->alignment_categories ?? [])) ? 'selected' : '' }}>
+                                            NSQF</option>
+                                        <option value="govt_schemes"
+                                            {{ in_array('govt_schemes', old('alignment_categories', $project->alignment_categories ?? [])) ? 'selected' : '' }}>
+                                            Govt Schemes</option>
+                                        <option value="csr_schedule_vii"
+                                            {{ in_array('csr_schedule_vii', old('alignment_categories', $project->alignment_categories ?? [])) ? 'selected' : '' }}>
+                                            CSR Schedule VII</option>
+                                    </select>
+                                    @error('alignment_categories')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                    <div class="form-text">Select applicable categories (hold Ctrl/Cmd to select multiple)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SDG Goals (conditional) -->
+                        <div id="sdg_section"
+                            style="display: {{ in_array('sdg', old('alignment_categories', $project->alignment_categories ?? [])) ? 'block' : 'none' }};">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="mb-3">
+                                        <label class="form-label">Sustainable Development Goals (SDGs)</label>
+                                        <div class="form-text mb-3">Select multiple SDGs that align with this project.
+                                            Click to
+                                            select/unselect.</div>
+
+                                        <!-- Hidden input to store selected SDG IDs -->
+                                        <input type="hidden" name="sdg_goals" id="sdg_goals_input"
+                                            value="{{ is_array(old('sdg_goals', $project->sdg_goals)) ? implode(',', old('sdg_goals', $project->sdg_goals)) : '' }}">
+
+                                        <!-- SDG Grid Container -->
+                                        <div id="sdg_grid"
+                                            class="row row-cols-2 row-cols-md-3 row-cols-lg-5 row-cols-xl-6 g-3">
+                                            @php
+                                                $sdgs = App\Helpers\SDGHelper::getAllSDGs();
+                                                $selectedSDGs = is_array(old('sdg_goals', $project->sdg_goals))
+                                                    ? old('sdg_goals', $project->sdg_goals)
+                                                    : [];
+                                            @endphp
+
+                                            @foreach ($sdgs as $sdg)
+                                                @php
+                                                    $isSelected = in_array($sdg['id'], $selectedSDGs);
+                                                    $fallbackImage = "https://ui-avatars.com/api/?name=SDG+{$sdg['id']}&background={$sdg['color']}&color=fff&size=100&bold=true";
+                                                @endphp
+                                                <div class="col">
+                                                    <div class="sdg-card card h-100 border rounded-3 p-2 position-relative
+                                       {{ $isSelected ? 'border-primary border-2 selected' : 'border-light' }}"
+                                                        data-sdg-id="{{ $sdg['id'] }}"
+                                                        data-sdg-name="{{ $sdg['name'] }}"
+                                                        data-sdg-description="{{ $sdg['description'] }}"
+                                                        data-sdg-color="{{ $sdg['color'] }}"
+                                                        style="cursor: pointer; transition: all 0.2s ease; min-height: 160px;">
+
+                                                        <!-- Selected Checkmark -->
+                                                        <div class="selected-check position-absolute top-0 end-0 m-2"
+                                                            style="display: {{ $isSelected ? 'block' : 'none' }};">
+                                                            <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center"
+                                                                style="width: 24px; height: 24px;">
+                                                                <i class="feather feather-check"
+                                                                    style="font-size: 12px;"></i>
+                                                            </div>
+                                                        </div>
+
+                                                        <div
+                                                            class="card-body p-2 text-center d-flex flex-column justify-content-between">
+                                                            <!-- SDG Icon with Multiple Fallback Sources -->
+                                                            <div class="sdg-icon mb-2">
+                                                                <div class="position-relative"
+                                                                    style="width: 80px; height: 80px; margin: 0 auto;">
+                                                                    <!-- Primary Image -->
+                                                                    <img src="{{ $sdg['image_url'] }}"
+                                                                        alt="SDG {{ $sdg['id'] }}: {{ $sdg['name'] }}"
+                                                                        class="sdg-img img-fluid rounded-circle"
+                                                                        style="width: 100%; height: 100%; object-fit: cover;"
+                                                                        loading="lazy" onerror="handleImageError(this)">
+
+                                                                    <!-- SDG Number Badge -->
+                                                                    <div class="position-absolute bottom-0 end-0">
+                                                                        <span class="badge bg-dark"
+                                                                            style="font-size: 0.7rem; padding: 2px 6px;">
+                                                                            {{ $sdg['id'] }}
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <!-- SDG Name -->
+                                                            <div class="sdg-name mt-auto">
+                                                                <small class="card-title fw-semibold d-block"
+                                                                    style="font-size: 0.75rem; line-height: 1.2;">
+                                                                    {{ $sdg['name'] }}
+                                                                </small>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        </div>
+
+                                        <!-- Error Display -->
+                                        @error('sdg_goals')
+                                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                                        @enderror
+
+                                        <!-- Selected SDGs Summary -->
+                                        <div class="mt-4" id="selected_sdg_summary"
+                                            style="display: {{ !empty($selectedSDGs) ? 'block' : 'none' }};">
+                                            <div class="card border-primary">
+                                                <div
+                                                    class="card-header bg-primary bg-opacity-10 border-primary d-flex justify-content-between align-items-center py-2">
+                                                    <h6 class="mb-0 text-primary">
+                                                        <i class="feather feather-check-circle me-2"></i>
+                                                        <strong>Selected SDGs ({{ count($selectedSDGs) }})</strong>
+                                                    </h6>
+                                                    <button type="button" class="btn btn-sm btn-outline-danger"
+                                                        id="clear_all_sdgs">
+                                                        <i class="feather feather-x me-1"></i> Clear All
+                                                    </button>
+                                                </div>
+                                                <div class="card-body p-3">
+                                                    <div id="selected_sdg_chips" class="d-flex flex-wrap gap-3">
+                                                        @if (!empty($selectedSDGs))
+                                                            @foreach ($selectedSDGs as $sdgId)
+                                                                @php
+                                                                    $sdg = App\Helpers\SDGHelper::getSDGById($sdgId);
+                                                                    $color = $sdg['color'] ?? '4C9F38';
+                                                                    $fallback = "https://ui-avatars.com/api/?name=SDG+{$sdgId}&background={$color}&color=fff&size=60&bold=true";
+                                                                @endphp
+                                                                @if ($sdg)
+                                                                    <div class="sdg-chip position-relative">
+                                                                        <div class="card border shadow-sm"
+                                                                            style="width: 100px;">
+                                                                            <div class="card-body p-2 text-center">
+                                                                                <img src="{{ $sdg['image_url'] }}"
+                                                                                    alt="SDG {{ $sdgId }}"
+                                                                                    class="img-fluid rounded-circle mb-2"
+                                                                                    style="width: 60px; height: 60px; object-fit: cover;"
+                                                                                    onerror="this.src='{{ $fallback }}'">
+                                                                                <small class="d-block fw-semibold"
+                                                                                    style="font-size: 0.65rem;">
+                                                                                    SDG {{ $sdgId }}
+                                                                                </small>
+                                                                                <small class="d-block text-muted"
+                                                                                    style="font-size: 0.6rem;">
+                                                                                    {{ Str::limit($sdg['name'], 10) }}
+                                                                                </small>
+                                                                                <button type="button"
+                                                                                    class="btn-close btn-close-sm position-absolute top-0 end-0 m-1"
+                                                                                    data-sdg-id="{{ $sdgId }}"
+                                                                                    aria-label="Remove SDG {{ $sdgId }}"></button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                @endif
+                                                            @endforeach
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- SDG Preview Modal -->
+                                        <div class="modal fade" id="sdgPreviewModal" tabindex="-1" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="previewModalTitle"></h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                            aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body text-center">
+                                                        <div id="previewModalImage" class="mb-3"
+                                                            style="width: 120px; height: 120px; margin: 0 auto;"></div>
+                                                        <p id="previewModalDescription" class="text-muted"></p>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary"
+                                                            data-bs-dismiss="modal">Close</button>
+                                                        <button type="button" class="btn btn-primary"
+                                                            id="toggleSelectBtn">Select</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-text mt-2">
+                                            <i class="feather feather-info text-info me-1"></i>
+                                            Click on SDG icons to select/unselect. Click and hold for details.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End SDG Section -->
+
+                        @php
+                            // Normalize alignment_categories
+                            $alignmentCategories = old('alignment_categories', $project->alignment_categories ?? []);
+                            $alignmentCategories = is_array($alignmentCategories)
+                                ? $alignmentCategories
+                                : (array) json_decode($alignmentCategories ?: '[]', true);
+
+                            // Normalize govt_schemes
+                            $govtSchemes = old('govt_schemes', $project->govt_schemes ?? []);
+                            $govtSchemes = is_array($govtSchemes)
+                                ? $govtSchemes
+                                : (array) json_decode($govtSchemes ?: '[]', true);
+                        @endphp
+
+
+                        <!-- Govt Schemes (conditional) -->
+                        <div id="govt_schemes_section"
+                            style="display: {{ in_array('govt_schemes', $alignmentCategories ?? []) ? 'block' : 'none' }};">
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="mb-3">
+                                        <label class="form-label">Government Schemes / Policies</label>
+
+                                        <select name="govt_schemes[]"
+                                            class="form-select select2-multiple @error('govt_schemes') is-invalid @enderror"
+                                            multiple>
+
+                                            @foreach ($schemes as $scheme)
+                                                <option value="{{ $scheme->slug }}" @selected(in_array($scheme->slug, $govtSchemes ?? []))>
+                                                    {{ $scheme->title }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+
+                                        @error('govt_schemes')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+
+                                        <div class="form-text">
+                                            Select government schemes aligned with this project
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -1424,73 +1496,270 @@
                     </div>
                 </div>
 
-            <!-- End Strategic Tab -->
+                <!-- End Strategic Tab -->
 
-            <!-- Tab 4: Ongoing Updates (Conditional) -->
-            <div class="tab-pane" id="ongoing_tab" role="tabpanel">
-                <div class="border p-4 rounded-3 bg-white mb-4">
-                    <div class="alert alert-info mb-3">
-                        <i class="feather feather-info me-2"></i> This section is only relevant for Ongoing or Completed
-                        projects.
-                    </div>
-                    
-                    <!-- Execution Dashboard Guide -->
-        <div class="alert alert-light border-primary border-start border-4 mb-4 shadow-sm">
-            <h6 class="text-primary fw-bold mb-3"><i class="feather feather-activity me-2"></i>Live Monitoring Dashboard Input Guide</h6>
-            <div class="row g-3">
-                <div class="col-md-6">
-                    <div class="p-3 bg-white rounded border h-100">
-                        <strong class="text-dark d-block mb-2">1. Execution Health</strong>
-                        <p class="small text-muted mb-2">Determines the "health" gauge on the dashboard.</p>
-                        <ul class="small text-muted mb-0 list-unstyled">
-                            <li><strong>Source:</strong> <code>Completion Readiness (%)</code> field below.</li>
-                            <li><strong>Frontend Label:</strong> "Execution Health"</li>
-                            <li class="mt-2 text-dark bg-light p-2 rounded">
-                                <strong>Example:</strong><br>
-                                Input: <code>100</code> &rarr; Frontend: <strong>100.00 (Good)</strong><br>
-                                <em>"Composite score based on milestones"</em>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="p-3 bg-white rounded border h-100">
-                        <strong class="text-dark d-block mb-2">2. Project Risk Assessment</strong>
-                        <p class="small text-muted mb-2">Calculates the overall risk level based on "Risks" below.</p>
-                        <ul class="small text-muted mb-0 list-unstyled">
-                            <li><strong>Source:</strong> Weighted sum of Risks & Impacts.</li>
-                            <li><strong>Formula:</strong> High(3) + Medium(2) + Low(1)</li>
-                            <li class="mt-2 text-dark bg-light p-2 rounded">
-                                <strong>Example:</strong><br>
-                                1x High, 1x Med, 1x Low &rarr; Score: <strong>6 (Medium Risk)</strong><br>
-                                <em>"Risk level monitoring"</em>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="p-3 bg-white rounded border h-100">
-                        <strong class="text-dark d-block mb-2">3. Project Progress</strong>
-                        <ul class="small text-muted mb-0 list-unstyled">
-                            <li><strong>Source:</strong> <code>Project Progress</code> (Basic Details Tab).</li>
-                            <li class="mt-1"><strong>Example:</strong> 89% &rarr; "89.00% Overall completion"</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="p-3 bg-white rounded border h-100">
-                        <strong class="text-dark d-block mb-2">4. Beneficiaries Reached</strong>
-                        <ul class="small text-muted mb-0 list-unstyled">
-                            <li><strong>Source:</strong> <code>Actual Beneficiary Count</code> field below.</li>
-                            <li class="mt-1"><strong>Example:</strong> 111 &rarr; "111 - Total individuals reached"</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-                    </div>
+                <!-- Tab 4: Ongoing Updates (Conditional) -->
+                <div class="tab-pane" id="ongoing_tab" role="tabpanel">
+                    <div class="border p-4 rounded-3 bg-white mb-4">
+                        <div class="alert alert-info mb-3">
+                            <i class="feather feather-info me-2"></i> This section is only relevant for Ongoing or
+                            Completed
+                            projects.
+                        </div>
 
-                    <h5 class="mb-4 text-primary"><i class="feather feather-clock me-2"></i> Ongoing Project Updates &
+                        <!-- Execution Dashboard Guide -->
+                        <div class="alert alert-light border-primary border-start border-4 mb-4 shadow-sm">
+                            <h6 class="text-primary fw-bold mb-3"><i class="feather feather-activity me-2"></i>Live
+                                Monitoring Dashboard Input Guide</h6>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="p-3 bg-white rounded border h-100">
+                                        <strong class="text-dark d-block mb-2">1. Execution Health</strong>
+                                        <p class="small text-muted mb-2">Determines the "health" gauge on the dashboard.
+                                        </p>
+                                        <ul class="small text-muted mb-0 list-unstyled">
+                                            <li><strong>Source:</strong> <code>Completion Readiness (%)</code> field below.
+                                            </li>
+                                            <li><strong>Frontend Label:</strong> "Execution Health"</li>
+                                            <li class="mt-2 text-dark bg-light p-2 rounded">
+                                                <strong>Example:</strong><br>
+                                                Input: <code>100</code> &rarr; Frontend: <strong>100.00 (Good)</strong><br>
+                                                <em>"Composite score based on milestones"</em>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="p-3 bg-white rounded border h-100">
+                                        <strong class="text-dark d-block mb-2">2. Project Risk Assessment</strong>
+                                        <p class="small text-muted mb-2">Calculates the overall risk level based on "Risks"
+                                            below.</p>
+                                        <ul class="small text-muted mb-0 list-unstyled">
+                                            <li><strong>Source:</strong> Weighted sum of Risks & Impacts.</li>
+                                            <li><strong>Formula:</strong> High(3) + Medium(2) + Low(1)</li>
+                                            <li class="mt-2 text-dark bg-light p-2 rounded">
+                                                <strong>Example:</strong><br>
+                                                1x High, 1x Med, 1x Low &rarr; Score: <strong>6 (Medium Risk)</strong><br>
+                                                <em>"Risk level monitoring"</em>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="p-3 bg-white rounded border h-100">
+                                        <strong class="text-dark d-block mb-2">3. Project Progress</strong>
+                                        <ul class="small text-muted mb-0 list-unstyled">
+                                            <li><strong>Source:</strong> <code>Project Progress</code> (Basic Details Tab).
+                                            </li>
+                                            <li class="mt-1"><strong>Example:</strong> 89% &rarr; "89.00% Overall
+                                                completion"</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="p-3 bg-white rounded border h-100">
+                                        <strong class="text-dark d-block mb-2">4. Beneficiaries Reached</strong>
+                                        <ul class="small text-muted mb-0 list-unstyled">
+                                            <li><strong>Source:</strong> <code>Actual Beneficiary Count</code> field below.
+                                            </li>
+                                            <li class="mt-1"><strong>Example:</strong> 111 &rarr; "111 - Total
+                                                individuals reached"</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        @if (!$isUpcoming)
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h5 class="mb-3 text-primary"><i class="feather feather-users me-2"></i> Target
+                                    Beneficiaries</h5>
+
+                                @php
+                                    // Variables are now defined globally at the top of tab-content
+                                @endphp
+
+                                {{-- GROUPS SECTION --}}
+                                <div class="mb-4 border p-3 rounded bg-light">
+                                    <h6 class="fw-bold mb-3 text-secondary">Target Groups</h6>
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered bg-white" id="beneficiary_groups_table">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width: 40%">Group Category</th>
+                                                    <th style="width: 20%">Target Numbers</th>
+                                                    @if (!$isUpcoming)
+                                                        <th style="width: 20%">Reached</th>
+                                                        <th style="width: 20%">Current Date</th>
+                                                    @endif
+                                                    {{-- Always show action column --}}
+                                                    <th style="width: 5%"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="beneficiary_groups_body">
+                                                @foreach ($groups as $ben)
+                                                    <tr>
+                                                        <td>
+                                                            @if ($isUpcoming)
+                                                                <select
+                                                                    name="beneficiary_groups[{{ $loop->index }}][category]"
+                                                                    class="form-select select2">
+                                                                    <option value="">Select Group</option>
+                                                                    @foreach ($groupOptions as $opt)
+                                                                        <option value="{{ $opt }}"
+                                                                            {{ $ben->category == $opt ? 'selected' : '' }}>
+                                                                            {{ $opt }}</option>
+                                                                    @endforeach
+                                                                </select>
+                                                            @else
+                                                                {{ $ben->category }}
+                                                            @endif
+                                                        </td>
+                                                        <td>
+                                                            @if ($isUpcoming)
+                                                                <input type="number"
+                                                                    name="beneficiary_groups[{{ $loop->index }}][target]"
+                                                                    class="form-control"
+                                                                    value="{{ $ben->target_number }}">
+                                                            @else
+                                                                {{ $ben->target_number }}
+                                                            @endif
+                                                        </td>
+                                                        @if (!$isUpcoming)
+                                                            <td>
+                                                                <input type="number"
+                                                                    name="beneficiary_reached[{{ $ben->id }}]"
+                                                                    class="form-control bg-light"
+                                                                    value="{{ $ben->reached_number }}"
+                                                                    placeholder="Enter reached">
+                                                            </td>
+                                                            <td>
+                                                                <input type="date"
+                                                                    name="beneficiary_date[{{ $ben->id }}]"
+                                                                    class="form-control" value="{{ date('Y-m-d') }}">
+                                                                <small class="text-muted d-block mt-1">Auto-updates
+                                                                    history</small>
+                                                            </td>
+                                                        @endif
+                                                        <td>
+                                                            @if ($isUpcoming)
+                                                                <button type="button"
+                                                                    class="btn btn-sm btn-outline-danger remove-row"><i
+                                                                        class="feather feather-trash-2"></i></button>
+                                                            @else
+                                                                <span class="text-muted small">--</span>
+                                                            @endif
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <td colspan="{{ !$isUpcoming ? 5 : 3 }}">
+                                                        <button type="button" class="btn btn-sm btn-primary"
+                                                            id="add_group_btn">
+                                                            ➕ Add Group
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                {{-- INDIVIDUALS SECTION --}}
+                                <div class="mb-4 border p-3 rounded bg-light">
+                                    <h6 class="fw-bold mb-3 text-secondary">Target Individuals</h6>
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered bg-white" id="beneficiary_individuals_table">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width: 40%">Individual Category</th>
+                                                    <th style="width: 20%">Target Numbers</th>
+                                                    @if (!$isUpcoming)
+                                                        <th style="width: 20%">Reached</th>
+                                                        <th style="width: 20%">Current Date</th>
+                                                    @endif
+                                                    <th style="width: 5%"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="beneficiary_individuals_body">
+                                                @foreach ($individuals as $ben)
+                                                    <tr>
+                                                        <td>
+                                                            @if ($isUpcoming)
+                                                                <select
+                                                                    name="beneficiary_individuals[{{ $loop->index }}][category]"
+                                                                    class="form-select select2">
+                                                                    <option value="">Select Individual</option>
+                                                                    @foreach ($individualOptions as $opt)
+                                                                        <option value="{{ $opt }}"
+                                                                            {{ $ben->category == $opt ? 'selected' : '' }}>
+                                                                            {{ $opt }}</option>
+                                                                    @endforeach
+                                                                </select>
+                                                            @else
+                                                                {{ $ben->category }}
+                                                            @endif
+                                                        </td>
+                                                        <td>
+                                                            @if ($isUpcoming)
+                                                                <input type="number"
+                                                                    name="beneficiary_individuals[{{ $loop->index }}][target]"
+                                                                    class="form-control"
+                                                                    value="{{ $ben->target_number }}">
+                                                            @else
+                                                                {{ $ben->target_number }}
+                                                            @endif
+                                                        </td>
+                                                        @if (!$isUpcoming)
+                                                            <td>
+                                                                <input type="number"
+                                                                    name="beneficiary_reached[{{ $ben->id }}]"
+                                                                    class="form-control bg-light"
+                                                                    value="{{ $ben->reached_number }}"
+                                                                    placeholder="Enter reached">
+                                                            </td>
+                                                            <td>
+                                                                <input type="date"
+                                                                    name="beneficiary_date[{{ $ben->id }}]"
+                                                                    class="form-control" value="{{ date('Y-m-d') }}">
+                                                                <small class="text-muted d-block mt-1">Auto-updates
+                                                                    history</small>
+                                                            </td>
+                                                        @endif
+                                                        <td>
+                                                            @if ($isUpcoming)
+                                                                <button type="button"
+                                                                    class="btn btn-sm btn-outline-danger remove-row"><i
+                                                                        class="feather feather-trash-2"></i></button>
+                                                            @else
+                                                                <span class="text-muted small">--</span>
+                                                            @endif
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <td colspan="{{ !$isUpcoming ? 5 : 3 }}">
+                                                        <button type="button" class="btn btn-sm btn-primary"
+                                                            id="add_individual_btn">
+                                                            ➕ Add Individual
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="mb-4"></div>
+                        @endif
+                        <h5 class="mb-4 text-primary"><i class="feather feather-clock me-2"></i> Ongoing Project Updates &
                         Progress Tracking</h5>
                     <div class="row">
                         <div class="col-md-12">
@@ -1507,7 +1776,8 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-md-6" id="actual_end_date_wrapper" style="{{ in_array($project->stage, ['ongoing', 'completed']) ? '' : 'display:none;' }}">
+                        <div class="col-md-6" id="actual_end_date_wrapper"
+                            style="{{ in_array($project->stage, ['ongoing', 'completed']) ? '' : 'display:none;' }}">
                             <div class="mb-3">
                                 <label class="form-label">Actual End Date <span class="text-danger">*</span></label>
                                 <input type="date"
@@ -1603,8 +1873,9 @@
                             </div>
                         </div>
                     </div>
+                    </div>
                 </div>
-            </div> <!-- End Ongoing Tab -->
+            <!-- End Ongoing Tab -->
 
             <!-- Tab 5: CSR & Stakeholders -->
             <div class="tab-pane" id="csr_tab" role="tabpanel">
@@ -1780,10 +2051,17 @@
                                                     <div class="col-md-2">
                                                         <div class="mb-3">
                                                             <label class="form-label">Impact</label>
-                                                            <select name="risks[{{ $index }}][impact]" class="form-select select2">
-                                                                <option value="low" {{ ($risk['impact'] ?? '') == 'low' ? 'selected' : '' }}>Low</option>
-                                                                <option value="medium" {{ ($risk['impact'] ?? '') == 'medium' ? 'selected' : '' }}>Medium</option>
-                                                                <option value="high" {{ ($risk['impact'] ?? '') == 'high' ? 'selected' : '' }}>High</option>
+                                                            <select name="risks[{{ $index }}][impact]"
+                                                                class="form-select select2">
+                                                                <option value="low"
+                                                                    {{ ($risk['impact'] ?? '') == 'low' ? 'selected' : '' }}>
+                                                                    Low</option>
+                                                                <option value="medium"
+                                                                    {{ ($risk['impact'] ?? '') == 'medium' ? 'selected' : '' }}>
+                                                                    Medium</option>
+                                                                <option value="high"
+                                                                    {{ ($risk['impact'] ?? '') == 'high' ? 'selected' : '' }}>
+                                                                    High</option>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -1843,10 +2121,17 @@
                                                     <div class="col-md-2">
                                                         <div class="mb-3">
                                                             <label class="form-label">Impact</label>
-                                                            <select name="risks[{{ $index }}][impact]" class="form-select select2">
-                                                                <option value="low" {{ ($risk['impact'] ?? '') == 'low' ? 'selected' : '' }}>Low</option>
-                                                                <option value="medium" {{ ($risk['impact'] ?? '') == 'medium' ? 'selected' : '' }}>Medium</option>
-                                                                <option value="high" {{ ($risk['impact'] ?? '') == 'high' ? 'selected' : '' }}>High</option>
+                                                            <select name="risks[{{ $index }}][impact]"
+                                                                class="form-select select2">
+                                                                <option value="low"
+                                                                    {{ ($risk['impact'] ?? '') == 'low' ? 'selected' : '' }}>
+                                                                    Low</option>
+                                                                <option value="medium"
+                                                                    {{ ($risk['impact'] ?? '') == 'medium' ? 'selected' : '' }}>
+                                                                    Medium</option>
+                                                                <option value="high"
+                                                                    {{ ($risk['impact'] ?? '') == 'high' ? 'selected' : '' }}>
+                                                                    High</option>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -1889,7 +2174,8 @@
                                 </div>
                                 <button type="button" class="btn btn-sm btn-primary mt-2" id="add_risk">Add
                                     Risk</button>
-                                <div class="form-text">Add operational risks with mitigation strategies and responsible
+                                <div class="form-text">Add operational risks with mitigation strategies and
+                                    responsible
                                     persons</div>
                             </div>
                         </div>
@@ -1945,7 +2231,8 @@
                                     <div class="text-muted small">No gallery images uploaded yet</div>
                                 @endif
 
-                                <div class="form-text">Upload real photos of project implementation - Max 5 images, 5MB
+                                <div class="form-text">Upload real photos of project implementation - Max 5 images,
+                                    5MB
                                     each</div>
                             </div>
                         </div>
@@ -2175,14 +2462,15 @@
                                 </div>
                                 <button type="button" class="btn btn-sm btn-primary mt-2" id="add_link">Add
                                     Link</button>
-                                <div class="form-text">Add press coverage, YouTube videos, social media links, live survey
+                                <div class="form-text">Add press coverage, YouTube videos, social media links, live
+                                    survey
                                     links</div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div> <!-- End Media Tab -->
-            </div>
+        </div>
         </div> <!-- End Tab Content -->
 
 
@@ -2861,6 +3149,7 @@
             // Beneficiary Counters
             let benGroupCounter = {{ $project->beneficiaries->where('type', 'group')->count() }};
             let benIndCounter = {{ $project->beneficiaries->where('type', 'individual')->count() }};
+            const isUpcoming = {{ $isUpcoming ? 'true' : 'false' }};
 
             const groupOptions = [
                 'Schools', 'Colleges / Higher Education Institutions', 'Women Self-Help Groups (SHGs)',
@@ -2953,24 +3242,48 @@
                     optionsHtml += `<option value="${opt}">${opt}</option>`;
                 });
 
-                let html = `
-                <tr>
-                    <td>
-                        <select name="beneficiary_groups[${benGroupCounter}][category]" class="form-select select2">
-                            ${optionsHtml}
-                        </select>
-                    </td>
-                    <td>
-                        <input type="number" name="beneficiary_groups[${benGroupCounter}][target]" class="form-control" placeholder="0">
-                    </td>
-                    <td>
-                        <button type="button" class="btn btn-sm btn-outline-danger remove-row"><i class="feather feather-trash-2"></i></button>
-                    </td>
-                </tr>`;
-                
+                let html = '';
+                if (isUpcoming) {
+                    html = `
+                    <tr>
+                        <td>
+                            <select name="beneficiary_groups[${benGroupCounter}][category]" class="form-select select2">
+                                ${optionsHtml}
+                            </select>
+                        </td>
+                        <td>
+                            <input type="number" name="beneficiary_groups[${benGroupCounter}][target]" class="form-control" placeholder="0">
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-sm btn-outline-danger remove-row"><i class="feather feather-trash-2"></i></button>
+                        </td>
+                    </tr>`;
+                } else {
+                    html = `
+                    <tr>
+                        <td>
+                            <select name="beneficiary_groups[${benGroupCounter}][category]" class="form-select select2">
+                                ${optionsHtml}
+                            </select>
+                        </td>
+                        <td>
+                            <input type="number" name="beneficiary_groups[${benGroupCounter}][target]" class="form-control" placeholder="0">
+                        </td>
+                        <td>
+                            <input type="number" class="form-control bg-light" disabled value="0" placeholder="Save to edit">
+                        </td>
+                        <td>
+                            <input type="date" class="form-control" disabled value="{{ date('Y-m-d') }}">
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-sm btn-outline-danger remove-row"><i class="feather feather-trash-2"></i></button>
+                        </td>
+                    </tr>`;
+                }
+
                 $('#beneficiary_groups_body').append(html);
-                
-                 // Re-initialize Select2
+
+                // Re-initialize Select2
                 $('#beneficiary_groups_body .select2:last').select2({
                     placeholder: "Select Group",
                     allowClear: true,
@@ -2986,20 +3299,44 @@
                     optionsHtml += `<option value="${opt}">${opt}</option>`;
                 });
 
-                let html = `
-                <tr>
-                    <td>
-                        <select name="beneficiary_individuals[${benIndCounter}][category]" class="form-select select2">
-                            ${optionsHtml}
-                        </select>
-                    </td>
-                    <td>
-                        <input type="number" name="beneficiary_individuals[${benIndCounter}][target]" class="form-control" placeholder="0">
-                    </td>
-                    <td>
-                        <button type="button" class="btn btn-sm btn-outline-danger remove-row"><i class="feather feather-trash-2"></i></button>
-                    </td>
-                </tr>`;
+                let html = '';
+                if (isUpcoming) {
+                    html = `
+                    <tr>
+                        <td>
+                            <select name="beneficiary_individuals[${benIndCounter}][category]" class="form-select select2">
+                                ${optionsHtml}
+                            </select>
+                        </td>
+                        <td>
+                            <input type="number" name="beneficiary_individuals[${benIndCounter}][target]" class="form-control" placeholder="0">
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-sm btn-outline-danger remove-row"><i class="feather feather-trash-2"></i></button>
+                        </td>
+                    </tr>`;
+                } else {
+                     html = `
+                    <tr>
+                        <td>
+                            <select name="beneficiary_individuals[${benIndCounter}][category]" class="form-select select2">
+                                ${optionsHtml}
+                            </select>
+                        </td>
+                        <td>
+                            <input type="number" name="beneficiary_individuals[${benIndCounter}][target]" class="form-control" placeholder="0">
+                        </td>
+                        <td>
+                            <input type="number" class="form-control bg-light" disabled value="0" placeholder="Save to edit">
+                        </td>
+                        <td>
+                            <input type="date" class="form-control" disabled value="{{ date('Y-m-d') }}">
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-sm btn-outline-danger remove-row"><i class="feather feather-trash-2"></i></button>
+                        </td>
+                    </tr>`;
+                }
 
                 $('#beneficiary_individuals_body').append(html);
 
@@ -3090,9 +3427,9 @@
                     </div>
                 </div>`;
                 $('#risks_wrapper').append(html);
-                
+
                 // Re-initialize Select2 for the new dropdown
-                 $('#risks_wrapper .select2:last').select2({
+                $('#risks_wrapper .select2:last').select2({
                     placeholder: "Select Impact",
                     minimumResultsForSearch: Infinity, // No search box for small lists
                     width: '100%'
@@ -3233,9 +3570,9 @@
                 }
 
                 if (stage === 'ongoing' || stage === 'completed') {
-                     $('#actual_end_date_wrapper').slideDown();
+                    $('#actual_end_date_wrapper').slideDown();
                 } else {
-                     $('#actual_end_date_wrapper').slideUp();
+                    $('#actual_end_date_wrapper').slideUp();
                 }
             }
 

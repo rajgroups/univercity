@@ -1081,4 +1081,78 @@ class ProjectController extends Controller
         $projects = Project::findOrFail($projectid);
         return view('admin.project.estmator', compact('projects'));
     }
+    /**
+     * Save Project Beneficiaries (Groups & Individuals)
+     */
+    private function saveBeneficiaries(Request $request, Project $project)
+    {
+        // 1. Handle Beneficiary Groups & Individuals (Sync for Upcoming, Append for others)
+        $isUpcoming = $project->stage === 'upcoming';
+        
+        // Define types to process
+        $types = ['group' => 'beneficiary_groups', 'individual' => 'beneficiary_individuals'];
+
+        foreach ($types as $type => $inputName) {
+            if ($request->has($inputName)) {
+                $inputs = $request->input($inputName);
+                if (is_array($inputs)) {
+                    // Filter empty
+                    $inputs = array_filter($inputs, function ($item) {
+                        return !empty($item['category']);
+                    });
+
+                    if ($isUpcoming) {
+                        // SYNC: Delete existing of this type and recreate
+                        ProjectBeneficiary::where('project_id', $project->id)
+                            ->where('type', $type)
+                            ->delete();
+                    }
+
+                    // Create new
+                    foreach ($inputs as $data) {
+                        ProjectBeneficiary::create([
+                            'project_id' => $project->id,
+                            'type' => $type,
+                            'category' => $data['category'],
+                            'target_number' => $data['target'] ?? 0,
+                            'reached_number' => 0 // Default
+                        ]);
+                    }
+                }
+            } elseif ($isUpcoming) {
+                 // If upcoming and no input, it means user removed all rows.
+                 ProjectBeneficiary::where('project_id', $project->id)
+                            ->where('type', $type)
+                            ->delete();
+            }
+        }
+
+        // 2. Handle Reached & Date Updates (For Ongoing/Completed)
+        if ($request->has('beneficiary_reached')) {
+            $reached = $request->input('beneficiary_reached');
+            $dates = $request->input('beneficiary_date', []);
+
+            foreach ($reached as $id => $val) {
+                $ben = ProjectBeneficiary::find($id);
+                if ($ben && $ben->project_id == $project->id) {
+                    $val = (int)$val;
+                    $date = $dates[$id] ?? date('Y-m-d');
+
+                    // Check if changed
+                    if ($ben->reached_number != $val) {
+                         // Update History history model name ProjectBeneficiaryUpdate
+                         ProjectBeneficiaryUpdate::create([
+                             'project_beneficiary_id' => $ben->id,
+                             'reached_number' => $val,
+                             'date' => $date
+                         ]);
+                         
+                         // Update Current
+                         $ben->reached_number = $val;
+                         $ben->save();
+                    }
+                }
+            }
+        }
+    }
 }
