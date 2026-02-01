@@ -1180,25 +1180,25 @@
                     <div class="col-md-3">
                         <div class="px-3 border-end border-white border-opacity-25">
                             <h2 class="fw-bold mb-1 text-white">250+</h2>
-                            <p class="small mb-0 opacity-75">Certified Trainers</p>
+                            <p class="small mb-0 opacity-75 text-white">Certified Trainers</p>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="px-3 border-end border-white border-opacity-25">
                             <h2 class="fw-bold mb-1 text-white">1,000+</h2>
-                            <p class="small mb-0 opacity-75">Student Reviews</p>
+                            <p class="small mb-0 opacity-75 text-white">Student Reviews</p>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="px-3 border-end border-white border-opacity-25">
                             <h2 class="fw-bold mb-1 text-white">5,000+</h2>
-                            <p class="small mb-0 opacity-75">Skilled Students</p>
+                            <p class="small mb-0 opacity-75 text-white">Skilled Students</p>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="px-3">
                             <h2 class="fw-bold mb-1 text-white">15+</h2>
-                            <p class="small mb-0 opacity-75">National Recognitions</p>
+                            <p class="small mb-0 opacity-75 text-white">National Recognitions</p>
                         </div>
                     </div>
                 </div>
