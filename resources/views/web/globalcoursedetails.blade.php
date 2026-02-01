@@ -359,13 +359,24 @@
                             <!-- Fees Tab -->
                             <div class="tab-pane fade" id="fees">
                                 <h3 class="fw-bold mb-4 text-dark">Fees & Funding</h3>
-                                <div class="bg-primary bg-opacity-10 p-4 rounded-4 mb-4">
-                                    <div class="d-flex align-items-center">
-                                        <div class="flex-grow-1">
-                                            <small class="text-uppercase fw-bold text-primary ls-1">Total Estimated Cost</small>
-                                            <h2 class="fw-bold mb-0 text-dark">{{ $course->total_fees ?? 'Contact for Pricing' }}</h2>
+                                                                <!-- Total Cost Card -->
+                                <div class="card border-0 bg-primary bg-gradient text-white overflow-hidden mb-5 shadow-lg rounded-4 position-relative">
+                                    <div class="position-absolute top-0 end-0 p-4 opacity-10">
+                                        <i class="bi bi-wallet2 display-1"></i>
+                                    </div>
+                                    <div class="card-body p-4 p-md-5 position-relative z-1">
+                                        <div class="row align-items-center">
+                                            <div class="col-md-7">
+                                                <small class="text-uppercase fw-bold text-white-50 ls-2 mb-2 d-block">Estimated Total Investment</small>
+                                                <h2 class="display-5 fw-bold mb-1 text-white">{{ $course->total_fees ?? 'Contact for Pricing' }}</h2>
+                                                <p class="mb-0 text-white-50">*Includes tuition and estimated living expenses</p>
+                                            </div>
+                                            <div class="col-md-5 text-md-end mt-3 mt-md-0">
+                                                <button class="btn btn-light text-primary fw-bold px-4 py-3 rounded-pill shadow-sm hover-scale" onclick="document.getElementById('enquiryForm').scrollIntoView({behavior: 'smooth'})">
+                                                    Get Detailed Quote <i class="bi bi-arrow-right ms-2"></i>
+                                                </button>
+                                            </div>
                                         </div>
-                                        <i class="bi bi-tag-fill fs-1 text-primary opacity-25"></i>
                                     </div>
                                 </div>
 
