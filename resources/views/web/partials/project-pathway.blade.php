@@ -47,25 +47,59 @@
                             <div class="swiper-wrapper">
                                 @forelse($learningPathway->courses as $course)
                                     <div class="swiper-slide h-auto">
-                                        <div class="card h-100 border-0 shadow-sm rounded-4">
-                                            <div class="card-body p-4 d-flex flex-column">
-                                                <div class="mb-3">
-                                                    <span class="badge px-3 py-1 rounded-pill" style="background: {{ $loop->iteration % 3 == 1 ? '#e8f5e9' : ($loop->iteration % 3 == 2 ? '#fff3e0' : '#e3f2fd') }}; color: {{ $loop->iteration % 3 == 1 ? '#2e7d32' : ($loop->iteration % 3 == 2 ? '#ef6c00' : '#1565c0') }}">
-                                                        {{ $course->sector->name ?? 'General' }}
+                                        <div class="course-card card h-100 border-0 shadow-sm hover-lift rounded-4 {{ ($course->availability_status ?? '') == 'not_available' ? 'unavailable' : '' }}">
+                                            @if(($course->availability_status ?? '') == 'not_available')
+                                                <div class="unavailable-overlay" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10; background: rgba(0, 0, 0, 0.7); color: white; padding: 10px 20px; border-radius: 5px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; white-space: nowrap;">Currently Not Available</div>
+                                            @endif
+                                            <div class="position-relative">
+                                                <img src="{{ asset($course->image ?? 'default-course.jpg') }}" class="card-img-top rounded-top-4" alt="{{ $course->name }}" style="height: 200px; object-fit: cover;">
+                                                <div class="card-img-overlay d-flex justify-content-between align-items-start p-3">
+                                                   <span class="badge bg-{{ ($course->mode_of_study->value ?? 1) == 1 ? 'primary' : 'secondary' }}">
+                                                        {{ $course->mode_of_study?->label() ?? 'Online' }}
+                                                    </span>
+                                                    <span class="badge bg-{{ ($course->paid_type->value ?? 'paid') == 'free' ? 'success' : 'warning' }}">
+                                                        {{ strtoupper($course->paid_type->value ?? 'PAID') }}
                                                     </span>
                                                 </div>
-                                                <h5 class="fw-bold mb-2">{{ $course->name }}</h5>
-                                                <p class="text-muted small mb-3 flex-grow-1">{{ Str::limit($course->short_description ?? 'No description available', 80) }}</p>
-                                                
-                                                <div class="d-flex align-items-center text-muted small mb-4">
-                                                    <i class="feather icon-clock me-1"></i> {{ $course->duration_number ?? '' }} {{ $course->duration_unit?->label() ?? '' }}
-                                                    <span class="mx-2">•</span> 
-                                                    <i class="feather icon-bar-chart-2 me-1"></i> {{ $course->level ?? 'All Levels' }}
+                                            </div>
+                                            <div class="card-body d-flex flex-column p-4">
+                                                <h6 class="card-title text-primary mb-2 fw-bold" style="min-height: 3rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                                                    {{ $course->name }}
+                                                </h6>
+                                                <p class="text-muted small mb-2">
+                                                    <i class="bi bi-building me-1"></i>{{ $course->provider ?? 'ISICO' }}
+                                                </p>
+                                                <p class="text-warning small mb-2">
+                                                    <i class="bi bi-tags me-1"></i>{{ $course->sector->name ?? 'General' }}
+                                                </p>
+                                                <div class="course-meta d-flex justify-content-between text-muted small mb-3">
+                                                    <span class="d-flex align-items-center">
+                                                         <i class="bi bi-translate me-1"></i>
+                                                         @php
+                                                            $languages = is_array($course->language) ? $course->language : (is_string($course->language) ? json_decode($course->language, true) : []);
+                                                         @endphp
+                                                         {{ count($languages) > 0 ? count($languages).' Languages' : 'English' }}
+                                                    </span>
+                                                    <span class="d-flex align-items-center">
+                                                        <i class="bi bi-clock me-1"></i>
+                                                        {{ $course->duration_number ?? '' }} {{ $course->duration_unit?->label() ?? '' }}
+                                                    </span>
                                                 </div>
                                                 
-                                                <a href="{{ route('web.course.show', $course->slug) }}" class="btn w-100 rounded-3 fw-semibold" style="background: #2e7d32; color: #fff;">
-                                                    View Course
-                                                </a>
+                                                <div class="mt-auto">
+                                                     <div class="d-flex justify-content-between align-items-center mb-3">
+                                                        <div class="rating">
+                                                             <i class="bi bi-star-fill text-warning"></i>
+                                                             <small class="text-muted">{{ $course->review_stars ?? '4.5' }} ({{ $course->review_count ?? '120' }} reviews)</small>
+                                                        </div>
+                                                        <div class="enrollment">
+                                                            <small class="text-muted"><i class="bi bi-people me-1"></i>{{ $course->enrollment_count ?? 0 }} enrolled</small>
+                                                        </div>
+                                                    </div>
+                                                    <a href="{{ route('web.course.show', $course->slug) }}" class="btn w-100 rounded-3 fw-semibold btn-primary">
+                                                        View Course <i class="bi bi-arrow-right ms-2"></i>
+                                                    </a>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

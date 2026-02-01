@@ -4627,14 +4627,6 @@
 .read-more-btn:hover {
     text-decoration: underline;
 }
-
-/* Course Card Unavailable State */
-.course-card.unavailable .card-img-top,
-.course-card.unavailable .card-body {
-    filter: blur(3px) grayscale(100%);
-    opacity: 0.7;
-    pointer-events: none;
-}
 </style>
 @endpush
 
