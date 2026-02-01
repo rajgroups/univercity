@@ -1067,7 +1067,7 @@
                                     <i class="bi bi-building text-primary"></i>
                                 </div>
                                 <div>
-                                    <h6 class="fw-bold mb-1 text-white">Government Schemes</h6>
+                                    <h6 class="fw-bold mb-1">Government Schemes</h6>
                                     <p class="small text-muted mb-0">Partnering with central programs for education and skills.</p>
                                 </div>
                             </div>
@@ -1076,7 +1076,7 @@
                                     <i class="bi bi-people text-primary"></i>
                                 </div>
                                 <div>
-                                    <h6 class="fw-bold mb-1 text-white">CSR Initiatives</h6>
+                                    <h6 class="fw-bold mb-1">CSR Initiatives</h6>
                                     <p class="small text-muted mb-0">Leveraging corporate support for community projects.</p>
                                 </div>
                             </div>
@@ -1085,7 +1085,7 @@
                                     <i class="bi bi-globe text-primary"></i>
                                 </div>
                                 <div>
-                                    <h6 class="fw-bold mb-1 text-white">International Body</h6>
+                                    <h6 class="fw-bold mb-1">International Body</h6>
                                     <p class="small text-muted mb-0">Exchanging global best practices with Indian expertise.</p>
                                 </div>
                             </div>
@@ -1179,25 +1179,25 @@
                 <div class="row text-center g-4">
                     <div class="col-md-3">
                         <div class="px-3 border-end border-white border-opacity-25">
-                            <h2 class="fw-bold mb-1">250+</h2>
+                            <h2 class="fw-bold mb-1 text-white">250+</h2>
                             <p class="small mb-0 opacity-75">Certified Trainers</p>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="px-3 border-end border-white border-opacity-25">
-                            <h2 class="fw-bold mb-1">1,000+</h2>
+                            <h2 class="fw-bold mb-1 text-white">1,000+</h2>
                             <p class="small mb-0 opacity-75">Student Reviews</p>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="px-3 border-end border-white border-opacity-25">
-                            <h2 class="fw-bold mb-1">5,000+</h2>
+                            <h2 class="fw-bold mb-1 text-white">5,000+</h2>
                             <p class="small mb-0 opacity-75">Skilled Students</p>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="px-3">
-                            <h2 class="fw-bold mb-1">15+</h2>
+                            <h2 class="fw-bold mb-1 text-white">15+</h2>
                             <p class="small mb-0 opacity-75">National Recognitions</p>
                         </div>
                     </div>
