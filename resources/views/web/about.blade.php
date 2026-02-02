@@ -110,7 +110,7 @@
                 <span class="text-white">About Us</span>
             </div>
             <h1 class="modern-banner-title">About ISICO</h1>
-            <p class="modern-banner-subtitle">Advancing India’s socio-economic development through education, skill enhancement, and entrepreneurship.</p>
+            <h4 class="modern-banner-subtitle text-white">Advancing India’s socio-economic development through education, skill enhancement, and entrepreneurship.</h4>
         </div>
     </section>
     <!-- Title Banner Section End -->
