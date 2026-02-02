@@ -110,7 +110,7 @@
                 <span class="text-white">Global Pathways</span>
             </div>
             <h1 class="modern-banner-title">Global Opportunities</h1>
-            <p class="modern-banner-subtitle">Explore skill development courses and career pathways across the globe.</p>
+            <h4 class="modern-banner-subtitle text-white">Explore skill development courses and career pathways across the globe.</h4>
         </div>
     </section>
     <!-- Title Banner Section End -->
@@ -119,7 +119,7 @@
     <section class="couses-sec mb-120">
         <div class="container-fluid">
             <h4 class="text-center mb-5">Please select country to explore skill courses</h4>
-            <form method="GET" action="{{ route('web.global.course') }}">
+            <form method="GET" action="{{ route('web.global.country') }}">
                 @csrf
                 <div class="wrapper">
                     <div class="searchBar mb-4">
