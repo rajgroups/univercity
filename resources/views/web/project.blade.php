@@ -1383,14 +1383,14 @@
                                     class="table-header-custom d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center">
                                     <div class="d-flex align-items-center mb-2 mb-md-0">
                                         <i class="bi bi-list-task fs-5 me-2"></i>
-                                        <h2 class="h5 mb-0">Admin · Milestone Planner</h2>
+                                        <h2 class="h5 mb-0 text-white">Admin · Milestone Planner</h2>
                                     </div>
                                     <div class="d-flex align-items-center">
                                         <small class="text-white-50 me-3 d-none d-md-block">Showing All – {{ $milestones->count() }} items</small>
-                                        <select class="form-select form-select-sm w-auto">
-                                            <option>All Phases</option>
+                                        <select class="form-select form-select-sm w-auto" id="milestonePhaseFilter">
+                                            <option value="all">All Phases</option>
                                             @foreach($milestones->pluck('phase')->unique()->sort() as $ph)
-                                                <option>Phase {{ substr($ph, 1) }}</option>
+                                                <option value="{{ $ph }}">Phase {{ substr($ph, 1) }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -1417,7 +1417,7 @@
                                                         if(in_array($phaseName, $lphases)) $layerName = strtolower($lname);
                                                     }
                                                 @endphp
-                                                <tr class="phase-section-header {{ $layerName }}">
+                                                <tr class="phase-section-header {{ $layerName }}" data-phase="{{ $phaseName }}">
                                                     <td colspan="7" class="fw-bold">
                                                         <i class="bi bi-{{ substr($phaseName, 1) }}-circle-fill me-2"></i>Phase {{ substr($phaseName, 1) }} - {{ ucfirst($layerName) }}
                                                     </td>
@@ -1427,7 +1427,7 @@
                                                     @php
                                                         $mStatus = $m->status == 'completed' ? 'finished' : ($m->status == 'in-progress' ? 'current' : 'pending');
                                                     @endphp
-                                                    <tr>
+                                                    <tr data-phase="{{ $phaseName }}">
                                                         <td class="fw-medium">{{ $phaseName }}</td>
                                                         <td><span class="badge bg-light text-dark">{{ $idx + 1 }}/{{ $items->count() }}</span></td>
                                                         <td class="{{ $m->status == 'pending' ? 'text-muted' : '' }}">
@@ -1518,6 +1518,24 @@
                                     this.classList.add('table-active');
                                 });
                             });
+
+                            // Filter Milestone List View
+                            const filterSelect = document.getElementById('milestonePhaseFilter');
+                            if (filterSelect) {
+                                filterSelect.addEventListener('change', function() {
+                                    const selectedPhase = this.value;
+                                    const tableRows = document.querySelectorAll('#milestone-list-view table tbody tr');
+
+                                    tableRows.forEach(row => {
+                                        const rowPhase = row.getAttribute('data-phase');
+                                        if (selectedPhase === 'all' || rowPhase === selectedPhase) {
+                                            row.style.display = '';
+                                        } else {
+                                            row.style.display = 'none';
+                                        }
+                                    });
+                                });
+                            }
                         </script>
                         </div>
                 </div>
