@@ -47,6 +47,8 @@
                                         @case(7) Course @break
                                         @case(8) Event @break
                                         @case(9) Competition @break
+                                        @case(10) Newsletter @break
+                                        @case(11) Project Interest @break
                                         @default Unknown
                                     @endswitch
                                 </td>

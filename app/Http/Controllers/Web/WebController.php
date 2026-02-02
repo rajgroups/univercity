@@ -704,7 +704,7 @@ class WebController extends Controller
                 'name' => $request->name,
                 'email' => $request->email,
                 'mobile' => '0000000000', // Placeholder as it might be required
-                'type' => 1, // General Enquiry type? Or specific?
+                'type' => 11, // Project Interest
                 'message' => $fullMessage,
                 'status' => 1,
             ]);

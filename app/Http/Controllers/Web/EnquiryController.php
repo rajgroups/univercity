@@ -11,6 +11,7 @@ use Flasher\Prime\FlasherInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
+use App\Models\Activity;
 
 class EnquiryController extends Controller
 {
@@ -39,7 +40,7 @@ class EnquiryController extends Controller
             'name'              => 'required|string|max:255',
             'email'             => 'nullable|email|max:255',
             'mobile'            => 'required|string|max:15|regex:/^[0-9]+$/',
-            'type'              => 'required|integer|in:1,2,3,4,5,6,7,8,9', // Only allow 8 or 9 as per your form
+            'type'              => 'required|integer|in:1,2,3,4,5,6,7,8,9,10,11', // Expanded types for Newsletter(10) and Project Interest(11)
             'message'           => 'nullable|string|max:1000',
             'is_philanthropist' => 'nullable|boolean',
             'paid'              => 'nullable|boolean',
@@ -66,6 +67,14 @@ class EnquiryController extends Controller
             // If the user is interested in a course, append a proper paragraph
             if ($request->filled('course_name')) {
                 $message .= "\n\n---\nUser is interested in the course: \"" . $request->course_name . "\".";
+            }
+
+            // If the user enquires about an activity/event
+            if ($request->filled('event_id')) {
+                $activity = Activity::find($request->event_id);
+                if ($activity) {
+                    $message .= "\n\n---\nUser is enquiring about the activity: \"" . $activity->title . "\".";
+                }
             }
 
             $enquiry = Enquiry::create([

@@ -90,28 +90,28 @@
         @endif
         <div class="main-header" style="background-color: #fafafa;border-bottom: 1px solid rgb(202, 202, 202);">
             <div class="container-fluid">
-                <div class="row p-2 bg-white text-dark justify-content-between align-items-center">
-                    <div class="col-md-6 text-center-sm">
+                <div class="row p-3 bg-white text-dark justify-content-between align-items-center">
+                    <div class="col-md-auto text-center-sm">
                         {{-- <img src="https://www.skillindiadigital.gov.in/assets/new-ux-img/india-flag.svg" alt="" srcset=""> | --}}
                         <img src="{{ asset('resource/web/assets/media/vector/india-flag.svg') }}" alt="flag"
                             srcset=""> |
                        ISICO | National Skill Development NGO
                     </div>
-                    <div class="col-md-6 d-flex justify-content-between-sm" style="align-items: center;">
+                    <div class="col-md-auto d-flex justify-content-between-sm justify-content-end gap-3" style="align-items: center;">
                         {{-- <p class="p-2 d-none d-lg-block">Skip To Main Content</p> --}}
                         {{-- <div class="item p-2">
                             <i class="bi bi-badge-ad p-2"></i>
                         </div> --}}
-                        <div class="item p-2">
+                        <div class="item">
                             <i class="bi bi-geo-alt-fill"></i> Karaikudi
                         </div>
-                        <div class="item p-2 text-light-gray">
+                        <div class="item text-light-gray">
                             <a href="{{ url('/') }}">
                                 <i class="bi bi-house-fill"></i> Home </a>
                         </div>
-                        <div class="item p-2 text-light-gray">
+                        <div class="item text-light-gray">
                             <div class="dropdown">
-                                <button class="btn p-2 text-light-gray" id="moreMenu" data-bs-toggle="dropdown" aria-expanded="false">
+                                <button class="btn p-0 text-light-gray" id="moreMenu" data-bs-toggle="dropdown" aria-expanded="false">
                                     More <i class="bi bi-three-dots-vertical"></i>
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="moreMenu">

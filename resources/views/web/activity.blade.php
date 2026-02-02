@@ -202,6 +202,69 @@
                 padding: 5px 8px;
             }
         }
+
+        /* Custom Dropdown Styles */
+        .wrapper-dropdown {
+            position: relative;
+            cursor: pointer;
+            padding: 8px 15px;
+            background: #fff;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            user-select: none;
+            min-width: 180px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 42px; /* Match standard input height */
+        }
+
+        .wrapper-dropdown .topbar-dropdown {
+            position: absolute;
+            top: 105%;
+            left: 0;
+            right: 0;
+            background: #fff;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            list-style: none;
+            padding: 5px 0;
+            margin: 0;
+            display: none;
+            z-index: 1050; /* Higher than most Bootstrap elements */
+            box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+        }
+
+        .wrapper-dropdown.active .topbar-dropdown {
+            display: block !important;
+        }
+
+        .wrapper-dropdown .topbar-dropdown .item {
+            padding: 8px 15px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.95rem;
+            color: #212529;
+        }
+
+        .wrapper-dropdown .topbar-dropdown .item:hover {
+            background-color: #f8f9fa;
+            color: var(--bs-primary);
+        }
+
+        .wrapper-dropdown .selected-display {
+            font-weight: 500;
+            font-size: 0.95rem;
+            color: #212529;
+        }
+
+        .wrapper-dropdown svg {
+            transition: transform 0.3s ease;
+        }
+
+        .wrapper-dropdown.active svg {
+            transform: rotate(180deg);
+        }
     </style>
 
     <!-- Title Banner Section Start -->
@@ -229,20 +292,19 @@
                     </button>
                     {{-- END MOBILE FILTER BUTTON --}}
 
-                    <div class="w-100 drop-container">
-                        <div class="wrapper-dropdown form-control" id="dropdown-l2">
-                            <div class="d-flex align-items-center justify-content-between gap-64">
-                                <span class="selected-display black" id="desation112">Newest First</span>
-                                <svg id="drop-down2" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                                    <path d="M19.7337 4.81165C19.3788 4.45668 18.8031 4.45662 18.4481 4.81171L10.0002 13.2598L1.55191 4.81165C1.19694 4.45668 0.621303 4.45662 0.266273 4.81171C-0.0887576 5.16674 -0.0887576 5.74232 0.266273 6.09735L9.35742 15.1883C9.52791 15.3587 9.75912 15.4545 10.0002 15.4545C10.2413 15.4545 10.4726 15.3587 10.643 15.1882L19.7337 6.09729C20.0888 5.74232 20.0888 5.16668 19.7337 4.81165Z" fill="#92949F"/>
-                                </svg>
-                            </div>
-                            <ul class="topbar-dropdown">
-                                <li class="item" data-value="newest_first">Newest First</li>
-                                <li class="item" data-value="date_soonest">Date (Soonest)</li>
-                                <li class="item" data-value="popular">Popular</li>
-                            </ul>
-                        </div>
+                    {{-- BOOTSTRAP DROPDOWN REPLACEMENT --}}
+                    <div class="dropdown w-100 drop-container" style="max-width: 250px;">
+                        <button class="btn bg-white border d-flex align-items-center justify-content-between w-100 py-2 px-3 rounded-3" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <span class="selected-display text-dark fw-medium" id="currentSortLabel">Newest First</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                <path d="M19.7337 4.81165C19.3788 4.45668 18.8031 4.45662 18.4481 4.81171L10.0002 13.2598L1.55191 4.81165C1.19694 4.45668 0.621303 4.45662 0.266273 4.81171C-0.0887576 5.16674 -0.0887576 5.74232 0.266273 6.09735L9.35742 15.1883C9.52791 15.3587 9.75912 15.4545 10.0002 15.4545C10.2413 15.4545 10.4726 15.3587 10.643 15.1882L19.7337 6.09729C20.0888 5.74232 20.0888 5.16668 19.7337 4.81165Z" fill="#92949F"/>
+                            </svg>
+                        </button>
+                        <ul class="dropdown-menu w-100 shadow border-0 mt-1 p-1" style="border-radius: 8px;">
+                            <li><a class="dropdown-item sort-option rounded-2 py-2" href="#" data-value="newest_first">Newest First</a></li>
+                            <li><a class="dropdown-item sort-option rounded-2 py-2" href="#" data-value="date_soonest">Date (Soonest)</a></li>
+                            <li><a class="dropdown-item sort-option rounded-2 py-2" href="#" data-value="popular">Popular</a></li>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -504,6 +566,29 @@
 @push('scripts')
 <script>
     $(document).ready(function() {
+        // Sorting functionality for Bootstrap dropdown
+        $('.sort-option').on('click', function(e) {
+            e.preventDefault();
+            var sortValue = $(this).data('value');
+            var sortText = $(this).text();
+            
+            // Update dropdown display
+            $('#currentSortLabel').text(sortText);
+            
+            // Update hidden input
+            $('#sortInput').val(sortValue);
+            
+            // Submit form
+            $('#eventFiltersDesktop').submit();
+        });
+
+        // Initialize current sort label
+        var currentSort = "{{ request('sort', 'newest_first') }}";
+        var currentItem = $('.sort-option[data-value="' + currentSort + '"]');
+        if(currentItem.length) {
+            $('#currentSortLabel').text(currentItem.text());
+        }
+
         // Mobile filter form cloning
         var $desktopForm = $('#eventFiltersDesktop');
         
@@ -580,13 +665,6 @@
             
             $('#mobileFilterOffcanvas').append($footer);
         }
-        
-        // Sorting dropdown functionality
-        $('.topbar-dropdown .item').on('click', function() {
-            var sortValue = $(this).data('value');
-            var sortText = $(this).text();
-            
-            // Update dropdown display
             $('#desation112').text(sortText);
             
             // Update hidden input

@@ -4,8 +4,8 @@
     <div class="page-header">
         <div class="add-item d-flex">
             <div class="page-title">
-                <h4 class="fw-bold">Students</h4>
-                <h6>Manage your Students</h6>
+                <h4 class="fw-bold">Enquiries</h4>
+                <h6>Manage your Enquiries</h6>
             </div>
         </div>
         <ul class="table-top-head">
@@ -70,6 +70,8 @@
                                         @case(7) Course @break
                                         @case(8) Event @break
                                         @case(9) Competition @break
+                                        @case(10) Newsletter @break
+                                        @case(11) Project Interest @break
                                         @default Unknown
                                     @endswitch
                                 </td>
