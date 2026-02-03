@@ -2,7 +2,7 @@
 <div class="container-fluid" id="learningPathwayContainer">
     <div class="row">
         <div class="col-12">
-            <!-- Header -->
+            {{-- <!-- Header -->
             <div class="card border-0 shadow-sm mb-4">
                 <div class="card-body p-4">
                     <div class="d-flex justify-content-between align-items-center">
@@ -12,10 +12,10 @@
                             </h4>
                             <p class="text-muted mb-0">Live preview of how your learning pathway will appear to users</p>
                         </div>
-                      
+
                     </div>
                 </div>
-            </div>
+            </div> --}}
 
             <!-- PREVIEW SECTION -->
             <div class="p-0">
@@ -41,7 +41,7 @@
                     <div class="card-body p-4">
                         <h4 class="fw-bold mb-2">📚 Training Support Courses</h4>
                         <p class="text-muted mb-4">Defined training modules that translate skills into real-world capability.</p>
-                        
+
                         <!-- Swiper Implementation for Courses -->
                         <div class="swiper course-swiper pb-5">
                             <div class="swiper-wrapper">
@@ -85,7 +85,7 @@
                                                         {{ $course->duration_number ?? '' }} {{ $course->duration_unit?->label() ?? '' }}
                                                     </span>
                                                 </div>
-                                                
+
                                                 <div class="mt-auto">
                                                      <div class="d-flex justify-content-between align-items-center mb-3">
                                                         <div class="rating">
@@ -121,7 +121,7 @@
                     <div class="card-body p-4">
                         <h4 class="fw-bold mb-2">🧭 Standard ISICO Learning Path (Customizable)</h4>
                         <p class="text-muted mb-4">A universal, project-agnostic framework guiding learners from awareness to sustainable income or employment.</p>
-                        
+
                         <!-- Swiper Implementation for Roadmap -->
                         <div class="swiper roadmap-swiper">
                             <div class="swiper-wrapper">
@@ -148,7 +148,7 @@
                                 @endforelse
                             </div>
                         </div>
-                        
+
                         <div class="alert mt-4 rounded-3 text-center" style="background: #eef7ee; border: none;">
                             <strong>Impact Promise:</strong> This standard learning path ensures every ISICO project delivers measurable skills, employability, and sustainable economic outcomes.
                         </div>
@@ -167,20 +167,20 @@
 
                         <!-- FLAT TIMELINE AXIS -->
                         <div class="py-4 position-relative">
-                            
+
                             <div class="d-none d-lg-block position-absolute start-0 end-0 top-50 translate-middle-y" style="height: 4px; background: #e5e7eb; border-radius: 4px; z-index: 0; margin-top: -47px;"></div>
-                            
+
                             <!-- Swiper Implementation for Flow -->
                             <div class="swiper flow-swiper">
                                 <div class="swiper-wrapper">
                                     @forelse($learningPathway->flows as $index => $flow)
                                     <div class="swiper-slide h-auto">
                                         <div class="text-center position-relative" style="z-index: 1;">
-                                            <div class="d-inline-flex align-items-center justify-content-center rounded-circle text-white fw-bold mb-3 shadow-sm" 
+                                            <div class="d-inline-flex align-items-center justify-content-center rounded-circle text-white fw-bold mb-3 shadow-sm"
                                                  style="width: 44px; height: 44px; background-color: {{ ['#4caf50', '#ff9800', '#2196f3', '#9c27b0'][$index % 4] }};">
                                                 {{ $index + 1 }}
                                             </div>
-                                            
+
                                             <div class="card border-0 shadow-sm rounded-4 p-3 h-100" style="background-color: {{ ['#e8f5e9', '#fff3e0', '#e3f2fd', '#f3e5f5'][$index % 4] }};">
                                                 <h6 class="fw-bold mb-2" style="color: {{ ['#2e7d32', '#ef6c00', '#1565c0', '#7b1fa2'][$index % 4] }};">
                                                     {{ $flow->step_title }}
@@ -199,7 +199,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="alert mt-4 border" style="background: #eef7ee;">
                             This flat timeline model builds strong stakeholder confidence by clearly demonstrating how ISICO training courses integrate into a structured, scalable Skill-to-Income ecosystem.
                         </div>
