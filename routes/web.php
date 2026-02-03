@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\ActivityController;
-use App\Http\Controllers\web\EnquiryController;
+use App\Http\Controllers\Web\EnquiryController;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
