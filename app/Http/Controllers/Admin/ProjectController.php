@@ -373,10 +373,12 @@ class ProjectController extends Controller
 
         if ($stage === 'completed') {
             $rules['actual_end_date'] = ['required', 'date', 'after_or_equal:actual_start_date'];
+            $rules['actual_beneficiary_count'] = ['required', 'integer', 'min:0'];
             $rules['handover_sustainability_note'] = ['required', 'string'];
         } else {
             // For ongoing/upcoming, explicitly keep it nullable
             $rules['actual_end_date'] = ['nullable', 'date', 'after_or_equal:actual_start_date'];
+            $rules['actual_beneficiary_count'] = ['nullable', 'integer', 'min:0'];
         }
 
         return $request->validate($rules);
@@ -1086,44 +1088,95 @@ class ProjectController extends Controller
      */
     private function saveBeneficiaries(Request $request, Project $project)
     {
-        // 1. Handle Beneficiary Groups & Individuals (Sync for Upcoming, Append for others)
-        $isUpcoming = $project->stage === 'upcoming';
-        
-        // Define types to process
+        // 1. Handle Beneficiary Groups & Individuals
         $types = ['group' => 'beneficiary_groups', 'individual' => 'beneficiary_individuals'];
 
         foreach ($types as $type => $inputName) {
+            // Fetch all existing beneficiaries for this project & type
+            $allExisting = ProjectBeneficiary::where('project_id', $project->id)
+                ->where('type', $type)
+                ->get();
+
+            // Group by category to identify duplicates
+            $existingGrouped = $allExisting->groupBy('category');
+            
+            $processedIds = [];
+
+            // If input exists (even if empty array, though Request::has usually implies keys exist)
+            // Note: form sends array keys. If all rows deleted, input might be missing.
+            // But if at least one row exists, we proceed.
             if ($request->has($inputName)) {
                 $inputs = $request->input($inputName);
                 if (is_array($inputs)) {
-                    // Filter empty
-                    $inputs = array_filter($inputs, function ($item) {
-                        return !empty($item['category']);
-                    });
-
-                    if ($isUpcoming) {
-                        // SYNC: Delete existing of this type and recreate
-                        ProjectBeneficiary::where('project_id', $project->id)
-                            ->where('type', $type)
-                            ->delete();
-                    }
-
-                    // Create new
                     foreach ($inputs as $data) {
-                        ProjectBeneficiary::create([
-                            'project_id' => $project->id,
-                            'type' => $type,
-                            'category' => $data['category'],
-                            'target_number' => $data['target'] ?? 0,
-                            'reached_number' => 0 // Default
-                        ]);
+                        if (empty($data['category'])) continue;
+
+                        $category = $data['category'];
+                        $target = $data['target'] ?? 0;
+
+                        if ($existingGrouped->has($category)) {
+                            // Category exists in DB
+                            // Get all rows for this category
+                            $rows = $existingGrouped->get($category);
+                            
+                            // Pick the FIRST one to update (Consolidate to this one)
+                            $ben = $rows->first();
+                            $ben->target_number = $target;
+                            $ben->save();
+
+                            $processedIds[] = $ben->id;
+                            // The other rows in $rows (duplicates) will NOT be in $processedIds
+                            // so they will be deleted at the end.
+                        } else {
+                            // Create new
+                            $newBen = ProjectBeneficiary::create([
+                                'project_id' => $project->id,
+                                'type' => $type,
+                                'category' => $category,
+                                'target_number' => $target,
+                                'reached_number' => 0
+                            ]);
+                            $processedIds[] = $newBen->id;
+                        }
                     }
                 }
-            } elseif ($isUpcoming) {
-                 // If upcoming and no input, it means user removed all rows.
+            } 
+            // If the project is NOT upcoming (meaning ongoing/completed), and the input is COMPLETELY missing,
+            // it likely means the user deleted ALL rows (empty form). 
+            // However, verify if this request actually intended to update beneficiaries.
+            // Since this is the EDIT form summary update, we should trust the absence if stage is relevant.
+            // But to be safe vs partial updates, we usually rely on "has".
+            // If the user complaint is about 'duplicates', the above logic handles it when inputs are present.
+            // Special handling for "Delete All" when stage is Upcoming is preserved.
+            elseif ($project->stage === 'upcoming') {
+                 // Clear all if upcoming and no input
+                 $processedIds = []; // This will cause all to be deleted below
+            } else {
+                 // If ongoing/completed and no input, we assume NO CHANGES / Keep existing? 
+                 // OR we assume Delete All?
+                 // Standard HTML: missing input = empty. 
+                 // If we assume "Delete All", we set filteredIds = [].
+                 // If we assume "No Change", we set filteredIds = all IDs.
+                 // Given the "update" nature, if I delete all rows, I expect them gone.
+                 // But if I submit a partial form...?
+                 // Let's assume for 'edit' route we always send full form.
+                 // So emptiness means deletion.
+                 // BUT, to be safer for now, I will NOT delete all if input is missing for Ongoing,
+                 // unless I am sure. I will stick to the duplicate cleanup (where input exists).
+                 // So, if input is missing, we do nothing (preserve all), UNLESS we want to fix duplicates there too?
+                 // We'll skip the delete block if input is missing for ongoing.
+                 $allExistingIds = $allExisting->pluck('id')->toArray();
+                 $processedIds = $allExistingIds; 
+            }
+
+            // Execute Delete Cleanup
+            // (Unless it was the 'upcoming' empty case which creates [] processedIds, so deletes all)
+            // (Or the 'ongoing' empty case where we restored all IDs, so deletes none)
+            if ($request->has($inputName) || $project->stage === 'upcoming') {
                  ProjectBeneficiary::where('project_id', $project->id)
-                            ->where('type', $type)
-                            ->delete();
+                    ->where('type', $type)
+                    ->whereNotIn('id', $processedIds)
+                    ->delete();
             }
         }
 

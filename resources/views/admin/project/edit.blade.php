@@ -970,7 +970,7 @@
                                                             <td>
                                                                 <button type="button"
                                                                     class="btn btn-sm btn-outline-danger remove-row"><i
-                                                                        class="feather feather-trash-2"></i></button>
+                                                                        class="bi bi-trash"></i></button>
                                                             </td>
                                                         @endif
                                                     </tr>
@@ -1059,7 +1059,7 @@
                                                             <td>
                                                                 <button type="button"
                                                                     class="btn btn-sm btn-outline-danger remove-row"><i
-                                                                        class="feather feather-trash-2"></i></button>
+                                                                        class="bi bi-trash"></i></button>
                                                             </td>
                                                         @endif
                                                     </tr>
@@ -1570,7 +1570,8 @@
                             </div>
                         </div>
                         
-                        @if (!$isUpcoming)
+
+                        <fieldset id="ongoing_beneficiaries_fieldset" {{ $isUpcoming ? 'disabled' : '' }}>
                         <div class="row">
                             <div class="col-md-12">
                                 <h5 class="mb-3 text-primary"><i class="feather feather-users me-2"></i> Target
@@ -1584,81 +1585,65 @@
                                 <div class="mb-4 border p-3 rounded bg-light">
                                     <h6 class="fw-bold mb-3 text-secondary">Target Groups</h6>
                                     <div class="table-responsive">
-                                        <table class="table table-bordered bg-white" id="beneficiary_groups_table">
+                                        <table class="table table-bordered bg-white" id="ongoing_beneficiary_groups_table">
                                             <thead>
                                                 <tr>
                                                     <th style="width: 40%">Group Category</th>
                                                     <th style="width: 20%">Target Numbers</th>
-                                                    @if (!$isUpcoming)
-                                                        <th style="width: 20%">Reached</th>
-                                                        <th style="width: 20%">Current Date</th>
-                                                    @endif
+                                                    <th style="width: 20%">Reached</th>
+                                                    <th style="width: 20%">Current Date</th>
                                                     {{-- Always show action column --}}
                                                     <th style="width: 5%"></th>
                                                 </tr>
                                             </thead>
-                                            <tbody id="beneficiary_groups_body">
+                                            <tbody id="ongoing_beneficiary_groups_body">
                                                 @foreach ($groups as $ben)
                                                     <tr>
                                                         <td>
-                                                            @if ($isUpcoming)
-                                                                <select
-                                                                    name="beneficiary_groups[{{ $loop->index }}][category]"
-                                                                    class="form-select select2">
-                                                                    <option value="">Select Group</option>
-                                                                    @foreach ($groupOptions as $opt)
-                                                                        <option value="{{ $opt }}"
-                                                                            {{ $ben->category == $opt ? 'selected' : '' }}>
-                                                                            {{ $opt }}</option>
-                                                                    @endforeach
-                                                                </select>
-                                                            @else
-                                                                {{ $ben->category }}
-                                                            @endif
+                                                            <select
+                                                                name="beneficiary_groups[{{ $loop->index }}][category]"
+                                                                class="form-select select2">
+                                                                <option value="">Select Group</option>
+                                                                @foreach ($groupOptions as $opt)
+                                                                    <option value="{{ $opt }}"
+                                                                        {{ $ben->category == $opt ? 'selected' : '' }}>
+                                                                        {{ $opt }}</option>
+                                                                @endforeach
+                                                            </select>
                                                         </td>
                                                         <td>
-                                                            @if ($isUpcoming)
-                                                                <input type="number"
-                                                                    name="beneficiary_groups[{{ $loop->index }}][target]"
-                                                                    class="form-control"
-                                                                    value="{{ $ben->target_number }}">
-                                                            @else
-                                                                {{ $ben->target_number }}
-                                                            @endif
+                                                            <input type="number"
+                                                                name="beneficiary_groups[{{ $loop->index }}][target]"
+                                                                class="form-control"
+                                                                value="{{ $ben->target_number }}">
                                                         </td>
-                                                        @if (!$isUpcoming)
-                                                            <td>
-                                                                <input type="number"
-                                                                    name="beneficiary_reached[{{ $ben->id }}]"
-                                                                    class="form-control bg-light"
-                                                                    value="{{ $ben->reached_number }}"
-                                                                    placeholder="Enter reached">
-                                                            </td>
-                                                            <td>
-                                                                <input type="date"
-                                                                    name="beneficiary_date[{{ $ben->id }}]"
-                                                                    class="form-control" value="{{ date('Y-m-d') }}">
-                                                                <small class="text-muted d-block mt-1">Auto-updates
-                                                                    history</small>
-                                                            </td>
-                                                        @endif
                                                         <td>
-                                                            @if ($isUpcoming)
-                                                                <button type="button"
-                                                                    class="btn btn-sm btn-outline-danger remove-row"><i
-                                                                        class="feather feather-trash-2"></i></button>
-                                                            @else
-                                                                <span class="text-muted small">--</span>
-                                                            @endif
+                                                            <input type="number"
+                                                                name="beneficiary_reached[{{ $ben->id }}]"
+                                                                class="form-control bg-light"
+                                                                value="{{ $ben->reached_number }}"
+                                                                placeholder="Enter reached">
+                                                        </td>
+                                                        <td>
+                                                            <input type="date"
+                                                                name="beneficiary_date[{{ $ben->id }}]"
+                                                                class="form-control" value="{{ date('Y-m-d') }}">
+                                                            <small class="text-muted d-block mt-1">Auto-updates
+                                                                history</small>
+                                                        </td>
+                                                        <td>
+                                                            <button type="button"
+                                                                class="btn btn-sm btn-outline-danger remove-row"><i
+                                                                    class="bi bi-trash"></i></button>
                                                         </td>
                                                     </tr>
                                                 @endforeach
                                             </tbody>
                                             <tfoot>
                                                 <tr>
-                                                    <td colspan="{{ !$isUpcoming ? 5 : 3 }}">
+                                                    <td colspan="5">
                                                         <button type="button" class="btn btn-sm btn-primary"
-                                                            id="add_group_btn">
+                                                            id="add_ongoing_group_btn">
                                                             ➕ Add Group
                                                         </button>
                                                     </td>
@@ -1672,80 +1657,64 @@
                                 <div class="mb-4 border p-3 rounded bg-light">
                                     <h6 class="fw-bold mb-3 text-secondary">Target Individuals</h6>
                                     <div class="table-responsive">
-                                        <table class="table table-bordered bg-white" id="beneficiary_individuals_table">
+                                        <table class="table table-bordered bg-white" id="ongoing_beneficiary_individuals_table">
                                             <thead>
                                                 <tr>
                                                     <th style="width: 40%">Individual Category</th>
                                                     <th style="width: 20%">Target Numbers</th>
-                                                    @if (!$isUpcoming)
-                                                        <th style="width: 20%">Reached</th>
-                                                        <th style="width: 20%">Current Date</th>
-                                                    @endif
+                                                    <th style="width: 20%">Reached</th>
+                                                    <th style="width: 20%">Current Date</th>
                                                     <th style="width: 5%"></th>
                                                 </tr>
                                             </thead>
-                                            <tbody id="beneficiary_individuals_body">
+                                            <tbody id="ongoing_beneficiary_individuals_body">
                                                 @foreach ($individuals as $ben)
                                                     <tr>
                                                         <td>
-                                                            @if ($isUpcoming)
-                                                                <select
-                                                                    name="beneficiary_individuals[{{ $loop->index }}][category]"
-                                                                    class="form-select select2">
-                                                                    <option value="">Select Individual</option>
-                                                                    @foreach ($individualOptions as $opt)
-                                                                        <option value="{{ $opt }}"
-                                                                            {{ $ben->category == $opt ? 'selected' : '' }}>
-                                                                            {{ $opt }}</option>
-                                                                    @endforeach
-                                                                </select>
-                                                            @else
-                                                                {{ $ben->category }}
-                                                            @endif
+                                                            <select
+                                                                name="beneficiary_individuals[{{ $loop->index }}][category]"
+                                                                class="form-select select2">
+                                                                <option value="">Select Individual</option>
+                                                                @foreach ($individualOptions as $opt)
+                                                                    <option value="{{ $opt }}"
+                                                                        {{ $ben->category == $opt ? 'selected' : '' }}>
+                                                                        {{ $opt }}</option>
+                                                                @endforeach
+                                                            </select>
                                                         </td>
                                                         <td>
-                                                            @if ($isUpcoming)
-                                                                <input type="number"
-                                                                    name="beneficiary_individuals[{{ $loop->index }}][target]"
-                                                                    class="form-control"
-                                                                    value="{{ $ben->target_number }}">
-                                                            @else
-                                                                {{ $ben->target_number }}
-                                                            @endif
+                                                            <input type="number"
+                                                                name="beneficiary_individuals[{{ $loop->index }}][target]"
+                                                                class="form-control"
+                                                                value="{{ $ben->target_number }}">
                                                         </td>
-                                                        @if (!$isUpcoming)
-                                                            <td>
-                                                                <input type="number"
-                                                                    name="beneficiary_reached[{{ $ben->id }}]"
-                                                                    class="form-control bg-light"
-                                                                    value="{{ $ben->reached_number }}"
-                                                                    placeholder="Enter reached">
-                                                            </td>
-                                                            <td>
-                                                                <input type="date"
-                                                                    name="beneficiary_date[{{ $ben->id }}]"
-                                                                    class="form-control" value="{{ date('Y-m-d') }}">
-                                                                <small class="text-muted d-block mt-1">Auto-updates
-                                                                    history</small>
-                                                            </td>
-                                                        @endif
                                                         <td>
-                                                            @if ($isUpcoming)
-                                                                <button type="button"
-                                                                    class="btn btn-sm btn-outline-danger remove-row"><i
-                                                                        class="feather feather-trash-2"></i></button>
-                                                            @else
-                                                                <span class="text-muted small">--</span>
-                                                            @endif
+                                                            <input type="number"
+                                                                name="beneficiary_reached[{{ $ben->id }}]"
+                                                                class="form-control bg-light"
+                                                                value="{{ $ben->reached_number }}"
+                                                                placeholder="Enter reached">
+                                                        </td>
+                                                        <td>
+                                                            <input type="date"
+                                                                name="beneficiary_date[{{ $ben->id }}]"
+                                                                class="form-control" value="{{ date('Y-m-d') }}">
+                                                            <small class="text-muted d-block mt-1">Auto-updates
+                                                                history</small>
+                                                        </td>
+                                                        <td>
+                                                            <button type="button"
+                                                                class="btn btn-sm btn-outline-danger remove-row"><i
+                                                                    class="bi bi-trash"></i></button>
                                                         </td>
                                                     </tr>
                                                 @endforeach
                                             </tbody>
                                             <tfoot>
                                                 <tr>
-                                                    <td colspan="{{ !$isUpcoming ? 5 : 3 }}">
+                                                    <td colspan="5">
                                                         <button type="button" class="btn btn-sm btn-primary"
-                                                            id="add_individual_btn">
+                                                            id="add_ongoing_individual_btn">
                                                             ➕ Add Individual
                                                         </button>
                                                     </td>
@@ -1757,8 +1726,9 @@
 
                             </div>
                         </div>
+                        </fieldset>
                         <div class="mb-4"></div>
-                        @endif
+
                         <h5 class="mb-4 text-primary"><i class="feather feather-clock me-2"></i> Ongoing Project Updates &
                         Progress Tracking</h5>
                     <div class="row">
@@ -1777,7 +1747,7 @@
 
                     <div class="row">
                         <div class="col-md-6" id="actual_end_date_wrapper"
-                            style="{{ in_array($project->stage, ['ongoing', 'completed']) ? '' : 'display:none;' }}">
+                            style="{{ $project->stage == 'completed' ? '' : 'display:none;' }}">
                             <div class="mb-3">
                                 <label class="form-label">Actual End Date <span class="text-danger">*</span></label>
                                 <input type="date"
@@ -1790,7 +1760,7 @@
                                 <div class="form-text">Actual project completion date</div>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-6" id="actual_beneficiary_count_wrapper" style="{{ $project->stage == 'completed' ? '' : 'display:none;' }}">
                             <div class="mb-3">
                                 <label class="form-label">Actual Beneficiary Count <span
                                         class="text-danger">*</span></label>
@@ -3255,7 +3225,7 @@
                             <input type="number" name="beneficiary_groups[${benGroupCounter}][target]" class="form-control" placeholder="0">
                         </td>
                         <td>
-                            <button type="button" class="btn btn-sm btn-outline-danger remove-row"><i class="feather feather-trash-2"></i></button>
+                            <button type="button" class="btn btn-sm btn-outline-danger remove-row"><i class="bi bi-trash"></i></button>
                         </td>
                     </tr>`;
                 } else {
@@ -3276,7 +3246,7 @@
                             <input type="date" class="form-control" disabled value="{{ date('Y-m-d') }}">
                         </td>
                         <td>
-                            <button type="button" class="btn btn-sm btn-outline-danger remove-row"><i class="feather feather-trash-2"></i></button>
+                            <button type="button" class="btn btn-sm btn-outline-danger remove-row"><i class="bi bi-trash"></i></button>
                         </td>
                     </tr>`;
                 }
@@ -3312,7 +3282,7 @@
                             <input type="number" name="beneficiary_individuals[${benIndCounter}][target]" class="form-control" placeholder="0">
                         </td>
                         <td>
-                            <button type="button" class="btn btn-sm btn-outline-danger remove-row"><i class="feather feather-trash-2"></i></button>
+                            <button type="button" class="btn btn-sm btn-outline-danger remove-row"><i class="bi bi-trash"></i></button>
                         </td>
                     </tr>`;
                 } else {
@@ -3333,7 +3303,7 @@
                             <input type="date" class="form-control" disabled value="{{ date('Y-m-d') }}">
                         </td>
                         <td>
-                            <button type="button" class="btn btn-sm btn-outline-danger remove-row"><i class="feather feather-trash-2"></i></button>
+                            <button type="button" class="btn btn-sm btn-outline-danger remove-row"><i class="bi bi-trash"></i></button>
                         </td>
                     </tr>`;
                 }
@@ -3548,17 +3518,23 @@
                         var tab = new bootstrap.Tab(triggerEl);
                         tab.show();
                     }
+                    // Disable ongoing beneficiaries inputs
+                    $('#ongoing_beneficiaries_fieldset').prop('disabled', true);
                 } else if (stage === 'ongoing') {
                     $('#step_upcoming').addClass('completed');
                     $('#step_ongoing').addClass('active');
                     // Show Ongoing Tab
                     $('.nav-link[data-bs-target="#ongoing_tab"]').parent().show();
+                    // Enable ongoing beneficiaries inputs
+                    $('#ongoing_beneficiaries_fieldset').prop('disabled', false);
                 } else if (stage === 'completed') {
                     $('#step_upcoming').addClass('completed');
                     $('#step_ongoing').addClass('completed');
                     $('#step_completed').addClass('active');
                     // Show Ongoing Tab
                     $('.nav-link[data-bs-target="#ongoing_tab"]').parent().show();
+                    // Enable ongoing beneficiaries inputs
+                    $('#ongoing_beneficiaries_fieldset').prop('disabled', false);
                 }
 
                 // Toggle Completed Fields inside Ongoing Tab
@@ -3569,12 +3545,82 @@
                     $('#completed_fields_wrapper').slideUp();
                 }
 
-                if (stage === 'ongoing' || stage === 'completed') {
+                if (stage === 'completed') {
                     $('#actual_end_date_wrapper').slideDown();
+                    $('#actual_beneficiary_count_wrapper').slideDown();
                 } else {
                     $('#actual_end_date_wrapper').slideUp();
+                    $('#actual_beneficiary_count_wrapper').slideUp();
                 }
             }
+
+
+
+            // Add Ongoing Group Handler
+            $('#add_ongoing_group_btn').on('click', function() {
+                let optionsHtml = '<option value="">Select Group</option>';
+                groupOptions.forEach(opt => {
+                    optionsHtml += `<option value="${opt}">${opt}</option>`;
+                });
+                
+                let html = `
+                <tr>
+                    <td>
+                        <select name="beneficiary_groups[${benGroupCounter}][category]" class="form-select select2">
+                            ${optionsHtml}
+                        </select>
+                    </td>
+                    <td>
+                        <input type="number" name="beneficiary_groups[${benGroupCounter}][target]" class="form-control" placeholder="0">
+                    </td>
+                    <td>
+                        <input type="number" class="form-control bg-light" disabled value="0" placeholder="Save to edit">
+                    </td>
+                    <td>
+                        <input type="date" class="form-control" disabled value="{{ date('Y-m-d') }}">
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-sm btn-outline-danger remove-row"><i class="bi bi-trash"></i></button>
+                    </td>
+                </tr>`;
+
+                $('#ongoing_beneficiary_groups_body').append(html);
+                $('#ongoing_beneficiary_groups_body .select2:last').select2({ placeholder: "Select Group", allowClear: true, width: '100%' });
+                benGroupCounter++;
+            });
+
+            // Add Ongoing Individual Handler
+            $('#add_ongoing_individual_btn').on('click', function() {
+                let optionsHtml = '<option value="">Select Individual</option>';
+                individualOptions.forEach(opt => {
+                    optionsHtml += `<option value="${opt}">${opt}</option>`;
+                });
+                
+                let html = `
+                <tr>
+                    <td>
+                        <select name="beneficiary_individuals[${benIndCounter}][category]" class="form-select select2">
+                            ${optionsHtml}
+                        </select>
+                    </td>
+                    <td>
+                        <input type="number" name="beneficiary_individuals[${benIndCounter}][target]" class="form-control" placeholder="0">
+                    </td>
+                    <td>
+                        <input type="number" class="form-control bg-light" disabled value="0" placeholder="Save to edit">
+                    </td>
+                    <td>
+                        <input type="date" class="form-control" disabled value="{{ date('Y-m-d') }}">
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-sm btn-outline-danger remove-row"><i class="bi bi-trash"></i></button>
+                    </td>
+                </tr>`;
+
+                $('#ongoing_beneficiary_individuals_body').append(html);
+                $('#ongoing_beneficiary_individuals_body .select2:last').select2({ placeholder: "Select Individual", allowClear: true, width: '100%' });
+                benIndCounter++;
+            });
 
             // Click on Stepper
             $('.step-item').on('click', function() {
