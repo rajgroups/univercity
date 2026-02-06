@@ -163,20 +163,28 @@ class IntlCourseController extends Controller
                 $courseData['gallery_images'] = $galleryImages;
             }
 
-            // Handle course brochures upload using helper
-            if ($request->hasFile('course_brochures')) {
+            // Handle course brochures upload
+            if ($request->has('course_brochures')) {
                 $brochures = [];
-                foreach ($request->file('course_brochures') as $brochure) {
-                    $filePath = $this->handleFileUpload(
-                        $brochure,
-                        'uploads/intlcourse/brochures'
-                    );
-                    $brochures[] = [
-                        'document_name' => $brochure->getClientOriginalName(),
-                        'file_path' => $filePath
-                    ];
+                $brochureData = $request->input('course_brochures');
+                if (is_array($brochureData)) {
+                    foreach ($brochureData as $index => $item) {
+                        if ($request->hasFile("course_brochures.{$index}.file")) {
+                            $file = $request->file("course_brochures.{$index}.file");
+                            $filePath = $this->handleFileUpload(
+                                $file,
+                                'uploads/intlcourse/brochures'
+                            );
+                            $brochures[] = [
+                                'document_name' => $item['label'] ?? $file->getClientOriginalName(),
+                                'file_path' => $filePath
+                            ];
+                        }
+                    }
                 }
-                $courseData['course_brochures'] = $brochures;
+                if (!empty($brochures)) {
+                    $courseData['course_brochures'] = $brochures;
+                }
             }
 
             // Process overseas fee breakdown
@@ -512,20 +520,39 @@ class IntlCourseController extends Controller
                 $courseData['gallery_images'] = $galleryImages;
             }
 
-            // Handle course brochures upload using helper
-            if ($request->hasFile('course_brochures')) {
-                $brochures = $course->course_brochures ?? [];
-                foreach ($request->file('course_brochures') as $brochure) {
-                    $filePath = $this->handleFileUpload(
-                        $brochure,
-                        'uploads/intlcourse/brochures'
-                    );
-                    $brochures[] = [
-                        'document_name' => $brochure->getClientOriginalName(),
-                        'file_path' => $filePath
-                    ];
+            // Handle course brochures upload
+            if ($request->has('course_brochures')) {
+                $brochures = [];
+                $brochureData = $request->input('course_brochures');
+                
+                if (is_array($brochureData)) {
+                    foreach ($brochureData as $index => $item) {
+                        $filePath = null;
+
+                        // Check for new file
+                        if ($request->hasFile("course_brochures.{$index}.file")) {
+                            $file = $request->file("course_brochures.{$index}.file");
+                            $filePath = $this->handleFileUpload(
+                                $file,
+                                'uploads/intlcourse/brochures'
+                            );
+                        } 
+                        // Check for existing file
+                        elseif (isset($item['existing_file'])) {
+                            $filePath = $item['existing_file'];
+                        }
+
+                        if ($filePath) {
+                            $brochures[] = [
+                                'document_name' => $item['label'] ?? 'Document',
+                                'file_path' => $filePath
+                            ];
+                        }
+                    }
                 }
-                $courseData['course_brochures'] = $brochures;
+                
+                // Allow empty array if all removed
+                 $courseData['course_brochures'] = $brochures;
             }
 
             // Process overseas fee breakdown

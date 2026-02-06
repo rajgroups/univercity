@@ -536,6 +536,19 @@
                                         </div>
                                         </div>
                                         @endif
+
+                                        @if (!empty($course->occupations) && count($course->occupations) > 0)
+                                        <div class="col-md-12">
+                                        <div class="mt-4">
+                                            <h6 class="fw-bold mb-3">Target Occupations</h6>
+                                            <div class="d-flex flex-wrap gap-2">
+                                                @foreach ($course->occupations as $occupation)
+                                                    <span class="badge badge-soft-primary text-primary border border-light px-3 py-2">{{ $occupation }}</span>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                        </div>
+                                        @endif
                                     </div>
                                 </div>
 
@@ -642,7 +655,7 @@
                         <!-- Course Snapshot -->
                         <div class="custom-card mb-4">
                             <div class="card-header bg-primary text-white py-3 px-4">
-                                <h5 class="mb-0 fw-bold"><i class="bi bi-lightning-charge me-2"></i> Highlights</h5>
+                                <h5 class="mb-0 fw-bold text-white"><i class="bi bi-lightning-charge me-2"></i> Highlights</h5>
                             </div>
                             <div class="card-body p-0">
                                 <div class="list-group list-group-flush">

@@ -62,6 +62,7 @@ Route::prefix('admin')->as('admin.')->group(function() {
 
         // Course Resource Routes
         Route::post('courses-by-sectors', [CourseController::class, 'getBySectors'])->name('courses.by.sectors');
+
         Route::resource('course',CourseController::class);
 
         // Blog Routes

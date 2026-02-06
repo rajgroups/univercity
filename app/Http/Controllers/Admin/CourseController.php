@@ -107,7 +107,7 @@ class CourseController extends Controller
 
             // Generate course code if not provided
             if (empty($validated['course_code'])) {
-                $validated['course_code'] = $this->generateCourseCode($validated['sector_id'], $validated['level']);
+                $validated['course_code'] = $this->generateCourseCode($validated['sector_id']);
             }
 
             // Convert JSON fields
@@ -144,34 +144,53 @@ class CourseController extends Controller
 
     /**
      * Generate Course Code
+     * Format: ISI + Sector(3 chars) + 01 + Serial(001)
      */
-    private function generateCourseCode($sectorId, $level)
+    private function generateCourseCode($sectorId)
     {
         try {
             $sector = Sector::find($sectorId);
             if (!$sector) {
-                return null;
+                return 'ISIXXX01001'; // Fallback
             }
 
-            $sectorCode = $sector->prefix ?? substr(strtoupper($sector->name), 0, 2);
+            // 1. Prefix
+            $prefix = "ISI";
 
-            $levelCodes = [
-                'Awareness' => '01',
-                'Foundation' => '02',
-                'Intermediate' => '03',
-                'Advanced' => '04',
-                'Professional' => '05'
-            ];
+            // 2. Sector Code (First 3 letters of name, UPPERCASE)
+            $sectorNameClean = preg_replace('/[^A-Za-z]/', '', $sector->name);
+            $sectorCode = strtoupper(substr($sectorNameClean, 0, 3));
+            if (strlen($sectorCode) < 3) {
+                $sectorCode = str_pad($sectorCode, 3, 'X');
+            }
 
-            $levelCode = $levelCodes[$level] ?? '00';
+            // 3. Middle Segment (Fixed 01 as requested)
+            $middle = "01";
 
-            $lastCourse = Course::orderBy('id', 'desc')->first();
-            $sequentialNumber = $lastCourse ? str_pad($lastCourse->id + 1, 3, '0', STR_PAD_LEFT) : '001';
+            // 4. Base Code for Searching
+            $baseSearch = $prefix . $sectorCode . $middle;
 
-            return "CRS{$sectorCode}{$levelCode}{$sequentialNumber}";
+            // 5. Find the last code matching this pattern to increment serial
+            $lastCourse = Course::where('course_code', 'LIKE', $baseSearch . '%')
+                                ->orderBy('id', 'desc')
+                                ->first();
+
+            $nextSerial = '001';
+            if ($lastCourse) {
+                $existingCode = $lastCourse->course_code;
+                // Format length: 3 (ISI) + 3 (SEC) + 2 (01) = 8 chars.
+                if (strlen($existingCode) > 8) {
+                    $serialPart = substr($existingCode, 8);
+                    if (is_numeric($serialPart)) {
+                        $nextSerial = str_pad(intval($serialPart) + 1, 3, '0', STR_PAD_LEFT);
+                    }
+                }
+            }
+
+            return $baseSearch . $nextSerial;
         } catch (\Exception $e) {
             Log::error('Error generating course code: ' . $e->getMessage());
-            return null;
+            return 'ISIErr01001';
         }
     }
 
@@ -453,4 +472,6 @@ class CourseController extends Controller
 
         return response()->json($courses);
     }
+
+
 }

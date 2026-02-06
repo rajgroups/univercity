@@ -211,16 +211,16 @@
                     <!-- Badges -->
                     <div class="d-flex flex-wrap align-items-center mb-2">
                         @if ($event->type == 2)
-                            <span class="event-badge modern-primary">
+                            <span class="event-badge modern-primary text-white">
                                 <i class="bi bi-trophy-fill me-2"></i> Competition
                             </span>
                         @else
-                            <span class="event-badge modern-primary">
+                            <span class="event-badge modern-primary text-white">
                                 <i class="bi bi-calendar-event me-2"></i> Event
                             </span>
                         @endif
 
-                        <span class="event-badge modern-success">
+                        <span class="event-badge modern-success text-white">
                             <i class="fas {{ $event->entry_fee > 0 ? 'fa-ticket-alt' : 'fa-gift' }} me-2"></i>
                             {{ $event->entry_fee > 0 ? 'Paid: ₹' . number_format($event->entry_fee, 2) : 'Free' }}
                         </span>

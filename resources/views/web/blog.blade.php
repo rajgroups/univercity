@@ -271,7 +271,7 @@
                     <label for="type_desktop" class="form-label-custom">Content Type</label>
                     <select name="type" id="type_desktop" class="form-select form-select-custom">
                         <option value="">All Types</option>
-                        <option value="1" {{ request('type') == '1' ? 'selected' : '' }}>CSR Initiatives</option>
+                        <option value="1" {{ request('type') == '1' ? 'selected' : '' }}>Blog</option>
                         <option value="2" {{ request('type') == '2' ? 'selected' : '' }}>News</option>
                         {{-- <option value="3" {{ request('type') == '3' ? 'selected' : '' }}>Collaboration</option> --}}
                         <option value="4" {{ request('type') == '4' ? 'selected' : '' }}>Training Model</option>

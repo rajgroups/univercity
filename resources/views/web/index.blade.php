@@ -565,7 +565,7 @@
                                     <div class="scheme-card">
                                         <div class="scheme-image-wrapper">
                                             <img src="{{ $program->image ? asset($program->image) : asset('resource/web/assets/media/default/default-img.png') }}" alt="{{ $program->title }}">
-                                            <div class="scheme-badge">{{ $program->category->name ?? 'N/A' }}</div>
+                                            <div class="scheme-badge">{{ $program->category->name ?? 'Programs' }}</div>
                                         </div>
                                         <div class="p-4 flex-grow-1 d-flex flex-column">
                                             <h6 class="fw-bold mb-2">
@@ -889,7 +889,7 @@
                                     <div class="scheme-card">
                                         <div class="scheme-image-wrapper">
                                             <img src="{{ asset($scheme->image) }}" alt="{{ $scheme->title }}">
-                                            <div class="scheme-badge">{{ $scheme->category->name ?? 'N/A' }}</div>
+                                            <div class="scheme-badge">{{ $scheme->category->name ?? 'Government Scheme' }}</div>
                                         </div>
                                         <div class="p-4 flex-grow-1">
                                             <h6 class="fw-bold mb-2">
