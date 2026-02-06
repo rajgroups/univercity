@@ -220,6 +220,29 @@
                                     </div>
                                 </div>
 
+                                <!-- Gallery Carousel -->
+                                @if($course->gallery_images && count($course->gallery_images) > 0)
+                                <div id="courseGalleryCarousel" class="carousel slide mb-5" data-bs-ride="carousel">
+                                    <div class="carousel-inner rounded-4 overflow-hidden">
+                                        @foreach($course->gallery_images as $index => $image)
+                                        <div class="carousel-item {{ $index == 0 ? 'active' : '' }}">
+                                            <img src="{{ asset($image) }}" class="d-block w-100" style="height: 400px; object-fit: cover;" alt="Course Gallery Image">
+                                        </div>
+                                        @endforeach
+                                    </div>
+                                    @if(count($course->gallery_images) > 1)
+                                    <button class="carousel-control-prev" type="button" data-bs-target="#courseGalleryCarousel" data-bs-slide="prev">
+                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                        <span class="visually-hidden">Previous</span>
+                                    </button>
+                                    <button class="carousel-control-next" type="button" data-bs-target="#courseGalleryCarousel" data-bs-slide="next">
+                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                        <span class="visually-hidden">Next</span>
+                                    </button>
+                                    @endif
+                                </div>
+                                @endif
+
                                 <div class="course-description text-secondary mb-5">
                                     {!! $course->course_details !!}
                                 </div>
@@ -267,27 +290,18 @@
                                 </div>
                                 @endif
                                 
-                                <!-- Gallery -->
-                                @if($course->gallery_images && count($course->gallery_images) > 0)
-                                <h5 class="fw-bold mb-3">Campus & Life</h5>
-                                <div class="row g-3">
-                                    @foreach($course->gallery_images as $image)
-                                    <div class="col-6 col-md-4">
-                                        <a href="{{ asset($image) }}" data-lightbox="gallery" class="d-block rounded-3 overflow-hidden shadow-sm hover-overlay">
-                                            <img src="{{ asset($image) }}" class="img-fluid w-100" style="height: 150px; object-fit: cover;" alt="Gallery">
-                                        </a>
-                                    </div>
-                                    @endforeach
-                                </div>
-                                @endif
+
                             </div>
 
                             <!-- Curriculum Tab -->
                             <div class="tab-pane fade" id="curriculum">
                                 <h3 class="fw-bold mb-4 text-dark">Course Curriculum</h3>
-                                @if($course->topics_syllabus && count($course->topics_syllabus) > 0)
+                                @php
+                                    $topics = $course->topics_syllabus ?? $course->topics;
+                                @endphp
+                                @if($topics && count($topics) > 0)
                                     <div class="accordion accordion-modern" id="topicsAccordion">
-                                        @foreach($course->topics_syllabus as $index => $topic)
+                                        @foreach($topics as $index => $topic)
                                             <div class="accordion-item">
                                                 <h2 class="accordion-header">
                                                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#topic{{ $index }}">
@@ -399,7 +413,6 @@
                                             @endforeach
                                         </tbody>
                                     </table>
-                                </div>
                                 </div>
                                 @endif
 
@@ -605,8 +618,8 @@
                                     <span class="fw-bold text-dark">{{ $course->course_code }}</span>
                                 </li>
                                 <li class="d-flex justify-content-between py-2 border-bottom">
-                                    <span class="text-muted">Overseas Duration</span>
-                                    <span class="fw-bold text-dark">{{ $course->course_duration_overseas ?? 'Flexible' }}</span>
+                                    <span class="text-muted">Duration</span>
+                                    <span class="fw-bold text-dark">{{ $course->total_duration ?? $course->course_duration_overseas ?? 'Flexible' }}</span>
                                 </li>
                                 <li class="d-flex justify-content-between py-2 border-bottom">
                                     <span class="text-muted">Language</span>
@@ -660,8 +673,12 @@
                                     <ul class="dropdown-menu w-100 p-2 shadow border-0">
                                         @foreach($course->course_brochures as $brochure)
                                         <li>
-                                            <a class="dropdown-item rounded py-2" href="{{ asset($brochure['file_path']) }}" download>
-                                                <small><i class="bi bi-file-pdf text-danger me-2"></i> {{ $brochure['document_name'] ?? 'Brochure' }}</small>
+                                            @php
+                                                $url = is_string($brochure) ? $brochure : ($brochure['file_path'] ?? '#');
+                                                $name = is_string($brochure) ? basename($brochure) : ($brochure['document_name'] ?? 'Brochure');
+                                            @endphp
+                                            <a class="dropdown-item rounded py-2" href="{{ asset($url) }}" download>
+                                                <small><i class="bi bi-file-pdf text-danger me-2"></i> {{ $name }}</small>
                                             </a>
                                         </li>
                                         @endforeach
@@ -747,12 +764,12 @@
                                      alt="{{ $relatedCourse->course_title }}"
                                      onerror="this.src='{{ asset('resource/web/assets/media/default/default-img.png') }}'">
                                 <div class="position-absolute top-0 end-0 p-3">
-                                    <span class="badge bg-white text-dark shadow-sm">{{ $relatedCourse->category->name ?? 'Course' }}</span>
+                                    <span class="badge bg-white text-dark shadow-sm text-white">{{ $relatedCourse->category->name ?? 'Course' }}</span>
                                 </div>
                             </div>
                             <div class="card-body p-4 d-flex flex-column">
                                 <div class="mb-2">
-                                    <span class="badge bg-primary bg-opacity-10 text-primary small mb-2">{{ $relatedCourse->country->name }}</span>
+                                    <span class="badge bg-primary bg-opacity-10 small mb-2 text-white">{{ $relatedCourse->country->name }}</span>
                                 </div>
                                 <h5 class="card-title fw-bold mb-3 flex-grow-1">
                                     <a href="{{ route('web.global.course.show', $relatedCourse->slug) }}" class="text-dark text-decoration-none stretched-link">

@@ -141,7 +141,27 @@
                 <span class="mx-2">/</span>
                 <span class="text-white">Courses</span>
             </div>
-            <h1 class="modern-banner-title">Explore Our Courses</h1>
+            @php
+                 $bannerTitle = "Explore Our Courses";
+                 $sectorName = null;
+                 if (request()->has('sectors')) {
+                     $sectorIds = request('sectors', []);
+                     if (is_string($sectorIds)) {
+                         $sectorIds = explode(',', $sectorIds);
+                     }
+                     if (is_array($sectorIds) && count($sectorIds) > 0) {
+                        // Assuming $sectors is available in this view as well
+                        // Based on controller, it is typically passed
+                        $firstSectorId = Arr::first($sectorIds);
+                        $foundSector = isset($sectors) ? $sectors->firstWhere('id', $firstSectorId) : null;
+                        if ($foundSector) {
+                            $sectorName = $foundSector->name;
+                            $bannerTitle = $sectorName . " Courses";
+                        }
+                     }
+                 }
+            @endphp
+            <h1 class="modern-banner-title">{{ $bannerTitle }}</h1>
             <p class="text-white opacity-75 lead" style="max-width: 600px; margin: 0 auto;">Discover skill development programs designed to accelerate your career growth.</p>
         </div>
     </section>

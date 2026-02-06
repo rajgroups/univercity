@@ -78,11 +78,11 @@
                                 <td>{{ $item->created_at->format('d M Y') }}</td>
 
                                 <td>
-                                    @if ($item->publish_status == '1')
-                                        <span class="badge bg-success fw-medium fs-10">Active</span>
-                                    @else
-                                        <span class="badge bg-danger fw-medium fs-10">Inactive</span>
-                                    @endif
+                                    <div class="status-toggle d-flex justify-content-between align-items-center">
+                                        <input type="checkbox" id="status_{{ $item->id }}" class="check status-change"
+                                            data-id="{{ $item->id }}" {{ $item->publish_status ? 'checked' : '' }}>
+                                        <label for="status_{{ $item->id }}" class="checktoggle"></label>
+                                    </div>
                                 </td>
                                 <td class="action-table-data">
                                     <div class="edit-delete-action">
@@ -108,3 +108,50 @@
         </div>
     </div>
 @endsection
+
+@push('scripts')
+    <script>
+        $(document).ready(function() {
+            $('.status-change').on('change', function() {
+                var status = $(this).prop('checked') == true ? 1 : 0;
+                var id = $(this).data('id');
+                var url = "{{ route('admin.intlcourse.status') }}";
+
+                $.ajax({
+                    type: "POST",
+                    dataType: "json",
+                    url: url,
+                    data: {
+                        '_token': '{{ csrf_token() }}',
+                        'status': status,
+                        'id': id
+                    },
+                    success: function(data) {
+                        if (data.status == 'success') {
+                            // Using Notyf if available, otherwise fallback
+                            if(typeof notyf !== 'undefined') {
+                                notyf.success(data.message);
+                            } else {
+                                // Fallback or use toastr if project uses it
+                                console.log(data.message);
+                            }
+                        } else {
+                            if(typeof notyf !== 'undefined') {
+                                notyf.error(data.message);
+                            } else {
+                                alert(data.message);
+                            }
+                        }
+                    },
+                    error: function(data) {
+                        if(typeof notyf !== 'undefined') {
+                            notyf.error('Error updating status');
+                        } else {
+                            alert('Error updating status');
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+@endpush

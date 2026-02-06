@@ -15,6 +15,23 @@
                         @csrf
                         @method('PUT')
 
+                        @if ($errors->any())
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-exclamation-triangle me-2 fs-4"></i>
+                                    <div>
+                                        <h5 class="alert-heading mb-1">There were some problems with your input:</h5>
+                                        <ul class="mb-0 ps-3">
+                                            @foreach ($errors->all() as $error)
+                                                <li>{{ $error }}</li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        @endif
+
                         <!-- Stepper Navigation -->
                         <div class="stepper-wrapper mb-5">
                             <div class="stepper-item active" data-step="1">
@@ -172,16 +189,43 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="form-label fw-bold">Language of Instruction <span class="text-danger">*</span></label>
-                                        <select name="language_of_instruction[]" class="form-select select2-multiple" multiple required>
+                                        <div class="d-flex flex-wrap gap-2">
                                             @php $selectedLangs = $course->language_of_instruction ?? []; @endphp
-                                            <option value="English" {{ in_array('English', $selectedLangs) ? 'selected' : '' }}>English</option>
-                                            <option value="Japanese" {{ in_array('Japanese', $selectedLangs) ? 'selected' : '' }}>Japanese</option>
-                                            <option value="Chinese" {{ in_array('Chinese', $selectedLangs) ? 'selected' : '' }}>Chinese</option>
-                                            <option value="French" {{ in_array('French', $selectedLangs) ? 'selected' : '' }}>French</option>
-                                            <option value="German" {{ in_array('German', $selectedLangs) ? 'selected' : '' }}>German</option>
-                                            <option value="Spanish" {{ in_array('Spanish', $selectedLangs) ? 'selected' : '' }}>Spanish</option>
-                                        </select>
-                                        <div class="form-text text-muted">Select multiple languages if applicable</div>
+                                            @foreach(['English', 'Japanese', 'Chinese', 'French', 'German', 'Spanish'] as $lang)
+                                            <input type="checkbox" class="btn-check" name="language_of_instruction[]" 
+                                                   id="lang_{{ $lang }}" value="{{ $lang }}" autocomplete="off"
+                                                   {{ in_array($lang, $selectedLangs) ? 'checked' : '' }}>
+                                            <label class="btn btn-outline-primary rounded-pill px-3" for="lang_{{ $lang }}">
+                                                {{ $lang }}
+                                            </label>
+                                            @endforeach
+
+                                            @php
+                                                // Calculate custom languages again for display logic
+                                                $standardLangs = ['English', 'Japanese', 'Chinese', 'French', 'German', 'Spanish'];
+                                                $selectedLangs = $course->language_of_instruction ?? [];
+                                                $customLangs = array_diff($selectedLangs, $standardLangs);
+                                                $customValue = implode(', ', $customLangs);
+                                                $hasCustom = !empty($customLangs);
+                                            @endphp
+
+                                            <!-- Other / Custom Checkbox -->
+                                            <input type="checkbox" class="btn-check" id="lang_other_check" autocomplete="off"
+                                                   {{ $hasCustom ? 'checked' : '' }}>
+                                            <label class="btn btn-outline-primary rounded-pill px-3" for="lang_other_check">
+                                                Other
+                                            </label>
+                                        </div>
+                                        
+                                        <!-- Custom Input Container -->
+                                        <div class="mt-3 {{ $hasCustom ? '' : 'd-none' }}" id="custom_lang_div">
+                                            <input type="text" class="form-control" name="language_of_instruction[]" 
+                                                   id="custom_lang_input" 
+                                                   placeholder="Enter other language(s)" 
+                                                   value="{{ $customValue }}"
+                                                   {{ $hasCustom ? '' : 'disabled' }}>
+                                        </div>
+                                        <div class="form-text text-muted mt-2">Select one or more languages</div>
                                     </div>
                                 </div>
 
@@ -787,38 +831,30 @@
                                                 @foreach($brochures as $index => $brochure)
                                                 <div class="brochure-item mb-2 border p-2 rounded relative">
                                                     <div class="row g-2">
+                                                        <input type="hidden" name="course_brochures[{{ $index }}][id]" value="{{ $brochure['id'] ?? $brochure->id ?? '' }}">
                                                         <div class="col-md-5">
                                                             <input type="text" name="course_brochures[{{ $index }}][label]"
                                                                    class="form-control" placeholder="Document Name (e.g. Brochure)"
-                                                                   value="{{ $brochure['document_name'] ?? '' }}">
+                                                                   value="{{ $brochure['document_name'] ?? $brochure->document_name ?? '' }}">
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="d-flex align-items-center gap-2">
-                                                                <input type="file" name="course_brochures[{{ $index }}][file]" class="form-control" accept=".pdf,.doc,.docx">
-                                                                @if(isset($brochure['file_path']))
-                                                                <a href="{{ asset($brochure['file_path']) }}" target="_blank" class="btn btn-outline-secondary btn-sm" title="Download">
+                                                                <input type="file" name="course_brochures[{{ $index }}][file]" class="form-control doc-file-input" accept=".pdf,.doc,.docx">
+                                                                @php $filePath = $brochure['file_path'] ?? $brochure->file_path ?? null; @endphp
+                                                                @if($filePath)
+                                                                <input type="hidden" name="course_brochures[{{ $index }}][existing_file]" value="{{ $filePath }}">
+                                                                <a href="{{ asset($filePath) }}" target="_blank" class="btn btn-outline-secondary btn-sm" title="Download">
                                                                     <i class="fas fa-download"></i>
                                                                 </a>
-                                                                <input type="hidden" name="course_brochures[{{ $index }}][existing_file]" value="{{ $brochure['file_path'] }}">
                                                                 @endif
                                                             </div>
                                                         </div>
-                                                        <!-- 
-                                                        Current controller logic does not support removing specific items by index because it appends. 
-                                                        So removing from UI won't remove from DB on save unless we rewrite controller.
-                                                        I will ommit the remove button for EXISTING items to avoid confusion, 
-                                                        or user 'remove-brochure' but it won't persist delete. 
-                                                        Wait, user asked for "Repeater Label+ Multiple Upload". 
-                                                        I'll stick to the UI that allows adding new ones. 
-                                                        I will show existing ones separately? 
-                                                        Or should I follow 'create' pattern?
                                                         
                                                         Let's just replicate the 'create' pattern but populate it?
                                                         If I populate it, and user changes Label, it won't save because controller only looks at FILES.
                                                         
                                                         So, effectively, the "Edit" page can only ADD new brochures. 
                                                         And maybe I should show existing ones in a list above.
-                                                        -->
                                                     </div>
                                                 </div>
                                                 @endforeach
@@ -1321,11 +1357,12 @@ $(document).ready(function() {
     setupRepeater('brochures-container', 'add-brochure', (i) => `
         <div class="brochure-item mb-2 border p-2 rounded relative">
             <div class="row g-2">
+                <input type="hidden" name="course_brochures[${i}][id]" value="">
                 <div class="col-md-5">
                     <input type="text" name="course_brochures[${i}][label]" class="form-control" placeholder="Document Name (e.g. Brochure)">
                 </div>
                 <div class="col-md-6">
-                    <input type="file" name="course_brochures[${i}][file]" class="form-control" accept=".pdf,.doc,.docx">
+                    <input type="file" name="course_brochures[${i}][file]" class="form-control doc-file-input" accept=".pdf,.doc,.docx">
                 </div>
                 <div class="col-md-1">
                      <button type="button" class="btn btn-danger btn-sm remove-brochure">
@@ -1338,6 +1375,36 @@ $(document).ready(function() {
 
     // Form validation on submit check
     $('form').on('submit', function(e) {
+        let valid = true;
+        
+        // Check Course Brochures for file type (if selected)
+        $('.doc-file-input').each(function() {
+            if ($(this).val()) {
+                const file = this.files[0];
+                const fileType = file.type;
+                const validTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+                
+                if (!validTypes.includes(fileType)) {
+                    // Try to show notification if notyf exists, otherwise alert
+                    if(typeof notyf !== 'undefined') {
+                        notyf.error('Invalid file type for document. Only PDF, DOC, DOCX allowed.');
+                    } else {
+                        alert('Invalid file type for document. Only PDF, DOC, DOCX allowed.');
+                    }
+                    $(this).addClass('is-invalid');
+                    valid = false;
+                } else {
+                    $(this).removeClass('is-invalid');
+                }
+            }
+        });
+
+        if (!valid) {
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+        }
+
         if (!this.checkValidity()) {
             e.preventDefault();
             e.stopPropagation();
@@ -1345,6 +1412,18 @@ $(document).ready(function() {
             $('input:invalid, select:invalid, textarea:invalid').first().focus();
         }
     });
+
+    // Custom Language Toggle
+    $('#lang_other_check').change(function() {
+        if(this.checked) {
+            $('#custom_lang_div').removeClass('d-none');
+            $('#custom_lang_input').prop('disabled', false).focus();
+        } else {
+            $('#custom_lang_div').addClass('d-none');
+            $('#custom_lang_input').prop('disabled', true);
+        }
+    });
 });
+
 </script>
 @endpush

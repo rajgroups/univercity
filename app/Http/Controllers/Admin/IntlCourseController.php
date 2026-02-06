@@ -102,7 +102,8 @@ class IntlCourseController extends Controller
             'gallery_images' => 'nullable|array',
             'gallery_images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
             'course_brochures' => 'nullable|array',
-            'course_brochures.*' => 'file|mimes:pdf,doc,docx|max:5120',
+            'course_brochures.*.file' => 'nullable|file|mimes:pdf,doc,docx|max:5120',
+            'course_brochures.*.label' => 'nullable|string|max:255',
             'short_description' => 'required|string|max:200',
             'meta_description' => 'nullable|string',
             'seo_keywords' => 'nullable|string|max:255',
@@ -455,7 +456,8 @@ class IntlCourseController extends Controller
             'gallery_images' => 'nullable|array',
             'gallery_images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
             'course_brochures' => 'nullable|array',
-            'course_brochures.*' => 'file|mimes:pdf,doc,docx|max:5120',
+            'course_brochures.*.file' => 'nullable|file|mimes:pdf,doc,docx|max:5120',
+            'course_brochures.*.label' => 'nullable|string|max:255',
             'short_description' => 'required|string|max:200',
             'meta_description' => 'nullable|string',
             'seo_keywords' => 'nullable|string|max:255',
@@ -738,37 +740,65 @@ class IntlCourseController extends Controller
      */
     private function generateCourseCode($sectorId, $countryId)
     {
-        $sector = Sector::find($sectorId);
+        // Sector not used in new format, but kept in signature for compatibility if needed.
+        // $sector = Sector::find($sectorId); 
         $country = Country::find($countryId);
 
-        if (!$sector || !$country) {
-            throw new \Exception('Sector and Country are required to generate course code');
+        if (!$country) {
+            throw new \Exception('Country is required to generate course code');
         }
 
-        // Get first 2 letters of sector name
-        $sectorCode = strtoupper(substr($sector->name, 0, 2));
+        // Get ISO2 code or fallback to first 2 letters
+        $countryCode = strtoupper($country->iso2 ?? substr($country->name, 0, 2));
 
-        // Get first 2 letters of country name
-        $countryCode = strtoupper(substr($country->name, 0, 2));
+        // Get all codes starting with this prefix
+        $existingCodes = \App\Models\IntlCourse::where('course_code', 'LIKE', $countryCode . '%')
+            ->pluck('course_code')
+            ->toArray();
 
-        // Find the next available number
-        $lastCourse = \App\Models\IntlCourse::where('course_code', 'LIKE', $sectorCode . $countryCode . '%')
-            ->orderBy('course_code', 'desc')
-            ->first();
-
-        if ($lastCourse) {
-            // Extract the number part and increment
-            $lastNumber = intval(substr($lastCourse->course_code, 4));
-            $nextNumber = $lastNumber + 1;
-        } else {
-            $nextNumber = 1;
+        $maxNumber = 0;
+        foreach ($existingCodes as $code) {
+            // Check if code matches pattern CCXXX (2 letters + 3 digits) exactly
+            if (preg_match('/^' . preg_quote($countryCode, '/') . '(\d{3})$/', $code, $matches)) {
+                $number = intval($matches[1]);
+                if ($number > $maxNumber) {
+                    $maxNumber = $number;
+                }
+            }
         }
 
-        // Format as SECTORCODE + COUNTRYCODE + 3-digit number
-        $courseCode = $sectorCode . $countryCode . str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
+        $nextNumber = $maxNumber + 1;
+
+        // Format as COUNTRYCODE + 3-digit number (e.g., SG001)
+        $courseCode = $countryCode . str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
 
         return $courseCode;
     }
 
+    /**
+     * Update the status of the specified resource.
+     */
+    public function updateStatus(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|exists:intlcourses,id',
+            'status' => 'required|boolean'
+        ]);
 
+        try {
+            $course = IntlCourse::findOrFail($request->id);
+            $course->publish_status = $request->status;
+            $course->save();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Status updated successfully'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Error updating status'
+            ], 500);
+        }
+    }
 }

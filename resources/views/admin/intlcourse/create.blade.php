@@ -11,6 +11,23 @@
                     </h4>
                 </div>
                 <div class="card-body p-4">
+                    @if ($errors->any())
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-exclamation-triangle me-2 fs-4"></i>
+                                <div>
+                                    <h5 class="alert-heading mb-1">There were some problems with your input:</h5>
+                                    <ul class="mb-0 ps-3">
+                                        @foreach ($errors->all() as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            </div>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    @endif
+
                     <form action="{{ route('admin.intlcourse.store') }}" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
                         @csrf
 
@@ -52,8 +69,8 @@
                                         <label class="form-label fw-bold">Admission Provider <span class="text-danger">*</span></label>
                                         <select name="admission_provider" class="form-select form-select-lg" required>
                                             <option value="">Select Provider</option>
-                                            <option value="ISICO">ISICO</option>
-                                            <option value="Overseas Partner">Overseas Partner</option>
+                                            <option value="ISICO" {{ old('admission_provider') == 'ISICO' ? 'selected' : '' }}>ISICO</option>
+                                            <option value="Overseas Partner" {{ old('admission_provider') == 'Overseas Partner' ? 'selected' : '' }}>Overseas Partner</option>
                                         </select>
                                         <div class="form-text text-muted">Select the main admission provider</div>
                                     </div>
@@ -63,6 +80,7 @@
                                     <div class="form-group">
                                         <label class="form-label fw-bold">Overseas Partner Institution <span class="text-danger">*</span></label>
                                         <input type="text" name="overseas_partner_institution" class="form-control form-control-lg" required
+                                               value="{{ old('overseas_partner_institution') }}"
                                                placeholder="Enter institution name">
                                         <div class="form-text text-muted">Full name of overseas partner institution</div>
                                     </div>
@@ -72,6 +90,7 @@
                                     <div class="form-group">
                                         <label class="form-label fw-bold">Accreditation / Recognition</label>
                                         <input type="text" name="accreditation_recognition" class="form-control"
+                                               value="{{ old('accreditation_recognition') }}"
                                                placeholder="e.g., PEI registered, Govt Accreditation">
                                         <div class="form-text text-muted">Any accreditation or recognition details</div>
                                     </div>
@@ -83,7 +102,7 @@
                                         <select name="country_id" class="form-select select2" required>
                                             <option value="">Select Country</option>
                                             @foreach($countrys as $country)
-                                                <option value="{{ $country->id }}">{{ $country->name }}</option>
+                                                <option value="{{ $country->id }}" {{ old('country_id') == $country->id ? 'selected' : '' }}>{{ $country->name }}</option>
                                             @endforeach
                                         </select>
                                         <div class="form-text text-muted">Select the destination country</div>
@@ -118,6 +137,7 @@
                                         <label class="form-label fw-bold">Course Title <span class="text-danger">*</span></label>
                                         <input type="text" name="course_title" class="form-control" required
                                                id="course_title"
+                                               value="{{ old('course_title') }}"
                                                placeholder="Official course name">
                                         <div class="form-text text-muted">Official name of the course</div>
                                     </div>
@@ -135,7 +155,7 @@
                                         <select name="sector_id" class="form-select select2" required>
                                             <option value="">Select Sector</option>
                                             @foreach($sectors as $sector)
-                                                <option value="{{ $sector->id }}">{{ $sector->name }}</option>
+                                                <option value="{{ $sector->id }}" {{ old('sector_id') == $sector->id ? 'selected' : '' }}>{{ $sector->name }}</option>
                                             @endforeach
                                         </select>
                                         <div class="form-text text-muted">e.g., IT, Business, Hospitality</div>
@@ -148,7 +168,7 @@
                                         <select name="category_id" class="form-select select2" required>
                                             <option value="">Select Level</option>
                                             @foreach($categories as $category)
-                                                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                                <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
                                             @endforeach
                                         </select>
                                         <div class="form-text text-muted">e.g., Foundation, UG, PG, Diploma</div>
@@ -159,6 +179,7 @@
                                     <div class="form-group">
                                         <label class="form-label fw-bold">Certification Type <span class="text-danger">*</span></label>
                                         <input type="text" name="certification_type" class="form-control" required
+                                               value="{{ old('certification_type') }}"
                                                placeholder="e.g., University Certificate, Joint Certificate">
                                         <div class="form-text text-muted">Type of certification awarded</div>
                                     </div>
@@ -168,12 +189,12 @@
                                     <div class="form-group">
                                         <label class="form-label fw-bold">Language of Instruction <span class="text-danger">*</span></label>
                                         <select name="language_of_instruction[]" class="form-select select2-multiple" multiple required>
-                                            <option value="English">English</option>
-                                            <option value="Japanese">Japanese</option>
-                                            <option value="Chinese">Chinese</option>
-                                            <option value="French">French</option>
-                                            <option value="German">German</option>
-                                            <option value="Spanish">Spanish</option>
+                                            <option value="English" {{ in_array('English', old('language_of_instruction', [])) ? 'selected' : '' }}>English</option>
+                                            <option value="Japanese" {{ in_array('Japanese', old('language_of_instruction', [])) ? 'selected' : '' }}>Japanese</option>
+                                            <option value="Chinese" {{ in_array('Chinese', old('language_of_instruction', [])) ? 'selected' : '' }}>Chinese</option>
+                                            <option value="French" {{ in_array('French', old('language_of_instruction', [])) ? 'selected' : '' }}>French</option>
+                                            <option value="German" {{ in_array('German', old('language_of_instruction', [])) ? 'selected' : '' }}>German</option>
+                                            <option value="Spanish" {{ in_array('Spanish', old('language_of_instruction', [])) ? 'selected' : '' }}>Spanish</option>
                                         </select>
                                         <div class="form-text text-muted">Select multiple languages if applicable</div>
                                     </div>
@@ -184,11 +205,11 @@
                                         <label class="form-label fw-bold">Pathway Type <span class="text-danger">*</span></label>
                                         <select name="pathway_type" class="form-select" required>
                                             <option value="">Select Pathway Type</option>
-                                            <option value="Online">Online</option>
-                                            <option value="Onsite Abroad">Onsite Abroad</option>
-                                            <option value="Hybrid">Hybrid</option>
-                                            <option value="Twinning">Twinning</option>
-                                            <option value="Dual Credit">Dual Credit</option>
+                                            <option value="Online" {{ old('pathway_type') == 'Online' ? 'selected' : '' }}>Online</option>
+                                            <option value="Onsite Abroad" {{ old('pathway_type') == 'Onsite Abroad' ? 'selected' : '' }}>Onsite Abroad</option>
+                                            <option value="Hybrid" {{ old('pathway_type') == 'Hybrid' ? 'selected' : '' }}>Hybrid</option>
+                                            <option value="Twinning" {{ old('pathway_type') == 'Twinning' ? 'selected' : '' }}>Twinning</option>
+                                            <option value="Dual Credit" {{ old('pathway_type') == 'Dual Credit' ? 'selected' : '' }}>Dual Credit</option>
                                         </select>
                                         <div class="form-text text-muted">Select the study pathway type</div>
                                     </div>
@@ -200,7 +221,7 @@
                                         @foreach(['Online', 'In Centre', 'Hybrid', 'On-demand Site'] as $mode)
                                         <div class="form-check form-check-inline">
                                             <input class="form-check-input" type="checkbox" name="mode_of_study[]"
-                                                   value="{{ $mode }}" id="mode_{{ Str::slug($mode) }}">
+                                                   value="{{ $mode }}" id="mode_{{ Str::slug($mode) }}" {{ in_array($mode, old('mode_of_study', [])) ? 'checked' : '' }}>
                                             <label class="form-check-label" for="mode_{{ Str::slug($mode) }}">
                                                 {{ $mode }}
                                             </label>
@@ -215,7 +236,7 @@
                                         @foreach(['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'] as $month)
                                         <div class="month-checkbox">
                                             <input class="form-check-input" type="checkbox" name="intake_months[]"
-                                                   value="{{ $month }}" id="month_{{ $month }}">
+                                                   value="{{ $month }}" id="month_{{ $month }}" {{ in_array($month, old('intake_months', [])) ? 'checked' : '' }}>
                                             <label class="form-check-label" for="month_{{ $month }}">{{ $month }}</label>
                                         </div>
                                         @endforeach
@@ -226,7 +247,7 @@
                                     <div class="form-group">
                                         <label class="form-label fw-bold">Course Details <span class="text-danger">*</span></label>
                                         <textarea name="course_details" class="form-control" rows="6" id="long_description" required
-                                                  placeholder="Full course description and details..."></textarea>
+                                                  placeholder="Full course description and details...">{{ old('course_details') }}</textarea>
                                         <div class="form-text text-muted">Detailed course description for the course page</div>
                                     </div>
                                 </div>
@@ -282,11 +303,11 @@
                                         <label class="form-label fw-bold">Minimum Education <span class="text-danger">*</span></label>
                                         <select name="minimum_education" class="form-select" required>
                                             <option value="">Select Education Level</option>
-                                            <option value="10th">10th Grade</option>
-                                            <option value="12th">12th Grade</option>
-                                            <option value="UG">Undergraduate</option>
-                                            <option value="PG">Postgraduate</option>
-                                            <option value="Diploma">Diploma</option>
+                                            <option value="10th" {{ old('minimum_education') == '10th' ? 'selected' : '' }}>10th Grade</option>
+                                            <option value="12th" {{ old('minimum_education') == '12th' ? 'selected' : '' }}>12th Grade</option>
+                                            <option value="UG" {{ old('minimum_education') == 'UG' ? 'selected' : '' }}>Undergraduate</option>
+                                            <option value="PG" {{ old('minimum_education') == 'PG' ? 'selected' : '' }}>Postgraduate</option>
+                                            <option value="Diploma" {{ old('minimum_education') == 'Diploma' ? 'selected' : '' }}>Diploma</option>
                                         </select>
                                     </div>
                                 </div>
@@ -295,6 +316,7 @@
                                     <div class="form-group">
                                         <label class="form-label fw-bold">Minimum Age <span class="text-danger">*</span></label>
                                         <input type="number" name="minimum_age" class="form-control" required
+                                               value="{{ old('minimum_age') }}"
                                                min="16" max="50" placeholder="e.g., 17">
                                         <div class="form-text text-muted">Minimum age requirement</div>
                                     </div>
@@ -305,7 +327,7 @@
                                         <label class="form-label fw-bold">Work Experience Required</label>
                                         <div class="form-check form-switch">
                                             <input class="form-check-input" type="checkbox" name="work_experience_required"
-                                                   id="work_exp_switch" value="1">
+                                                   id="work_exp_switch" value="1" {{ old('work_experience_required') ? 'checked' : '' }}>
                                             <label class="form-check-label" for="work_exp_switch">Work Experience Required</label>
                                         </div>
                                     </div>
@@ -315,7 +337,7 @@
                                     <div class="form-group">
                                         <label class="form-label fw-bold">Work Experience Details</label>
                                         <textarea name="work_experience_details" class="form-control" rows="3"
-                                                  placeholder="Details about work experience requirements..."></textarea>
+                                                  placeholder="Details about work experience requirements...">{{ old('work_experience_details') }}</textarea>
                                     </div>
                                 </div>
 
@@ -323,6 +345,7 @@
                                     <div class="form-group">
                                         <label class="form-label fw-bold">Language Proficiency <span class="text-danger">*</span></label>
                                         <input type="text" name="language_proficiency" class="form-control" required
+                                               value="{{ old('language_proficiency') }}"
                                                placeholder="e.g., IELTS 6.0, JLPT N2, TOEFL 80">
                                         <div class="form-text text-muted">Required language test scores</div>
                                     </div>
@@ -359,7 +382,7 @@
                                         <label class="form-label fw-bold">Internship Included</label>
                                         <div class="form-check form-switch">
                                             <input class="form-check-input" type="checkbox" name="internship_included"
-                                                   id="internship_switch" value="1">
+                                                   id="internship_switch" value="1" {{ old('internship_included') ? 'checked' : '' }}>
                                             <label class="form-check-label" for="internship_switch">Internship Included</label>
                                         </div>
                                     </div>
@@ -370,7 +393,7 @@
                                         <label class="form-label fw-bold">Local Training</label>
                                         <div class="form-check form-switch">
                                             <input class="form-check-input" type="checkbox" name="local_training"
-                                                   id="local_training_switch" value="1">
+                                                   id="local_training_switch" value="1" {{ old('local_training') ? 'checked' : '' }}>
                                             <label class="form-check-label" for="local_training_switch">Local Training Included</label>
                                         </div>
                                     </div>
@@ -395,7 +418,7 @@
                                     <div class="form-group">
                                         <label class="form-label fw-bold">Internship Summary</label>
                                         <textarea name="internship_summary" class="form-control" rows="3"
-                                                  placeholder="Internship terms & conditions or summary"></textarea>
+                                                  placeholder="Internship terms & conditions or summary">{{ old('internship_summary') }}</textarea>
                                     </div>
                                 </div>
 
@@ -427,8 +450,8 @@
                                         <label class="form-label fw-bold">Paid Type <span class="text-danger">*</span></label>
                                         <select name="paid_type" class="form-select" required>
                                             <option value="">Select Type</option>
-                                            <option value="Paid">Paid</option>
-                                            <option value="Free">Free</option>
+                                            <option value="Paid" {{ old('paid_type') == 'Paid' ? 'selected' : '' }}>Paid</option>
+                                            <option value="Free" {{ old('paid_type') == 'Free' ? 'selected' : '' }}>Free</option>
                                         </select>
                                     </div>
                                 </div>
@@ -439,6 +462,7 @@
                                         <div class="input-group">
                                             <span class="input-group-text"><i class="fas fa-rupee-sign"></i></span>
                                             <input type="text" name="total_fees" class="form-control"
+                                                   value="{{ old('total_fees') }}"
                                                    placeholder="Approx. INR 4.1 Lakhs">
                                         </div>
                                         <div class="form-text text-muted">Must clearly mention "Approx"</div>
@@ -545,12 +569,12 @@
                                         <label class="form-label fw-bold">Scholarship Available</label>
                                         <div class="form-check form-switch mb-2">
                                             <input class="form-check-input" type="checkbox" name="scholarship_available"
-                                                   id="scholarship_switch" value="1">
+                                                   id="scholarship_switch" value="1" {{ old('scholarship_available') ? 'checked' : '' }}>
                                             <label class="form-check-label" for="scholarship_switch">Enable Scholarship</label>
                                         </div>
                                         <div id="scholarship_notes_div" style="display: none;">
                                             <textarea name="scholarship_notes" class="form-control" rows="2"
-                                                      placeholder="Scholarship Notes..."></textarea>
+                                                      placeholder="Scholarship Notes...">{{ old('scholarship_notes') }}</textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -560,12 +584,12 @@
                                         <label class="form-label fw-bold">Bank Loan Assistance</label>
                                         <div class="form-check form-switch mb-2">
                                             <input class="form-check-input" type="checkbox" name="bank_loan_assistance"
-                                                   id="loan_switch" value="1">
+                                                   id="loan_switch" value="1" {{ old('bank_loan_assistance') ? 'checked' : '' }}>
                                             <label class="form-check-label" for="loan_switch">Enable Loan Assistance</label>
                                         </div>
                                         <div id="loan_notes_div" style="display: none;">
                                             <textarea name="loan_assistance_notes" class="form-control" rows="2"
-                                                      placeholder="Loan Assistance Notes..."></textarea>
+                                                      placeholder="Loan Assistance Notes...">{{ old('loan_assistance_notes') }}</textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -575,12 +599,33 @@
                                     <div class="form-group">
                                         <label class="form-label fw-bold">Career Outcomes / Job Roles <span class="text-danger">*</span></label>
                                         <div id="career-outcomes-container">
-                                            <div class="outcome-item input-group mb-2">
-                                                <span class="input-group-text"><i class="fas fa-briefcase"></i></span>
-                                                <input type="text" name="career_outcomes[]" class="form-control" placeholder="Job Role (e.g. Junior Web Developer)" required>
-                                                <button type="button" class="btn btn-danger remove-career-outcome"><i class="fas fa-times"></i></button>
-                                            </div>
+                                            @php
+                                                $outcomes = old('career_outcomes') ? json_decode(old('career_outcomes'), true) : [];
+                                                if (!is_array($outcomes) && old('career_outcomes')) {
+                                                    // Fallback if it was a plain string or something else
+                                                    $outcomes = [old('career_outcomes')]; 
+                                                }
+                                            @endphp
+                                            
+                                            @if(count($outcomes) > 0)
+                                                @foreach($outcomes as $outcome)
+                                                <div class="outcome-item input-group mb-2">
+                                                    <span class="input-group-text"><i class="fas fa-briefcase"></i></span>
+                                                    <input type="text" name="career_outcomes_list[]" class="form-control" 
+                                                           value="{{ $outcome }}"
+                                                           placeholder="Job Role (e.g., Junior Software Developer, Assistant Chef)" required>
+                                                    <button type="button" class="btn btn-danger remove-career-outcome"><i class="fas fa-times"></i></button>
+                                                </div>
+                                                @endforeach
+                                            @else
+                                                <div class="outcome-item input-group mb-2">
+                                                    <span class="input-group-text"><i class="fas fa-briefcase"></i></span>
+                                                    <input type="text" name="career_outcomes_list[]" class="form-control" placeholder="Job Role (e.g., Junior Software Developer, Assistant Chef)" required>
+                                                    <button type="button" class="btn btn-danger remove-career-outcome"><i class="fas fa-times"></i></button>
+                                                </div>
+                                            @endif
                                         </div>
+                                        <input type="hidden" name="career_outcomes" id="career_outcomes_final">
                                         <button type="button" class="btn btn-outline-primary btn-sm mt-1" id="add-career-outcome">
                                             <i class="fas fa-plus me-1"></i>Add Job Role
                                         </button>
@@ -591,12 +636,32 @@
                                     <div class="form-group">
                                         <label class="form-label fw-bold">Next Pathways / Progression</label>
                                         <div id="next-pathways-container">
-                                            <div class="pathway-item input-group mb-2">
-                                                <span class="input-group-text"><i class="fas fa-graduation-cap"></i></span>
-                                                <input type="text" name="next_pathways[]" class="form-control" placeholder="Pathway (e.g. Bachelor's Degree Year 2)">
-                                                <button type="button" class="btn btn-danger remove-next-pathway"><i class="fas fa-times"></i></button>
-                                            </div>
+                                            @php
+                                                $pathways = old('next_pathways') ? json_decode(old('next_pathways'), true) : [];
+                                                 if (!is_array($pathways) && old('next_pathways')) {
+                                                    $pathways = [old('next_pathways')];
+                                                }
+                                            @endphp
+
+                                            @if(count($pathways) > 0)
+                                                @foreach($pathways as $pathway)
+                                                <div class="pathway-item input-group mb-2">
+                                                    <span class="input-group-text"><i class="fas fa-graduation-cap"></i></span>
+                                                    <input type="text" name="next_pathways_list[]" class="form-control" 
+                                                           value="{{ $pathway }}"
+                                                           placeholder="Pathway (e.g., Degree entry, Work progression route)">
+                                                    <button type="button" class="btn btn-danger remove-next-pathway"><i class="fas fa-times"></i></button>
+                                                </div>
+                                                @endforeach
+                                            @else
+                                                <div class="pathway-item input-group mb-2">
+                                                    <span class="input-group-text"><i class="fas fa-graduation-cap"></i></span>
+                                                    <input type="text" name="next_pathways_list[]" class="form-control" placeholder="Pathway (e.g., Degree entry, Work progression route)">
+                                                    <button type="button" class="btn btn-danger remove-next-pathway"><i class="fas fa-times"></i></button>
+                                                </div>
+                                            @endif
                                         </div>
+                                        <input type="hidden" name="next_pathways" id="next_pathways_final">
                                         <button type="button" class="btn btn-outline-primary btn-sm mt-1" id="add-next-pathway">
                                             <i class="fas fa-plus me-1"></i>Add Pathway
                                         </button>
@@ -613,7 +678,7 @@
                                 <div class="col-md-6">
                                     <div class="form-check form-switch mb-3">
                                         <input class="form-check-input" type="checkbox" name="visa_support_included"
-                                               id="visa_switch" value="1">
+                                               id="visa_switch" value="1" {{ old('visa_support_included') ? 'checked' : '' }}>
                                         <label class="form-check-label fw-bold" for="visa_switch">Visa Support Included</label>
                                     </div>
                                 </div>
@@ -621,7 +686,7 @@
                                 <div class="col-md-6">
                                     <div class="form-check form-switch mb-3">
                                         <input class="form-check-input" type="checkbox" name="accommodation_support"
-                                               id="accommodation_switch" value="1">
+                                               id="accommodation_switch" value="1" {{ old('accommodation_support') ? 'checked' : '' }}>
                                         <label class="form-check-label fw-bold" for="accommodation_switch">Accommodation Support</label>
                                     </div>
                                 </div>
@@ -630,7 +695,7 @@
                                     <div class="form-group">
                                         <label class="form-label fw-bold">Visa Notes</label>
                                         <textarea name="visa_notes" class="form-control" rows="3"
-                                                  placeholder="Visa processing details and requirements..."></textarea>
+                                                  placeholder="Visa processing details and requirements...">{{ old('visa_notes') }}</textarea>
                                     </div>
                                 </div>
 
@@ -638,7 +703,7 @@
                                     <div class="form-group">
                                         <label class="form-label fw-bold">Accommodation Notes</label>
                                         <textarea name="accommodation_notes" class="form-control" rows="3"
-                                                  placeholder="Accommodation options and details..."></textarea>
+                                                  placeholder="Accommodation options and details...">{{ old('accommodation_notes') }}</textarea>
                                     </div>
                                 </div>
 
@@ -758,7 +823,7 @@
                                                         <input type="text" name="course_brochures[0][label]" class="form-control" placeholder="Document Name (e.g. Brochure)">
                                                     </div>
                                                     <div class="col-md-6">
-                                                        <input type="file" name="course_brochures[0][file]" class="form-control" accept=".pdf,.doc,.docx">
+                                                        <input type="file" name="course_brochures[0][file]" class="form-control doc-file-input" accept=".pdf,.doc,.docx">
                                                     </div>
                                                     <div class="col-md-1">
                                                          <button type="button" class="btn btn-danger btn-sm remove-brochure">
@@ -778,7 +843,7 @@
                                     <div class="form-group">
                                         <label class="form-label fw-bold">Short Description <span class="text-danger">*</span></label>
                                         <textarea name="short_description" class="form-control" rows="3" maxlength="200" required
-                                                  placeholder="Brief description (max 200 characters)"></textarea>
+                                                  placeholder="Brief description (max 200 characters)">{{ old('short_description') }}</textarea>
                                         <div class="d-flex justify-content-between mt-1">
                                             <div class="form-text text-muted">Brief description for course listing</div>
                                             <div class="form-text"><span class="char-count">0</span>/200 characters</div>
@@ -790,7 +855,7 @@
                                     <div class="form-group">
                                         <label class="form-label fw-bold">Meta Description</label>
                                         <textarea name="meta_description" class="form-control" rows="3"
-                                                  placeholder="SEO meta description..."></textarea>
+                                                  placeholder="SEO meta description...">{{ old('meta_description') }}</textarea>
                                         <div class="form-text text-muted">Brief description for search engines</div>
                                     </div>
                                 </div>
@@ -799,6 +864,7 @@
                                     <div class="form-group">
                                         <label class="form-label fw-bold">SEO Keywords</label>
                                         <input type="text" name="seo_keywords" class="form-control"
+                                               value="{{ old('seo_keywords') }}"
                                                placeholder="keyword1, keyword2, keyword3">
                                         <div class="form-text text-muted">Comma separated keywords for SEO</div>
                                     </div>
@@ -807,7 +873,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="form-label fw-bold">Display Order</label>
-                                        <input type="number" name="display_order" class="form-control" value="0"
+                                        <input type="number" name="display_order" class="form-control" value="{{ old('display_order', 0) }}"
                                                min="0">
                                         <div class="form-text text-muted">Lower numbers display first</div>
                                     </div>
@@ -818,7 +884,7 @@
                                         <label class="form-label fw-bold">Publish Status</label>
                                         <div class="form-check form-switch">
                                             <input class="form-check-input" type="checkbox" name="publish_status"
-                                                   id="publish_switch" value="1" checked>
+                                                   id="publish_switch" value="1" {{ old('publish_status', '1') == '1' ? 'checked' : '' }}>
                                             <label class="form-check-label" for="publish_switch">Publish Course</label>
                                         </div>
                                     </div>
@@ -1406,7 +1472,61 @@ $(document).ready(function() {
     `);
 
     // Form validation on submit (final check)
+    // Updated submit handler
     $('form').on('submit', function(e) {
+        let valid = true;
+        
+        // 1. Check Course Brochures for file presence and type
+        $('.doc-file-input').each(function() {
+            if ($(this).val()) {
+                const file = this.files[0];
+                const fileType = file.type;
+                const validTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+                
+                if (!validTypes.includes(fileType)) {
+                    notyf.error('Invalid file type for document. Only PDF, DOC, DOCX allowed.');
+                    $(this).addClass('is-invalid');
+                    valid = false;
+                } else {
+                    $(this).removeClass('is-invalid');
+                }
+            } else {
+                // If it's the first one and optional, maybe ok? But if row exists, it usually implies needed.
+                // Assuming optional repeater, but if row exists, file is needed?
+                // Left loose for now unless 'required'
+            }
+        });
+
+        if (!valid) {
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+        }
+
+        // 2. Prepare JSON for Repeater fields
+        // Career Outcomes
+        let outcomes = [];
+        $('input[name="career_outcomes_list[]"]').each(function() {
+            if($(this).val().trim() !== '') {
+                outcomes.push($(this).val().trim());
+            }
+        });
+        if (outcomes.length === 0) {
+           // Allow empty? Field is required in HTML.
+           // Browser validation should catch if empty.
+        }
+        $('#career_outcomes_final').val(JSON.stringify(outcomes));
+
+        // Next Pathways
+        let pathways = [];
+        $('input[name="next_pathways_list[]"]').each(function() {
+            if($(this).val().trim() !== '') {
+                pathways.push($(this).val().trim());
+            }
+        });
+        $('#next_pathways_final').val(JSON.stringify(pathways));
+
+
         if (!this.checkValidity()) {
             e.preventDefault();
             e.stopPropagation();
@@ -1469,7 +1589,7 @@ $(document).ready(function() {
         $('#career-outcomes-container').append(`
             <div class="outcome-item input-group mb-2">
                 <span class="input-group-text"><i class="fas fa-briefcase"></i></span>
-                <input type="text" name="career_outcomes[]" class="form-control" placeholder="Job Role" required>
+                <input type="text" name="career_outcomes_list[]" class="form-control" placeholder="Job Role (e.g., Junior Software Developer, Assistant Chef)" required>
                 <button type="button" class="btn btn-danger remove-career-outcome"><i class="fas fa-times"></i></button>
             </div>
         `);
@@ -1483,7 +1603,7 @@ $(document).ready(function() {
         $('#next-pathways-container').append(`
             <div class="pathway-item input-group mb-2">
                 <span class="input-group-text"><i class="fas fa-graduation-cap"></i></span>
-                <input type="text" name="next_pathways[]" class="form-control" placeholder="Pathway">
+                <input type="text" name="next_pathways_list[]" class="form-control" placeholder="Pathway (e.g., Degree entry, Work progression route)">
                 <button type="button" class="btn btn-danger remove-next-pathway"><i class="fas fa-times"></i></button>
             </div>
         `);
@@ -1502,7 +1622,7 @@ $(document).ready(function() {
                         <input type="text" name="course_brochures[${brochureCount}][label]" class="form-control" placeholder="Document Name">
                     </div>
                     <div class="col-md-6">
-                        <input type="file" name="course_brochures[${brochureCount}][file]" class="form-control" accept=".pdf,.doc,.docx">
+                        <input type="file" name="course_brochures[${brochureCount}][file]" class="form-control doc-file-input" accept=".pdf,.doc,.docx">
                     </div>
                     <div class="col-md-1">
                         <button type="button" class="btn btn-danger btn-sm remove-brochure"><i class="fas fa-times"></i></button>
@@ -1517,13 +1637,7 @@ $(document).ready(function() {
     });
 
     // Auto-generate course code based on country
-    $('select[name="country_id"]').change(function() {
-        if ($(this).val()) {
-            const countryCode = $(this).find('option:selected').text().substring(0, 2).toUpperCase();
-            const randomNum = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
-            $('input[name="course_code"]').val(`${countryCode}${randomNum}`);
-        }
-    });
+
 });
 </script>
 @endpush

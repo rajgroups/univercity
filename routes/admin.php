@@ -94,6 +94,7 @@ Route::prefix('admin')->as('admin.')->group(function() {
 
         // Country Routes
         Route::resource('intlcourse',IntlCourseController::class);
+        Route::post('intlcourse/status', [IntlCourseController::class, 'updateStatus'])->name('intlcourse.status');
 
         // Onrginzation Routes
         // Route::resource('organization',Or::class);

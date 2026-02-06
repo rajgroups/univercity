@@ -32,3 +32,39 @@
 <script src="{{asset('resource/admin/assets/cdn-cgi/scripts/7d0fa10a/cloudflare-static/rocket-loader.min.js')}}"></script>
 <script src="{{asset('https://static.cloudflareinsights.com/beacon.min.js')}}"></script>
 <script src="{{asset('resource/admin/assets/js/script.js')}}" type="text/javascript"></script>
+
+<!-- Notyf JS -->
+<script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
+<script>
+    // Create an instance of Notyf
+    const notyf = new Notyf({
+        duration: 3000,
+        position: {
+            x: 'right',
+            y: 'top',
+        },
+        types: [
+            {
+                type: 'warning',
+                background: 'orange',
+                icon: {
+                    className: 'fas fa-exclamation-triangle',
+                    tagName: 'i',
+                    text: ''
+                }
+            },
+            {
+                type: 'error',
+                background: 'indianred',
+                duration: 4000,
+                dismissible: true
+            },
+             {
+                type: 'success',
+                background: '#2e7d32',
+                duration: 3000,
+                dismissible: true
+            }
+        ]
+    });
+</script>

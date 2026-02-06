@@ -1,3 +1,4 @@
+
     <script src="{{ asset('resource/admin/assets/js/theme-script.js')}}" type="f02aaf728428538873e67490-text/javascript"></script>
 
 	<!-- Favicon -->
@@ -44,3 +45,6 @@
 	<!-- Summernote CSS -->
 	<link rel="stylesheet" href="{{ asset('resource/admin/assets/plugins/summernote/summernote-bs4.min.css')}}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+    <!-- Notyf CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css">

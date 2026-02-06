@@ -109,7 +109,21 @@
                 <span class="mx-2">/</span>
                 <span class="text-white">Courses</span>
             </div>
-            <h1 class="modern-banner-title">International Courses</h1>
+            @php
+                $selectedSectorNames = [];
+                if(request()->has('sectors') && !empty(request('sectors'))) {
+                    $selectedIds = is_array(request('sectors')) ? request('sectors') : explode(',', request('sectors'));
+                    $selectedSectorNames = $sectors->whereIn('id', $selectedIds)->pluck('name')->toArray();
+                }
+            @endphp
+            
+            <h1 class="modern-banner-title">
+                @if(count($selectedSectorNames) > 0)
+                    {{ implode(', ', $selectedSectorNames) }}
+                @else
+                    International Courses
+                @endif
+            </h1>
             <p class="modern-banner-subtitle text-white">Explore study abroad opportunities and global career pathways designed for your success.</p>
         </div>
     </section>
@@ -126,6 +140,9 @@
 
         $selectedSectors = $normalizeInput(request('sectors', []));
         $selectedCountries = $normalizeInput(request('countries', []));
+        // Normalize countries to uppercase for case-insensitive comparison (e.g. ?countries=pos vs POS)
+        $selectedCountries = array_map('strtoupper', $selectedCountries);
+
         $selectedLanguages = $normalizeInput(request('languages', []));
         $selectedDurations = $normalizeInput(request('durations', []));
         $selectedCategories = $normalizeInput(request('categories', []));
@@ -144,26 +161,14 @@
                     </button>
 
                     {{-- Sort Dropdown --}}
-                    <div class="w-100 drop-container" style="max-width: 250px;">
-                        <div class="wrapper-dropdown form-control" id="dropdown-l2">
-                            <div class="d-flex align-items-center justify-content-between gap-2">
-                                <span class="selected-display black" id="sort-display">
-                                    @switch(request('sort'))
-                                        @case('oldest') Oldest First @break
-                                        @case('name_asc') Name (A-Z) @break
-                                        @case('name_desc') Name (Z-A) @break
-                                        @default Newest First
-                                    @endswitch
-                                </span>
-                                <i class="bi bi-chevron-down"></i>
-                            </div>
-                            <ul class="topbar-dropdown">
-                                <li class="item" data-value="newest">Newest First</li>
-                                <li class="item" data-value="oldest">Oldest First</li>
-                                <li class="item" data-value="name_asc">Name (A-Z)</li>
-                                <li class="item" data-value="name_desc">Name (Z-A)</li>
-                            </ul>
-                        </div>
+                    {{-- Sort Select --}}
+                    <div style="min-width: 200px;">
+                        <select class="form-select form-select-sm border-secondary-subtle" id="sortSelect" aria-label="Sort by">
+                            <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>Newest First</option>
+                            <option value="oldest" {{ request('sort') == 'oldest' ? 'selected' : '' }}>Oldest First</option>
+                            <option value="name_asc" {{ request('sort') == 'name_asc' ? 'selected' : '' }}>Name (A-Z)</option>
+                            <option value="name_desc" {{ request('sort') == 'name_desc' ? 'selected' : '' }}>Name (Z-A)</option>
+                        </select>
                     </div>
                 </div>
             </div>
@@ -645,44 +650,15 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Sort Dropdown Functionality
-            const dropdown = document.getElementById('dropdown-l2');
+            // Sort functionality using native select
+            const sortSelect = document.getElementById('sortSelect');
             const hiddenInput = document.getElementById('sortInput');
             const form = document.getElementById('courseFilters');
 
-            if (dropdown && hiddenInput && form) {
-                // Toggle dropdown
-                dropdown.addEventListener('click', function(e) {
-                    this.classList.toggle('active');
-                });
-
-                // Handle item selection
-                const items = dropdown.querySelectorAll('.item');
-                items.forEach(item => {
-                    item.addEventListener('click', function(e) {
-                        e.stopPropagation(); // Prevent closing immediately then reopening
-                        
-                        const value = this.getAttribute('data-value');
-                        const text = this.textContent;
-
-                        // Update display
-                        document.getElementById('sort-display').textContent = text;
-                        document.getElementById('sort-display').classList.add('selected-display'); // ensure styling
-
-                        // Close dropdown
-                        dropdown.classList.remove('active');
-
-                        // Update hidden input and submit form
-                        hiddenInput.value = value;
-                        form.submit();
-                    });
-                });
-
-                // Close dropdown when clicking outside
-                document.addEventListener('click', function(e) {
-                    if (!dropdown.contains(e.target)) {
-                        dropdown.classList.remove('active');
-                    }
+            if (sortSelect && hiddenInput && form) {
+                sortSelect.addEventListener('change', function() {
+                    hiddenInput.value = this.value;
+                    form.submit();
                 });
             }
         });
