@@ -633,6 +633,22 @@
             
             // Insert into offcanvas body
             $('#offcanvasFilterBody').empty().append($mobileForm);
+
+            // Add sticky footer for actions
+            var $footer = $(`
+                <div class="offcanvas-footer p-3 border-top bg-white sticky-bottom position-sticky bottom-0 start-0 end-0">
+                    <div class="d-grid gap-2">
+                        <button type="submit" form="eventFiltersMobile" class="btn btn-primary">
+                            <i class="bi bi-funnel me-1"></i> Apply Filters
+                        </button>
+                        <a href="{{ route('web.activity') }}" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-counterclockwise me-1"></i> Reset All
+                        </a>
+                    </div>
+                </div>
+            `);
+            
+            $('#offcanvasFilterBody').append($footer);
         }
     });
 </script>
