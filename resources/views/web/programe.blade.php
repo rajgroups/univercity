@@ -411,7 +411,7 @@
                         <i class="bi bi-bookmarks"></i>
                         <div class="prog-meta-text">
                             <span>Category</span>
-                            <strong>{{ $category->name ?? 'N/A' }}</strong>
+                            <strong>{{ $program->category->name ?? 'N/A' }}</strong>
                         </div>
                     </div>
                     <div class="prog-meta-item">
