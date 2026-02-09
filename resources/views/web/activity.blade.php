@@ -596,106 +596,44 @@
             // Clone the desktop form
             var $mobileForm = $desktopForm.clone();
             
-            // Update IDs to avoid conflicts
+            // Update form ID
             $mobileForm.attr('id', 'eventFiltersMobile');
             
-            // Update all element IDs
+            // Generate unique IDs for all form elements to avoid conflicts
             $mobileForm.find('[id]').each(function() {
                 var oldId = $(this).attr('id');
                 var newId = 'mobile_' + oldId;
                 $(this).attr('id', newId);
                 
-                // Update related attributes
-                var $this = $(this);
-                
-                // Update for attributes
-                if ($this.is('label')) {
-                    var forAttr = $this.attr('for');
-                    if (forAttr) {
-                        $this.attr('for', 'mobile_' + forAttr);
-                    }
-                }
-                
-                // Update data-bs-target attributes
-                var target = $this.attr('data-bs-target');
-                if (target) {
-                    $this.attr('data-bs-target', target.replace('#', '#mobile_'));
-                }
-                
-                // Update aria-labelledby attributes
-                var labelledBy = $this.attr('aria-labelledby');
-                if (labelledBy) {
-                    $this.attr('aria-labelledby', 'mobile_' + labelledBy);
-                }
-                
-                // Update aria-controls attributes
-                var controls = $this.attr('aria-controls');
-                if (controls) {
-                    $this.attr('aria-controls', 'mobile_' + controls);
+                // Update corresponding labels
+                var $label = $mobileForm.find('label[for="' + oldId + '"]');
+                if ($label.length) {
+                    $label.attr('for', newId);
                 }
             });
-            
-            // Update data-bs-parent attributes
-            $mobileForm.find('[data-bs-parent]').each(function() {
+
+            // Update Accordion Data Attributes
+            $mobileForm.find('[data-bs-toggle="collapse"]').each(function() {
+                var target = $(this).attr('data-bs-target');
                 var parent = $(this).attr('data-bs-parent');
+
+                if (target) {
+                    var newTarget = target.replace('#', '#mobile_');
+                    $(this).attr('data-bs-target', newTarget);
+                    $(this).attr('aria-controls', newTarget.substring(1));
+                }
+                
                 if (parent) {
                     $(this).attr('data-bs-parent', parent.replace('#', '#mobile_'));
                 }
             });
-            
-            // Remove desktop action buttons
+
+            // Remove desktop-specific action buttons
             $mobileForm.find('.d-grid.gap-2.mt-4').remove();
             
-            // Insert into offcanvas
-            $('#offcanvasFilterBody').html($mobileForm);
-            
-            // Add mobile action buttons
-            var $footer = $(`
-                <div class="offcanvas-footer p-3 border-top bg-white sticky-bottom">
-                    <div class="d-grid gap-2">
-                        <button type="submit" form="eventFiltersMobile" class="btn btn-primary">
-                            <i class="bi bi-funnel me-1"></i> Apply Filters
-                        </button>
-                        <a href="{{ route('web.activity') }}" class="btn btn-outline-secondary">
-                            <i class="bi bi-arrow-counterclockwise me-1"></i> Reset All
-                        </a>
-                    </div>
-                </div>
-            `);
-            
-            $('#mobileFilterOffcanvas').append($footer);
+            // Insert into offcanvas body
+            $('#offcanvasFilterBody').empty().append($mobileForm);
         }
-            $('#desation112').text(sortText);
-            
-            // Update hidden input
-            $('#sortInput').val(sortValue);
-            
-            // Close dropdown
-            $('#dropdown-l2').removeClass('active');
-            
-            // Submit form
-            $('#eventFiltersDesktop').submit();
-        });
-        
-        // Initialize current sort display
-        var currentSort = "{{ request('sort', 'newest_first') }}";
-        var currentItem = $('.topbar-dropdown .item[data-value="' + currentSort + '"]');
-        if(currentItem.length) {
-            $('#desation112').text(currentItem.text());
-        }
-        
-        // Dropdown toggle
-        $('#dropdown-l2').on('click', function(e) {
-            e.preventDefault();
-            $(this).toggleClass('active');
-        });
-        
-        // Close dropdown when clicking outside
-        $(document).on('click', function(e) {
-            if (!$(e.target).closest('#dropdown-l2').length) {
-                $('#dropdown-l2').removeClass('active');
-            }
-        });
     });
 </script>
 @endpush

@@ -5118,6 +5118,23 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     });
+    // Close offcanvas on mobile when a link is clicked
+    const mobileLinks = document.querySelectorAll('#mobileProjectTabs button');
+    const offcanvasElement = document.getElementById('mobileTabMenu');
+    if (offcanvasElement) {
+        const bsOffcanvas = new bootstrap.Offcanvas(offcanvasElement);
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                // Check if offcanvas is currently shown before trying to hide
+                if (offcanvasElement.classList.contains('show')) {
+                     // We need to get the instance or just use the data-bs-dismiss methodology
+                     // But since we are inside a custom click, let's use the instance we created or find the existing one
+                     const instance = bootstrap.Offcanvas.getInstance(offcanvasElement);
+                     if (instance) instance.hide();
+                }
+            });
+        });
+    }
 });
 </script>
 @endpush
