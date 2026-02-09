@@ -1,5 +1,37 @@
                                {{-- @dd($project->govt_schemes) --}}
 @extends('layouts.web.app')
+
+@push('meta')
+    <title>{{ $project->title ?? 'Project Details' }} - ISICO</title>
+    <meta name="description" content="{{ $project->short_description ?? Str::limit(strip_tags($project->description ?? ''), 160) }}">
+    <meta name="keywords" content="{{ $project->category->name ?? 'Project' }}, skill development, ISICO, {{ $project->location_summary ?? 'India' }}">
+    <meta name="author" content="ISICO">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="{{ url()->current() }}">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="{{ $project->title ?? 'Project Details' }}">
+    <meta property="og:description" content="{{ $project->short_description ?? Str::limit(strip_tags($project->description ?? ''), 160) }}">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:site_name" content="ISICO">
+    @if($project->banner_images)
+    <meta property="og:image" content="{{ asset($project->banner_images) }}">
+    @elseif($project->thumbnail_image)
+    <meta property="og:image" content="{{ asset($project->thumbnail_image) }}">
+    @endif
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ $project->title ?? 'Project Details' }}">
+    <meta name="twitter:description" content="{{ $project->short_description ?? Str::limit(strip_tags($project->description ?? ''), 160) }}">
+    @if($project->banner_images)
+    <meta name="twitter:image" content="{{ asset($project->banner_images) }}">
+    @elseif($project->thumbnail_image)
+    <meta name="twitter:image" content="{{ asset($project->thumbnail_image) }}">
+    @endif
+@endpush
+
 @section('content')
 @push('css')
 <style>
