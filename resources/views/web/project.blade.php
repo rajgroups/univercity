@@ -412,6 +412,51 @@
     width: 50%;
 }
 
+
+        .modern-breadcrumb {
+            display: inline-flex;
+            padding: 8px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            border-radius: 50px;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            --bs-breadcrumb-divider: '/';
+        }
+
+        .modern-breadcrumb .breadcrumb {
+            margin-bottom: 0;
+            padding: 0;
+            background: transparent;
+        }
+
+        .modern-breadcrumb .breadcrumb-item {
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+        }
+
+        .modern-breadcrumb .breadcrumb-item a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .modern-breadcrumb .breadcrumb-item a:hover {
+            color: #fff;
+        }
+
+        .modern-breadcrumb .breadcrumb-item.active {
+            color: #fff;
+        }
+
+        .modern-breadcrumb .breadcrumb-item + .breadcrumb-item::before {
+            color: rgba(255, 255, 255, 0.6);
+            padding-right: 0.5rem;
+            padding-left: 0.5rem;
+        }
+
 @media (max-width: 576px) {
     .w-md-50 {
         width: 100% !important;
@@ -426,9 +471,10 @@
         <div class="row align-items-center min-vh-70">
             <div class="col-lg-8">
                 <!-- Breadcrumb -->
-                <nav aria-label="breadcrumb" class="mb-4">
+                <nav class="modern-breadcrumb" aria-label="breadcrumb">
                     <ol class="breadcrumb mb-0">
-                        <li class="breadcrumb-item"><a href="{{ route('web.projects') }}" class="text-white text-decoration-none"><i class="bi bi-arrow-left me-1"></i> Back to Projects</a></li>
+                        <li class="breadcrumb-item"><a href="{{ url('/') }}">Home</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('web.projects') }}">Our Projects</a></li>
                         <li class="breadcrumb-item active text-white" aria-current="page">{{ Str::limit($project->title, 30) }}</li>
                     </ol>
                 </nav>
