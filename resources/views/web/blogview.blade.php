@@ -28,7 +28,7 @@
 @endphp
 
 <!-- Hero Section -->
-<section class="modern-hero position-relative d-flex align-items-center justify-content-center text-center text-white" 
+<section class="modern-hero position-relative d-flex align-items-center justify-content-center text-center text-white"
     style="background-image: url('{{ asset($blog->banner_image) }}');">
     <div class="hero-overlay position-absolute top-0 start-0 w-100 h-100"></div>
     <div class="container position-relative z-2">
@@ -58,14 +58,14 @@
             <!-- Content Wrapper -->
             <div class="col-lg-12 col-xl-12">
                 <div class="bg-white p-4 p-md-5 rounded-4 shadow-sm content-card">
-                    
+
                     <div class="row g-5">
                         <!-- Left Content Column -->
                         <div class="col-lg-8">
                             <!-- Gallery -->
                             @if($blog->images && $blog->images->count() > 0)
                                 <div class="mb-5">
-                                    <h3 class="fw-bold mb-4 text-dark">Visual Gallery</h3>
+                                    <h3 class="fw-bold mb-4 text-dark">Gallery</h3>
                                     <div class="swiper blog-gallery-swiper rounded-4 overflow-hidden shadow-lg">
                                         <div class="swiper-wrapper">
                                             @foreach($blog->images as $image)
@@ -128,7 +128,7 @@
                         <!-- Right Sidebar Column -->
                         <div class="col-lg-4">
                             <aside class="sidebar-wrapper position-sticky top-0" style="padding-top: 2rem;">
-                                
+
                                 <!-- Table of Contents -->
                                 @if(count($points) > 0)
                                 <div class="sidebar-widget mb-4 p-4 rounded-4 bg-white border border-light shadow-sm">
@@ -197,7 +197,7 @@
                             </aside>
                         </div>
                     </div>
-                    
+
                 </div>
             </div>
         </div>
@@ -231,7 +231,7 @@
     .content-card {
         border: 1px solid rgba(0,0,0,0.05);
     }
-    
+
     /* Typography */
     .tracking-wide { letter-spacing: 0.1em; }
     .ls-1 { letter-spacing: 1px; }
