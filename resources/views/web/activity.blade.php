@@ -66,23 +66,46 @@
 
         .modern-breadcrumb {
             display: inline-flex;
-            padding: 8px 16px;
+            padding: 8px 20px;
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(5px);
             border-radius: 50px;
             margin-bottom: 1.5rem;
             border: 1px solid rgba(255, 255, 255, 0.15);
+            --bs-breadcrumb-divider: '/'; /* Ensure proper divider */
         }
 
-        .modern-breadcrumb a, .modern-breadcrumb span {
-            color: rgba(255, 255, 255, 0.8);
+        .modern-breadcrumb .breadcrumb {
+            margin-bottom: 0;
+            padding: 0;
+            background: transparent;
+        }
+
+        .modern-breadcrumb .breadcrumb-item {
             font-size: 0.9rem;
             font-weight: 500;
-            text-decoration: none;
+            display: flex;
+            align-items: center;
         }
 
-        .modern-breadcrumb a:hover {
+        .modern-breadcrumb .breadcrumb-item a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .modern-breadcrumb .breadcrumb-item a:hover {
             color: #fff;
+        }
+
+        .modern-breadcrumb .breadcrumb-item.active {
+            color: #fff;
+        }
+
+        .modern-breadcrumb .breadcrumb-item + .breadcrumb-item::before {
+            color: rgba(255, 255, 255, 0.6);
+            padding-right: 0.5rem;
+            padding-left: 0.5rem;
         }
 
         /* Modern event card styling */
@@ -270,11 +293,12 @@
     <!-- Title Banner Section Start -->
     <section class="modern-page-banner" style="background-image: url('{{ asset('resource/web/assets/media/banner/event-bg.jpg') }}'), url('https://images.unsplash.com/photo-1544531586-fde5298cdd40?q=80&w=2070&auto=format&fit=crop');">
         <div class="modern-banner-content" data-aos="fade-up">
-            <div class="modern-breadcrumb">
-                <a href="{{ url('/') }}">Home</a>
-                <span class="mx-2">/</span>
-                <span class="text-white">Events & Competitions</span>
-            </div>
+            <nav class="modern-breadcrumb" aria-label="breadcrumb">
+                <ol class="breadcrumb mb-0">
+                    <li class="breadcrumb-item"><a href="{{ url('/') }}">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Events & Competitions</li>
+                </ol>
+            </nav>
             <h1 class="modern-banner-title">Events & Competitions</h1>
             <p class="text-white opacity-75 lead" style="max-width: 600px; margin: 0 auto;">Join ISICO's national-level events and competitions that drive innovation, entrepreneurship, and skill development.</p>
         </div>
@@ -431,14 +455,15 @@
                                         
                                         <!-- Event Status Badge -->
                                         @php
-                                            $statusLabel = match($event->status) {
+                                            $eventStatus = (int) $event->status;
+                                            $statusLabel = match($eventStatus) {
                                                 1 => 'Upcoming',
                                                 2 => 'Ongoing',
                                                 3 => 'Completed',
                                                 4 => 'Cancelled',
                                                 default => 'Draft'
                                             };
-                                            $statusClass = match($event->status) {
+                                            $statusClass = match($eventStatus) {
                                                 1 => 'bg-info',
                                                 2 => 'bg-success',
                                                 3 => 'bg-secondary',
