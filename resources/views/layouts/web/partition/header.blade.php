@@ -295,7 +295,7 @@
                                                 <a href="javascript:void(0);">Resources </a>
                                                 <ul>
                                                     <li><a
-                                                            href="{{ route('web.blog.filter', ['category_id' => '', 'type' => '']) }}">Blogs</a>
+                                                            href="{{ route('web.blog.filter', ['category_id' => '', 'type' => 1]) }}">Blogs</a>
                                                     </li>
                                                     <li><a
                                                             href="{{ route('web.blog.filter', ['category_id' => '', 'type' => 4]) }}">Training
