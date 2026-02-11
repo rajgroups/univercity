@@ -100,7 +100,7 @@
                                 <td>{{ $blog->slug }}</td>
                                @php
                                 $typeOptions = [
-                                    1 => 'CSR Initiatives',
+                                    1 => 'Blog',
                                     2 => 'News',
                                     3 => 'Collaboration',
                                     4 => 'Training Model',

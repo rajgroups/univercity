@@ -129,7 +129,9 @@
             font-weight: bold;
             text-transform: uppercase;
             letter-spacing: 1px;
-            white-space: nowrap;
+            text-align: center;
+            max-width: 90%;
+            white-space: normal;
         }
     </style>
 
@@ -414,7 +416,10 @@
                                 <div class="col-md-6 col-xl-4">
                                     <div class="course-card card h-100 border-0 shadow-sm hover-lift {{ $course->availability_status == 'not_available' ? 'unavailable' : '' }}">
                                         @if($course->availability_status == 'not_available')
-                                            <div class="unavailable-overlay">Currently Not Available</div>
+                                            <div class="unavailable-overlay">
+                                                <div class="mb-2 text-white small" style="text-transform: none; font-weight: normal;">{{ $course->name }}</div>
+                                                <span class="badge bg-danger">Currently Not Available</span>
+                                            </div>
                                         @endif
                                         <div class="position-relative">
                                             <img src="{{ asset($course->image ?? 'default-course.jpg') }}"
@@ -423,13 +428,7 @@
                                             <div
                                                 class="card-img-overlay d-flex justify-content-between align-items-start p-3">
                                                <span class="badge bg-{{ $course->mode_of_study->value == 1 ? 'primary' : 'secondary' }}">
-                                                    @switch($course->mode_of_study->value)
-                                                        @case(1) {{ $learningTypes[1] ?? 'Online' }} @break
-                                                        @case(2) {{ $learningTypes[2] ?? 'Offline' }} @break
-                                                        @case(3) {{ $learningTypes[3] ?? 'Hybrid' }} @break
-                                                        @case(4) {{ $learningTypes[4] ?? 'Flexible' }} @break
-                                                        @default {{ $learningTypes[$course->mode_of_study->value] ?? 'N/A' }}
-                                                    @endswitch
+                                                    {{ $course->mode_of_study?->label() ?? 'N/A' }}
                                                 </span>
                                                 <span
                                                     class="badge bg-{{ $course->paid_type->value == 'free' ? 'success' : 'warning' }}">

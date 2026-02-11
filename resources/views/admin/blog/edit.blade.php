@@ -200,11 +200,11 @@
                                         class="form-select @error('type') is-invalid @enderror">
                                         <option value="1" {{ old('type', $blog->type) == '1' ? 'selected' : '' }}>Blog</option>
                                         <option value="2" {{ old('type', $blog->type) == '2' ? 'selected' : '' }}>News</option>
-                                        <option value="3" {{ old('type', $blog->type) == '3' ? 'selected' : '' }}>Collaboration</option>
+                                        {{-- <option value="3" {{ old('type', $blog->type) == '3' ? 'selected' : '' }}>Collaboration</option> --}}
                                         <option value="4" {{ old('type', $blog->type) == '4' ? 'selected' : '' }}>Training Model</option>
                                         <option value="5" {{ old('type', $blog->type) == '5' ? 'selected' : '' }}>Research and Publication</option>
                                         <option value="6" {{ old('type', $blog->type) == '6' ? 'selected' : '' }}>Case Studies</option>
-                                        <option value="7" {{ old('type', $blog->type) == '7' ? 'selected' : '' }}>Resource</option>
+                                        {{-- <option value="7" {{ old('type', $blog->type) == '7' ? 'selected' : '' }}>Resource</option> --}}
                                         <option value="8" {{ old('type', $blog->type) == '8' ? 'selected' : '' }}>CSR Initiatives</option>
                                     </select>
                                     @error('type')

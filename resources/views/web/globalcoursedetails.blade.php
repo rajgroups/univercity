@@ -41,13 +41,13 @@
         bottom: 0;
         background: linear-gradient(135deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.6) 100%);
     }
-    
+
     .course-content-wrapper {
         margin-top: -80px; /* Overlap effect */
         position: relative;
         z-index: 10;
     }
-    
+
     /* Sticky Sidebar */
     .sticky-sidebar {
         position: -webkit-sticky;
@@ -55,7 +55,7 @@
         top: 100px;
         z-index: 90;
     }
-    
+
     .nav-tabs-modern {
         border-bottom: 1px solid #e9ecef;
     }
@@ -85,7 +85,7 @@
         background-color: var(--bs-primary);
         border-radius: 3px 3px 0 0;
     }
-    
+
     .feature-icon-box {
         width: 48px;
         height: 48px;
@@ -98,7 +98,7 @@
      .bg-purple { background-color: #6f42c1 !important; }
     .text-purple { color: #6f42c1 !important; }
     .bg-purple-subtle { background-color: rgba(111, 66, 193, 0.1) !important; color: #6f42c1 !important; }
-    
+
     .accordion-modern .accordion-item {
         border: 1px solid #e9ecef;
         border-radius: 12px !important;
@@ -118,7 +118,7 @@
     .accordion-modern .accordion-body {
         background-color: #fcfcfc;
     }
-    
+
     .hover-card {
         transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
@@ -143,7 +143,7 @@
                         </span>
                         <h1 class="fw-bolder display-4 mb-3 text-white">{{ $course->course_title }}</h1>
                         <p class="lead opacity-90 mb-4 text-white">{{ $course->short_description }}</p>
-                        
+
                         <div class="d-flex flex-wrap gap-2 gap-lg-4 text-white-50 small">
                             <div class="d-flex align-items-center">
                                 <i class="bi bi-geo-alt-fill text-warning me-2 fs-5"></i>
@@ -194,7 +194,7 @@
                             <!-- Overview Tab -->
                             <div class="tab-pane fade show active" id="overview">
                                 <h3 class="fw-bold mb-4 text-dark">About This Course</h3>
-                                
+
                                 <div class="row g-4 mb-5">
                                     <div class="col-md-6">
                                         <div class="d-flex align-items-start p-3 rounded-3 bg-light h-100">
@@ -289,7 +289,7 @@
                                     </div>
                                 </div>
                                 @endif
-                                
+
 
                             </div>
 
@@ -381,7 +381,7 @@
                                     <div class="card-body p-4 p-md-5 position-relative z-1">
                                         <div class="row align-items-center">
                                             <div class="col-md-7">
-                                                <small class="text-uppercase fw-bold text-white-50 ls-2 mb-2 d-block">Estimated Total Investment</small>
+                                                <small class="text-uppercase fw-bold text-white-50 ls-2 mb-2 d-block">Approximate Cost</small>
                                                 <h2 class="display-5 fw-bold mb-1 text-white">{{ $course->total_fees ?? 'Contact for Pricing' }}</h2>
                                                 <p class="mb-0 text-white-50">*Includes tuition and estimated living expenses</p>
                                             </div>
@@ -487,7 +487,7 @@
                                     @endif
                                 </div>
                             </div>
-                            
+
                             <!-- Career Tab -->
                             <div class="tab-pane fade" id="career">
                                 <h3 class="fw-bold mb-4 text-dark">Future Prospects</h3>
@@ -506,7 +506,7 @@
                                     </div>
                                 </div>
                                 @endif
-                                
+
                                 @if($course->next_pathways && count($course->next_pathways) > 0)
                                 <div>
                                     <h5 class="fw-bold mb-3">Further Education</h5>
@@ -523,7 +523,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- Additional Info Cards -->
                     <div class="row g-4 mb-4">
                         @if($course->certification_type || $course->accreditation_recognition)
@@ -578,7 +578,7 @@
                             </div>
                         </div>
                         @endif
-                        
+
                         @if($course->faqs && count($course->faqs) > 0)
                         <div class="col-12">
                             <div class="bg-white rounded-4 shadow-sm p-4">
@@ -611,7 +611,7 @@
                         <!-- Quick Details Card (Overlapping Banner) -->
                         <div class="bg-white rounded-4 shadow-lg p-4 mb-4 border-top border-5 border-primary">
                             <h4 class="fw-bold mb-4">Quick Highlights</h4>
-                            
+
                             <ul class="list-unstyled mb-4">
                                 <li class="d-flex justify-content-between py-2 border-bottom">
                                     <span class="text-muted">Course Code</span>
@@ -660,11 +660,11 @@
                                     </span>
                                 </li>
                             </ul>
-                            
+
                             <button class="btn btn-primary w-100 btn-lg mb-2 shadow-sm lift-btn" onclick="document.getElementById('enquiryForm').scrollIntoView({behavior: 'smooth'})">
                                 Enquire Now <i class="bi bi-arrow-right ms-2"></i>
                             </button>
-                            
+
                             @if($course->course_brochures && count($course->course_brochures) > 0)
                                 <div class="dropdown">
                                     <button class="btn btn-outline-secondary w-100 dropdown-toggle" type="button" data-bs-toggle="dropdown">
@@ -686,7 +686,7 @@
                                 </div>
                             @endif
                         </div>
-                        
+
                         <!-- Enquiry Form Card -->
                         <div class="bg-white rounded-4 shadow-sm p-4" id="enquiryForm">
                             <div class="text-center mb-4">
@@ -696,12 +696,12 @@
                                 <h5 class="fw-bold">Interested?</h5>
                                 <p class="small text-muted mb-0">Fill the form and our expert will contact you shortly.</p>
                             </div>
-                            
+
                             <form action="{{ route('web.enquiry') }}" method="POST">
                                 @csrf
                                 <input type="hidden" name="type" value="7">
                                 <input type="hidden" name="course_name" value="{{ $course->course_title }}">
-                                
+
                                 <div class="mb-3">
                                     <label class="form-label small fw-bold text-muted">Full Name</label>
                                     <div class="input-group">
@@ -709,7 +709,7 @@
                                         <input type="text" class="form-control bg-light border-start-0 ps-0" name="name" required placeholder="John Doe">
                                     </div>
                                 </div>
-                                
+
                                 <div class="mb-3">
                                     <label class="form-label small fw-bold text-muted">Email Address</label>
                                     <div class="input-group">
@@ -717,7 +717,7 @@
                                         <input type="email" class="form-control bg-light border-start-0 ps-0" name="email" required placeholder="name@example.com">
                                     </div>
                                 </div>
-                                
+
                                 <div class="mb-3">
                                     <label class="form-label small fw-bold text-muted">Mobile Number</label>
                                     <div class="input-group">
@@ -725,12 +725,12 @@
                                         <input type="tel" class="form-control bg-light border-start-0 ps-0" name="mobile" required placeholder="+1234567890">
                                     </div>
                                 </div>
-                                
+
                                 <div class="mb-4">
                                     <label class="form-label small fw-bold text-muted">Message (Optional)</label>
                                     <textarea class="form-control bg-light" name="message" rows="3" placeholder="I am interested in this course..."></textarea>
                                 </div>
-                                
+
                                 <button type="submit" class="btn btn-dark w-100">Submit Request</button>
                             </form>
                         </div>
@@ -751,20 +751,20 @@
                 </div>
                 <!-- Swiper Navigation Buttons Here if needed -->
             </div>
-            
+
             <div class="swiper mySwiper">
                 <div class="swiper-wrapper">
                     @foreach($otherCourses as $relatedCourse)
                     <div class="swiper-slide h-auto">
                         <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden hover-card">
                             <div class="position-relative">
-                                <img src="{{ $relatedCourse->thumbnail_image ? asset($relatedCourse->thumbnail_image) : asset('resource/web/assets/media/default/default-img.png') }}" 
-                                     class="card-img-top" 
+                                <img src="{{ $relatedCourse->thumbnail_image ? asset($relatedCourse->thumbnail_image) : asset('resource/web/assets/media/default/default-img.png') }}"
+                                     class="card-img-top"
                                      style="height: 200px; object-fit: cover;"
                                      alt="{{ $relatedCourse->course_title }}"
                                      onerror="this.src='{{ asset('resource/web/assets/media/default/default-img.png') }}'">
                                 <div class="position-absolute top-0 end-0 p-3">
-                                    <span class="badge bg-white text-dark shadow-sm text-white">{{ $relatedCourse->category->name ?? 'Course' }}</span>
+                                    <span class="badge bg-white text-dark shadow-sm text-black">{{ $relatedCourse->category->name ?? 'Course' }}</span>
                                 </div>
                             </div>
                             <div class="card-body p-4 d-flex flex-column">
@@ -776,7 +776,7 @@
                                         {{ Str::limit($relatedCourse->course_title, 50) }}
                                     </a>
                                 </h5>
-                                
+
                                 <div class="d-flex justify-content-between align-items-center text-muted small mt-auto pt-3 border-top">
                                     <span><i class="bi bi-clock me-1"></i> {{ $relatedCourse->course_duration_overseas ?? 'Flexible' }}</span>
                                     <span class="fw-bold text-dark">{{ $relatedCourse->paid_type }}</span>
@@ -792,3 +792,40 @@
     </section>
     @endif
 @endsection
+
+@push('scripts')
+<script>
+    var swiper = new Swiper(".mySwiper", {
+        slidesPerView: 1,
+        spaceBetween: 24,
+        loop: true,
+        autoplay: {
+            delay: 3000,
+            disableOnInteraction: false,
+        },
+        pagination: {
+            el: ".swiper-pagination",
+            clickable: true,
+            dynamicBullets: true,
+        },
+        breakpoints: {
+            640: {
+                slidesPerView: 1,
+                spaceBetween: 20,
+            },
+            768: {
+                slidesPerView: 2,
+                spaceBetween: 24,
+            },
+            1024: {
+                slidesPerView: 3,
+                spaceBetween: 30,
+            },
+            1200: {
+                slidesPerView: 3,
+                spaceBetween: 30,
+            },
+        },
+    });
+</script>
+@endpush

@@ -88,7 +88,7 @@
             font-size: 0.9rem;
             font-weight: 500;
         }
-        
+
         @media (max-width: 768px) {
             .modern-page-banner {
                 min-height: 250px;
@@ -116,7 +116,7 @@
                     $selectedSectorNames = $sectors->whereIn('id', $selectedIds)->pluck('name')->toArray();
                 }
             @endphp
-            
+
             <h1 class="modern-banner-title">
                 @if(count($selectedSectorNames) > 0)
                     {{ implode(', ', $selectedSectorNames) }}
@@ -349,7 +349,7 @@
 {{-- Course Grid --}}
 <div class="col-12 col-md-9">
     @if($courses->count() > 0)
-        <div class="row g-4">
+        <div class="row g-2 ">
             @foreach ($courses as $course)
                 <div class="col-md-6 col-lg-4 d-flex align-items-stretch mb-4">
                     <div class="course-card card h-100 border-0 shadow-sm">
@@ -406,7 +406,7 @@
                                 </div>
                             </div>
 
-                            <hr class="my-3 opacity-10">
+                            <hr class="my-1 opacity-10">
 
                             {{-- Course Details Footer --}}
                             <div class="mt-auto">
@@ -562,7 +562,7 @@
             overflow: hidden;
             z-index: 1;
         }
-        
+
         .course-btn:after {
             content: '';
             position: absolute;
@@ -674,7 +674,7 @@
             {{-- Copy of Desktop Filter Form with mobile ID --}}
             <form action="{{ route('web.global.course') }}" method="GET" id="courseFiltersMobile">
                 <input type="hidden" name="sort" value="{{ request('sort', 'newest') }}">
-                
+
                 {{-- Search --}}
                 <div class="mb-4">
                     <div class="input-group">
