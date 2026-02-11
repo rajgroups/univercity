@@ -102,16 +102,16 @@
                                 </td>
                                 <td>{{ Str::limit($activity->location, 20) }}</td>
                                 <td>
-                                    @if($activity->status == 0)
-                                        <span class="badge bg-secondary">Draft</span>
-                                    @elseif($activity->status == 1)
-                                        <span class="badge bg-primary">Upcoming</span>
+                                    @if($activity->status == 1)
+                                        <span class="badge bg-primary">Active</span>
+                                    @elseif($activity->status == 0)
+                                        <span class="badge bg-danger">Inactive</span>
                                     @elseif($activity->status == 2)
-                                        <span class="badge bg-success">Ongoing</span>
+                                        <span class="badge bg-warning">Upcoming</span>
                                     @elseif($activity->status == 3)
-                                        <span class="badge bg-info text-dark">Completed</span>
-                                    @else
-                                        <span class="badge bg-danger">Cancelled</span>
+                                        <span class="badge bg-info">Ongoing</span>
+                                    @elseif($activity->status == 4)
+                                        <span class="badge bg-success">Completed</span>
                                     @endif
                                 </td>
                                 <td class="action-table-data">
