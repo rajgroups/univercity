@@ -146,9 +146,9 @@
                                 </div>
                             </form>
                             <!-- Logos -->
-                            <div class="col-md-3">
+                            <div class="col-md-3 text-center text-md-start">
                                 <a href="/"> <img src="{{ asset($defaultSettings->site_logo ?? null) }}"
-                                        alt="{{ $defaultSettings->site_title ?? null }}" style="height: 54px;"></a>
+                                        alt="{{ $defaultSettings->site_title ?? null }}" style="height: 90px; max-width: 100%; object-fit: contain;"></a>
                             </div>
 
                             <!-- Search Bar (Visible on md+ screens only) -->
