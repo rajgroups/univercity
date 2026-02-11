@@ -457,17 +457,19 @@
                                         @php
                                             $eventStatus = (int) $event->status;
                                             $statusLabel = match($eventStatus) {
-                                                1 => 'Upcoming',
-                                                2 => 'Ongoing',
-                                                3 => 'Completed',
-                                                4 => 'Cancelled',
+                                                1 => 'Active',
+                                                0 => 'Inactive',
+                                                2 => 'Upcoming',
+                                                3 => 'Ongoing',
+                                                4 => 'Completed',
                                                 default => 'Draft'
                                             };
                                             $statusClass = match($eventStatus) {
-                                                1 => 'bg-info',
-                                                2 => 'bg-success',
-                                                3 => 'bg-secondary',
-                                                4 => 'bg-danger',
+                                                1 => 'bg-primary',
+                                                0 => 'bg-danger',
+                                                2 => 'bg-warning',
+                                                3 => 'bg-info',
+                                                4 => 'bg-success',
                                                 default => 'bg-secondary'
                                             };
                                         @endphp
