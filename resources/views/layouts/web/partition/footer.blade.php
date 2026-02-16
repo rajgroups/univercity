@@ -70,36 +70,54 @@
                                                <!-- Contact form -->
                         <form class="row g-3" method="POST" action="{{ route('web.enquiry') }}">
                             @csrf
+                            <input type="hidden" name="type" value="10">
 
                             <div class="col-md-6 g-2">
-                                <input type="text" name="name"
-                                    class="form-control @error('name') is-invalid @enderror" placeholder="Your Name"
-                                    value="{{ old('name') }}" required>
+                                <div class="input-block">
+                                    <input type="text" name="name"
+                                        class="form-control @error('name') is-invalid @enderror" placeholder="Your Name"
+                                        value="{{ old('name') }}" required>
+                                </div>
                                 @error('name')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
 
                             <div class="col-md-6 g-2">
-                                <input type="email" name="email"
-                                    class="form-control @error('email') is-invalid @enderror" placeholder="Your Email"
-                                    value="{{ old('email') }}" required>
+                                <div class="input-block">
+                                    <input type="email" name="email"
+                                        class="form-control @error('email') is-invalid @enderror" placeholder="Your Email"
+                                        value="{{ old('email') }}" required>
+                                </div>
                                 @error('email')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
 
                             <div class="col-md-6 g-2">
-                                <input type="tel" name="mobile"
-                                    class="form-control @error('mobile') is-invalid @enderror"
-                                    placeholder="Mobile Number" value="{{ old('mobile') }}" required>
+                                <div class="input-block">
+                                    <input type="tel" name="mobile"
+                                        class="form-control @error('mobile') is-invalid @enderror"
+                                        placeholder="Mobile Number" value="{{ old('mobile') }}" required>
+                                </div>
                                 @error('mobile')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
 
+                            <div class="col-md-6 g-2 organization-box" style="display: none;">
+                                <div class="input-block">
+                                    <input type="text" name="organization"
+                                        class="form-control @error('organization') is-invalid @enderror"
+                                        placeholder="Organization / Company Name" value="{{ old('organization') }}">
+                                </div>
+                                @error('organization')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
                             <div class="col-md-6 g-2 form-check">
-                                <input class="form-check-input" type="checkbox" name="is_philanthropist" id="philanthropistCheck" {{ old('is_philanthropist') ? 'checked' : '' }}>
+                                <input class="form-check-input" type="checkbox" name="is_philanthropist" value="1" id="philanthropistCheck" {{ old('is_philanthropist') ? 'checked' : '' }}>
                                 <label class="form-check-label text-white" for="philanthropistCheck">
                                     Register as a Philanthropist or Sponsor
                                 </label>
@@ -109,7 +127,6 @@
                                 <button type="submit" class="btn cus-btn bg-white">Submit</button>
                             </div>
                         </form>
-
                     </div>
                 </div>
 
@@ -211,3 +228,23 @@
     </div>
 </footer>
 <!-- FOOTER End -->
+
+@push('scripts')
+<script>
+    $(document).ready(function() {
+        $('#philanthropistCheck').on('change', function() {
+            if ($(this).is(':checked')) {
+                $('.organization-box').show();
+            } else {
+                $('.organization-box').hide();
+                $('input[name="organization"]').val(''); // Clear value when hidden
+            }
+        });
+
+        // Trigger on load if checked (e.g. invalid submission)
+        if ($('#philanthropistCheck').is(':checked')) {
+            $('.organization-box').show();
+        }
+    });
+</script>
+@endpush

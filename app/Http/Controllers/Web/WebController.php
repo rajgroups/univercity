@@ -449,7 +449,7 @@ class WebController extends Controller
                     ->appends($request->all());
 
     // Dropdown filter options
-    $sectors = Sector::where('status', 1)->where('type', 2)->get();
+    $sectors = Sector::where('status', 1)->where('type', 2)->orderBy('position', 'asc')->get();
     $countries = Country::where('status', 1)->get();
     $categories = Category::where('type', 6)->get();
 
@@ -571,7 +571,7 @@ class WebController extends Controller
         }
 
         $courses = $query->paginate(10);
-        $sectors = Sector::where('type', 1)->get();
+        $sectors = Sector::where('type', 1)->orderBy('position', 'asc')->get();
 
         return view('web.course', compact('courses', 'sectors'));
     }
@@ -682,6 +682,7 @@ class WebController extends Controller
             'project_id' => 'required|exists:projects,id',
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
+            'mobile' => 'required|string|max:15|regex:/^[0-9]+$/',
             'organization' => 'nullable|string|max:255',
             'message' => 'nullable|string',
         ]);
@@ -703,7 +704,7 @@ class WebController extends Controller
             $enquiry = \App\Models\Enquiry::create([
                 'name' => $request->name,
                 'email' => $request->email,
-                'mobile' => '0000000000', // Placeholder as it might be required
+                'mobile' => $request->mobile, // Use user provided mobile
                 'type' => 11, // Project Interest
                 'message' => $fullMessage,
                 'status' => 1,
@@ -893,7 +894,7 @@ class WebController extends Controller
         // Base query - Show all published events (status != 0 and != 4 if needed, or just status 1,2,3)
         // Assuming status: 0=Draft, 1=Upcoming, 2=Ongoing, 3=Completed, 4=Cancelled
         $events = Activity::query()
-            ->whereIn('status', [1, 2, 3]) // Show Upcoming, Ongoing, Completed
+            ->whereIn('status', [1, 2, 3, 4]) // Show Active, Upcoming, Ongoing, Completed
             ->with('category');
 
         // Apply search filter
@@ -978,7 +979,7 @@ class WebController extends Controller
         // Get similar events (same category, excluding current event)
         $similarEvents = Activity::where('category_id', $event->category_id)
             ->where('id', '!=', $event->id)
-            ->where('status', 'published')
+            ->whereIn('status', [1, 2, 3, 4])
             ->orderBy('start_date', 'asc')
             ->limit(3)
             ->get();

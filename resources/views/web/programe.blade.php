@@ -51,7 +51,7 @@
     .prog-hero-overlay {
         position: absolute;
         top: 0; left: 0; right: 0; bottom: 0;
-        background: linear-gradient(135deg, rgba(76, 175, 80, 0.9) 0%, rgba(46, 125, 50, 0.6) 100%);
+        background: linear-gradient(135deg, rgba(88, 214, 141, 0.9) 0%, rgba(40, 180, 99, 0.95) 100%);
         z-index: 2;
     }
 

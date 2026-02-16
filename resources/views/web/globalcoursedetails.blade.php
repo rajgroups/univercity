@@ -562,13 +562,13 @@
                         <div class="col-12">
                             <div class="bg-white rounded-4 shadow-sm p-4">
                                 <div class="row g-4">
-                                    @if($course->visa_support_included && $course->visa_notes)
+                                    @if($course->visa_notes)
                                     <div class="col-md-6">
                                         <h5 class="fw-bold mb-3"><i class="bi bi-passport text-danger me-2"></i>Visa Support</h5>
                                         <p class="text-muted small mb-0">{!! strip_tags($course->visa_notes) !!}</p>
                                     </div>
                                     @endif
-                                    @if($course->accommodation_support && $course->accommodation_notes)
+                                    @if($course->accommodation_notes)
                                     <div class="col-md-6">
                                         <h5 class="fw-bold mb-3"><i class="bi bi-house-heart text-purple me-2"></i>Accommodation</h5>
                                         <p class="text-muted small mb-0">{!! strip_tags($course->accommodation_notes) !!}</p>

@@ -53,127 +53,109 @@
     <form action="{{ route('admin.sectors.store') }}" method="POST" enctype="multipart/form-data" class="add-product-form">
         @csrf
         <div class="add-product">
-            <div class="accordions-items-seperate" id="accordionSpacingExample">
-                <div class="accordion-item border mb-4">
-                    <h2 class="accordion-header" id="headingSpacingOne">
-                        <div class="accordion-button collapsed bg-white" data-bs-toggle="collapse"
-                            data-bs-target="#SpacingOne" aria-expanded="true" aria-controls="SpacingOne">
-                            <div class="d-flex align-items-center justify-content-between flex-fill">
-                                <h5 class="d-flex align-items-center">
-                                    <i class="feather feather-info text-primary me-2"></i>
-                                    <span>Sector Information</span>
-                                </h5>
-                            </div>
-                        </div>
-                    </h2>
-
-                    <div id="SpacingOne" class="accordion-collapse collapse show" aria-labelledby="headingSpacingOne">
-                        <div class="accordion-body border-top">
-                            <div class="row">
-                               <div class="col-sm-6 col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 col-12">
                                 <div class="mb-3">
-                                    <label class="form-label">Sector Name <span class="text-danger">*</span></label>
+                                    <label class="form-label fw-bold">Sector Name <span class="text-danger">*</span></label>
                                     <input type="text" name="name" value="{{ old('name') }}"
-                                        class="form-control @error('name') is-invalid @enderror" id="sector-name">
+                                        class="form-control form-control-lg @error('name') is-invalid @enderror" id="sector-name" placeholder="Enter sector name">
                                     @error('name')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
                             </div>
-
-                             <div class="col-sm-6 col-12">
+    
+                            <div class="col-lg-6 col-md-6 col-12">
                                 <div class="mb-3">
-                                    <label class="form-label">Sector Code <span class="text-danger">*</span></label>
+                                    <label class="form-label fw-bold">Prefix <span class="text-danger">*</span></label>
                                     <input type="text" name="prefix" value="{{ old('prefix') }}"
-                                        class="form-control @error('prefix') is-invalid @enderror" id="prefix-name">
+                                        class="form-control form-control-lg @error('prefix') is-invalid @enderror" id="prefix-name" placeholder="E.g., SEC-01">
                                     @error('prefix')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
                             </div>
-
-                            <div class="col-sm-6 col-12">
+    
+                            <div class="col-lg-6 col-md-6 col-12">
                                 <div class="mb-3">
-                                    <label class="form-label">Position <span class="text-danger">*</span></label>
-                                    <input type="text" name="position" value="{{ old('position') }}"
-                                        class="form-control @error('position') is-invalid @enderror" id="position">
+                                    <label class="form-label fw-bold">Position <span class="text-danger">*</span></label>
+                                    <input type="number" name="position" value="{{ old('position') }}"
+                                        class="form-control form-control-lg @error('position') is-invalid @enderror" id="position" placeholder="Order position">
                                     @error('position')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
                             </div>
-
-                            <div class="col-sm-6 col-12">
+    
+                            <div class="col-lg-6 col-md-6 col-12">
                                 <div class="mb-3">
-                                    <label class="form-label">Slug <span class="text-danger">*</span></label>
+                                    <label class="form-label fw-bold">Slug <span class="text-danger">*</span></label>
                                     <input type="text" name="slug" value="{{ old('slug') }}"
-                                        class="form-control @error('slug') is-invalid @enderror" id="sector-slug">
+                                        class="form-control form-control-lg @error('slug') is-invalid @enderror" id="sector-slug" readonly style="background-color: #e9ecef;">
                                     @error('slug')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
                             </div>
-                                        <div class="col-md-6 col-12">
-                                            <div class="mb-3">
-                                                <label class="form-label">Type <span class="text-danger">*</span></label>
-                                                <select name="type" class="form-select @error('type') is-invalid @enderror">
-                                                    <option value="">Select</option>
-                                                    <option value="1" {{ old('type') == 1 ? 'selected' : '' }}>Normal</option>
-                                                    <option value="2" {{ old('type') == 2 ? 'selected' : '' }}>INTL</option>
-                                                </select>
-                                                @error('type')
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
-                                            </div>
-                                        </div>
-
-                                <div class="col-sm-6 col-12">
-                                    <div class="mb-3">
-                                        <label class="form-label">Image <span class="text-danger">*</span></label>
-                                        <input type="file" name="image"
-                                            class="form-control @error('image') is-invalid @enderror" accept="image/*">
-                                        @error('image')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">Status <span class="text-danger">*</span></label>
-                                        <select name="status" class="form-select @error('status') is-invalid @enderror">
-                                            <option value="">Select</option>
-                                            <option value="1" {{ old('status') == 1 ? 'selected' : '' }}>Active</option>
-                                            <option value="0" {{ old('status') == 0 ? 'selected' : '' }}>Inactive</option>
-                                        </select>
-                                        @error('status')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
+    
+                            <div class="col-lg-6 col-md-6 col-12">
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Type <span class="text-danger">*</span></label>
+                                    <select name="type" class="form-select form-select-lg @error('type') is-invalid @enderror">
+                                        <option value="">Select Type</option>
+                                        <option value="1" {{ old('type') == 1 ? 'selected' : '' }}>Normal</option>
+                                        <option value="2" {{ old('type') == 2 ? 'selected' : '' }}>INTL</option>
+                                    </select>
+                                    @error('type')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
                             </div>
-
-                            <div class="col-lg-12">
-                                <div class="summer-description-box">
-                                    <label class="form-label">Description <span class="text-danger">*</span></label>
-                                    <textarea name="description" id="summernote" cols="30" rows="10" class="form-control @error('description') is-invalid @enderror">{{ old('description') }}</textarea>
-                                    <p class="fs-14 mt-1">Maximum 60 Words</p>
+    
+                            <div class="col-lg-6 col-md-6 col-12">
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Status <span class="text-danger">*</span></label>
+                                    <select name="status" class="form-select form-select-lg @error('status') is-invalid @enderror">
+                                        <option value="">Select Status</option>
+                                        <option value="1" {{ old('status') == 1 ? 'selected' : '' }}>Active</option>
+                                        <option value="0" {{ old('status') == 0 ? 'selected' : '' }}>Inactive</option>
+                                    </select>
+                                    @error('status')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+    
+                            <div class="col-12">
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Context Image <span class="text-danger">*</span></label>
+                                    <input type="file" name="image" class="form-control @error('image') is-invalid @enderror" accept="image/*">
+                                    @error('image')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+    
+                            <div class="col-12">
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Description <span class="text-danger">*</span></label>
+                                    <textarea name="description" id="summernote" class="form-control @error('description') is-invalid @enderror">{{ old('description') }}</textarea>
+                                    <div class="form-text text-muted">Maximum 60 Words recommended for optimal display.</div>
                                     @error('description')
                                         <div class="invalid-feedback d-block">{{ $message }}</div>
                                     @enderror
                                 </div>
                             </div>
-
-                            <div class="modal-footer mt-4">
-                                <div class="d-flex justify-content-center">
-                                    <a href="{{ route('admin.sectors.index') }}" class="btn btn-light me-3">Cancel</a>
-                                    <button type="submit" class="btn btn-primary">Create New</button>
-                                </div>
-                            </div>
-                            <!-- /Editor -->
+                        </div>
+    
+                        <div class="d-flex justify-content-end mt-4">
+                            <a href="{{ route('admin.sectors.index') }}" class="btn btn-outline-secondary me-3 px-4">Cancel</a>
+                            <button type="submit" class="btn btn-primary px-4">Create New</button>
                         </div>
                     </div>
                 </div>
-            </div>
         </div>
     </form>
 @endsection

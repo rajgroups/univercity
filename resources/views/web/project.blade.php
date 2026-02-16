@@ -466,7 +466,7 @@
 @endpush
 <!-- Hero Section - Modernized -->
 <div class="project-hero position-relative overflow-hidden"
-     style="@if($project->banner_images) background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.5)), url('{{ asset($project->banner_images) }}'); @else background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); @endif">
+     style="@if($project->banner_images) background-image: linear-gradient(rgba(40, 167, 69, 0.8), rgba(32, 201, 151, 0.6)), url('{{ asset($project->banner_images) }}'); @else background: linear-gradient(135deg, #58d68d 0%, #28b463 100%); @endif">
     <div class="container position-relative py-5 z-2">
         <div class="row align-items-center min-vh-70">
             <div class="col-lg-8">
@@ -4419,6 +4419,10 @@
                     <div class="mb-3">
                         <label class="form-label fw-bold">Email *</label>
                         <input type="email" name="email" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Mobile *</label>
+                        <input type="tel" name="mobile" class="form-control" placeholder="10-digit mobile number" required pattern="[0-9]{10}">
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-bold">Organization</label>

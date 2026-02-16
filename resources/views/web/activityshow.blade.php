@@ -466,10 +466,34 @@
                                                     Unknown
                                                 @endif
                                                 <br>
-                                                @if ($event->type == 2 && $event->is_competition)
+                                                <!-- @if ($event->type == 2 && $event->is_competition)
                                                     <span class="badge bg-danger">
                                                         Prize: {{ $event->prize ?? 'TBD' }}
                                                     </span>
+                                                @endif -->
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div class="event-detail-item">
+                                        <svg class="event-detail-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#6c757d">
+                                            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                                        </svg>
+                                        <div>
+                                            <h6 class="mb-1">Status</h6>
+                                            <p class="mb-0">
+                                                @if($event->status == 0)
+                                                    <span class="badge bg-secondary">Inactive</span>
+                                                @elseif($event->status == 1)
+                                                    <span class="badge bg-primary">Active</span>
+                                                @elseif($event->status == 2)
+                                                    <span class="badge bg-warning text-dark">Upcoming</span>
+                                                @elseif($event->status == 3)
+                                                    <span class="badge bg-info text-dark">Ongoing</span>
+                                                @elseif($event->status == 4)
+                                                    <span class="badge bg-success">Completed</span>
+                                                @else
+                                                    <span class="badge bg-secondary">Unknown</span>
                                                 @endif
                                             </p>
                                         </div>

@@ -95,7 +95,7 @@
                         {{-- <img src="https://www.skillindiadigital.gov.in/assets/new-ux-img/india-flag.svg" alt="" srcset=""> | --}}
                         <img src="{{ asset('resource/web/assets/media/vector/india-flag.svg') }}" alt="flag"
                             srcset=""> |
-                       ISICO | National Skill Development NGO
+                       ISICO | Skill Development NGO
                     </div>
                     <div class="col-md-auto d-flex justify-content-between-sm justify-content-end gap-3" style="align-items: center;">
                         {{-- <p class="p-2 d-none d-lg-block">Skip To Main Content</p> --}}
@@ -276,7 +276,7 @@
                                                 </ul>
                                             </li>
                                             <li>
-                                                <a href="{{ route('web.sector') }}" class="{{ request()->routeIs('web.sector') ? 'active' : '' }}"> Sectors</a>
+                                                <a href="{{ route('web.sector') }}" class="{{ request()->routeIs('web.sector') ? 'active' : '' }}"> Skill Courses</a>
                                             </li>
                                            <li>
                                                 <a href="{{ route('web.collaboration') }}" class="{{ request()->routeIs('web.collaboration') ? 'active' : '' }}"> collaboration</a>

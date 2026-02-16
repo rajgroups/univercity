@@ -308,7 +308,7 @@
     <section class="events-sec mb-120">
         <div class="container-fluid">
             <div class="d-flex align-items-center justify-content-sm-between justify-content-center row-gap-4 flex-wrap mb-24">
-                <h4 class="text-center">Upcoming Events & Competitions</h4>
+                <h4 class="text-center">Events & Competitions</h4>
                 <div class="d-flex align-items-center gap-8">
                     {{-- MOBILE FILTER BUTTON --}}
                     <button class="btn btn-outline-primary d-md-none me-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileFilterOffcanvas" aria-controls="mobileFilterOffcanvas">

@@ -97,11 +97,12 @@
     <section class="modern-page-banner" style="background-image: url('{{ asset('resource/web/assets/media/banner/sector-bg.jpg') }}'), url('https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=2070&auto=format&fit=crop');">
         <div class="modern-banner-content" data-aos="fade-up">
             <div class="modern-breadcrumb">
-                <span>Home</span>
+                <a href="{{ url('/') }}">Home</a>
                 <span class="mx-2">/</span>
-                <span class="text-white">Sectors</span>
+                <span class="text-white">Skill Courses</span>
             </div>
-            <h1 class="modern-banner-title">Our Sectors</h1>
+            <h1 class="modern-banner-title p-0">Our sectors</h1>
+            <small class="text-white fs-3">Skill Courses</small>
             <p class="text-white opacity-75 lead" style="max-width: 600px; margin: 0 auto;">Dedicated to empowering growth across diverse industries through specialized skill development.</p>
         </div>
     </section>
@@ -109,7 +110,7 @@
             <!-- Couse Section Start -->
             <section class="couses-sec mb-120">
                 <div class="container-fluid">
-                    <h4 class="text-center mb-5">Please select sectoy to expore skill courses</h4>
+                    <h4 class="text-center mb-5">Please select sector to explore skill courses</h4>
                     <form method="GET" action="{{ route('web.sector') }}">
                         @csrf
                         <div class="wrapper">

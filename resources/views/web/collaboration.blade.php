@@ -124,7 +124,7 @@
             <div class="row">
                 <!-- Left Side Navigation -->
                 <div class="col-lg-3 mb-4 mb-lg-0">
-                    <div class="sticky-top" style="top: 101px;">
+                    <div class="sticky-top" style="top: 101px;z-index: 10 !important;">
                         <div class="card shadow-sm">
                             <div class="card-header bg-primary text-white">
                                 <h5 class="mb-0 text-white">Collaboration Types</h5>
@@ -733,7 +733,7 @@
                                     <div class="row">
                                         <!-- Left Navigation -->
                                         <div class="col-md-4">
-                                            <div class="list-group sticky-top" style="top: 80px;">
+                                            <div class="list-group sticky-top" style="top: 110px; z-index: 100;">
                                                 <a href="#intCurriculum"
                                                     class="list-group-item list-group-item-action active">
                                                     1. Curriculum Development
@@ -1169,7 +1169,7 @@
                             
                             <form action="{{ route('web.enquiry') }}" method="POST">
                                 @csrf
-                                <input type="hidden" name="type" value="collaboration">
+                                <input type="hidden" name="type" value="4">
                                 <div class="row g-3">
                                     <div class="col-md-6">
                                         <div class="form-floating">
@@ -1183,16 +1183,22 @@
                                             <label for="email">Your Email</label>
                                         </div>
                                     </div>
-                                    <div class="col-12">
+                                    <div class="col-md-6">
                                         <div class="form-floating">
-                                            <input type="text" class="form-control" id="organization" name="subject" placeholder="Organization Name">
+                                            <input type="tel" class="form-control" id="mobile" name="mobile" placeholder="Mobile Number" required pattern="[0-9]+" title="Please enter numbers only">
+                                            <label for="mobile">Mobile Number</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-floating">
+                                            <input type="text" class="form-control" id="organization" name="organization" placeholder="Organization Name">
                                             <label for="organization">Organization Name</label>
                                         </div>
                                     </div>
                                     <div class="col-12">
                                         <div class="form-floating">
                                             <select class="form-select" id="collaborationType" name="message_type" aria-label="Collaboration Type">
-                                                <option selected>Select Collaboration Type</option>
+                                                <option selected disabled>Select Collaboration Type</option>
                                                 <option value="Corporate">Corporate Partnership</option>
                                                 <option value="Government">Government Collaboration</option>
                                                 <option value="Academic">Academic Collaboration</option>

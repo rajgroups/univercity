@@ -38,6 +38,12 @@
             <div class="search-set">
                 <div class="search-input">
                     <span class="btn-searchset"><i class="ti ti-search fs-14 feather-search"></i></span>
+                    <div class="dataTables_filter">
+                        <label>
+                            <input type="search" class="form-control form-control-sm" placeholder="Search"
+                                aria-controls="DataTables_Table_0">
+                        </label>
+                    </div>
                 </div>
             </div>
             <div class="d-flex table-dropdown my-xl-auto right-content align-items-center flex-wrap row-gap-3">

@@ -254,7 +254,7 @@
     .hero-backdrop {
         position: absolute;
         top: 0; left: 0; right: 0; bottom: 0;
-        background: linear-gradient(135deg, rgba(13, 110, 253, 0.9) 0%, rgba(26, 26, 46, 0.95) 100%),
+        background: linear-gradient(135deg, rgba(88, 214, 141, 0.9) 0%, rgba(40, 180, 99, 0.95) 100%),
                     url('https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=1200&q=80');
         background-size: cover;
         background-position: center;

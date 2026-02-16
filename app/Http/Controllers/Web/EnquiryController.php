@@ -77,6 +77,14 @@ class EnquiryController extends Controller
                 }
             }
 
+            // Append Organization and Collaboration Type for Partnership Enquiries
+            if ($request->filled('organization')) {
+                $message .= "\n\nOrganization: " . $request->organization;
+            }
+            if ($request->filled('message_type')) {
+                $message .= "\nInterested In: " . $request->message_type;
+            }
+
             $enquiry = Enquiry::create([
                 'name'              => $request->name,
                 'email'             => $request->email,

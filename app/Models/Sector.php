@@ -17,6 +17,7 @@ class Sector extends Model
         'type',
         'status',
         'description',
+        'position',
     ];
 
     public function courses()
