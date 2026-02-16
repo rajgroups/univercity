@@ -382,7 +382,7 @@
                                         <div class="row align-items-center">
                                             <div class="col-md-7">
                                                 <small class="text-uppercase fw-bold text-white-50 ls-2 mb-2 d-block">Approximate Cost</small>
-                                                <h2 class="display-5 fw-bold mb-1 text-white">{{ $course->total_fees ?? 'Contact for Pricing' }}</h2>
+                                                <h2 class="fs-5 fw-bold mb-1 text-white">{{ $course->total_fees ?? 'Contact for Pricing' }}</h2>
                                                 <p class="mb-0 text-white-50">*Includes tuition and estimated living expenses</p>
                                             </div>
                                             <div class="col-md-5 text-md-end mt-3 mt-md-0">
