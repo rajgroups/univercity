@@ -100,8 +100,25 @@
     </style>
 
     @php
-        $selectedCountries = is_array(request('countries')) ? request('countries') : (request('countries') ? [request('countries')] : []);
-        $countryCode = (count($selectedCountries) == 1) ? strtoupper($selectedCountries[0]) : null;
+        // Helper function to normalize inputs
+        $normalizeInput = function($input) {
+            if (is_string($input)) {
+                return explode(',', $input);
+            }
+            return is_array($input) ? $input : [];
+        };
+
+        $selectedSectors = $normalizeInput(request('sectors', []));
+        $selectedCountries = $normalizeInput(request('countries', []));
+        $selectedCountries = array_map('strtoupper', $selectedCountries);
+
+        $selectedLanguages = $normalizeInput(request('languages', []));
+        $selectedDurations = $normalizeInput(request('durations', []));
+        $selectedCategories = $normalizeInput(request('categories', []));
+        $selectedPathways = $normalizeInput(request('pathways', []));
+        $selectedPrices = $normalizeInput(request('prices', []));
+
+        $countryCode = (count($selectedCountries) == 1) ? $selectedCountries[0] : null;
 
         $countryBanners = [
             'POS' => 'https://images.unsplash.com/photo-1524492412937-b28074a5d7da?q=80&w=2071&auto=format&fit=crop', // India
@@ -118,59 +135,43 @@
 
         $bannerImage = ($countryCode && isset($countryBanners[$countryCode]))
             ? $countryBanners[$countryCode]
-            : 'https://images.unsplash.com/photo-1526772662000-3f88f10405ff?q=80&w=2070&auto=format&fit=crop'; // Global Travel Collage / World Map
+            : 'https://images.unsplash.com/photo-1526772662000-3f88f10405ff?q=80&w=2070&auto=format&fit=crop';
+
+        $countryName = null;
+        if ($countryCode) {
+            $foundCountry = $countries->firstWhere('iso3', $countryCode);
+            if ($foundCountry) {
+                $countryName = $foundCountry->name;
+            }
+        }
+
+        $bannerTitle = "International Courses";
+        if ($countryName) {
+            $bannerTitle = "Study in " . ucwords($countryName);
+        } elseif (count($selectedSectors) > 0) {
+            $selectedSectorNames = $sectors->whereIn('id', $selectedSectors)->pluck('name')->toArray();
+            $bannerTitle = implode(', ', $selectedSectorNames) . " Courses";
+        }
     @endphp
 
     <!-- Title Banner Section Start -->
     <section class="modern-page-banner" style="background-image: url('{{ $bannerImage }}');">
         <div class="modern-banner-content" data-aos="fade-up">
             <div class="modern-breadcrumb">
-                <span>Home</span>
+                <a href="{{ url('/') }}" class="text-white">Home</a>
                 <span class="mx-2">/</span>
-                <span>Global Pathways</span>
+                <span class="text-white-50">Global Pathways</span>
                 <span class="mx-2">/</span>
                 <span class="text-white">Courses</span>
             </div>
-            @php
-                $selectedSectorNames = [];
-                if(request()->has('sectors') && !empty(request('sectors'))) {
-                    $selectedIds = is_array(request('sectors')) ? request('sectors') : explode(',', request('sectors'));
-                    $selectedSectorNames = $sectors->whereIn('id', $selectedIds)->pluck('name')->toArray();
-                }
-            @endphp
 
-            <h1 class="modern-banner-title">
-                @if(count($selectedSectorNames) > 0)
-                    {{ implode(', ', $selectedSectorNames) }}
-                @else
-                    International Courses
-                @endif
-            </h1>
+            <h1 class="modern-banner-title">{{ $bannerTitle }}</h1>
             <p class="modern-banner-subtitle text-white">Explore study abroad opportunities and global career pathways designed for your success.</p>
         </div>
     </section>
     <!-- Title Banner Section End -->
 
-    @php
-        // Helper function to normalize inputs
-        $normalizeInput = function($input) {
-            if (is_string($input)) {
-                return explode(',', $input);
-            }
-            return is_array($input) ? $input : [];
-        };
 
-        $selectedSectors = $normalizeInput(request('sectors', []));
-        $selectedCountries = $normalizeInput(request('countries', []));
-        // Normalize countries to uppercase for case-insensitive comparison (e.g. ?countries=pos vs POS)
-        $selectedCountries = array_map('strtoupper', $selectedCountries);
-
-        $selectedLanguages = $normalizeInput(request('languages', []));
-        $selectedDurations = $normalizeInput(request('durations', []));
-        $selectedCategories = $normalizeInput(request('categories', []));
-        $selectedPathways = $normalizeInput(request('pathways', []));
-        $selectedPrices = $normalizeInput(request('prices', []));
-    @endphp
 
     <section class="couses-sec mb-120">
         <div class="container-fluid">
