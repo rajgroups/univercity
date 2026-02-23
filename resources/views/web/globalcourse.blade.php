@@ -99,8 +99,30 @@
         }
     </style>
 
+    @php
+        $selectedCountries = is_array(request('countries')) ? request('countries') : (request('countries') ? [request('countries')] : []);
+        $countryCode = (count($selectedCountries) == 1) ? strtoupper($selectedCountries[0]) : null;
+
+        $countryBanners = [
+            'POS' => 'https://images.unsplash.com/photo-1524492412937-b28074a5d7da?q=80&w=2071&auto=format&fit=crop', // India
+            'SGP' => 'https://images.unsplash.com/photo-1525625230556-8e8bd0ba25b2?q=80&w=2070&auto=format&fit=crop', // Singapore
+            'USA' => 'https://images.unsplash.com/photo-1485738422979-f5c462d49f74?q=80&w=2070&auto=format&fit=crop', // USA
+            'GBR' => 'https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?q=80&w=2070&auto=format&fit=crop', // UK
+            'CAN' => 'https://images.unsplash.com/photo-1503614472-8c93d56e92ce?q=80&w=2011&auto=format&fit=crop', // Canada
+            'AUS' => 'https://images.unsplash.com/photo-1523482580672-f109ba8cb9be?q=80&w=2130&auto=format&fit=crop', // Australia
+            'DEU' => 'https://images.unsplash.com/photo-1467269204594-9661b134dd2b?q=80&w=2070&auto=format&fit=crop', // Germany
+            'FRA' => 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?q=80&w=2073&auto=format&fit=crop', // France
+            'ARE' => 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?q=80&w=2070&auto=format&fit=crop', // UAE
+            'JPN' => 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?q=80&w=2070&auto=format&fit=crop', // Japan
+        ];
+
+        $bannerImage = ($countryCode && isset($countryBanners[$countryCode]))
+            ? $countryBanners[$countryCode]
+            : 'https://images.unsplash.com/photo-1526772662000-3f88f10405ff?q=80&w=2070&auto=format&fit=crop'; // Global Travel Collage / World Map
+    @endphp
+
     <!-- Title Banner Section Start -->
-    <section class="modern-page-banner" style="background-image: url('{{ asset('resource/web/assets/media/banner/global-bg.jpg') }}');">
+    <section class="modern-page-banner" style="background-image: url('{{ $bannerImage }}');">
         <div class="modern-banner-content" data-aos="fade-up">
             <div class="modern-breadcrumb">
                 <span>Home</span>

@@ -346,9 +346,9 @@
     <div class="blog-sec mt-10 ai-background-section">
         <div class="container-fluid">
             <div class="heading mb-10 text-start">
-                <div class="text-white">{{ $settings->upcoming_project_title ?? null }}</div>
-                <h3 class="fw-bold text-white mt-2 mb-2">{!! $settings->upcoming_project_main_sub_title ?? null !!}</h3>
-                <p class="text-white">{{ $settings->upcoming_final_title ?? null }}</p>
+                <div class="text-white">{{ $settings->on_going_project_title ?? null }}</div>
+                <h3 class="fw-bold text-white mt-2 mb-2">{{ $settings->on_going_project_main_title ?? null }} <span class="text-white-50"> {!! $settings->on_going_project_main_sub_title ?? null !!}</span></h3>
+                <p class="text-white">{{ $settings->onging_final_titles ?? "asdd" }}</p>
             </div> <!-- Swiper -->
             <div class="row align-items-center">
                 <div class="col-md-12 col-lg-4">
@@ -357,24 +357,24 @@
                             <div class="tagblock mb-16 mt-1 mb-4"> <img
                                     src="{{ asset('resource/web/assets/media/hero/buld-vec.png') }}" class="bulb-vec"
                                     alt="">
-                                <p class="black">Upcoming Projects</p>
+                                <p class="black">Ongoing Projects</p>
                             </div>
-                            <h3 class="fw-bold text-white">{!! $settings->upcoming_secondary_title ?? null !!}</h3>
+                            <h3 class="fw-bold text-white">{{ $settings->on_going_project_main_title ?? null }}</h3>
                         </div>
-                        <p class="text-white">{{ $settings->upcoming_secondary_desc ?? null }}</p>
+                        <p class="text-white">{{ $settings->onging_final_titles ?? null }}</p>
                     </div>
                 </div>
                 <div class="col-md-12 col-lg-8">
-                    @if ($upcomingProjects->isEmpty())
+                    @if ($ongoingProjects->isEmpty())
                         <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                            <strong>No upcoming projects found.</strong> Please check back later.
+                            <strong>No ongoing projects found.</strong> Please check back later.
                             <button type="button" class="btn-close" data-bs-dismiss="alert"
                                 aria-label="Close"></button>
                         </div>
                     @else
                         <div class="swiper upcomingproject">
                             <div class="swiper-wrapper">
-                                @foreach ($upcomingProjects as $project)
+                                @foreach ($ongoingProjects as $project)
 
                                     <div class="swiper-slide">
                                         <div class="blog-card">
@@ -421,25 +421,24 @@
             <div class="heading mb-10 text-start">
                 <div class="tagblock mb-16"> <img src="{{ asset('resource/web/assets/media/hero/buld-vec.png') }}"
                         class="bulb-vec" alt="">
-                    <p class="black">Ongoing Projects</p>
+                    <p class="black">Upcoming Projects</p>
                 </div>
-                <div class="cds-119 css-1v1mgi3 cds-121 mt-2">{{ $settings->on_going_project_title ?? null }}</div>
-                <h3 class="fw-bold mt-2 mb-2">{{ $settings->on_going_project_main_title ?? null }} <span
-                        class="color-primary"> {{ $settings->on_going_project_main_sub_title ?? null }}</span></h3>
-                <p class="cds-119 css-lg65q1 cds-121">{{ $settings->onging_final_titles ?? null }}</p>
+                <div class="cds-119 css-1v1mgi3 cds-121 mt-2">{{ $settings->upcoming_project_title ?? null }}</div>
+                <h3 class="fw-bold mt-2 mb-2">{!! $settings->upcoming_project_main_sub_title ?? null !!}</h3>
+                <p class="cds-119 css-lg65q1 cds-121">{{ $settings->upcoming_final_title ?? null }}</p>
             </div> <!-- Swiper -->
             <div class="swiper mySwipers">
                 <div class="swiper-wrapper">
-                    @if ($ongoingProjects->isEmpty())
+                    @if ($upcomingProjects->isEmpty())
                         <div class="w-100">
                             <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                                <strong>No projects found.</strong> Please check back later.
+                                <strong>No upcoming projects found.</strong> Please check back later.
                                 <button type="button" class="btn-close" data-bs-dismiss="alert"
                                     aria-label="Close"></button>
                             </div>
                         </div>
                     @else
-                        @foreach ($ongoingProjects as $project)
+                        @foreach ($upcomingProjects as $project)
                             <!-- Slide -->
                             <div class="swiper-slide" data-swiper-autoplay="2000">
                                 <div class="blog-card">
