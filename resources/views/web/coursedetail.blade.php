@@ -78,7 +78,7 @@
         .badge-soft-primary { background: var(--primary-soft); color: var(--primary-color); }
         .badge-soft-success { background: rgba(25, 135, 84, 0.1); color: #198754; }
         .badge-soft-warning { background: rgba(255, 193, 7, 0.1); color: #856404; }
-        .badge-internship { background: #ffc107; color: #fff !important; }
+        .badge-soft-violet { background: rgba(138, 43, 226, 0.1); color: #8a2be2; }
 
         .hero-meta-item {
             display: flex;
@@ -235,8 +235,8 @@
                                 <i class="bi bi-grid-fill me-1"></i> {{ $course->sector->name ?? 'General Course' }}
                             </span>
                             @if($course->internship)
-                                <span class="badge badge-internship px-3 py-2 rounded-pill shadow-sm">
-                                    <i class="bi bi-mortarboard-fill me-1"></i> Internship Available
+                                <span class="badge badge-soft-violet px-3 py-2 rounded-pill">
+                                    <i class="bi bi-person-workspace me-1"></i> Internship Available
                                 </span>
                             @endif
                         </div>
@@ -725,19 +725,15 @@
                                             <small class="text-muted d-block text-uppercase" style="font-size: 0.75rem; letter-spacing: 0.5px;">Certificate</small>
                                             <span class="fw-bold fs-6">{{ $course->certification_type }}</span>
                                         </div>
-                                    </div>
+                                    </div>course
                                     @endif
 
                                     @if (!empty($course->learning_tools) && count($course->learning_tools) > 0)
                                     <div class="list-group-item px-4 py-3 d-flex align-items-center text-dark">
                                         <i class="bi bi-tools text-primary fs-5 me-3"></i>
-                                        <div class="w-100">
-                                            <small class="text-muted d-block text-uppercase mb-2" style="font-size: 0.75rem; letter-spacing: 0.5px;">Learning Tools</small>
-                                            <div class="d-flex flex-wrap gap-1">
-                                                @foreach ($course->learning_tools as $tool)
-                                                    <span class="badge bg-light text-dark border fw-normal" style="font-size: 0.7rem;">{{ $tool }}</span>
-                                                @endforeach
-                                            </div>
+                                        <div>
+                                            <small class="text-muted d-block text-uppercase" style="font-size: 0.75rem; letter-spacing: 0.5px;">Learning Tools</small>
+                                            <span class="fw-bold fs-6">{{ implode(', ', $course->learning_tools) }}</span>
                                         </div>
                                     </div>
                                     @endif
@@ -757,7 +753,7 @@
                                         <i class="bi bi-briefcase text-primary fs-5 me-3"></i>
                                         <div>
                                             <small class="text-muted d-block text-uppercase" style="font-size: 0.75rem; letter-spacing: 0.5px;">Internship</small>
-                                            <span class="fw-bold fs-6" style="color: #ffc107;">Available</span>
+                                            <span class="fw-bold fs-6" style="color: #8a2be2;">Available</span>
                                         </div>
                                     </div>
                                     @endif

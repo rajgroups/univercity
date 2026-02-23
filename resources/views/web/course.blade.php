@@ -195,7 +195,7 @@
                             data-bs-target="#mobileFilters">
                             <i class="bi bi-funnel me-2"></i>Filters
                             @if (request()->anyFilled(['search', 'sectors', 'languages', 'durations', 'prices']))
-                                <span class="badge bg-primary ms-1">!</span>
+                                <span class="badge bg-primary  text-white ms-1">!</span>
                             @endif
                         </button>
 
@@ -464,7 +464,7 @@
                                                 style="height: 200px; object-fit: cover;">
                                             <div
                                                 class="card-img-overlay d-flex justify-content-between align-items-start p-3">
-                                               <span class="badge bg-{{ $course->mode_of_study->value == 1 ? 'primary' : 'secondary' }}">
+                                               <span class="badge text-white bg-{{ $course->mode_of_study->value == 1 ? 'primary' : 'secondary' }}">
                                                     {{ $course->mode_of_study?->label() ?? 'N/A' }}
                                                 </span>
                                                 <span
@@ -603,8 +603,14 @@
     <!-- Mobile Filters Offcanvas -->
     <div class="offcanvas offcanvas-start" tabindex="-1" id="mobileFilters">
         <div class="offcanvas-header border-bottom">
-            <h5 class="offcanvas-title">
+            <h5 class="offcanvas-title flex-grow-1">
                 <i class="bi bi-funnel me-2 text-primary"></i>Filters
+                @if (request()->anyFilled(['search', 'sectors', 'languages', 'durations', 'prices', 'levels']))
+                    <a href="{{ route('web.course.index') }}"
+                        class="btn btn-sm btn-outline-danger float-end me-3">
+                        Clear All
+                    </a>
+                @endif
             </h5>
             <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
         </div>
