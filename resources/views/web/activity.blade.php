@@ -293,7 +293,7 @@
     <!-- Title Banner Section Start -->
     <section class="modern-page-banner" style="background-image: url('{{ asset('resource/web/assets/media/banner/event-bg.jpg') }}'), url('https://images.unsplash.com/photo-1544531586-fde5298cdd40?q=80&w=2070&auto=format&fit=crop');">
         <div class="modern-banner-content" data-aos="fade-up">
-            <nav class="modern-breadcrumb" aria-label="breadcrumb">
+            <nav class="modern-breadcrumb mt-2" aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0">
                     <li class="breadcrumb-item"><a href="{{ url('/') }}">Home</a></li>
                     <li class="breadcrumb-item active" aria-current="page">Events & Competitions</li>
