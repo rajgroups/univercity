@@ -535,14 +535,14 @@
 
         /* Badges */
         .badge-pathway {
-            background: rgba(255, 255, 255, 0.95);
-            color: #0d6efd;
+            background-color: #0d6efd; /* Blue */
+            color: #fff;
             font-weight: 600;
             backdrop-filter: blur(4px);
         }
 
         .badge-free {
-            background-color: #198754;
+            background-color: #dc3545; /* Red */
             color: #fff;
         }
 

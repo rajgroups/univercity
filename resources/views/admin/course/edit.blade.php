@@ -38,11 +38,11 @@
     <form action="{{ route('admin.course.update', $course->id) }}" method="POST" enctype="multipart/form-data" id="courseForm">
         @csrf
         @method('PUT')
-        
+
         <div class="row">
             <!-- Left Column: Main Content -->
             <div class="col-lg-8">
-                
+
                 <!-- Basic Information -->
                 <div class="card border-0 shadow-sm mb-4">
                     <div class="card-header bg-transparent border-bottom p-3">
@@ -51,16 +51,16 @@
                     <div class="card-body p-4">
                         <div class="mb-3">
                             <label class="form-label fw-bold">Course Name <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control form-control-lg @error('name') is-invalid @enderror" 
-                                   name="name" value="{{ old('name', $course->name) }}" 
+                            <input type="text" class="form-control form-control-lg @error('name') is-invalid @enderror"
+                                   name="name" value="{{ old('name', $course->name) }}"
                                    placeholder="e.g., Full Stack Web Development Masterclass" required>
                             @error('name') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
-                        
+
                         <div class="mb-3">
                             <label class="form-label fw-bold">Short Description</label>
-                            <textarea class="form-control @error('short_description') is-invalid @enderror" 
-                                      name="short_description" rows="3" 
+                            <textarea class="form-control @error('short_description') is-invalid @enderror"
+                                      name="short_description" rows="3"
                                       placeholder="Brief summary (max 200 chars)...">{{ old('short_description', $course->short_description) }}</textarea>
                              <div class="form-text text-end"><span id="shortDescCount">0</span>/200</div>
                             @error('short_description') <div class="invalid-feedback">{{ $message }}</div> @enderror
@@ -191,7 +191,7 @@
                                      <input type="text" class="form-control" name="internship_note" value="{{ old('internship_note', $course->internship_note) }}" placeholder="Internship Description">
                                 </div>
                             </div>
-                            
+
                             <div class="col-md-6 mb-3">
                                 <label class="form-label fw-bold">Stipend Details</label>
                                 <div class="btn-group w-100" role="group">
@@ -217,7 +217,7 @@
                         <div class="mb-4">
                             <label class="form-label fw-bold">Course Modules / Topics</label>
                             <div id="topics-wrapper">
-                                @php 
+                                @php
                                     $topics = old('topics', $course->topics ?? []);
                                     if(empty($topics)) $topics = [['title' => '', 'description' => '']];
                                 @endphp
@@ -239,11 +239,11 @@
                             </div>
                             <button type="button" id="add-topic" class="btn btn-light btn-sm text-primary mt-2"><i class="bi bi-plus me-1"></i> Add Topic</button>
                         </div>
-                        
+
                         <div>
                              <label class="form-label fw-bold">Learning Outcomes / Specifications</label>
                              <div id="specifications-wrapper">
-                                  @php 
+                                  @php
                                     $specs = old('other_specifications', $course->other_specifications ?? []);
                                     if(empty($specs)) $specs = [['label' => '', 'description' => '']];
                                   @endphp
@@ -272,7 +272,7 @@
 
             <!-- Right Column: Settings & Media -->
             <div class="col-lg-4">
-                
+
                 <!-- Configuration -->
                 <div class="card border-0 shadow-sm mb-4">
                      <div class="card-header bg-transparent border-bottom p-3">
@@ -302,7 +302,7 @@
                                 <label class="btn btn-outline-warning" for="featured_yes"><i class="bi bi-star-fill me-1"></i> Featured</label>
                             </div>
                         </div>
-                        
+
                          <div class="mb-3">
                             <label class="form-label fw-bold">Sector <span class="text-danger">*</span></label>
                             <select name="sector_id" class="form-select select2 @error('sector_id') is-invalid @enderror">
@@ -326,7 +326,7 @@
                             </select>
                             @error('level') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
-                        
+
                         <div class="mb-3">
                             <label class="form-label fw-bold">Duration</label>
                             <div class="input-group">
@@ -377,7 +377,7 @@
                                 <option value="4" {{ old('mode_of_study', $course->mode_of_study) == '4' ? 'selected' : '' }}>On-Demand</option>
                             </select>
                         </div>
-                        
+
                         <div class="mb-3">
                             <label class="form-label fw-bold">Languages <span class="text-danger">*</span></label>
                             <select name="language[]" class="form-control select2-multiple" multiple>
@@ -392,7 +392,7 @@
                                 @endforeach
                             </select>
                         </div>
-                        
+
                          <div class="mb-3">
                             <label class="form-label fw-bold">Locations</label>
                             <select name="location[]" class="form-control select2-multiple" multiple>
@@ -417,9 +417,9 @@
                                 @endfor
                              </select>
                         </div>
-                        
+
                         <div class="mb-3">
-                             <label class="form-label fw-bold">Target Occupations</label>
+                             <label class="form-label fw-bold">Who can join</label>
                              <select name="occupations[]" class="form-control select2-multiple" multiple data-placeholder="Add Occupations">
                                  @php $occs = old('occupations', $course->occupations ?? []); @endphp
                                  @foreach(['Software Developer', 'Data Analyst', 'Web Designer', 'Digital Marketer', 'Project Manager'] as $occ)
@@ -456,7 +456,7 @@
                          <div class="mb-3">
                              <label class="form-label fw-bold">Gallery</label>
                              <input type="file" class="form-control mb-2" id="galleryUpload" name="gallery[]" multiple accept="image/*">
-                             
+
                              <div class="form-check mb-2">
                                 <input class="form-check-input" type="checkbox" name="remove_gallery" id="remove_gallery" value="1">
                                 <label class="form-check-label text-danger" for="remove_gallery">Remove All Gallery</label>
@@ -498,7 +498,7 @@
 
             </div>
         </div>
-        
+
         <div class="d-flex justify-content-end mb-5">
             <a href="{{ route('admin.course.index') }}" class="btn btn-light me-2 btn-lg">Cancel</a>
             <button type="submit" class="btn btn-primary btn-lg px-5">

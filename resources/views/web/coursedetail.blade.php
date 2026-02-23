@@ -78,6 +78,7 @@
         .badge-soft-primary { background: var(--primary-soft); color: var(--primary-color); }
         .badge-soft-success { background: rgba(25, 135, 84, 0.1); color: #198754; }
         .badge-soft-warning { background: rgba(255, 193, 7, 0.1); color: #856404; }
+        .badge-internship { background: #ffc107; color: #fff !important; }
 
         .hero-meta-item {
             display: flex;
@@ -203,13 +204,18 @@
         /* Overrides */
         .bg-primary { background-color: var(--primary-color) !important; }
         .text-primary { color: var(--primary-color) !important; }
-        .btn-primary { 
-            background-color: var(--primary-color) !important; 
-            border-color: var(--primary-color) !important; 
+        .btn-primary {
+            background-color: var(--primary-color) !important;
+            border-color: var(--primary-color) !important;
         }
-        .btn-primary:hover {
-            background-color: #1b5e20 !important; /* Darker Green */
-            border-color: #1b5e20 !important;
+        /* Custom Badge Overrides */
+        .badge.bg-secondary {
+            background-color: #0d6efd !important; /* Blue */
+            color: #fff !important;
+        }
+        .badge.bg-success {
+            background-color: #dc3545 !important; /* Red */
+            color: #fff !important;
         }
     </style>
 
@@ -229,8 +235,8 @@
                                 <i class="bi bi-grid-fill me-1"></i> {{ $course->sector->name ?? 'General Course' }}
                             </span>
                             @if($course->internship)
-                                <span class="badge badge-soft-success px-3 py-2 rounded-pill">
-                                    <i class="bi bi-check-circle me-1"></i> Internship Available
+                                <span class="badge badge-internship px-3 py-2 rounded-pill shadow-sm">
+                                    <i class="bi bi-mortarboard-fill me-1"></i> Internship Available
                                 </span>
                             @endif
                         </div>
@@ -317,6 +323,11 @@
                                                  alt="Gallery Image"
                                                  style="height: 450px; object-fit: cover;"
                                                  onerror="this.src='{{ asset('resource/web/assets/media/default/default-img.png') }}'">
+                                            @if($course->paid_type->value == 'free')
+                                                <div class="position-absolute top-0 end-0 m-3 badge bg-success fs-6 shadow">Free</div>
+                                            @elseif($course->paid_type->value == 'paid')
+                                                <div class="position-absolute top-0 end-0 m-3 badge bg-warning text-dark fs-6 shadow">Paid</div>
+                                            @endif
                                         </div>
                                     @endforeach
                                 @endif
@@ -540,7 +551,7 @@
                                         @if (!empty($course->occupations) && count($course->occupations) > 0)
                                         <div class="col-md-12">
                                         <div class="mt-4">
-                                            <h6 class="fw-bold mb-3">Target Occupations</h6>
+                                            <h6 class="fw-bold mb-3">Who can join</h6>
                                             <div class="d-flex flex-wrap gap-2">
                                                 @foreach ($course->occupations as $occupation)
                                                     <span class="badge badge-soft-primary text-primary border border-light px-3 py-2">{{ $occupation }}</span>
@@ -582,7 +593,7 @@
                                                 </div>
                                             </div>
                                         @endif
-                                        
+
                                         @if ($course->industry_experience_years || $course->industry_experience_desc)
                                         <div class="col-md-6">
                                             <div class="feature-box text-center">
@@ -660,6 +671,14 @@
                             <div class="card-body p-0">
                                 <div class="list-group list-group-flush">
                                     <div class="list-group-item px-4 py-3 d-flex align-items-center text-dark">
+                                        <i class="bi bi-bar-chart-steps text-primary fs-5 me-3"></i>
+                                        <div>
+                                            <small class="text-muted d-block text-uppercase" style="font-size: 0.75rem; letter-spacing: 0.5px;">Course Level</small>
+                                            <span class="fw-bold fs-6">{{ $course->level ?? 'Not Specified' }}</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="list-group-item px-4 py-3 d-flex align-items-center text-dark">
                                         <i class="bi bi-currency-rupee text-primary fs-5 me-3"></i>
                                         <div>
                                             <small class="text-muted d-block text-uppercase" style="font-size: 0.75rem; letter-spacing: 0.5px;">Price</small>
@@ -674,7 +693,7 @@
                                             </span>
                                         </div>
                                     </div>
-                                    
+
                                     @if ($course->start_date || $course->end_date)
                                     <div class="list-group-item px-4 py-3 d-flex align-items-center text-dark">
                                         <i class="bi bi-calendar-range text-primary fs-5 me-3"></i>
@@ -709,6 +728,20 @@
                                     </div>
                                     @endif
 
+                                    @if (!empty($course->learning_tools) && count($course->learning_tools) > 0)
+                                    <div class="list-group-item px-4 py-3 d-flex align-items-center text-dark">
+                                        <i class="bi bi-tools text-primary fs-5 me-3"></i>
+                                        <div class="w-100">
+                                            <small class="text-muted d-block text-uppercase mb-2" style="font-size: 0.75rem; letter-spacing: 0.5px;">Learning Tools</small>
+                                            <div class="d-flex flex-wrap gap-1">
+                                                @foreach ($course->learning_tools as $tool)
+                                                    <span class="badge bg-light text-dark border fw-normal" style="font-size: 0.7rem;">{{ $tool }}</span>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @endif
+
                                     @if ($course->duration_number)
                                     <div class="list-group-item px-4 py-3 d-flex text-dark">
                                         <i class="bi bi-stopwatch text-primary fs-5 me-3"></i>
@@ -724,7 +757,7 @@
                                         <i class="bi bi-briefcase text-primary fs-5 me-3"></i>
                                         <div>
                                             <small class="text-muted d-block text-uppercase" style="font-size: 0.75rem; letter-spacing: 0.5px;">Internship</small>
-                                            <span class="fw-bold fs-6 text-success">Available</span>
+                                            <span class="fw-bold fs-6" style="color: #ffc107;">Available</span>
                                         </div>
                                     </div>
                                     @endif
@@ -749,7 +782,7 @@
                             <div class="card-body p-4">
                                 <h4 class="fw-bold mb-1">Interested?</h4>
                                 <p class="text-muted mb-4 small">Fill the form below and we'll get back to you.</p>
-                                
+
                                 <form class="needs-validation" action="{{ route('web.enquiry') }}" method="POST" novalidate>
                                     @csrf
                                     <input type="hidden" name="type" value="7">
@@ -792,7 +825,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <!-- Related Courses -->
              @if($relatedCourses->isNotEmpty())
              <div class="mt-5 pt-5 border-top">
@@ -803,7 +836,7 @@
                      </div>
                      <a href="{{ route('web.course.index') }}" class="btn btn-outline-primary rounded-pill px-4">View All</a>
                  </div>
-                 
+
                  <div class="row g-4">
                      @foreach ($relatedCourses->take(3) as $rcourse)
                          <div class="col-md-4">

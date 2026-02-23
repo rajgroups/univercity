@@ -133,6 +133,16 @@
             max-width: 90%;
             white-space: normal;
         }
+
+        /* Custom Badge Colors for Mode of Study and Paid Type */
+        .badge.bg-secondary {
+            background-color: #0d6efd !important; /* Blue */
+            color: #fff !important;
+        }
+        .badge.bg-success {
+            background-color: #dc3545 !important; /* Red */
+            color: #fff !important;
+        }
     </style>
 
     <!-- Title Banner Section Start -->
@@ -249,11 +259,11 @@
                                 </div>
 
                                 <!-- Active Filters -->
-                                @if (request()->anyFilled(['sectors', 'languages', 'durations', 'prices']))
+                                @if (request()->anyFilled(['sectors', 'languages', 'durations', 'prices', 'levels']))
                                     <div class="mb-4">
                                         <label class="form-label fw-semibold">Active Filters</label>
                                         <div class="d-flex flex-wrap gap-2">
-                                            @foreach ($selectedSectors as $sectorId)
+                                            {{-- @foreach ($selectedSectors as $sectorId)
                                                 @php $sector = $sectors->firstWhere('id', $sectorId); @endphp
                                                 @if ($sector)
                                                     <span class="badge bg-primary">
@@ -269,7 +279,7 @@
                                                     <a href="{{ request()->fullUrlWithQuery(['languages' => array_diff(request('languages', []), [$language])]) }}"
                                                         class="text-white ms-1">×</a>
                                                 </span>
-                                            @endforeach
+                                            @endforeach --}}
                                             @foreach (request('durations', []) as $duration)
                                                 <span class="badge bg-warning text-dark">
                                                     {{ $duration }}
@@ -277,13 +287,20 @@
                                                         class="text-dark ms-1">×</a>
                                                 </span>
                                             @endforeach
-                                            @foreach (request('prices', []) as $price)
-                                                <span class="badge bg-success">
-                                                    {{ $price }}
-                                                    <a href="{{ request()->fullUrlWithQuery(['prices' => array_diff(request('prices', []), [$price])]) }}"
+                                            @foreach (request('levels', []) as $level)
+                                                <span class="badge bg-info">
+                                                    {{ $level }}
+                                                    <a href="{{ request()->fullUrlWithQuery(['levels' => array_diff(request('levels', []), [$level])]) }}"
                                                         class="text-white ms-1">×</a>
                                                 </span>
                                             @endforeach
+                                            {{-- @foreach (request('prices', []) as $price)
+                                                <span class="badge bg-{{ $price == 'free' ? 'success' : 'warning' }}">
+                                                    {{ ucfirst($price) }}
+                                                    <a href="{{ request()->fullUrlWithQuery(['prices' => array_diff(request('prices', []), [$price])]) }}"
+                                                        class="text-white ms-1">×</a>
+                                                </span>
+                                            @endforeach --}}
                                         </div>
                                     </div>
                                 @endif
@@ -332,7 +349,7 @@
                                 </div>
 
                                 <!-- Duration Filter -->
-                                <div class="mb-4">
+                                {{-- <div class="mb-4">
                                     <label class="form-label fw-semibold d-flex justify-content-between">
                                         <span>Duration</span>
                                         <span class="badge bg-primary">{{ count(request('durations', [])) }}</span>
@@ -349,10 +366,30 @@
                                             </div>
                                         @endforeach
                                     </div>
+                                </div> --}}
+
+                                <!-- Level Filter -->
+                                <div class="mb-4">
+                                    <label class="form-label fw-semibold d-flex justify-content-between">
+                                        <span>Course Level</span>
+                                        <span class="badge bg-primary">{{ count(request('levels', [])) }}</span>
+                                    </label>
+                                    <div class="filter-options">
+                                        @foreach (['Awareness', 'Foundation', 'Intermediate', 'Professional', 'Advanced'] as $level)
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" name="levels[]"
+                                                    id="levelDesktop{{ $loop->index }}" value="{{ $level }}"
+                                                    {{ in_array($level, request('levels', [])) ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="levelDesktop{{ $loop->index }}">
+                                                    {{ $level }}
+                                                </label>
+                                            </div>
+                                        @endforeach
+                                    </div>
                                 </div>
 
                                 <!-- Price Filter -->
-                                <div class="mb-4">
+                                {{-- <div class="mb-4">
                                     <label class="form-label fw-semibold d-flex justify-content-between">
                                         <span>Price Type</span>
                                         <span class="badge bg-primary">{{ count(request('prices', [])) }}</span>
@@ -375,10 +412,10 @@
                                             </label>
                                         </div>
                                     </div>
-                                </div>
+                                </div> --}}
 
                                 <!-- Mode of Study Filter -->
-                                <div class="mb-4">
+                                {{-- <div class="mb-4">
                                     <label class="form-label fw-semibold">Mode of Study</label>
                                     <div class="filter-options">
                                         @foreach ([1 => 'Online', 2 => 'In-Centre', 3 => 'Hybrid', 4 => 'On-Demand'] as $value => $label)
@@ -392,7 +429,7 @@
                                             </div>
                                         @endforeach
                                     </div>
-                                </div>
+                                </div> --}}
 
                                 <!-- Filter Actions -->
                                 <div class="d-grid gap-2">
@@ -493,7 +530,7 @@
                                                     <div class="rating">
                                                         <i class="bi bi-star-fill text-warning"></i>
                                                         <small class="text-muted">
-                                                            {{ $course->review_stars ?? '4.5' }} 
+                                                            {{ $course->review_stars ?? '4.5' }}
                                                             ({{ $course->review_count ?? '120' }} reviews)
                                                         </small>
                                                     </div>

@@ -63,7 +63,7 @@
 
                             <div class="col-lg-6 col-md-6 col-12">
                                 <div class="mb-3">
-                                    <label class="form-label fw-bold">Prefix <span class="text-danger">*</span></label>
+                                    <label class="form-label fw-bold">Sector Code <span class="text-danger">*</span></label>
                                     <input type="text" name="prefix" value="{{ old('prefix', $sector->prefix) }}"
                                         class="form-control form-control-lg @error('prefix') is-invalid @enderror" id="prefix-name" placeholder="E.g., SEC-01">
                                     @error('prefix')

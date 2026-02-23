@@ -66,10 +66,10 @@
                                     @enderror
                                 </div>
                             </div>
-    
+
                             <div class="col-lg-6 col-md-6 col-12">
                                 <div class="mb-3">
-                                    <label class="form-label fw-bold">Prefix <span class="text-danger">*</span></label>
+                                    <label class="form-label fw-bold">Sector Code <span class="text-danger">*</span></label>
                                     <input type="text" name="prefix" value="{{ old('prefix') }}"
                                         class="form-control form-control-lg @error('prefix') is-invalid @enderror" id="prefix-name" placeholder="E.g., SEC-01">
                                     @error('prefix')
@@ -77,7 +77,7 @@
                                     @enderror
                                 </div>
                             </div>
-    
+
                             <div class="col-lg-6 col-md-6 col-12">
                                 <div class="mb-3">
                                     <label class="form-label fw-bold">Position <span class="text-danger">*</span></label>
@@ -88,7 +88,7 @@
                                     @enderror
                                 </div>
                             </div>
-    
+
                             <div class="col-lg-6 col-md-6 col-12">
                                 <div class="mb-3">
                                     <label class="form-label fw-bold">Slug <span class="text-danger">*</span></label>
@@ -99,7 +99,7 @@
                                     @enderror
                                 </div>
                             </div>
-    
+
                             <div class="col-lg-6 col-md-6 col-12">
                                 <div class="mb-3">
                                     <label class="form-label fw-bold">Type <span class="text-danger">*</span></label>
@@ -113,7 +113,7 @@
                                     @enderror
                                 </div>
                             </div>
-    
+
                             <div class="col-lg-6 col-md-6 col-12">
                                 <div class="mb-3">
                                     <label class="form-label fw-bold">Status <span class="text-danger">*</span></label>
@@ -127,7 +127,7 @@
                                     @enderror
                                 </div>
                             </div>
-    
+
                             <div class="col-12">
                                 <div class="mb-3">
                                     <label class="form-label fw-bold">Context Image <span class="text-danger">*</span></label>
@@ -137,7 +137,7 @@
                                     @enderror
                                 </div>
                             </div>
-    
+
                             <div class="col-12">
                                 <div class="mb-3">
                                     <label class="form-label fw-bold">Description <span class="text-danger">*</span></label>
@@ -149,7 +149,7 @@
                                 </div>
                             </div>
                         </div>
-    
+
                         <div class="d-flex justify-content-end mt-4">
                             <a href="{{ route('admin.sectors.index') }}" class="btn btn-outline-secondary me-3 px-4">Cancel</a>
                             <button type="submit" class="btn btn-primary px-4">Create New</button>

@@ -552,6 +552,11 @@ class WebController extends Controller
             $query->whereIn('mode_of_study', $request->modes);
         }
 
+        // Level filter
+        if ($request->has('levels') && !empty($request->levels)) {
+            $query->whereIn('level', $request->levels);
+        }
+
         // Sorting
         $sort = $request->input('sort', 'newest');
         switch ($sort) {

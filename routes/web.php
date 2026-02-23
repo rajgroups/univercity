@@ -51,9 +51,9 @@ Route::middleware(['maintenance'])->group(function () {
         return view('web.about');
     })->name('about');
 
-    Route::get('/course', function () {
-        return view('web.course');
-    })->name('course');
+    // Route::get('/course', function () {
+    //     return view('web.course');
+    // })->name('course');
 
     // Route::get('/coursemode', function () {
     //     return view('web.coursemode');

@@ -107,7 +107,7 @@ class CourseController extends Controller
 
             // Generate course code if not provided
             if (empty($validated['course_code'])) {
-                $validated['course_code'] = $this->generateCourseCode($validated['sector_id']);
+                $validated['course_code'] = $this->generateCourseCode($validated['sector_id'], $validated['level']);
             }
 
             // Convert JSON fields
@@ -144,9 +144,16 @@ class CourseController extends Controller
 
     /**
      * Generate Course Code
-     * Format: ISI + Sector(3 chars) + 01 + Serial(001)
+     * Format: ISI + SectorPrefix + LevelCode(01-05) + Serial(001)
+     *
+     * Level Mapping:
+     *   Awareness    -> 01
+     *   Foundation   -> 02
+     *   Intermediate -> 03
+     *   Advanced     -> 04
+     *   Professional -> 05
      */
-    private function generateCourseCode($sectorId)
+    private function generateCourseCode($sectorId, $level)
     {
         try {
             $sector = Sector::find($sectorId);
@@ -154,33 +161,46 @@ class CourseController extends Controller
                 return 'ISIXXX01001'; // Fallback
             }
 
-            // 1. Prefix
+            // 1. Fixed Prefix
             $prefix = "ISI";
 
-            // 2. Sector Code (First 3 letters of name, UPPERCASE)
-            $sectorNameClean = preg_replace('/[^A-Za-z]/', '', $sector->name);
-            $sectorCode = strtoupper(substr($sectorNameClean, 0, 3));
+            // 2. Sector Prefix Code — from the sector's dedicated `prefix` column (UPPERCASE)
+            $sectorCode = strtoupper(trim($sector->prefix ?? ''));
+            if (empty($sectorCode)) {
+                // Fallback: first 3 letters of sector name
+                $sectorNameClean = preg_replace('/[^A-Za-z]/', '', $sector->name);
+                $sectorCode = strtoupper(substr($sectorNameClean, 0, 3));
+            }
+            // Pad to at least 3 chars if shorter
             if (strlen($sectorCode) < 3) {
                 $sectorCode = str_pad($sectorCode, 3, 'X');
             }
 
-            // 3. Middle Segment (Fixed 01 as requested)
-            $middle = "01";
+            // 3. Level Code (2-digit)
+            $levelMap = [
+                'Awareness'    => '01',
+                'Foundation'   => '02',
+                'Intermediate' => '03',
+                'Advanced'     => '04',
+                'Professional' => '05',
+            ];
+            $levelCode = $levelMap[$level] ?? '01';
 
-            // 4. Base Code for Searching
-            $baseSearch = $prefix . $sectorCode . $middle;
+            // 4. Base search pattern: ISI + SectorCode + LevelCode
+            $baseSearch = $prefix . $sectorCode . $levelCode;
 
-            // 5. Find the last code matching this pattern to increment serial
+            // 5. Find the last course with this same prefix to determine next serial
             $lastCourse = Course::where('course_code', 'LIKE', $baseSearch . '%')
-                                ->orderBy('id', 'desc')
+                                ->orderBy('course_code', 'desc')
                                 ->first();
 
             $nextSerial = '001';
             if ($lastCourse) {
                 $existingCode = $lastCourse->course_code;
-                // Format length: 3 (ISI) + 3 (SEC) + 2 (01) = 8 chars.
-                if (strlen($existingCode) > 8) {
-                    $serialPart = substr($existingCode, 8);
+                // base is: 3 (ISI) + len(sectorCode) + 2 (levelCode)
+                $baseLength = 3 + strlen($sectorCode) + 2;
+                if (strlen($existingCode) > $baseLength) {
+                    $serialPart = substr($existingCode, $baseLength);
                     if (is_numeric($serialPart)) {
                         $nextSerial = str_pad(intval($serialPart) + 1, 3, '0', STR_PAD_LEFT);
                     }
@@ -444,7 +464,7 @@ class CourseController extends Controller
 
     public function getBySectors(Request $request) {
         $sectorIds = $request->input('sectors', []);
-        
+
         if (empty($sectorIds)) {
             return response()->json([], 200);
         }
@@ -453,10 +473,10 @@ class CourseController extends Controller
                         ->whereIn('sector_id', $sectorIds)
                         ->where('status', 1) // Active courses only
                         ->select(
-                            'id', 
-                            'name', 
-                            'level', 
-                            'image', 
+                            'id',
+                            'name',
+                            'level',
+                            'image',
                             'course_code',
                             'mode_of_study',
                             'paid_type',
