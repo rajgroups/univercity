@@ -121,16 +121,16 @@
         $countryCode = (count($selectedCountries) == 1) ? $selectedCountries[0] : null;
 
         $countryBanners = [
-            'POS' => 'https://images.unsplash.com/photo-1524492412937-b28074a5d7da?q=80&w=2071&auto=format&fit=crop', // India
-            'SGP' => 'https://images.unsplash.com/photo-1525625230556-8e8bd0ba25b2?q=80&w=2070&auto=format&fit=crop', // Singapore
-            'USA' => 'https://images.unsplash.com/photo-1485738422979-f5c462d49f74?q=80&w=2070&auto=format&fit=crop', // USA
-            'GBR' => 'https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?q=80&w=2070&auto=format&fit=crop', // UK
-            'CAN' => 'https://images.unsplash.com/photo-1503614472-8c93d56e92ce?q=80&w=2011&auto=format&fit=crop', // Canada
-            'AUS' => 'https://images.unsplash.com/photo-1523482580672-f109ba8cb9be?q=80&w=2130&auto=format&fit=crop', // Australia
-            'DEU' => 'https://images.unsplash.com/photo-1467269204594-9661b134dd2b?q=80&w=2070&auto=format&fit=crop', // Germany
-            'FRA' => 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?q=80&w=2073&auto=format&fit=crop', // France
-            'ARE' => 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?q=80&w=2070&auto=format&fit=crop', // UAE
-            'JPN' => 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?q=80&w=2070&auto=format&fit=crop', // Japan
+            'POS' => 'https://images.unsplash.com/photo-1523050335192-ce67a27662ad?q=80&w=2069&auto=format&fit=crop', // Student Study
+            'SGP' => 'https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?q=80&w=2098&auto=format&fit=crop', // Group Study
+            'USA' => 'https://images.unsplash.com/photo-1541339907198-e08756ebafe3?q=80&w=2070&auto=format&fit=crop', // Campus View
+            'GBR' => 'https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?q=80&w=2069&auto=format&fit=crop', // Library
+            'CAN' => 'https://images.unsplash.com/photo-1498243639159-24d10e3b7481?q=80&w=2070&auto=format&fit=crop', // Students Campus
+            'AUS' => 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=2022&auto=format&fit=crop', // Global Education
+            'DEU' => 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?q=80&w=2070&auto=format&fit=crop', // Writing/Exam
+            'FRA' => 'https://images.unsplash.com/photo-1524178232363-1fb280714553?q=80&w=2070&auto=format&fit=crop', // Classroom
+            'ARE' => 'https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=2070&auto=format&fit=crop', // Collaboration
+            'JPN' => 'https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=2104&auto=format&fit=crop', // School/Learning
         ];
 
         $bannerImage = ($countryCode && isset($countryBanners[$countryCode]))
