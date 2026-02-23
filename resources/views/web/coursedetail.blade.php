@@ -147,6 +147,7 @@
             height: 100%;
             border: 1px solid transparent;
             transition: var(--transition);
+            text-align: end;
         }
         .feature-box:hover {
             background: #fff;
