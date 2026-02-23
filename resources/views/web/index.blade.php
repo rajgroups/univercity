@@ -348,7 +348,7 @@
             <div class="heading mb-10 text-start">
                 <div class="text-white">{{ $settings->on_going_project_title ?? null }}</div>
                 <h3 class="fw-bold text-white mt-2 mb-2">{{ $settings->on_going_project_main_title ?? null }} <span class="text-white-50"> {!! $settings->on_going_project_main_sub_title ?? null !!}</span></h3>
-                <p class="text-white">{{ $settings->onging_final_titles ?? "asdd" }}</p>
+                <p class="text-white">{{ $settings->onging_final_titles ?? "" }}</p>
             </div> <!-- Swiper -->
             <div class="row align-items-center">
                 <div class="col-md-12 col-lg-4">
