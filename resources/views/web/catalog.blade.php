@@ -49,8 +49,8 @@
                     <button type="submit" class="btn btn-primary rounded-pill px-4">Search</button>
                 </form>
             </div>
-            <div class="col-lg-5 d-none d-lg-block text-center">
-                <div class="hero-stat-bubble glass-light p-4 rounded-4 shadow-sm inline-block">
+            <div class="col-lg-5 d-lg-block text-center">
+                <div class="mt-3 hero-stat-bubble glass-light p-4 rounded-4 shadow-sm inline-block">
                     <h3 class="fw-bold text-white mb-0">{{ $results->total() }}</h3>
                     <small class="text-white-50">Total Initiatives</small>
                 </div>

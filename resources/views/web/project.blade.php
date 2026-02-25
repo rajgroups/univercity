@@ -2209,8 +2209,8 @@
                                         <i class="bi bi-facebook me-1"></i>Facebook
                                     </button>
                                     <button class="btn btn-outline-info btn-sm flex-grow-1"
-                                            onclick="shareProject('twitter', '{{ url()->current() }}', '{{ $project->title }}')">
-                                        <i class="bi bi-twitter-x me-1"></i>Twitter
+                                            onclick="shareProject('x', '{{ url()->current() }}', '{{ $project->title }}')">
+                                        <i class="bi bi-twitter-x me-1"></i>X (Twitter)
                                     </button>
                                     <button class="btn btn-outline-success btn-sm flex-grow-1"
                                             onclick="shareProject('whatsapp', '{{ url()->current() }}', '{{ $project->title }}')">
@@ -4867,8 +4867,8 @@ function shareProject(platform, url, title) {
         case 'facebook':
             shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
             break;
-        case 'twitter':
-            shareUrl = `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`;
+        case 'x':
+            shareUrl = `https://x.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`;
             break;
         case 'whatsapp':
             shareUrl = `https://api.whatsapp.com/send?text=${encodedTitle}%20${encodedUrl}`;

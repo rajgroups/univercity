@@ -708,59 +708,59 @@
 @push('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Auto-submit form when filters change (desktop)
+            // Auto-submit form only for search on Enter key (desktop)
             const desktopForm = document.getElementById('courseFiltersDesktop');
             if (desktopForm) {
-                const inputs = desktopForm.querySelectorAll('input[type="checkbox"], input[type="text"]');
-                inputs.forEach(input => {
-                    if (input.type === 'text') {
-                        input.addEventListener('keypress', function(e) {
-                            if (e.key === 'Enter') {
-                                desktopForm.submit();
-                            }
-                        });
-                    } else {
-                        input.addEventListener('change', function() {
+                const searchInput = desktopForm.querySelector('input[name="search"]');
+                if (searchInput) {
+                    searchInput.addEventListener('keypress', function(e) {
+                        if (e.key === 'Enter') {
                             desktopForm.submit();
-                        });
-                    }
-                });
+                        }
+                    });
+                }
             }
 
-            // Load mobile filters
-            const mobileFilters = document.getElementById('mobileFilters');
-            const mobileFilterContent = document.getElementById('mobileFilterContent');
-
-            mobileFilters.addEventListener('show.bs.offcanvas', function() {
-                if (!mobileFilterContent.innerHTML) {
-                    // Clone desktop form content for mobile
-                    const desktopForm = document.getElementById('courseFiltersDesktop');
-                    if (desktopForm) {
-                        mobileFilterContent.innerHTML = desktopForm.innerHTML;
-
-                        // Add auto-submit for mobile filters too
-                        const mobileInputs = mobileFilterContent.querySelectorAll('input[type="checkbox"]');
-                        mobileInputs.forEach(input => {
-                            input.addEventListener('change', function() {
-                                document.getElementById('courseFiltersDesktop').submit();
-                            });
-                        });
+            // Handle Apply Filters button loading state (using delegation for mobile compatibility)
+            document.addEventListener('submit', function(e) {
+                const form = e.target;
+                if (form.id === 'courseFiltersDesktop' || form.id === 'courseFiltersMobile') {
+                    const btn = form.querySelector('button[type="submit"]');
+                    if (btn && btn.innerText.includes('Apply Filters')) {
+                        btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Loading...';
+                        btn.disabled = true;
                     }
                 }
             });
 
-            // Show loading state on form submit
-            const forms = document.querySelectorAll('form[id*="Filters"]');
-            forms.forEach(form => {
-                form.addEventListener('submit', function() {
-                    const submitBtn = this.querySelector('button[type="submit"]');
-                    if (submitBtn) {
-                        submitBtn.innerHTML =
-                        '<i class="bi bi-hourglass-split me-2"></i>Loading...';
-                        submitBtn.disabled = true;
+            // Mobile filter logic
+            const mobileFilters = document.getElementById('mobileFilters');
+            const mobileFilterContent = document.getElementById('mobileFilterContent');
+
+            if (mobileFilters && mobileFilterContent) {
+                mobileFilters.addEventListener('show.bs.offcanvas', function() {
+                    if (!mobileFilterContent.innerHTML) {
+                        const desktopForm = document.getElementById('courseFiltersDesktop');
+                        if (desktopForm) {
+                            const mobileForm = document.createElement('form');
+                            mobileForm.id = 'courseFiltersMobile';
+                            mobileForm.method = 'GET';
+                            mobileForm.action = desktopForm.action;
+                            mobileForm.innerHTML = desktopForm.innerHTML;
+                            
+                            mobileForm.querySelectorAll('[id]').forEach(el => {
+                                el.id = 'mobile_' + el.id;
+                            });
+                            mobileForm.querySelectorAll('[for]').forEach(el => {
+                                el.setAttribute('for', 'mobile_' + el.getAttribute('for'));
+                            });
+
+                            mobileFilterContent.innerHTML = '';
+                            mobileFilterContent.appendChild(mobileForm);
+                        }
                     }
                 });
-            });
+            }
         });
 
         // Initialize tooltips and popovers

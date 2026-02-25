@@ -104,9 +104,6 @@
         .carousel-item img {
             transition: transform 0.5s ease;
         }
-        .carousel-item:hover img {
-            transform: scale(1.02);
-        }
 
         /* Tabs Styles */
         .modern-tabs .nav-link {
@@ -303,12 +300,12 @@
                 <div class="col-lg-6">
                     <div class="course-gallery-wrapper">
                         <div id="courseGalleryCarousel" class="carousel slide" data-bs-ride="carousel">
-                            <div class="carousel-inner">
+                            <div class="carousel-inner bg-light">
                                 <div class="carousel-item active">
                                     <img src="{{ $course->image ? asset($course->image) : asset('resource/web/assets/media/default/default-img.png') }}"
                                          class="d-block w-100"
                                          alt="{{ $course->name }}"
-                                         style="height: 450px; object-fit: cover;"
+                                         style="height: 450px; object-fit: contain;"
                                          onerror="this.src='{{ asset('resource/web/assets/media/default/default-img.png') }}'">
                                     @if($course->paid_type->value == 'free')
                                         <div class="position-absolute top-0 end-0 m-3 badge bg-success fs-6 shadow">Free</div>
@@ -322,7 +319,7 @@
                                             <img src="{{ asset($galleryImage) }}"
                                                  class="d-block w-100"
                                                  alt="Gallery Image"
-                                                 style="height: 450px; object-fit: cover;"
+                                                 style="height: 450px; object-fit: contain;"
                                                  onerror="this.src='{{ asset('resource/web/assets/media/default/default-img.png') }}'">
                                             @if($course->paid_type->value == 'free')
                                                 <div class="position-absolute top-0 end-0 m-3 badge bg-success fs-6 shadow">Free</div>
@@ -612,7 +609,7 @@
                                         </div>
                                         @endif
 
-                                        @if (!empty($course->learning_tools) && count($course->learning_tools) > 0)
+                                        <!-- @if (!empty($course->learning_tools) && count($course->learning_tools) > 0)
                                         <div class="col-md-6">
                                             <div class="feature-box text-center">
                                                 <div class="mb-3">
@@ -624,7 +621,7 @@
                                                 <p class="mb-0 fw-bold">{{ implode(', ', $course->learning_tools) }}</p>
                                             </div>
                                         </div>
-                                        @endif
+                                        @endif -->
                                     </div>
                                 </div>
 
@@ -726,7 +723,7 @@
                                             <small class="text-muted d-block text-uppercase" style="font-size: 0.75rem; letter-spacing: 0.5px;">Certificate</small>
                                             <span class="fw-bold fs-6">{{ $course->certification_type }}</span>
                                         </div>
-                                    </div>course
+                                    </div>
                                     @endif
 
                                     @if (!empty($course->learning_tools) && count($course->learning_tools) > 0)

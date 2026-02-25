@@ -598,11 +598,11 @@
                         <div class="mb-5">
                             <div id="announcementCarousel" class="carousel slide shadow-lg rounded-4 overflow-hidden"
                                 data-bs-ride="carousel">
-                                <div class="carousel-inner">
+                                <div class="carousel-inner bg-light">
                                     @foreach ($announcement->images as $index => $image)
                                         <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
                                             <img src="{{ asset($image->file_name) }}" class="d-block w-100"
-                                                style="height: 450px; object-fit: cover;"
+                                                style="height: 450px; object-fit: contain;"
                                                 alt="Scheme Image {{ $index + 1 }}">
                                         </div>
                                     @endforeach
@@ -653,7 +653,7 @@
                 @endphp
 
                 @if (!empty($points))
-                    <div class="mt-5 pt-4" id="details">
+                    <div class="col-lg-4 mt-5 pt-4" id="details">
                         <span class="section-label">Features & Benefits</span>
                         <h2 class="scheme-heading-section">Key Highlights</h2>
 

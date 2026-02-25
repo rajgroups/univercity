@@ -242,10 +242,10 @@
                     <!-- Social Share -->
                     <div class="mb-4">
                         <span class="text-white me-2">Share:</span>
-                        <a href="https://www.facebook.com/sharer/sharer.php?u={{ url()->current() }}" target="_blank" class="btn btn-sm btn-outline-light rounded-circle me-1"><i class="fab fa-facebook-f"></i></a>
-                        <a href="https://twitter.com/intent/tweet?url={{ url()->current() }}&text={{ urlencode($event->title) }}" target="_blank" class="btn btn-sm btn-outline-light rounded-circle me-1"><i class="fab fa-twitter"></i></a>
-                        <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ url()->current() }}&title={{ urlencode($event->title) }}" target="_blank" class="btn btn-sm btn-outline-light rounded-circle me-1"><i class="fab fa-linkedin-in"></i></a>
-                        <a href="https://api.whatsapp.com/send?text={{ urlencode($event->title . ' ' . url()->current()) }}" target="_blank" class="btn btn-sm btn-outline-light rounded-circle"><i class="fab fa-whatsapp"></i></a>
+                        <a href="https://www.facebook.com/sharer/sharer.php?u={{ url()->current() }}" target="_blank" class="btn btn-sm btn-outline-light rounded-circle me-1" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://x.com/intent/tweet?url={{ url()->current() }}&text={{ urlencode($event->title) }}" target="_blank" class="btn btn-sm btn-outline-light rounded-circle me-1" title="X (Twitter)"><i class="bi bi-twitter-x"></i></a>
+                        <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ url()->current() }}&title={{ urlencode($event->title) }}" target="_blank" class="btn btn-sm btn-outline-light rounded-circle me-1" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="https://api.whatsapp.com/send?text={{ urlencode($event->title . ' ' . url()->current()) }}" target="_blank" class="btn btn-sm btn-outline-light rounded-circle" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
                     </div>
 
                     <!-- Quick Info Glass Panel -->
@@ -360,21 +360,21 @@
                             <h3 class="fw-bold mb-4">Sponsors</h3>
                             <div class="row g-4">
                                 @foreach($sponsors as $sponsor)
-                                <div class="col-md-6 col-lg-4">
-                                    <div class="border rounded p-3 h-100 bg-light">
+                                <div class="col-md-6 col-lg-4 mx-auto">
+                                    <div class="border rounded p-4 h-100 bg-light d-flex flex-column align-items-center justify-content-center text-center">
                                         @if(!empty($sponsor['logo']))
-                                        <div class="text-center mb-3 sponsor-logo-container bg-white rounded p-2">
+                                        <div class="sponsor-logo-container bg-white rounded p-3 mb-3 d-flex align-items-center justify-content-center shadow-sm" style="width: 120px; height: 120px;">
                                             <img src="{{ asset($sponsor['logo']) }}" alt="{{ $sponsor['name'] ?? 'Sponsor' }}"
-                                                 class="img-fluid" style="max-height: 80px; object-fit: contain;">
+                                                 class="img-fluid sponsor-logo" style="max-height: 100%; max-width: 100%;">
                                         </div>
                                         @endif
-
+ 
                                         @if(!empty($sponsor['name']))
-                                        <h6 class="fw-bold text-center text-dark mb-1">{{ $sponsor['name'] }}</h6>
+                                        <h6 class="fw-bold text-dark mb-2">{{ $sponsor['name'] }}</h6>
                                         @endif
-
+ 
                                         @if(!empty($sponsor['details']))
-                                        <p class="small text-muted text-center mb-0">{{ $sponsor['details'] }}</p>
+                                        <p class="small text-muted mb-0">{{ $sponsor['details'] }}</p>
                                         @endif
                                     </div>
                                 </div>

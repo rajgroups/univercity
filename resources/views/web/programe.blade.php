@@ -435,10 +435,12 @@
                 @if ($program->images && $program->images->count() > 0)
                     <div class="mb-5">
                         <div id="progCarousel" class="carousel slide shadow-lg rounded-4 overflow-hidden" data-bs-ride="carousel">
-                            <div class="carousel-inner">
+                            <div class="carousel-inner bg-light">
                                 @foreach ($program->images as $index => $image)
                                     <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
-                                        <img src="{{ asset($image->file_name) }}" class="d-block w-100" style="height: 450px; object-fit: cover;" alt="Program Image {{ $index + 1 }}">
+                                        <img src="{{ asset($image->file_name) }}" class="d-block w-100"
+                                            style="height: 450px; object-fit: contain;"
+                                            alt="Scheme Image {{ $index + 1 }}">
                                     </div>
                                 @endforeach
                             </div>
@@ -475,7 +477,7 @@
                 @endphp
 
                 @if (!empty($points))
-                    <div class="mt-5 pt-4">
+                    <div class="col-lg-4 mt-5 pt-4">
                         <span class="section-label">Learning Path</span>
                         <h2 class="prog-heading-section">Program Curriculum</h2>
 

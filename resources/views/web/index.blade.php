@@ -342,6 +342,67 @@
             </div>
         </div>
     </section> <!-- How We Operate Section End -->
+        <div class="blog-sec mt-80 mb-5">
+        <div class="container-fluid">
+            <div class="heading mb-10 text-start">
+                <div class="tagblock mb-16"> <img src="{{ asset('resource/web/assets/media/hero/buld-vec.png') }}"
+                        class="bulb-vec" alt="">
+                    <p class="black">Upcoming Projects</p>
+                </div>
+                <div class="cds-119 css-1v1mgi3 cds-121 mt-2">{{ $settings->upcoming_project_title ?? null }}</div>
+                <h3 class="fw-bold mt-2 mb-2">{!! $settings->upcoming_project_main_sub_title ?? null !!}</h3>
+                <p class="cds-119 css-lg65q1 cds-121">{{ $settings->upcoming_final_title ?? null }}</p>
+            </div> <!-- Swiper -->
+            <div class="swiper mySwipers">
+                <div class="swiper-wrapper">
+                    @if ($upcomingProjects->isEmpty())
+                        <div class="w-100">
+                            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                <strong>No upcoming projects found.</strong> Please check back later.
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                    aria-label="Close"></button>
+                            </div>
+                        </div>
+                    @else
+                        @foreach ($upcomingProjects as $project)
+                            <!-- Slide -->
+                            <div class="swiper-slide" data-swiper-autoplay="2000">
+                                <div class="blog-card">
+
+                                    <a href="{{ route('web.project.show', [$project->category?->slug ?? 'N/A', $project->slug]) }}"
+                                        class="card-img">
+                                        <img src="{{ asset($project->thumbnail_image) }}" alt="{{ $project->title }}">
+                                        <span class="date-block">
+                                            <span
+                                                class="h6 fw-400 light-black">{{ \Carbon\Carbon::parse($project->created_at)->format('d') }}</span>
+                                            <span
+                                                class="h6 fw-400 light-black">{{ \Carbon\Carbon::parse($project->created_at)->format('M') }}</span>
+                                        </span>
+                                    </a>
+                                    <div class="card-content">
+                                        {{-- <div class="d-flex align-items-center gap-8 mb-20">
+                                        <img src="{{ asset('upload/project/'.$project->image) }}" class="card-user" alt="">
+                                        <p>By Admin</p>
+                                    </div> --}}
+                                        <a href="{{ route('web.project.show', [$project->category?->slug ?? 'N/A', $project->slug]) }}"
+                                            class="h6 fw-500 mb-8">{{ $project->title }}</a>
+                                        <p class="light-gray mb-24">
+                                            {{ \Illuminate\Support\Str::limit(strip_tags($project->description), 100) }}
+                                        </p>
+                                        <a href="{{ route('web.project.show', [$project->category?->slug ?? 'N/A', $project->slug]) }}"
+                                            class="card-btn"> Read More</a>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    @endif
+                </div>
+
+                <!-- Pagination -->
+                <div class="swiper-pagination"></div>
+            </div>
+        </div>
+    </div> <!-- Our Courses Section Start -->
      <!-- Upcoming Projects -->
     <div class="blog-sec mt-10 ai-background-section">
         <div class="container-fluid">
@@ -416,67 +477,6 @@
             </div>
         </div>
     </div>
-    <div class="blog-sec mt-80 mb-5">
-        <div class="container-fluid">
-            <div class="heading mb-10 text-start">
-                <div class="tagblock mb-16"> <img src="{{ asset('resource/web/assets/media/hero/buld-vec.png') }}"
-                        class="bulb-vec" alt="">
-                    <p class="black">Upcoming Projects</p>
-                </div>
-                <div class="cds-119 css-1v1mgi3 cds-121 mt-2">{{ $settings->upcoming_project_title ?? null }}</div>
-                <h3 class="fw-bold mt-2 mb-2">{!! $settings->upcoming_project_main_sub_title ?? null !!}</h3>
-                <p class="cds-119 css-lg65q1 cds-121">{{ $settings->upcoming_final_title ?? null }}</p>
-            </div> <!-- Swiper -->
-            <div class="swiper mySwipers">
-                <div class="swiper-wrapper">
-                    @if ($upcomingProjects->isEmpty())
-                        <div class="w-100">
-                            <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                                <strong>No upcoming projects found.</strong> Please check back later.
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                    aria-label="Close"></button>
-                            </div>
-                        </div>
-                    @else
-                        @foreach ($upcomingProjects as $project)
-                            <!-- Slide -->
-                            <div class="swiper-slide" data-swiper-autoplay="2000">
-                                <div class="blog-card">
-
-                                    <a href="{{ route('web.project.show', [$project->category?->slug ?? 'N/A', $project->slug]) }}"
-                                        class="card-img">
-                                        <img src="{{ asset($project->thumbnail_image) }}" alt="{{ $project->title }}">
-                                        <span class="date-block">
-                                            <span
-                                                class="h6 fw-400 light-black">{{ \Carbon\Carbon::parse($project->created_at)->format('d') }}</span>
-                                            <span
-                                                class="h6 fw-400 light-black">{{ \Carbon\Carbon::parse($project->created_at)->format('M') }}</span>
-                                        </span>
-                                    </a>
-                                    <div class="card-content">
-                                        {{-- <div class="d-flex align-items-center gap-8 mb-20">
-                                        <img src="{{ asset('upload/project/'.$project->image) }}" class="card-user" alt="">
-                                        <p>By Admin</p>
-                                    </div> --}}
-                                        <a href="{{ route('web.project.show', [$project->category?->slug ?? 'N/A', $project->slug]) }}"
-                                            class="h6 fw-500 mb-8">{{ $project->title }}</a>
-                                        <p class="light-gray mb-24">
-                                            {{ \Illuminate\Support\Str::limit(strip_tags($project->description), 100) }}
-                                        </p>
-                                        <a href="{{ route('web.project.show', [$project->category?->slug ?? 'N/A', $project->slug]) }}"
-                                            class="card-btn"> Read More</a>
-                                    </div>
-                                </div>
-                            </div>
-                        @endforeach
-                    @endif
-                </div>
-
-                <!-- Pagination -->
-                <div class="swiper-pagination"></div>
-            </div>
-        </div>
-    </div> <!-- Our Courses Section Start -->
     <style>
         .ai-background-section {
             position: relative;
@@ -574,17 +574,31 @@
                                             <p class="text-muted small mb-3">{{ Str::limit(strip_tags($program->description), 100) }}</p>
 
                                             <div class="d-flex justify-content-between align-items-center mt-auto">
-                                                <div class="share-links-modern">
+                                                <div class="share-wrapper">
                                                     @php
-                                                        $progUrl = urlencode(route('web.announcement.program', [$progCategorySlug, $program->slug]));
-                                                        $progText = urlencode($program->title);
+                                                        $progUrl = route('web.announcement.program', [$progCategorySlug, $program->slug]);
+                                                        $progText = $program->title;
                                                     @endphp
-                                                    <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ $progUrl }}" target="_blank" class="share-icon-circle">
-                                                        <img src="{{ asset('resource/web/assets/media/vector/linkedin.png') }}" alt="LI">
+                                                    <a href="javascript:void(0)" class="share-toggle share-icon-circle" title="Share this program">
+                                                        <i class="bi bi-share"></i>
                                                     </a>
-                                                    <a href="https://www.facebook.com/sharer/sharer.php?u={{ $progUrl }}" target="_blank" class="share-icon-circle">
-                                                        <img src="{{ asset('resource/web/assets/media/vector/facebook.png') }}" alt="FB">
-                                                    </a>
+                                                    <div class="share-links-modern">
+                                                        <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ urlencode($progUrl) }}" target="_blank" class="share-icon-circle" title="LinkedIn">
+                                                            <img src="{{ asset('resource/web/assets/media/vector/linkedin.png') }}" alt="LinkedIn">
+                                                        </a>
+                                                        <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode($progUrl) }}" target="_blank" class="share-icon-circle" title="Facebook">
+                                                            <img src="{{ asset('resource/web/assets/media/vector/facebook.png') }}" alt="Facebook">
+                                                        </a>
+                                                        <a href="https://x.com/intent/tweet?url={{ urlencode($progUrl) }}&text={{ urlencode($progText) }}" target="_blank" class="share-icon-circle" title="X (Twitter)">
+                                                            <i class="bi bi-twitter-x"></i>
+                                                        </a>
+                                                        <a href="https://api.whatsapp.com/send?text={{ urlencode($progText . ' ' . $progUrl) }}" target="_blank" class="share-icon-circle" title="WhatsApp">
+                                                            <i class="bi bi-whatsapp"></i>
+                                                        </a>
+                                                        <a href="javascript:void(0)" class="share-icon-circle copy-link" data-url="{{ $progUrl }}" title="Copy Link">
+                                                            <i class="bi bi-link-45deg"></i>
+                                                        </a>
+                                                    </div>
                                                 </div>
                                                 <a href="{{ route('web.announcement.program', [$progCategorySlug, $program->slug]) }}" class="btn btn-sm btn-outline-primary rounded-pill px-3">Explore Now</a>
                                             </div>
@@ -762,22 +776,62 @@
             background: rgba(1, 140, 1, 0.02);
         }
 
-        /* Interactive Share Icons */
+        /* Interactive Share Icons Tooltip Style */
+        .share-wrapper {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+        }
+
         .share-links-modern {
-            display: flex;
-            gap: 12px;
-            margin-top: 15px;
+            position: absolute;
+            bottom: calc(100% + 15px);
+            left: 50%;
+            transform: translateX(-50%) translateY(10px);
+            background: #ffffff;
+            padding: 8px;
+            border-radius: 50px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            display: grid;
+            gap: 8px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            z-index: 1000;
+            border: 1px solid #eee;
+            white-space: nowrap;
+        }
+
+        .share-links-modern.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* Tooltip Arrow */
+        .share-links-modern::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 8px;
+            border-style: solid;
+            border-color: #ffffff transparent transparent transparent;
         }
 
         .share-icon-circle {
-            width: 36px;
-            height: 36px;
+            width: 38px;
+            height: 38px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: #f1f2f6;
+            background: #f8f9fa;
             transition: var(--transition);
+            cursor: pointer;
+            text-decoration: none !important;
+            border: none;
         }
 
         .share-icon-circle:hover {
@@ -787,6 +841,16 @@
 
         .share-icon-circle:hover img {
             filter: brightness(0) invert(1);
+        }
+
+        .share-icon-circle:hover i {
+            color: #fff;
+        }
+
+        .share-icon-circle i {
+            font-size: 18px;
+            color: #555;
+            transition: var(--transition);
         }
 
         .share-icon-circle img {
@@ -848,7 +912,7 @@
             </div>
             <div class="col-md-5">
                 <div class="position-relative">
-                    <img src="{{ asset('resource/web/assets/media/images/proccess.jfif') }}" class="img-fluid rounded-4 shadow-lg w-100" style="object-fit: cover; height: 450px;">
+                    <img src="{{ asset('resource/web/assets/media/images/proccess.jfif') }}" class="img-fluid rounded-4 shadow-lg w-100" style="object-fit: fill; height: 450px;">
                     <div class="position-absolute bottom-0 start-0 p-4 w-100">
                         <div class="modern-card p-3 glass-bright">
                             <h6 class="mb-0 fw-bold"><i class="bi bi-check-circle-fill text-primary me-2"></i> Quality Education for All</h6>
@@ -864,7 +928,7 @@
             <div class="heading mb-48">
                 <div class="tagblock mb-16"> <img src="{{ asset('resource/web/assets/media/hero/buld-vec.png') }}"
                         class="bulb-vec" alt="">
-                    <p class="black">Government Schemes We Support</p>
+                    <p class="black"> Government Schemes We Support</p>
                 </div>
                 <div class="text-start mt-2">{{ $settings->gvt_scheme_title ?? null }}</div>
                 <h3 class="fw-500 text-start mt-2 mb-2">{{ $settings->gvt_scheme_main_title ?? null }} <span
@@ -898,20 +962,31 @@
                                             <p class="text-muted small mb-3">{{ Str::limit($scheme->subtitle, 80) }}</p>
 
                                             <div class="d-flex justify-content-between align-items-center mt-auto">
-                                                <div class="share-links-modern">
+                                                <div class="share-wrapper">
                                                     @php
-                                                        $currentUrl = urlencode(route('web.announcement.scheme', [$categorySlug, $scheme->slug]));
-                                                        $shareText = urlencode($scheme->title);
+                                                        $currentUrl = route('web.announcement.scheme', [$categorySlug, $scheme->slug]);
+                                                        $shareText = $scheme->title;
                                                     @endphp
-                                                    <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ $currentUrl }}" target="_blank" class="share-icon-circle">
-                                                        <img src="{{ asset('resource/web/assets/media/vector/linkedin.png') }}" alt="LI">
+                                                    <a href="javascript:void(0)" class="share-toggle share-icon-circle" title="Share this scheme">
+                                                        <i class="bi bi-share"></i>
                                                     </a>
-                                                    <a href="https://www.facebook.com/sharer/sharer.php?u={{ $currentUrl }}" target="_blank" class="share-icon-circle">
-                                                        <img src="{{ asset('resource/web/assets/media/vector/facebook.png') }}" alt="FB">
-                                                    </a>
-                                                    <a href="https://twitter.com/intent/tweet?url={{ $currentUrl }}&text={{ $shareText }}" target="_blank" class="share-icon-circle">
-                                                        <img src="{{ asset('resource/web/assets/media/vector/twitter.webp') }}" alt="X">
-                                                    </a>
+                                                    <div class="share-links-modern">
+                                                        <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ urlencode($currentUrl) }}" target="_blank" class="share-icon-circle" title="LinkedIn">
+                                                            <img src="{{ asset('resource/web/assets/media/vector/linkedin.png') }}" alt="LinkedIn">
+                                                        </a>
+                                                        <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode($currentUrl) }}" target="_blank" class="share-icon-circle" title="Facebook">
+                                                            <img src="{{ asset('resource/web/assets/media/vector/facebook.png') }}" alt="Facebook">
+                                                        </a>
+                                                        <a href="https://x.com/intent/tweet?url={{ urlencode($currentUrl) }}&text={{ urlencode($shareText) }}" target="_blank" class="share-icon-circle" title="X (Twitter)">
+                                                            <i class="bi bi-twitter-x"></i>
+                                                        </a>
+                                                        <a href="https://api.whatsapp.com/send?text={{ urlencode($shareText . ' ' . $currentUrl) }}" target="_blank" class="share-icon-circle" title="WhatsApp">
+                                                            <i class="bi bi-whatsapp"></i>
+                                                        </a>
+                                                        <a href="javascript:void(0)" class="share-icon-circle copy-link" data-url="{{ $currentUrl }}" title="Copy Link">
+                                                            <i class="bi bi-link-45deg"></i>
+                                                        </a>
+                                                    </div>
                                                 </div>
                                                 <a href="{{ route('web.announcement.scheme', [$categorySlug, $scheme->slug]) }}" class="btn btn-sm btn-outline-primary rounded-pill px-3">View Details</a>
                                             </div>
@@ -1066,7 +1141,7 @@
                                     <i class="bi bi-building text-primary"></i>
                                 </div>
                                 <div>
-                                    <h6 class="fw-bold mb-1">Government Schemes</h6>
+                                    <h6 class="fw-bold mb-1">State and Central Government Schemes</h6>
                                     <p class="small text-muted mb-0">Partnering with central programs for education and skills.</p>
                                 </div>
                             </div>
@@ -1172,7 +1247,7 @@
             </div>
         </div>
     </div>
-    <div class="stats-section py-5 mb-5 wow fadeInUp animated d-none d-lg-block" data-wow-delay="440ms">
+    {{-- <div class="stats-section py-5 mb-5 wow fadeInUp animated d-none d-lg-block" data-wow-delay="440ms">
         <div class="container">
             <div class="modern-card p-4 py-5 bg-primary text-white">
                 <div class="row text-center g-4">
@@ -1203,9 +1278,9 @@
                 </div>
             </div>
         </div>
-    </div> <!-- Content Block Section End -->
+    </div> <!-- Content Block Section End --> --}}
     <!-- Online Learning Section Start -->
-    <section class="learnig-journey-sec mb-120 wow fadeInUp animated" data-wow-delay="490ms">
+    <section class="learnig-journey-sec mb-120 mt-2 wow fadeInUp animated" data-wow-delay="490ms">
         <div class="container-fluid">
             <div class="row row-gap-4">
                 <div class="col-lg-6">
@@ -1492,7 +1567,72 @@
             // Optional: Detect manual scroll interaction if we want to get fancy,
             // but the simplified hover-pause logic handles the "manual scroll" requirement:
             // When user hovers, it stops. They can then wheel-scroll.
-            // When they leave, it resumes from that spot.
+            // Social Share Tooltip Toggle
+            document.addEventListener('click', function(e) {
+                const toggle = e.target.closest('.share-toggle');
+                const copyBtn = e.target.closest('.copy-link');
+                
+                if (toggle) {
+                    const wrapper = toggle.closest('.share-wrapper');
+                    const links = wrapper.querySelector('.share-links-modern');
+                    
+                    // Close all other open share tooltips
+                    document.querySelectorAll('.share-links-modern.active').forEach(item => {
+                        if (item !== links) {
+                            item.classList.remove('active');
+                            const otherToggle = item.closest('.share-wrapper').querySelector('.share-toggle i');
+                            otherToggle.classList.replace('bi-x-lg', 'bi-share');
+                        }
+                    });
+
+                    links.classList.toggle('active');
+                    
+                    // Toggle share icon
+                    const icon = toggle.querySelector('i');
+                    if (links.classList.contains('active')) {
+                        icon.classList.replace('bi-share', 'bi-x-lg');
+                    } else {
+                        icon.classList.replace('bi-x-lg', 'bi-share');
+                    }
+                    
+                    e.preventDefault();
+                    return;
+                }
+
+                // Copy Link Functionality
+                if (copyBtn) {
+                    const url = copyBtn.getAttribute('data-url');
+                    navigator.clipboard.writeText(url).then(() => {
+                        const icon = copyBtn.querySelector('i');
+                        icon.classList.replace('bi-link-45deg', 'bi-check2');
+                        copyBtn.style.background = '#018c01';
+                        copyBtn.style.borderColor = '#018c01';
+                        icon.style.color = '#fff';
+                        
+                        setTimeout(() => {
+                            icon.classList.replace('bi-check2', 'bi-link-45deg');
+                            copyBtn.style.background = '';
+                            icon.style.color = '';
+                        }, 2000);
+                        
+                        // Using toastr if available (from layout)
+                        if (typeof toastr !== 'undefined') {
+                            toastr.success('Link copied to clipboard!');
+                        }
+                    });
+                    e.preventDefault();
+                    return;
+                }
+
+                // Close tooltip when clicking outside
+                if (!e.target.closest('.share-wrapper')) {
+                    document.querySelectorAll('.share-links-modern.active').forEach(item => {
+                        item.classList.remove('active');
+                        const toggleIcon = item.closest('.share-wrapper').querySelector('.share-toggle i');
+                        toggleIcon.classList.replace('bi-x-lg', 'bi-share');
+                    });
+                }
+            });
         });
     </script>
     <!-- content @e -->

@@ -176,7 +176,10 @@
     <section class="couses-sec mb-120">
         <div class="container-fluid">
             <div class="d-flex align-items-center justify-content-sm-between justify-content-center row-gap-4 flex-wrap mb-5">
-                <h4 class="text-center">Global Learning Pathways</h4>
+                <div class="text-center text-sm-start">
+                    <h4 class="mb-1">Global Learning Pathways</h4>
+                    <p class="text-muted small mb-0 d-md-none">Showing <strong>{{ $courses->firstItem() ?? 0 }}-{{ $courses->lastItem() ?? 0 }}</strong> of <strong>{{ $courses->total() }}</strong> courses</p>
+                </div>
                 <div class="d-flex align-items-center gap-8">
                     {{-- MOBILE FILTER BUTTON --}}
                     <button class="btn btn-outline-primary d-md-none me-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileFilterOffcanvas" aria-controls="mobileFilterOffcanvas">
@@ -715,9 +718,10 @@
                         <h2 class="accordion-header" id="headingSectorM">
                             <button class="accordion-button collapsed shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSectorM">
                                 <i class="bi bi-grid me-2"></i> Sector
+                                <span class="badge bg-primary ms-auto">{{ count($selectedSectors) }}</span>
                             </button>
                         </h2>
-                        <div id="collapseSectorM" class="accordion-collapse collapse show" data-bs-parent="#filterAccordionMobile">
+                        <div id="collapseSectorM" class="accordion-collapse collapse {{ count($selectedSectors) ? 'show' : '' }}" data-bs-parent="#filterAccordionMobile">
                             <div class="accordion-body pt-2">
                                 @foreach ($sectors as $sector)
                                     <div class="form-check mb-2">
@@ -734,9 +738,10 @@
                         <h2 class="accordion-header" id="headingCountryM">
                             <button class="accordion-button collapsed shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCountryM">
                                 <i class="bi bi-flag me-2"></i> Country
+                                <span class="badge bg-primary ms-auto">{{ count($selectedCountries) }}</span>
                             </button>
                         </h2>
-                        <div id="collapseCountryM" class="accordion-collapse collapse" data-bs-parent="#filterAccordionMobile">
+                        <div id="collapseCountryM" class="accordion-collapse collapse {{ count($selectedCountries) ? 'show' : '' }}" data-bs-parent="#filterAccordionMobile">
                             <div class="accordion-body pt-2">
                                 @foreach ($countries as $country)
                                     <div class="form-check mb-2">
@@ -748,19 +753,102 @@
                         </div>
                     </div>
 
+                    {{-- Category/Level --}}
+                    <div class="accordion-item border-0 mb-3 shadow-sm">
+                        <h2 class="accordion-header" id="headingCategoryM">
+                            <button class="accordion-button collapsed shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCategoryM">
+                                <i class="bi bi-folder me-2"></i> Course Level
+                                <span class="badge bg-primary ms-auto">{{ count($selectedCategories) }}</span>
+                            </button>
+                        </h2>
+                        <div id="collapseCategoryM" class="accordion-collapse collapse {{ count($selectedCategories) ? 'show' : '' }}" data-bs-parent="#filterAccordionMobile">
+                            <div class="accordion-body pt-2">
+                                @foreach ($categories as $category)
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" name="categories[]" id="categoryM{{ $category->id }}" value="{{ $category->id }}" {{ in_array($category->id, $selectedCategories) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="categoryM{{ $category->id }}">{{ $category->name }}</label>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Language --}}
+                    <div class="accordion-item border-0 mb-3 shadow-sm">
+                        <h2 class="accordion-header" id="headingLangM">
+                            <button class="accordion-button collapsed shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#collapseLangM">
+                                <i class="bi bi-translate me-2"></i> Language
+                                <span class="badge bg-primary ms-auto">{{ count($selectedLanguages) }}</span>
+                            </button>
+                        </h2>
+                        <div id="collapseLangM" class="accordion-collapse collapse {{ count($selectedLanguages) ? 'show' : '' }}" data-bs-parent="#filterAccordionMobile">
+                            <div class="accordion-body pt-2">
+                                @foreach (['English', 'Japanese', 'Chinese', 'French', 'German', 'Spanish'] as $language)
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" name="languages[]" id="langM{{ $loop->index }}" value="{{ $language }}" {{ in_array($language, $selectedLanguages) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="langM{{ $loop->index }}">{{ $language }}</label>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+
                     {{-- Pathway Type --}}
                     <div class="accordion-item border-0 mb-3 shadow-sm">
                         <h2 class="accordion-header" id="headingPathwayM">
                             <button class="accordion-button collapsed shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePathwayM">
                                 <i class="bi bi-diagram-3 me-2"></i> Study Mode
+                                <span class="badge bg-primary ms-auto">{{ count($selectedPathways) }}</span>
                             </button>
                         </h2>
-                        <div id="collapsePathwayM" class="accordion-collapse collapse" data-bs-parent="#filterAccordionMobile">
+                        <div id="collapsePathwayM" class="accordion-collapse collapse {{ count($selectedPathways) ? 'show' : '' }}" data-bs-parent="#filterAccordionMobile">
                             <div class="accordion-body pt-2">
                                 @foreach (['Online', 'Onsite Abroad', 'Hybrid', 'Twinning', 'Dual Credit'] as $pathway)
                                     <div class="form-check mb-2">
                                         <input class="form-check-input" type="checkbox" name="pathways[]" id="pathwayM{{ $loop->index }}" value="{{ $pathway }}" {{ in_array($pathway, $selectedPathways) ? 'checked' : '' }}>
                                         <label class="form-check-label" for="pathwayM{{ $loop->index }}">{{ $pathway }}</label>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Price --}}
+                    <div class="accordion-item border-0 mb-3 shadow-sm">
+                        <h2 class="accordion-header" id="headingPriceM">
+                            <button class="accordion-button collapsed shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePriceM">
+                                <i class="bi bi-currency-rupee me-2"></i> Price
+                                <span class="badge bg-primary ms-auto">{{ count($selectedPrices) }}</span>
+                            </button>
+                        </h2>
+                        <div id="collapsePriceM" class="accordion-collapse collapse {{ count($selectedPrices) ? 'show' : '' }}" data-bs-parent="#filterAccordionMobile">
+                            <div class="accordion-body pt-2">
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" name="prices[]" id="priceFreeM" value="Free" {{ in_array('Free', $selectedPrices) ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="priceFreeM">Free</label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" name="prices[]" id="pricePaidM" value="Paid" {{ in_array('Paid', $selectedPrices) ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="pricePaidM">Paid</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Duration --}}
+                    <div class="accordion-item border-0 mb-3 shadow-sm">
+                        <h2 class="accordion-header" id="headingDurationM">
+                            <button class="accordion-button collapsed shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDurationM">
+                                <i class="bi bi-clock me-2"></i> Duration
+                                <span class="badge bg-primary ms-auto">{{ count(request('durations', [])) }}</span>
+                            </button>
+                        </h2>
+                        <div id="collapseDurationM" class="accordion-collapse collapse {{ count(request('durations', [])) ? 'show' : '' }}" data-bs-parent="#filterAccordionMobile">
+                            <div class="accordion-body pt-2">
+                                @foreach (['3 Months', '6 Months', '1 Year', '2 Years', '3+ Years'] as $duration)
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" name="durations[]" id="durM{{ $loop->index }}" value="{{ $duration }}" {{ in_array($duration, request('durations', [])) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="durM{{ $loop->index }}">{{ $duration }}</label>
                                     </div>
                                 @endforeach
                             </div>

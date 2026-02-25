@@ -1,202 +1,546 @@
 @extends('layouts.web.app')
+
 @section('content')
-  @push('meta')
-      <title>About - Indian Skill Institute Co-operation (ISICO)</title>
+    @push('meta')
+        <title>About ISICO - Indian Skill Institute Co-operation</title>
 
-      <meta name="description" content="The Indian Skill Institute Co-operation (ISICO), founded in 2020, is committed to advancing India’s socio-economic development through education, skill enhancement, and entrepreneurship. Focused on bridging gaps in rural and underprivileged areas, ISICO empowers individuals to secure sustainable livelihoods and contribute to national growth.">
-      <meta name="keywords" content="Indian Skill Institute, ISICO, skill development, education, entrepreneurship, socio-economic development, NEP 2020, sustainable livelihoods, SDG 4, SDG 5, SDG 8, Skill India, Make in India">
-      <meta name="author" content="Indian Skill Institute Co-operation (ISICO)">
-      <meta name="robots" content="index, follow">
+        <meta name="description"
+            content="Indian Skill Institute Co-operation (ISICO), founded in 2020, is a mission-driven social development platform connecting education, industry, and government initiatives to enable accessible skill development and sustainable livelihoods.">
+        <meta name="keywords"
+            content="Indian Skill Institute, ISICO, skill development, NGO, Skill India, NEP 2020, vocational training, sustainable livelihoods, entrepreneurship, global skill certification">
+        <meta name="author" content="Indian Skill Institute Co-operation (ISICO)">
+        <meta name="robots" content="index, follow">
 
-      <!-- Canonical Tag -->
-      <link rel="canonical" href="{{ url()->current() }}">
+        <!-- Canonical Tag -->
+        <link rel="canonical" href="{{ url()->current() }}">
 
-      <!-- Open Graph -->
-      <meta property="og:title" content="About - Indian Skill Institute Co-operation (ISICO)">
-      <meta property="og:description" content="The Indian Skill Institute Co-operation (ISICO), founded in 2020, is committed to advancing India’s socio-economic development through education, skill enhancement, and entrepreneurship. Focused on bridging gaps in rural and underprivileged areas, ISICO empowers individuals to secure sustainable livelihoods and contribute to national growth.">
-      <meta property="og:type" content="website">
-      <meta property="og:url" content="{{ url()->current() }}">
-      <meta property="og:image" content="{{ asset('default.jpg') }}">
+        <!-- Open Graph -->
+        <meta property="og:title" content="About ISICO - Indian Skill Institute Co-operation">
+        <meta property="og:description"
+            content="Founded in 2020, ISICO builds a structured ecosystem connecting education, industry, and government initiatives to enable accessible, outcome-oriented skill development.">
+        <meta property="og:type" content="website">
+        <meta property="og:url" content="{{ url()->current() }}">
+        <meta property="og:image" content="{{ asset('resource/web/assets/media/logo/isico-logo-main.png') }}">
 
-      <!-- Twitter Card -->
-      <meta name="twitter:card" content="summary_large_image">
-      <meta name="twitter:title" content="About - Indian Skill Institute Co-operation (ISICO)">
-      <meta name="twitter:description" content="The Indian Skill Institute Co-operation (ISICO), founded in 2020, is committed to advancing India’s socio-economic development through education, skill enhancement, and entrepreneurship. Focused on bridging gaps in rural and underprivileged areas, ISICO empowers individuals to secure sustainable livelihoods and contribute to national growth.">
-      <meta name="twitter:image" content="{{ asset('default.jpg') }}">
-  @endpush
+        <!-- Twitter Card -->
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="About ISICO - Indian Skill Institute Co-operation">
+        <meta name="twitter:description"
+            content="ISICO is a mission-driven social development platform working as a Skill Ecosystem Enabler and Implementation Partner.">
+    @endpush
+
     <style>
-        .modern-page-banner {
-            position: relative;
-            min-height: 400px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            overflow: hidden;
-            margin-bottom: 80px;
+        :root {
+            --isico-primary: #004274;
+            --isico-secondary: #ff6b35;
+            --isico-accent: #00a8cc;
+            --isico-body: #6c757d;
+            --isico-heading: #1a1a1a;
+            --glass-bg: rgba(255, 255, 255, 0.9);
         }
 
-        .modern-page-banner::before {
+        /* Banner Styles */
+        .page-header-banner {
+            position: relative;
+            padding: 120px 0 80px;
+            background: linear-gradient(135deg, var(--isico-primary) 0%, #002d50 100%);
+            overflow: hidden;
+            color: #fff;
+        }
+
+        .page-header-banner::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(135deg, rgba(0,0,0,0.85) 0%, rgba(255, 107, 107, 0.2) 100%);
+            background-image: url("https://www.transparenttextures.com/patterns/cubes.png");
+            opacity: 0.1;
+        }
+
+        .banner-shape {
+            position: absolute;
+            bottom: -50px;
+            right: -50px;
+            width: 300px;
+            height: 300px;
+            background: var(--isico-secondary);
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.3;
+            z-index: 0;
+        }
+
+        .breadcrumb-custom {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            padding: 8px 20px;
+            border-radius: 50px;
+            display: inline-flex;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+        }
+
+        .breadcrumb-custom a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .breadcrumb-custom a:hover {
+            color: #fff;
+        }
+
+        .banner-title {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 800;
+            margin-bottom: 20px;
+            line-height: 1.1;
+        }
+
+        .banner-subtitle {
+            font-size: 1.25rem;
+            max-width: 800px;
+            color: rgba(255, 255, 255, 0.85);
+            font-weight: 300;
+        }
+
+        /* Section Header */
+        .section-tag {
+            display: inline-block;
+            padding: 5px 15px;
+            background: rgba(0, 66, 116, 0.1);
+            color: var(--isico-primary);
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 1px;
+            font-size: 0.75rem;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+
+        .section-title {
+            font-weight: 800;
+            color: var(--isico-heading);
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        /* Cards and Items */
+        .feature-card {
+            background: #fff;
+            padding: 40px;
+            border-radius: 20px;
+            border: 1px solid #f0f0f0;
+            height: 100%;
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            position: relative;
+            overflow: hidden;
             z-index: 1;
         }
 
-        .modern-banner-content {
-            position: relative;
-            z-index: 2;
-            text-align: center;
-            width: 100%;
-            padding: 0 15px;
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+            border-color: var(--isico-primary);
         }
 
-        .modern-banner-title {
-            font-size: 3.5rem;
-            font-weight: 800;
+        .feature-icon-wrapper {
+            width: 70px;
+            height: 70px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--isico-primary);
+            margin-bottom: 25px;
+            transition: 0.3s;
+        }
+
+        .feature-card:hover .feature-icon-wrapper {
+            background: var(--isico-primary);
             color: #fff;
-            margin-bottom: 1rem;
-            text-shadow: 0 4px 10px rgba(0,0,0,0.3);
-            letter-spacing: -1px;
-        }
-        
-        .modern-banner-subtitle {
-             font-size: 1.25rem;
-             color: rgba(255,255,255,0.9);
-             font-weight: 300;
-             max-width: 700px;
-             margin: 0 auto;
-             line-height: 1.6;
         }
 
-        .modern-breadcrumb {
-            display: inline-flex;
-            padding: 8px 16px;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(5px);
-            border-radius: 50px;
-            margin-bottom: 2rem;
-            border: 1px solid rgba(255, 255, 255, 0.15);
+        /* Ecosystem Grid */
+        .eco-grid-item {
+            border-radius: 12px;
+            padding: 30px;
+            background: #fff;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            height: 100%;
+            border-top: 4px solid var(--isico-primary);
         }
 
-        .modern-breadcrumb span {
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 0.9rem;
-            font-weight: 500;
+        .eco-grid-item h5 {
+            color: var(--isico-primary);
+            font-weight: 700;
         }
 
-        @media (max-width: 768px) {
-            .modern-page-banner {
-                min-height: 250px;
-            }
-            .modern-banner-title {
-                font-size: 2.5rem;
-            }
+        /* Quote Section */
+        .quote-box {
+            background: var(--isico-primary);
+            padding: 50px;
+            border-radius: 30px;
+            color: #fff;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quote-box blockquote {
+            font-size: 1.5rem;
+            font-style: italic;
+            font-weight: 300;
+            margin: 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Mission Vision Cards */
+        .mv-card {
+            padding: 30px;
+            border-radius: 15px;
+            color: #fff;
+            height: 100%;
+        }
+
+        .vision-card { background: linear-gradient(45deg, #004274, #006ebc); }
+        .mission-card { background: linear-gradient(45deg, #ff6b35, #ff9e7d); }
+
+        /* Icon List */
+        .check-list {
+            list-style: none;
+            padding: 0;
+        }
+        .check-list li {
+            position: relative;
+            padding-left: 35px;
+            margin-bottom: 12px;
+            color: var(--isico-body);
+        }
+        .check-list li::before {
+            content: '\F633';
+            font-family: 'bootstrap-icons';
+            position: absolute;
+            left: 0;
+            top: 2px;
+            color: var(--isico-secondary);
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        /* Stats Section */
+        .stats-item h2 {
+            font-weight: 800;
+            color: var(--isico-primary);
+        }
+
+        @media (max-width: 991px) {
+            .page-header-banner { padding: 80px 0 60px; }
+            .banner-title { font-size: 2.8rem; }
+            .quote-box { padding: 30px; }
+            .quote-box blockquote { font-size: 1.25rem; }
         }
     </style>
 
-    <!-- Title Banner Section Start -->
-    <section class="modern-page-banner" style="background-image: url('{{ asset('resource/web/assets/media/banner/about-bg.jpg') }}'), url('https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=2084&auto=format&fit=crop');">
-        <div class="modern-banner-content" data-aos="fade-up">
-            <div class="modern-breadcrumb">
-                <span>Home</span>
-                <span class="mx-2">/</span>
-                <span class="text-white">About Us</span>
+    <!-- Hero Section -->
+    <section class="page-header-banner">
+        <div class="banner-shape"></div>
+        <div class="container text-center text-lg-start">
+            <div class="row align-items-center">
+                <div class="col-lg-10 mx-auto text-center">
+                    <div class="breadcrumb-custom wow fadeInDown">
+                        <a href="{{ url('/') }}">Home</a>
+                        <span class="mx-2 text-white-50">/</span>
+                        <span class="text-white">About Us</span>
+                    </div>
+                    <h1 class="banner-title wow fadeInUp" data-wow-delay="0.1s">Indian Skill Institute <br>Co-operation (ISICO)</h1>
+                    <p class="banner-subtitle mx-auto wow fadeInUp" data-wow-delay="0.2s">
+                        Building a connected skill ecosystem that transforms learning into livelihood and capability into national growth.
+                    </p>
+                </div>
             </div>
-            <h1 class="modern-banner-title">About ISICO</h1>
-            <h4 class="modern-banner-subtitle text-white">Advancing India’s socio-economic development through education, skill enhancement, and entrepreneurship.</h4>
         </div>
     </section>
-    <!-- Title Banner Section End -->
 
-    <!-- About Section Start -->
-    <section class="about-sec mb-120">
-        <div class="container-fluid">
-            <div class="row row-gap-4 align-items-center">
-
-                <div class="col-lg-12 order-1">
-                    <div class="ps-24">
-                        <div class="heading text-start">
-                            <div class="tagblock mb-16">
-                                <img src="{{ asset('resource/web/assets/media/hero/buld-vec.png') }}" class="bulb-vec"
-                                    alt="Lightbulb icon representing ideas and insight">
-                                <p class="black">About ISICO</p>
-                            </div>
+    <!-- Overview Section -->
+    <section class="py-100 overflow-hidden">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 mb-4 mb-lg-0 wow fadeInLeft">
+                    <div class="position-relative">
+                        <img src="https://images.unsplash.com/photo-1544717297-fa154daaf76e?q=80&w=2070&auto=format&fit=crop" 
+                             alt="Skill Development" class="img-fluid rounded-4 shadow-lg">
+                        <div class="position-absolute bottom-0 end-0 bg-white p-4 rounded-4 shadow-lg m-4 d-none d-md-block">
+                            <h2 class="text-primary fw-800 mb-0">2020</h2>
+                            <p class="text-muted small mb-0">Year Founded</p>
                         </div>
-                        <p class="mb-36">
-                            {{ $defaultSettings->about_description ?? null }}
+                    </div>
+                </div>
+                <div class="col-lg-6 ps-lg-5 wow fadeInRight">
+                    <span class="section-tag">Who We Are</span>
+                    <h2 class="section-title">Enabling a Nation-wide Skill Ecosystem</h2>
+                    <p class="lead text-dark mb-4">
+                        ISICO, founded in 2020 as a startup NGO, is a mission-driven social development platform working as a Skill Ecosystem Enabler and Implementation Partner.
+                    </p>
+                    <p class="text-muted mb-4 text-justify">
+                        ISICO builds a structured ecosystem connecting education, industry, government initiatives, and global opportunities to enable accessible, outcome oriented skill development and sustainable livelihoods.
+                    </p>
+                    <p class="text-muted mb-4 text-justify">
+                        We operate as a registered non-profit organization dedicated to strengthening national skill development, community empowerment, and inclusive economic growth. Rather than functioning as a standalone training institution, ISICO integrates multiple stakeholders into a unified platform that connects learners, training providers, industries, and institutions.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Vision & Mission -->
+    <section class="bg-light py-100">
+        <div class="container text-center">
+            <div class="row justify-content-center mb-60">
+                <div class="col-lg-8">
+                    <span class="section-tag">Purpose & Direction</span>
+                    <h2 class="section-title">Our Vision & Mission</h2>
+                </div>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                    <div class="mv-card vision-card text-start">
+                        <div class="fs-1 mb-3"><i class="bi bi-eye"></i></div>
+                        <h3>Our Vision</h3>
+                        <p class="mb-0">
+                            To create a skill-powered society by building an integrated ecosystem where education, skills, entrepreneurship, and global collaboration enable sustainable livelihoods and inclusive national development.
                         </p>
-                        {{-- <p class="mb-36">
-                                Aligned with the National Education Policy (NEP) 2020, ISICO works to enhance the quality of education
-                                while preparing future generations for evolving challenges. The organization adheres to core values of
-                                inclusivity, innovation, and collaboration, and actively contributes to Sustainable Development Goals
-                                (SDGs), particularly SDG 4 (Quality Education), SDG 5 (Gender Equality), and SDG 8 (Decent Work and
-                                Economic Growth).
-                              </p>
-                              <p class="mb-36">
-                                ISICO supports national initiatives like Skill India and Make in India, collaborating with various
-                                sectors to build a skilled, inclusive workforce for India’s future.
-                              </p> --}}
-                        <div class="d-flex align-items-center gap-24 mb-36">
-                            <div class="d-flex align-items-center gap-16">
-                                <img src="{{ asset('resource/web/assets/media/vector/unique-course-vec.') }}png"
-                                    class="content-vector" alt="Icon representing programs">
-                                <div>
-                                    <h4 class="fw-600 color-primary mb-2">Impactful</h4>
-                                    <p>Skill Programs</p>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center gap-16">
-                                <img src="{{ asset('resource/web/assets/media/vector/student-vector.png') }}"
-                                    class="content-vector" alt="Icon representing beneficiaries">
-                                <div>
-                                    <h4 class="fw-600 color-primary mb-2">Nation-wide</h4>
-                                    <p>Reach & Empowerment</p>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- <div>
-                                    <a href="#" class="cus-btn">
-                                      <span class="text">Learn More About ISICO</span>
-                                    </a>
-                                  </div> -->
+                    </div>
+                </div>
+                <div class="col-md-6 wow fadeInUp" data-wow-delay="0.2s">
+                    <div class="mv-card mission-card text-start">
+                        <div class="fs-1 mb-3"><i class="bi bi-bullseye"></i></div>
+                        <h3>Our Mission</h3>
+                        <ul class="list-unstyled mb-0">
+                            <li class="mb-2"><i class="bi bi-check2-circle me-2"></i> Develop a nationwide sector-wise skill ecosystem platform</li>
+                            <li class="mb-2"><i class="bi bi-check2-circle me-2"></i> Connect training partners and communities through accessible learning hubs</li>
+                            <li class="mb-2"><i class="bi bi-check2-circle me-2"></i> Support State and Central Government skill initiatives</li>
+                            <li class="mb-2"><i class="bi bi-check2-circle me-2"></i> Promote volunteering and community participation</li>
+                            <li class="mb-0"><i class="bi bi-check2-circle me-2"></i> Enable international skill certification and higher education pathways</li>
+                        </ul>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-12">
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="w-100 mb-24">
-                            <img src="https://d2twr397zv17p4.cloudfront.net/image/discovery-img/about/about1.jpg"
-                                class="" alt="">
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="w-100 mb-24">
-                                    <img src="https://d2twr397zv17p4.cloudfront.net/image/discovery-img/about/about2.jpg"
-                                        class="" alt="">
-                                </div>
-                            </div>
-                            <div class="col-md-12">
-                                <div class="w-100">
-                                    <img src="https://static.vecteezy.com/system/resources/thumbnails/023/060/798/small_2x/farming-tractor-spraying-plants-in-a-field-photo.jpg"
-                                        class="" alt="">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
         </div>
     </section>
-    <!-- About Section End -->
+
+    <!-- Why ISICO -->
+    <section class="py-100">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-5 wow fadeInDown">
+                    <span class="section-tag">The Need</span>
+                    <h2 class="section-title">Why ISICO Was Created</h2>
+                    <p class="text-muted mb-4">
+                        Across India, particularly in rural and Tier-2 and Tier-3 regions, education and skill opportunities often exist without coordinated access. While government schemes and industry demand are available, communities frequently struggle to connect with these pathways.
+                    </p>
+                    <div class="p-4 rounded-4 bg-primary bg-opacity-10 border border-primary border-opacity-10">
+                        <h5 class="fw-bold color-primary">Bridging the Gap</h5>
+                        <p class="small mb-0 text-dark">We create a connected ecosystem where opportunities reach underserved communities and translate into real outcomes.</p>
+                    </div>
+                </div>
+                <div class="col-lg-7 mt-5 mt-lg-0 wow fadeInUp">
+                    <div class="row g-4 ps-lg-5">
+                        <div class="col-sm-6">
+                            <div class="feature-card">
+                                <span class="badge bg-primary-soft text-primary mb-2">Outcome</span>
+                                <h5 class="fw-800">Underserved Outreach</h5>
+                                <p class="small text-muted mb-0">Skill opportunities reaching those who need them most in rural heartlands.</p>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="feature-card">
+                                <span class="badge bg-secondary-soft text-secondary mb-2">Impact</span>
+                                <h5 class="fw-800">Govt Translations</h5>
+                                <p class="small text-muted mb-0">Converting government initiatives into tangible vocational outcomes.</p>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="feature-card">
+                                <span class="badge bg-info-soft text-info mb-2">Scale</span>
+                                <h5 class="fw-800">Structured Training</h5>
+                                <p class="small text-muted mb-0">Enabling training partners with structured outreach and platform visibility.</p>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="feature-card">
+                                <span class="badge bg-warning-soft text-warning mb-2">Future</span>
+                                <h5 class="fw-800">Global Accessibility</h5>
+                                <p class="small text-muted mb-0">Bringing international learning beyond the reach of metropolitan cities.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Ecosystem Model -->
+    <section class="py-100 bg-light">
+        <div class="container">
+            <div class="row mb-60 text-center">
+                <div class="col-lg-8 mx-auto">
+                    <span class="section-tag">Operational Framework</span>
+                    <h2 class="section-title">The ISICO Skill Ecosystem Model</h2>
+                    <p class="text-muted">A multi-layer framework connecting stakeholders into one unified ecosystem.</p>
+                </div>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-4 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
+                    <div class="eco-grid-item">
+                        <div class="fs-2 mb-3 text-secondary"><i class="bi bi-diagram-3"></i></div>
+                        <h5>Skill Sector Platform</h5>
+                        <p class="small text-muted mb-0">Sector-wise organization across manufacturing, agriculture, digital technology, and more.</p>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-6 wow fadeInUp" data-wow-delay="0.2s">
+                    <div class="eco-grid-item">
+                        <div class="fs-2 mb-3 text-secondary"><i class="bi bi-people"></i></div>
+                        <h5>Training Partner Integration</h5>
+                        <p class="small text-muted mb-0">Collaboration with certified training institutes delivering programs through our platform.</p>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-6 wow fadeInUp" data-wow-delay="0.3s">
+                    <div class="eco-grid-item">
+                        <div class="fs-2 mb-3 text-secondary"><i class="bi bi-building"></i></div>
+                        <h5>Learning Infrastructure</h5>
+                        <p class="small text-muted mb-0">Activation of schools, panchayat halls, and centers as accessible learning hubs.</p>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-6 wow fadeInUp" data-wow-delay="0.4s">
+                    <div class="eco-grid-item">
+                        <div class="fs-2 mb-3 text-secondary"><i class="bi bi-journal-check"></i></div>
+                        <h5>Scheme Alignment</h5>
+                        <p class="small text-muted mb-0">Implementation aligned with NEP 2020, Skill India, and State/Central schemes.</p>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-6 wow fadeInUp" data-wow-delay="0.5s">
+                    <div class="eco-grid-item">
+                        <div class="fs-2 mb-3 text-secondary"><i class="bi bi-hand-thumbs-up"></i></div>
+                        <h5>Volunteering Participation</h5>
+                        <p class="small text-muted mb-0">Structured opportunities for professionals and community members to contribute.</p>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-6 wow fadeInUp" data-wow-delay="0.6s">
+                    <div class="eco-grid-item">
+                        <div class="fs-2 mb-3 text-secondary"><i class="bi bi-globe"></i></div>
+                        <h5>Global Pathways</h5>
+                        <p class="small text-muted mb-0">Collaborations enabling global certifications and vocational programs abroad.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Global Course Platform -->
+    <section class="py-100 overflow-hidden">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 mb-5 mb-lg-0 wow fadeInLeft">
+                    <span class="section-tag">Skill Network</span>
+                    <h2 class="section-title">Global Course Platform</h2>
+                    <p class="text-muted mb-4">
+                        ISICO operates a sector-wise skill network model that organizes training opportunities by industry sectors and connects approved training partners through a unified platform.
+                    </p>
+                    <div class="row g-4">
+                        <div class="col-sm-6">
+                            <h5 class="fw-bold"><i class="bi bi-shop me-2 text-primary"></i> Partner Showcase</h5>
+                            <p class="small text-muted">Institutions gain wider rural outreach and structured visibility for their programs.</p>
+                        </div>
+                        <div class="col-sm-6">
+                            <h5 class="fw-bold"><i class="bi bi-airplane me-2 text-primary"></i> Global Access</h5>
+                            <p class="small text-muted">Explore international programs including vocational pathways and certifications.</p>
+                        </div>
+                    </div>
+                    <a href="{{ url('/catalog') }}" class="btn btn-primary rounded-pill px-4 mt-4 py-2">Explore Courses</a>
+                </div>
+                <div class="col-lg-6 wow fadeInRight text-lg-end">
+                    <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=2071&auto=format&fit=crop" 
+                         alt="Teamwork" class="img-fluid rounded-4 shadow-lg w-75">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Project Initiatives & Roles -->
+    <section class="py-100 bg-dark text-white">
+        <div class="container">
+            <div class="row g-5">
+                <div class="col-lg-4 wow fadeInUp">
+                    <h2 class="fw-800 mb-4">Our Role in the Value Chain</h2>
+                    <ul class="check-list text-white">
+                        <li class="text-white-50"><strong class="text-white">Facilitator</strong> — Enables access to learning opportunities</li>
+                        <li class="text-white-50"><strong class="text-white">Integrator</strong> — Connects stakeholders into one ecosystem</li>
+                        <li class="text-white-50"><strong class="text-white">Implementation Partner</strong> — Supports on-ground execution</li>
+                        <li class="text-white-50"><strong class="text-white">Global Connector</strong> — Links learners with international pathways</li>
+                    </ul>
+                </div>
+                <div class="col-lg-8 wow fadeInUp" data-wow-delay="0.2s">
+                    <div class="quote-box">
+                        <div class="fs-1 text-white-50 opacity-25 mb-3"><i class="bi bi-quote"></i></div>
+                        <blockquote>
+                            ISICO initiatives bring together CSR partners, philanthropists, public contributors, and volunteers to jointly build a sustainable skill ecosystem for future generations through collaborative participation and social investment.
+                        </blockquote>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Alignment Section -->
+    <section class="py-100">
+        <div class="container">
+            <div class="row text-center mb-60">
+                <div class="col-lg-8 mx-auto">
+                    <span class="section-tag">Impact Focus</span>
+                    <h2 class="section-title">Alignment with National & Global Goals</h2>
+                </div>
+            </div>
+            <div class="row g-4 align-items-center">
+                <div class="col-md-6 wow fadeInLeft">
+                    <div class="bg-light p-5 rounded-4 h-100">
+                        <h4 class="fw-bold mb-4">National Initiatives</h4>
+                        <ul class="check-list">
+                            <li>National Education Policy (NEP) 2020</li>
+                            <li>Skill India Mission</li>
+                            <li>Digital India & Make in India</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-6 wow fadeInRight">
+                    <div class="bg-primary bg-opacity-10 p-5 rounded-4 h-100">
+                        <h4 class="fw-bold mb-4 text-primary">Global SDG Contribution</h4>
+                        <div class="d-flex flex-wrap gap-2">
+                            <span class="badge rounded-pill bg-primary px-3 py-2">SDG 4: Quality Education</span>
+                            <span class="badge rounded-pill bg-primary px-3 py-2">SDG 5: Gender Equality</span>
+                            <span class="badge rounded-pill bg-primary px-3 py-2">SDG 8: Decent Work</span>
+                            <span class="badge rounded-pill bg-primary px-3 py-2">SDG 17: Partnerships</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-100 bg-primary position-relative overflow-hidden">
+        <div class="banner-shape" style="bottom: auto; top: -100px; left: -100px;"></div>
+        <div class="container position-relative z-1 text-center text-white">
+            <h2 class="fw-800 display-5 mb-3">Partner With ISICO</h2>
+            <p class="lead mb-5 opacity-75">Together, we connect learning to livelihood and skills to sustainable progress.</p>
+            <div class="d-flex flex-wrap justify-content-center gap-3">
+                <a href="{{ url('/contact') }}" class="btn btn-light rounded-pill px-5 py-3 fw-bold">Contact Us</a>
+                <a href="{{ url('/collaboration') }}" class="btn btn-outline-light rounded-pill px-5 py-3 fw-bold">Collaborate</a>
+            </div>
+        </div>
+    </section>
 @endsection

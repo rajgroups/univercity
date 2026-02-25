@@ -70,10 +70,7 @@
                                         <div class="swiper-wrapper">
                                             @foreach($blog->images as $image)
                                                 <div class="swiper-slide">
-                                                    <img src="{{ asset($image->file_name) }}" class="d-block w-100 object-fit-cover" style="height: 500px;" alt="{{ $image->alt_text }}">
-                                                    {{-- <div class="position-absolute bottom-0 start-0 w-100 p-3 bg-dark bg-opacity-50 text-white">
-                                                        <small>{{ $image->alt_text }}</small>
-                                                    </div> --}}
+                                                    <img src="{{ asset($image->file_name) }}" class="blog-gallery-img" alt="{{ $image->alt_text }}">
                                                 </div>
                                             @endforeach
                                         </div>
@@ -270,12 +267,34 @@
         overflow: hidden;
     }
 
+    /* Gallery Styling */
+    .blog-gallery-img {
+        width: 100%;
+        height: 500px;
+        object-fit: cover;
+        display: block;
+    }
+
     /* Responsive */
     @media (max-width: 991px) {
         .modern-hero { height: 50vh; }
         .content-section { margin-top: -3rem; }
         .content-card { padding: 1.5rem !important; }
         .hero-title { font-size: 2.5rem; }
+    }
+
+    @media (max-width: 768px) {
+        .blog-gallery-img {
+            height: 300px;
+            object-fit: contain;
+            background-color: #f8f9fa;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .blog-gallery-img {
+            height: 250px;
+        }
     }
 </style>
 @endpush

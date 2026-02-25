@@ -126,6 +126,51 @@
         transform: translateY(-5px);
         box-shadow: 0 .5rem 1rem rgba(0,0,0,.08) !important;
     }
+
+    /* Enquiry Section Modern Styles */
+    .enquiry-card {
+        border: none;
+        transition: transform 0.3s ease;
+    }
+    .input-group-modern {
+        background: #f8f9fa;
+        border-radius: 10px;
+        border: 1px solid #eee;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+    .input-group-modern:focus-within {
+        border-color: var(--bs-primary);
+        background: #fff;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.05);
+    }
+    .input-group-modern .input-group-text {
+        background: transparent;
+        border: none;
+        color: #666;
+        padding-left: 1.25rem;
+    }
+    .input-group-modern .form-control {
+        background: transparent;
+        border: none;
+        padding: 0.75rem 1rem;
+        font-weight: 500;
+    }
+    .input-group-modern .form-control:focus {
+        box-shadow: none;
+    }
+    .hover-lift {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .hover-lift:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+    }
+    .ls-1 { letter-spacing: 1px; }
+
+    @media (max-width: 991px) {
+        .enquiry-card .display-6 { font-size: 1.75rem; }
+    }
 </style>
 @endpush
 
@@ -203,7 +248,7 @@
                                             </div>
                                             <div>
                                                 <small class="text-muted text-uppercase fw-bold">Provider</small>
-                                                <h6 class="fw-bold mb-0 mt-1">{{ $course->admission_provider }}</h6>
+                                                <h6 class="fw-bold mb-0 mt-1">{{ $course->admission_provider == "ISICO" ? "ISICO Global Pathway" : "Overseas Partner" }}</h6>
                                             </div>
                                         </div>
                                     </div>
@@ -223,10 +268,10 @@
                                 <!-- Gallery Carousel -->
                                 @if($course->gallery_images && count($course->gallery_images) > 0)
                                 <div id="courseGalleryCarousel" class="carousel slide mb-5" data-bs-ride="carousel">
-                                    <div class="carousel-inner rounded-4 overflow-hidden">
+                                    <div class="carousel-inner rounded-4 overflow-hidden bg-light">
                                         @foreach($course->gallery_images as $index => $image)
                                         <div class="carousel-item {{ $index == 0 ? 'active' : '' }}">
-                                            <img src="{{ asset($image) }}" class="d-block w-100" style="height: 400px; object-fit: cover;" alt="Course Gallery Image">
+                                            <img src="{{ asset($image) }}" class="d-block w-100" style="height: 400px; object-fit: contain;" alt="Course Gallery Image">
                                         </div>
                                         @endforeach
                                     </div>
@@ -383,7 +428,7 @@
                                             <div class="col-md-7">
                                                 <small class="text-uppercase fw-bold text-white-50 ls-2 mb-2 d-block">Approximate Cost</small>
                                                 <h2 class="fs-5 fw-bold mb-1 text-white">{{ $course->total_fees ?? 'Contact for Pricing' }}</h2>
-                                                <p class="mb-0 text-white-50">*Includes tuition and estimated living expenses</p>
+                                                <!-- <p class="mb-0 text-white-50">*Includes tuition and estimated living expenses</p> -->
                                             </div>
                                             <div class="col-md-5 text-md-end mt-3 mt-md-0">
                                                 <button class="btn btn-light text-primary fw-bold px-4 py-3 rounded-pill shadow-sm hover-scale" onclick="document.getElementById('enquiryForm').scrollIntoView({behavior: 'smooth'})">
@@ -686,52 +731,106 @@
                                 </div>
                             @endif
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    {{-- MODERN FULL-WIDTH ENQUIRY SECTION --}}
+    <section class="enquiry-section py-5 mb-5 overflow-hidden position-relative">
+        <div class="position-absolute top-0 start-0 w-100 h-100 bg-gradient opacity-5"></div>
+        <div class="row justify-content-center position-relative z-1">
+            <div class="col-xl-10">
+                <div class="enquiry-card bg-white rounded-5 shadow-lg overflow-hidden border border-light">
+                    <div class="row g-0">
+                        {{-- Left Info Column --}}
+                        <div class="col-lg-5 bg-dark p-4 p-md-5 d-flex flex-column justify-content-center text-white position-relative overflow-hidden">
+                            <div class="position-absolute top-0 end-0 p-5 opacity-10">
+                                <i class="bi bi-send-fill display-1"></i>
+                            </div>
+                            <div class="position-relative z-1">
+                                <span class="badge bg-primary px-3 py-2 rounded-pill mb-3 text-uppercase fw-bold ls-1">Join {{ $course->admission_provider == 'ISICO' ? 'ISICO' : 'Our Global Program' }}</span>
+                                <h2 class="display-6 fw-bold mb-4 text-white">Ready to start your global journey?</h2>
+                                <p class="lead text-white-50 mb-4">Fill out the form and our international education experts will guide you through every step of your application.</p>
 
-                        <!-- Enquiry Form Card -->
-                        <div class="bg-white rounded-4 shadow-sm p-4" id="enquiryForm">
-                            <div class="text-center mb-4">
-                                <div class="d-inline-flex align-items-center justify-content-center bg-primary bg-opacity-10 rounded-circle mb-3" style="width: 50px; height: 50px;">
-                                    <i class="bi bi-envelope-check-fill text-primary fs-4"></i>
+                                <div class="trust-signals d-flex flex-column gap-3 mt-4">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="bg-primary bg-opacity-20 p-2 rounded-circle">
+                                            <i class="bi bi-lightning-charge-fill text-white"></i>
+                                        </div>
+                                        <span class="small fw-medium">Response within 24 working hours</span>
+                                    </div>
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="bg-primary bg-opacity-20 p-2 rounded-circle">
+                                            <i class="bi bi-shield-lock-fill text-white"></i>
+                                        </div>
+                                        <span class="small fw-medium">100% Secure & Private Information</span>
+                                    </div>
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="bg-primary bg-opacity-20 p-2 rounded-circle">
+                                            <i class="bi bi-person-badge-fill text-white"></i>
+                                        </div>
+                                        <span class="small fw-medium">Expert Career Counseling</span>
+                                    </div>
                                 </div>
-                                <h5 class="fw-bold">Interested?</h5>
-                                <p class="small text-muted mb-0">Fill the form and our expert will contact you shortly.</p>
+                            </div>
+                        </div>
+
+                        {{-- Right Form Column --}}
+                        <div class="col-lg-7 p-4 p-md-5 bg-white">
+                            <div class="text-center text-lg-start mb-4">
+                                <h3 class="fw-bold text-dark mb-1">Enquire Now</h3>
+                                <p class="text-muted">Enter your details for the <strong>{{ $course->course_title }}</strong> program.</p>
                             </div>
 
-                            <form action="{{ route('web.enquiry') }}" method="POST">
+                            <form action="{{ route('web.enquiry') }}" method="POST" id="mainEnquiryForm">
                                 @csrf
                                 <input type="hidden" name="type" value="7">
                                 <input type="hidden" name="course_name" value="{{ $course->course_title }}">
 
-                                <div class="mb-3">
-                                    <label class="form-label small fw-bold text-muted">Full Name</label>
-                                    <div class="input-group">
-                                        <span class="input-group-text bg-light border-end-0"><i class="bi bi-person"></i></span>
-                                        <input type="text" class="form-control bg-light border-start-0 ps-0" name="name" required placeholder="John Doe">
+                                <div class="row g-3 px-0">
+                                    <div class="col-md-6">
+                                        <div class="form-group mb-3">
+                                            <label class="form-label small fw-bold text-dark opacity-75">Full Name</label>
+                                            <div class="input-group input-group-modern">
+                                                <span class="input-group-text"><i class="bi bi-person"></i></span>
+                                                <input type="text" class="form-control" name="name" required placeholder="John Doe">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group mb-3">
+                                            <label class="form-label small fw-bold text-dark opacity-75">Email Address</label>
+                                            <div class="input-group input-group-modern">
+                                                <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                                                <input type="email" class="form-control" name="email" required placeholder="john@example.com">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group mb-3">
+                                            <label class="form-label small fw-bold text-dark opacity-75">Phone Number</label>
+                                            <div class="input-group input-group-modern">
+                                                <span class="input-group-text"><i class="bi bi-phone"></i></span>
+                                                <input type="tel" class="form-control" name="mobile" required placeholder="+1 234 567 890">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group mb-4">
+                                            <label class="form-label small fw-bold text-dark opacity-75">Message (Optional)</label>
+                                            <textarea class="form-control rounded-3" name="message" rows="3" placeholder="I would like to know about..."></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <button type="submit" class="btn btn-primary d-flex align-items-center justify-content-center gap-2 py-3 w-100 rounded-3 shadow-sm hover-lift fw-bold">
+                                            Submit Inquiry <i class="bi bi-arrow-right"></i>
+                                        </button>
+                                        <p class="text-center text-muted small mt-3 mb-0">
+                                            <i class="bi bi-info-circle me-1"></i> By submitting, you agree to our Terms & Privacy Policy
+                                        </p>
                                     </div>
                                 </div>
-
-                                <div class="mb-3">
-                                    <label class="form-label small fw-bold text-muted">Email Address</label>
-                                    <div class="input-group">
-                                        <span class="input-group-text bg-light border-end-0"><i class="bi bi-envelope"></i></span>
-                                        <input type="email" class="form-control bg-light border-start-0 ps-0" name="email" required placeholder="name@example.com">
-                                    </div>
-                                </div>
-
-                                <div class="mb-3">
-                                    <label class="form-label small fw-bold text-muted">Mobile Number</label>
-                                    <div class="input-group">
-                                        <span class="input-group-text bg-light border-end-0"><i class="bi bi-phone"></i></span>
-                                        <input type="tel" class="form-control bg-light border-start-0 ps-0" name="mobile" required placeholder="+1234567890">
-                                    </div>
-                                </div>
-
-                                <div class="mb-4">
-                                    <label class="form-label small fw-bold text-muted">Message (Optional)</label>
-                                    <textarea class="form-control bg-light" name="message" rows="3" placeholder="I am interested in this course..."></textarea>
-                                </div>
-
-                                <button type="submit" class="btn btn-dark w-100">Submit Request</button>
                             </form>
                         </div>
                     </div>
@@ -739,7 +838,6 @@
             </div>
         </div>
     </section>
-
     <!-- Related Courses -->
     @if($otherCourses->count() > 0)
     <section class="py-5 bg-light">

@@ -38,7 +38,7 @@
     /* Fix Header Z-Index */
     .header-wrapper, .main-menu {
         position: relative;
-        z-index: 1000 !important;
+        /* z-index: 1000 !important; */
     }
 
     /* Hero Section */
@@ -263,7 +263,7 @@
 <div class="container pb-5">
     
     {{-- FILTER FORM --}}
-    <div class="filter-wrapper mb-5">
+    <div class="filter-wrapper mb-5 d-none d-lg-block">
         <form method="GET" action="{{ route('web.blog.filter') }}" id="blogFilterFormDesktop">
             <div class="row g-4">
                 {{-- Type Filter --}}
@@ -305,6 +305,16 @@
                 </div>
             </div>
         </form>
+    </div>
+
+    {{-- RESULTS HEADER --}}
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <p class="text-muted mb-0">Showing <strong>{{ $blogs->firstItem() ?? 0 }}-{{ $blogs->lastItem() ?? 0 }}</strong> of <strong>{{ $blogs->total() }}</strong> articles</p>
+        <div class="d-lg-none">
+            <button class="btn btn-primary rounded-pill px-4 shadow-sm d-flex align-items-center gap-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileBlogFilterOffcanvas">
+                <i class="bi bi-funnel"></i> Filters
+            </button>
+        </div>
     </div>
 
     {{-- RESULTS GRID --}}
@@ -379,68 +389,51 @@
     </div>
 </div>
 
+    {{-- MOBILE FILTER OFFCANVAS START --}}
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="mobileBlogFilterOffcanvas" aria-labelledby="mobileBlogFilterOffcanvasLabel">
+        <div class="offcanvas-header border-bottom">
+            <h5 class="offcanvas-title" id="mobileBlogFilterOffcanvasLabel">
+                <i class="bi bi-funnel me-2"></i> Filter Articles
+            </h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body" id="offcanvasFilterBody">
+            {{-- Cloned from desktop --}}
+        </div>
+    </div>
+    {{-- MOBILE FILTER OFFCANVAS END --}}
+
 @endsection
 
-{{-- ---------------------------------------------------------------------------------------------------------------------------------------------------------- --}}
-{{-- MOBILE FILTER OFFCANVAS START --}}
-<div class="offcanvas offcanvas-start" tabindex="-1" id="mobileBlogFilterOffcanvas" aria-labelledby="mobileBlogFilterOffcanvasLabel">
-    <div class="offcanvas-header border-bottom">
-        <h5 class="offcanvas-title" id="mobileBlogFilterOffcanvasLabel">
-            <i class="bi bi-funnel me-2"></i> Filter CSR Initiatives
-        </h5>
-        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-    </div>
-    <div class="offcanvas-body" id="offcanvasFilterBody">
-        {{-- The content of the desktop form will be cloned and inserted here by jQuery --}}
-    </div>
-</div>
-{{-- MOBILE FILTER OFFCANVAS END --}}
-
-{{-- ---------------------------------------------------------------------------------------------------------------------------------------------------------- --}}
-{{-- JQUERY SCRIPT TO CLONE AND INSERT THE FORM --}}
 @push('scripts')
 <script>
     $(document).ready(function() {
-        var $desktopForm = $('#blogFilterFormDesktop');
+        const $desktopFilters = $('#blogFilterFormDesktop');
+        const $mobileContainer = $('#offcanvasFilterBody');
 
-        if ($desktopForm.length) {
-            // 1. Clone the entire desktop form, including the form tag itself.
-            var $mobileForm = $desktopForm.clone();
-
-            // 2. Update the form ID for mobile context
-            $mobileForm.attr('id', 'blogFilterFormMobile');
-
-            // 3. Update element IDs and add a dedicated submit/reset button for the offcanvas footer
-            $mobileForm.find('select, input, button, a').each(function() {
-                var currentId = $(this).attr('id');
-                if (currentId) {
-                    // Change element IDs to ensure HTML validity when cloned
-                    $(this).attr('id', 'mobile_' + currentId);
-                }
-            });
-
-            // 4. Remove the desktop apply/reset buttons from the cloned form body
-            // as we will place them in the offcanvas footer for better sticky behavior.
-            $mobileForm.find('.col-12.mt-4.text-end').remove();
-
-            // 5. Insert the cleaned, cloned form into the offcanvas body
-            $('#offcanvasFilterBody').append($mobileForm);
-
-            // 6. Add a sticky footer with the controls for the mobile form
-            var $offcanvasFooter = $('<div class="offcanvas-footer p-3 border-top d-grid gap-2"></div>');
-
-            // Recreate the Apply and Reset buttons targeting the cloned form
-            var $applyButton = $('<button type="submit" form="blogFilterFormMobile" class="btn btn-primary"><i class="bi bi-check-circle me-1"></i> Apply Filters</button>');
-            var $resetLink = $('<a href="{{ route('web.blog.filter') }}" class="btn btn-outline-secondary"><i class="bi bi-arrow-counterclockwise me-1"></i> Reset All</a>');
-
-            $offcanvasFooter.append($applyButton).append($resetLink);
-
-            // Append the new footer container directly after the offcanvas body
-            $('#mobileBlogFilterOffcanvas').append($offcanvasFooter);
-
-            // OPTIONAL: Adjust styling for offcanvas layout if needed
-            $('#blogFilterFormMobile').removeClass('p-3 border rounded shadow-sm').addClass('p-0');
-            $('#blogFilterFormMobile h5').removeClass('mb-3').addClass('mb-3');
+        if ($desktopFilters.length && $mobileContainer.length) {
+            // Clone form content
+            const $clonedForm = $desktopFilters.clone();
+            
+            // Adjust IDs and layout for mobile
+            $clonedForm.attr('id', 'blogFilterFormMobile');
+            
+            // Remove the desktop actions column as we want a full-width button
+            $clonedForm.find('.col-md-3').remove();
+            
+            // Change column widths to 12 for vertical layout
+            $clonedForm.find('.col-md-4, .col-md-5').removeClass('col-md-4 col-md-5').addClass('col-12 mb-3');
+            
+            // Add a dedicated mobile submit button
+            const mobileBtn = `
+                <div class="col-12 mt-4 d-grid gap-2">
+                    <button type="submit" class="btn btn-primary py-3 rounded-3">Apply Filters</button>
+                    <a href="{{ route('web.blog.filter') }}" class="btn btn-light py-3 rounded-3 text-center">Reset All</a>
+                </div>
+            `;
+            $clonedForm.find('.row').append(mobileBtn);
+            
+            $mobileContainer.html($clonedForm);
         }
     });
 </script>

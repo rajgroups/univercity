@@ -69,7 +69,7 @@
                                         <label class="form-label fw-bold">Admission Provider <span class="text-danger">*</span></label>
                                         <select name="admission_provider" class="form-select form-select-lg" required>
                                             <option value="">Select Provider</option>
-                                            <option value="ISICO" {{ old('admission_provider') == 'ISICO' ? 'selected' : '' }}>ISICO</option>
+                                            <option value="ISICO" {{ old('admission_provider') == 'ISICO' ? 'selected' : '' }}>ISICO Global Pathway</option>
                                             <option value="Overseas Partner" {{ old('admission_provider') == 'Overseas Partner' ? 'selected' : '' }}>Overseas Partner</option>
                                         </select>
                                         <div class="form-text text-muted">Select the main admission provider</div>
@@ -603,15 +603,15 @@
                                                 $outcomes = old('career_outcomes') ? json_decode(old('career_outcomes'), true) : [];
                                                 if (!is_array($outcomes) && old('career_outcomes')) {
                                                     // Fallback if it was a plain string or something else
-                                                    $outcomes = [old('career_outcomes')]; 
+                                                    $outcomes = [old('career_outcomes')];
                                                 }
                                             @endphp
-                                            
+
                                             @if(count($outcomes) > 0)
                                                 @foreach($outcomes as $outcome)
                                                 <div class="outcome-item input-group mb-2">
                                                     <span class="input-group-text"><i class="fas fa-briefcase"></i></span>
-                                                    <input type="text" name="career_outcomes_list[]" class="form-control" 
+                                                    <input type="text" name="career_outcomes_list[]" class="form-control"
                                                            value="{{ $outcome }}"
                                                            placeholder="Job Role (e.g., Junior Software Developer, Assistant Chef)" required>
                                                     <button type="button" class="btn btn-danger remove-career-outcome"><i class="fas fa-times"></i></button>
@@ -647,7 +647,7 @@
                                                 @foreach($pathways as $pathway)
                                                 <div class="pathway-item input-group mb-2">
                                                     <span class="input-group-text"><i class="fas fa-graduation-cap"></i></span>
-                                                    <input type="text" name="next_pathways_list[]" class="form-control" 
+                                                    <input type="text" name="next_pathways_list[]" class="form-control"
                                                            value="{{ $pathway }}"
                                                            placeholder="Pathway (e.g., Degree entry, Work progression route)">
                                                     <button type="button" class="btn btn-danger remove-next-pathway"><i class="fas fa-times"></i></button>
@@ -1221,7 +1221,7 @@ $(document).ready(function() {
             }
         });
         currentStep = step;
-        
+
         // Remove validation state when entering new step
         $('.was-validated').removeClass('was-validated');
     }
@@ -1475,14 +1475,14 @@ $(document).ready(function() {
     // Updated submit handler
     $('form').on('submit', function(e) {
         let valid = true;
-        
+
         // 1. Check Course Brochures for file presence and type
         $('.doc-file-input').each(function() {
             if ($(this).val()) {
                 const file = this.files[0];
                 const fileType = file.type;
                 const validTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
-                
+
                 if (!validTypes.includes(fileType)) {
                     notyf.error('Invalid file type for document. Only PDF, DOC, DOCX allowed.');
                     $(this).addClass('is-invalid');
@@ -1570,12 +1570,12 @@ $(document).ready(function() {
         const overseas = $('#course_duration_overseas').val();
         const internship = $('#internship_duration_field').val();
         const local = $('#local_training_duration_field').val();
-        
+
         const parts = [];
         if (overseas) parts.push(`Overseas ${overseas}`);
         if ($('#internship_switch').is(':checked') && internship) parts.push(`Internship ${internship}`);
         if ($('#local_training_switch').is(':checked') && local) parts.push(`Local Training ${local}`);
-        
+
         $('#total_duration').val(parts.join(' + '));
     }
 

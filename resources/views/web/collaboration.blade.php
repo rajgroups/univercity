@@ -25,6 +25,40 @@
 @endpush
 
 @section('content')
+    <!-- Floating Side Register Button -->
+    <style>
+        .floating-side-register {
+            position: fixed;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1050;
+        }
+        .floating-side-register button {
+            transform: rotate(-90deg);
+            transform-origin: right bottom;
+            margin-right: -1px;
+            padding: 12px 25px;
+            border-radius: 12px 12px 0 0;
+            background-color: #FF671F;
+            border: none;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            white-space: nowrap;
+            box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        .floating-side-register button:hover {
+            padding-right: 35px;
+            background-color: #e65c1a;
+        }
+    </style>
+    <div class="floating-side-register d-none d-lg-block">
+        <button class="btn btn-warning text-white fw-bold" data-bs-toggle="modal" data-bs-target="#registerModal">
+            <i class="fas fa-user-plus me-2" style="transform: rotate(90deg);"></i> Register Now
+        </button>
+    </div>
 <!-- Title Banner Section Start -->
 
     <style>
@@ -140,6 +174,15 @@
                                     Partnerships</a>
                                 <a href="#academic" class="list-group-item list-group-item-action">Academic
                                     Collaborations</a>
+                                <a href="#volunteer" class="list-group-item list-group-item-action">Volunteer
+                                    Collaboration</a>
+                            </div>
+                            <div class="card-footer p-3 bg-light border-0">
+                                <button class="btn btn-warning w-100 py-3 fw-bold rounded-3 shadow-sm text-white" 
+                                    data-bs-toggle="modal" data-bs-target="#registerModal"
+                                    style="background-color: #FF671F; border: none;">
+                                    <i class="bi bi-pencil-square me-2"></i>Register Now
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -150,8 +193,13 @@
                     <!-- Corporate Partnerships Section -->
                     <div id="corporate" class="collaboration-section mb-5">
                         <div class="card shadow-sm">
-                            <div class="card-header bg-primary text-white">
+                            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
                                 <h2 class="h4 mb-0 text-white">Corporate Partnerships</h2>
+                                <button class="btn btn-warning btn-sm fw-bold border-0 shadow-sm px-3" 
+                                    data-bs-toggle="modal" data-bs-target="#registerModal"
+                                    style="background-color: #FF671F;">
+                                    Register Now
+                                </button>
                             </div>
                             <div class="card-body">
                                 <p style="text-indent: 2em;" class="lead">At ISICO, we believe that strategic
@@ -397,7 +445,7 @@
                                     for individuals and businesses alike.
                                 </p>
                                 <div class="mt-4 text-center">
-                                    <a href="#contact" class="btn btn-outline-primary px-4">Partner With Us</a>
+                                    <button class="btn btn-outline-primary px-4 fw-bold" data-bs-toggle="modal" data-bs-target="#registerModal">Partner With Us</button>
                                 </div>
                             </div>
                         </div>
@@ -406,8 +454,13 @@
                     <!-- Government Collaborations Section -->
                     <div id="government" class="collaboration-section mb-5">
                         <div class="card shadow-sm">
-                            <div class="card-header bg-primary text-white">
+                            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
                                 <h2 class="h4 mb-0 text-white">Government Collaborations</h2>
+                                <button class="btn btn-warning btn-sm fw-bold border-0 shadow-sm px-3" 
+                                    data-bs-toggle="modal" data-bs-target="#registerModal"
+                                    style="background-color: #FF671F;">
+                                    Register Now
+                                </button>
                             </div>
                             <div class="card-body">
                                 <p style="text-indent: 2em" class="lead">ISICO recognizes the pivotal role of government
@@ -532,8 +585,13 @@
                     <!-- Strategic Partnerships Section -->
                     <div id="strategic" class="collaboration-section mb-5">
                         <div class="card shadow-sm">
-                            <div class="card-header bg-primary text-white">
+                            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
                                 <h2 class="h4 mb-0 text-white">Strategic Partnerships</h2>
+                                <button class="btn btn-warning btn-sm fw-bold border-0 shadow-sm px-3" 
+                                    data-bs-toggle="modal" data-bs-target="#registerModal"
+                                    style="background-color: #FF671F;">
+                                    Register Now
+                                </button>
                             </div>
                             <div class="card-body">
                                 <p style="text-indent: 2em" class="lead">ISICO believes that impactful change in
@@ -681,8 +739,13 @@
                     <!-- International Partnerships Section -->
                     <div id="international" class="collaboration-section mb-5">
                         <div class="card shadow-sm">
-                            <div class="card-header bg-primary text-white">
+                            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
                                 <h2 class="h4 mb-0 text-white">International Partnerships</h2>
+                                <button class="btn btn-warning btn-sm fw-bold border-0 shadow-sm px-3" 
+                                    data-bs-toggle="modal" data-bs-target="#registerModal"
+                                    style="background-color: #FF671F;">
+                                    Register Now
+                                </button>
                             </div>
                             <div class="card-body">
                                 <p class="lead" style="text-indent: 2em;">ISICO actively seeks International
@@ -928,8 +991,13 @@
                     <!-- Academic Collaborations Section -->
                     <div id="academic" class="collaboration-section">
                         <div class="card shadow-sm">
-                            <div class="card-header bg-primary text-white">
+                            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
                                 <h2 class="h4 mb-0 text-white">Academic Collaborations</h2>
+                                <button class="btn btn-warning btn-sm fw-bold border-0 shadow-sm px-3" 
+                                    data-bs-toggle="modal" data-bs-target="#registerModal"
+                                    style="background-color: #FF671F;">
+                                    Register Now
+                                </button>
                             </div>
                             <div class="card-body">
                                 <p class="lead" style="text-indent: 2em">At ISICO, we recognize the pivotal role that academic institutions play in shaping the workforce of tomorrow. Our Academic Collaborations initiative aims to create strong partnerships with schools, colleges, universities, and research organizations to build a foundation for innovative education and skill development. These collaborations are designed to integrate practical skills with academic learning, ensuring that students are prepared for industry demands and entrepreneurial ventures.</p>
@@ -1146,7 +1214,109 @@
                                     <h4 class="h5 text-primary">Join Our Academic Network</h4>
                                     <p>ISICO invites academic institutions to collaborate in creating a transformative
                                         education ecosystem.</p>
-                                    <a href="#contact" class="btn btn-primary">Get Started</a>
+                                    <button class="btn btn-primary fw-bold" data-bs-toggle="modal" data-bs-target="#registerModal">Get Started</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Volunteer Collaboration Section -->
+                    <div id="volunteer" class="collaboration-section mb-5">
+                        <div class="card shadow-sm border-0">
+                            <div class="card-header bg-primary text-white py-3 d-flex justify-content-between align-items-center">
+                                <h2 class="h4 mb-0 text-white"><i class="bi bi-people-fill me-2"></i>Volunteer Collaboration</h2>
+                                <button class="btn btn-warning btn-sm fw-bold border-0 shadow-sm px-3" 
+                                    data-bs-toggle="modal" data-bs-target="#registerModal"
+                                    onclick="document.getElementById('collaborationType').value='Volunteer'"
+                                    style="background-color: #FF671F;">
+                                    Register Now
+                                </button>
+                            </div>
+                            <div class="card-body p-4 p-md-5">
+                                <p class="lead text-dark mb-4">ISICO encourages individuals and professionals to participate in nation-building through structured volunteering opportunities that support education, skill development, and community empowerment initiatives. Volunteer collaboration enables knowledge sharing, mentorship, and grassroots engagement that strengthens the ISICO skill ecosystem.</p>
+                                <p class="text-muted mb-5">Volunteers work alongside institutions, trainers, industry partners, and communities to expand access to learning and career opportunities, especially in rural and emerging regions.</p>
+
+                                <div class="row g-4 mb-5">
+                                    <div class="col-md-6">
+                                        <div class="card h-100 border-0 shadow-sm bg-light">
+                                            <div class="card-body">
+                                                <h3 class="h5 text-primary mb-4 fw-bold"><i class="bi bi-person-plus-fill me-2"></i>Who Can Join</h3>
+                                                <ul class="list-unstyled mb-0">
+                                                    <li class="mb-3 d-flex align-items-start"><i class="bi bi-check-circle-fill text-success me-3 mt-1"></i><span>Students and young professionals</span></li>
+                                                    <li class="mb-3 d-flex align-items-start"><i class="bi bi-check-circle-fill text-success me-3 mt-1"></i><span>Educators, trainers, and academic mentors</span></li>
+                                                    <li class="mb-3 d-flex align-items-start"><i class="bi bi-check-circle-fill text-success me-3 mt-1"></i><span>Industry experts and domain specialists</span></li>
+                                                    <li class="mb-3 d-flex align-items-start"><i class="bi bi-check-circle-fill text-success me-3 mt-1"></i><span>CSR employee volunteers</span></li>
+                                                    <li class="mb-3 d-flex align-items-start"><i class="bi bi-check-circle-fill text-success me-3 mt-1"></i><span>Social workers and community leaders</span></li>
+                                                    <li class="d-flex align-items-start"><i class="bi bi-check-circle-fill text-success me-3 mt-1"></i><span>Researchers and international contributors</span></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="card h-100 border-0 shadow-sm bg-light">
+                                            <div class="card-body">
+                                                <h3 class="h5 text-primary mb-4 fw-bold"><i class="bi bi-gear-fill me-2"></i>Areas of Engagement</h3>
+                                                <ul class="list-unstyled mb-0">
+                                                    <li class="mb-3 d-flex align-items-start"><i class="bi bi-check-circle-fill text-primary me-3 mt-1"></i><span>Community awareness and outreach programs</span></li>
+                                                    <li class="mb-3 d-flex align-items-start"><i class="bi bi-check-circle-fill text-primary me-3 mt-1"></i><span>Skill training assistance and mentoring support</span></li>
+                                                    <li class="mb-3 d-flex align-items-start"><i class="bi bi-check-circle-fill text-primary me-3 mt-1"></i><span>Career guidance and student counselling</span></li>
+                                                    <li class="mb-3 d-flex align-items-start"><i class="bi bi-check-circle-fill text-primary me-3 mt-1"></i><span>Digital learning and content development</span></li>
+                                                    <li class="mb-3 d-flex align-items-start"><i class="bi bi-check-circle-fill text-primary me-3 mt-1"></i><span>Event coordination and ecosystem activities</span></li>
+                                                    <li class="d-flex align-items-start"><i class="bi bi-check-circle-fill text-primary me-3 mt-1"></i><span>Research, documentation, and program support</span></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-5">
+                                    <h3 class="h5 text-primary mb-4 fw-bold text-center">Benefits of Collaboration</h3>
+                                    <div class="row g-4 text-center">
+                                        <div class="col-md-4">
+                                            <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex p-3 mb-3">
+                                                <i class="bi bi-graph-up-arrow text-white fs-3"></i>
+                                            </div>
+                                            <h6 class="fw-bold">National Impact</h6>
+                                            <p class="small text-muted mb-0">Contribute to national skill development initiatives across India.</p>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex p-3 mb-3">
+                                                <i class="bi bi-heart text-white fs-3"></i>
+                                            </div>
+                                            <h6 class="fw-bold">Social Experience</h6>
+                                            <p class="small text-muted mb-0">Gain meaningful social impact experience and personal growth.</p>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex p-3 mb-3">
+                                                <i class="bi bi-diagram-3 text-white fs-3"></i>
+                                            </div>
+                                            <h6 class="fw-bold">Skill Ecosystem</h6>
+                                            <p class="small text-muted mb-0">Work within a collaborative skill ecosystem and learning platform.</p>
+                                        </div>
+                                        <div class="col-md-6 col-lg-6 mx-auto">
+                                            <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex p-3 mb-3">
+                                                <i class="bi bi-people text-white fs-3"></i>
+                                            </div>
+                                            <h6 class="fw-bold">Professional Network</h6>
+                                            <p class="small text-muted mb-0">Build valuable professional and community networks for future growth.</p>
+                                        </div>
+                                        <div class="col-md-6 col-lg-6 mx-auto">
+                                            <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex p-3 mb-3">
+                                                <i class="bi bi-stars text-white fs-3"></i>
+                                            </div>
+                                            <h6 class="fw-bold">Inclusive Growth</h6>
+                                            <p class="small text-muted mb-0">Support inclusive growth and development of the future workforce.</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="call-to-action mt-5 p-5 bg-primary bg-opacity-10 rounded-4 text-center border border-primary border-opacity-25">
+                                    <h4 class="h5 text-primary fw-bold mb-3">Ready to Make a Difference?</h4>
+                                    <p class="mb-4">ISICO invites you to join our mission and contribute to a more skilled and empowered India.</p>
+                                    <button class="btn btn-primary px-5 py-3 fw-bold rounded-pill shadow-sm" data-bs-toggle="modal" data-bs-target="#registerModal">
+                                        Apply Now as a Volunteer <i class="bi bi-arrow-right ms-2"></i>
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -1203,6 +1373,7 @@
                                                 <option value="Government">Government Collaboration</option>
                                                 <option value="Academic">Academic Collaboration</option>
                                                 <option value="International">International Partnership</option>
+                                                <option value="Volunteer">Volunteer Collaboration</option>
                                                 <option value="Other">Other</option>
                                             </select>
                                             <label for="collaborationType">Interested In</label>

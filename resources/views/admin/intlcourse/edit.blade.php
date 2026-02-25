@@ -70,7 +70,7 @@
                                         <label class="form-label fw-bold">Admission Provider <span class="text-danger">*</span></label>
                                         <select name="admission_provider" class="form-select form-select-lg" required>
                                             <option value="">Select Provider</option>
-                                            <option value="ISICO" {{ $course->admission_provider == 'ISICO' ? 'selected' : '' }}>ISICO</option>
+                                            <option value="ISICO" {{ $course->admission_provider == 'ISICO' ? 'selected' : '' }}>ISICO Global Pathway</option>
                                             <option value="Overseas Partner" {{ $course->admission_provider == 'Overseas Partner' ? 'selected' : '' }}>Overseas Partner</option>
                                         </select>
                                         <div class="form-text text-muted">Select the main admission provider</div>
@@ -192,7 +192,7 @@
                                         <div class="d-flex flex-wrap gap-2">
                                             @php $selectedLangs = $course->language_of_instruction ?? []; @endphp
                                             @foreach(['English', 'Japanese', 'Chinese', 'French', 'German', 'Spanish'] as $lang)
-                                            <input type="checkbox" class="btn-check" name="language_of_instruction[]" 
+                                            <input type="checkbox" class="btn-check" name="language_of_instruction[]"
                                                    id="lang_{{ $lang }}" value="{{ $lang }}" autocomplete="off"
                                                    {{ in_array($lang, $selectedLangs) ? 'checked' : '' }}>
                                             <label class="btn btn-outline-primary rounded-pill px-3" for="lang_{{ $lang }}">
@@ -216,12 +216,12 @@
                                                 Other
                                             </label>
                                         </div>
-                                        
+
                                         <!-- Custom Input Container -->
                                         <div class="mt-3 {{ $hasCustom ? '' : 'd-none' }}" id="custom_lang_div">
-                                            <input type="text" class="form-control" name="language_of_instruction[]" 
-                                                   id="custom_lang_input" 
-                                                   placeholder="Enter other language(s)" 
+                                            <input type="text" class="form-control" name="language_of_instruction[]"
+                                                   id="custom_lang_input"
+                                                   placeholder="Enter other language(s)"
                                                    value="{{ $customValue }}"
                                                    {{ $hasCustom ? '' : 'disabled' }}>
                                         </div>
@@ -849,17 +849,17 @@
                                                                 @endif
                                                             </div>
                                                         </div>
-                                                        
+
                                                         Let's just replicate the 'create' pattern but populate it?
                                                         If I populate it, and user changes Label, it won't save because controller only looks at FILES.
-                                                        
-                                                        So, effectively, the "Edit" page can only ADD new brochures. 
+
+                                                        So, effectively, the "Edit" page can only ADD new brochures.
                                                         And maybe I should show existing ones in a list above.
                                                     </div>
                                                 </div>
                                                 @endforeach
                                             @endif
-                                            
+
                                             <!-- Logic for NEW items -->
                                             <!-- The repeater JS will add new items. -->
                                         </div>
@@ -1104,7 +1104,7 @@ $(document).ready(function() {
             }
         });
         currentStep = step;
-        
+
         // Remove validation state when entering new step
         $('.was-validated').removeClass('was-validated');
     }
@@ -1190,7 +1190,7 @@ $(document).ready(function() {
     // Repeater Functionality
     function setupRepeater(containerId, addButtonId, templateFn, startCount) {
         let count = startCount;
-        
+
         $(`#${addButtonId}`).click(function() {
             const newItem = templateFn(count);
             $(`#${containerId}`).append(newItem);
@@ -1352,7 +1352,7 @@ $(document).ready(function() {
     `, {{ count($course->faqs ?? []) }});
 
     // Course Brochures Repeater
-    // Note: We start count from existing brochures count to avoid index collision if we were updating, 
+    // Note: We start count from existing brochures count to avoid index collision if we were updating,
     // though with current controller logic it just appends files.
     setupRepeater('brochures-container', 'add-brochure', (i) => `
         <div class="brochure-item mb-2 border p-2 rounded relative">
@@ -1376,14 +1376,14 @@ $(document).ready(function() {
     // Form validation on submit check
     $('form').on('submit', function(e) {
         let valid = true;
-        
+
         // Check Course Brochures for file type (if selected)
         $('.doc-file-input').each(function() {
             if ($(this).val()) {
                 const file = this.files[0];
                 const fileType = file.type;
                 const validTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
-                
+
                 if (!validTypes.includes(fileType)) {
                     // Try to show notification if notyf exists, otherwise alert
                     if(typeof notyf !== 'undefined') {

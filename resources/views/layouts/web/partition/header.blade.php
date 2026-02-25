@@ -115,7 +115,7 @@
                                     More <i class="bi bi-three-dots-vertical"></i>
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="moreMenu">
-                                    <li><a class="dropdown-item" href="{{ route('web.activity') }}">NTI Competetions/Events</a></li>
+                                    <li><a class="dropdown-item" href="{{ route('web.activity') }}">NTI Competitions/Events</a></li>
                                     <li><a class="dropdown-item" href="{{ route('contact') }}">Donate Now</a></li>
                                 </ul>
                             </div>
