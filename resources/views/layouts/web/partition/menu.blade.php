@@ -16,7 +16,7 @@
                     <span class="text"> Donate Now</span>
                 </a>
                 <a href="{{ route('web.activity') }}" class="cus-btn-2">
-                    <span class="text">NTI Competetions/Events</span>
+                    <span class="text">NTI Competition/Events</span>
                 </a>
             </div>
         </div>

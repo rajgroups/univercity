@@ -160,7 +160,7 @@
                                         Now</a></li>
                                 <li class="link mb-12"><a href="{{ route('web.activity') }}"><i class="fa fa-arrow-alt-circle-right"></i>
                                         NTI
-                                        Competetions/Events</a>
+                                        Competition/Events</a>
                                 </li>
                             </ul>
                         </div>
