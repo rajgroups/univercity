@@ -43,7 +43,7 @@
         .page-header-banner {
             position: relative;
             padding: 120px 0 80px;
-            background: linear-gradient(135deg, var(--isico-primary) 0%, #002d50 100%);
+            background: linear-gradient(135deg, #008c01 0%, #005019 100%);
             overflow: hidden;
             color: #fff;
         }
@@ -207,7 +207,7 @@
             height: 100%;
         }
 
-        .vision-card { background: linear-gradient(45deg, #004274, #006ebc); }
+        .vision-card { background: linear-gradient(45deg, #ff671f, #ff8459) }
         .mission-card { background: linear-gradient(45deg, #ff6b35, #ff9e7d); }
 
         /* Icon List */
@@ -250,15 +250,15 @@
     <section class="page-header-banner">
         <div class="banner-shape"></div>
         <div class="container text-center text-lg-start">
-            <div class="row align-items-center">
+            <div class="row align-items-center mt-3">
                 <div class="col-lg-10 mx-auto text-center">
                     <div class="breadcrumb-custom wow fadeInDown">
                         <a href="{{ url('/') }}">Home</a>
                         <span class="mx-2 text-white-50">/</span>
                         <span class="text-white">About Us</span>
                     </div>
-                    <h1 class="banner-title wow fadeInUp" data-wow-delay="0.1s">Indian Skill Institute <br>Co-operation (ISICO)</h1>
-                    <p class="banner-subtitle mx-auto wow fadeInUp" data-wow-delay="0.2s">
+                    <h1 class="banner-title wow fadeInUp text-white" data-wow-delay="0.1s">Indian Skill Institute <br>Co-operation (ISICO)</h1>
+                    <p class="banner-subtitle mx-auto wow fadeInUp text-white" data-wow-delay="0.2s">
                         Building a connected skill ecosystem that transforms learning into livelihood and capability into national growth.
                     </p>
                 </div>
@@ -272,7 +272,7 @@
             <div class="row align-items-center">
                 <div class="col-lg-6 mb-4 mb-lg-0 wow fadeInLeft">
                     <div class="position-relative">
-                        <img src="https://images.unsplash.com/photo-1544717297-fa154daaf76e?q=80&w=2070&auto=format&fit=crop" 
+                        <img src="{{ asset('resource/web/assets/media/images/isico_overview.png') }}" 
                              alt="Skill Development" class="img-fluid rounded-4 shadow-lg">
                         <div class="position-absolute bottom-0 end-0 bg-white p-4 rounded-4 shadow-lg m-4 d-none d-md-block">
                             <h2 class="text-primary fw-800 mb-0">2020</h2>
@@ -311,7 +311,7 @@
                     <div class="mv-card vision-card text-start">
                         <div class="fs-1 mb-3"><i class="bi bi-eye"></i></div>
                         <h3>Our Vision</h3>
-                        <p class="mb-0">
+                        <p class="mb-0 text-white">
                             To create a skill-powered society by building an integrated ecosystem where education, skills, entrepreneurship, and global collaboration enable sustainable livelihoods and inclusive national development.
                         </p>
                     </div>
@@ -343,7 +343,7 @@
                     <p class="text-muted mb-4">
                         Across India, particularly in rural and Tier-2 and Tier-3 regions, education and skill opportunities often exist without coordinated access. While government schemes and industry demand are available, communities frequently struggle to connect with these pathways.
                     </p>
-                    <div class="p-4 rounded-4 bg-primary bg-opacity-10 border border-primary border-opacity-10">
+                    <div class="p-4 rounded-4 bg-opacity-10 border border-primary border-opacity-10">
                         <h5 class="fw-bold color-primary">Bridging the Gap</h5>
                         <p class="small mb-0 text-dark">We create a connected ecosystem where opportunities reach underserved communities and translate into real outcomes.</p>
                     </div>
@@ -387,11 +387,11 @@
     <!-- Ecosystem Model -->
     <section class="py-100 bg-light">
         <div class="container">
-            <div class="row mb-60 text-center">
+            <div class="row mb-60 text-center mt-2">
                 <div class="col-lg-8 mx-auto">
                     <span class="section-tag">Operational Framework</span>
                     <h2 class="section-title">The ISICO Skill Ecosystem Model</h2>
-                    <p class="text-muted">A multi-layer framework connecting stakeholders into one unified ecosystem.</p>
+                    <p class="text-muted mb-2">A multi-layer framework connecting stakeholders into one unified ecosystem.</p>
                 </div>
             </div>
             <div class="row g-4">
@@ -464,7 +464,7 @@
                     <a href="{{ url('/catalog') }}" class="btn btn-primary rounded-pill px-4 mt-4 py-2">Explore Courses</a>
                 </div>
                 <div class="col-lg-6 wow fadeInRight text-lg-end">
-                    <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=2071&auto=format&fit=crop" 
+                    <img src="{{ asset('resource/web/assets/media/images/isico_teamwork.png') }}" 
                          alt="Teamwork" class="img-fluid rounded-4 shadow-lg w-75">
                 </div>
             </div>
@@ -476,7 +476,7 @@
         <div class="container">
             <div class="row g-5">
                 <div class="col-lg-4 wow fadeInUp">
-                    <h2 class="fw-800 mb-4">Our Role in the Value Chain</h2>
+                    <h2 class="fw-800 mb-4 text-white">Our Role in the Value Chain</h2>
                     <ul class="check-list text-white">
                         <li class="text-white-50"><strong class="text-white">Facilitator</strong> — Enables access to learning opportunities</li>
                         <li class="text-white-50"><strong class="text-white">Integrator</strong> — Connects stakeholders into one ecosystem</li>
@@ -518,7 +518,7 @@
                 </div>
                 <div class="col-md-6 wow fadeInRight">
                     <div class="bg-primary bg-opacity-10 p-5 rounded-4 h-100">
-                        <h4 class="fw-bold mb-4 text-primary">Global SDG Contribution</h4>
+                        <h4 class="fw-bold mb-4 text-white">Global SDG Contribution</h4>
                         <div class="d-flex flex-wrap gap-2">
                             <span class="badge rounded-pill bg-primary px-3 py-2">SDG 4: Quality Education</span>
                             <span class="badge rounded-pill bg-primary px-3 py-2">SDG 5: Gender Equality</span>
@@ -532,11 +532,11 @@
     </section>
 
     <!-- CTA Section -->
-    <section class="py-100 bg-primary position-relative overflow-hidden">
+    <section class="py-100 bg-primary position-relative overflow-hidden mt-2 mb-2">
         <div class="banner-shape" style="bottom: auto; top: -100px; left: -100px;"></div>
-        <div class="container position-relative z-1 text-center text-white">
-            <h2 class="fw-800 display-5 mb-3">Partner With ISICO</h2>
-            <p class="lead mb-5 opacity-75">Together, we connect learning to livelihood and skills to sustainable progress.</p>
+        <div class="mt-3 mb-3 container position-relative z-1 text-center text-white">
+            <h2 class="fw-800 display-5 mb-3 text-white">Partner With ISICO</h2>
+            <p class="lead mb-5 opacity-75 text-white">Together, we connect learning to livelihood and skills to sustainable progress.</p>
             <div class="d-flex flex-wrap justify-content-center gap-3">
                 <a href="{{ url('/contact') }}" class="btn btn-light rounded-pill px-5 py-3 fw-bold">Contact Us</a>
                 <a href="{{ url('/collaboration') }}" class="btn btn-outline-light rounded-pill px-5 py-3 fw-bold">Collaborate</a>
