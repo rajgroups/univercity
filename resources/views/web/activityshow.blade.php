@@ -231,7 +231,7 @@
                     </div>
 
                     <!-- Title & Subtitle -->
-                    <h1 class="display-4 fw-bold text-white mb-2" style="text-shadow: 0 2px 4px rgba(0,0,0,0.3);">{{ $event->title }}</h1>
+                    <h1 class="display-4 fw-bold text-white mb-2" style="text-shadow: 0 2px 4px rgba(0,0,0,0.3);font-size: 23px;">{{ $event->title }}</h1>
                     @if($event->short_description)
                          <p class="lead text-white opacity-90 mb-3" style="font-size: 1.1rem; max-width: 800px;">{{ $event->short_description }}</p>
                     @endif
@@ -245,7 +245,8 @@
                         <a href="https://www.facebook.com/sharer/sharer.php?u={{ url()->current() }}" target="_blank" class="btn btn-sm btn-outline-light rounded-circle me-1" title="Facebook"><i class="fab fa-facebook-f"></i></a>
                         <a href="https://x.com/intent/tweet?url={{ url()->current() }}&text={{ urlencode($event->title) }}" target="_blank" class="btn btn-sm btn-outline-light rounded-circle me-1" title="X (Twitter)"><i class="bi bi-twitter-x"></i></a>
                         <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ url()->current() }}&title={{ urlencode($event->title) }}" target="_blank" class="btn btn-sm btn-outline-light rounded-circle me-1" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
-                        <a href="https://api.whatsapp.com/send?text={{ urlencode($event->title . ' ' . url()->current()) }}" target="_blank" class="btn btn-sm btn-outline-light rounded-circle" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                        <a href="https://api.whatsapp.com/send?text={{ urlencode($event->title . ' ' . url()->current()) }}" target="_blank" class="btn btn-sm btn-outline-light rounded-circle me-1" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                        <a href="https://www.instagram.com/" target="_blank" class="btn btn-sm btn-outline-light rounded-circle" title="Instagram"><i class="fab fa-instagram"></i></a>
                     </div>
 
                     <!-- Quick Info Glass Panel -->
@@ -282,8 +283,8 @@
                             <!-- CTA Button -->
                             <div class="col-lg-4 ps-lg-4 mt-3 mt-lg-0">
                                 @if (\Carbon\Carbon::now()->gt($event->registration_deadline))
-                                    <button class="btn btn-secondary w-100 py-3 rounded-pill fw-600" disabled>
-                                        Registration Closed
+                                    <button class="btn btn-danger w-100 py-3 rounded-pill fw-bold shadow-sm" disabled>
+                                        <i class="bi bi-x-circle me-1"></i> Registration Closed
                                     </button>
                                 @else
                                     <button class="btn btn-light text-primary w-100 py-3 rounded-pill fw-bold shadow-sm" data-bs-toggle="modal" data-bs-target="#registrationModal" style="transition: all 0.3s ease;">
@@ -618,10 +619,10 @@
                         <div class="card mb-4">
                             <div class="card-body text-center">
                                 @if (\Carbon\Carbon::now()->gt($event->registration_deadline))
-                                    <button class="btn btn-secondary w-100 py-3 mb-3" disabled>
-                                        Registration Closed
+                                    <button class="btn btn-danger w-100 py-3 mb-3 fw-bold shadow-sm" disabled>
+                                        <i class="bi bi-x-circle me-1"></i> Registration Closed
                                     </button>
-                                    <p class="text-muted">The registration deadline has passed</p>
+                                    <p class="text-danger small fw-medium">The registration deadline has passed</p>
                                 @else
                                     <button class="btn register-btn w-100 py-3 mb-3" data-bs-toggle="modal"
                                         data-bs-target="#registrationModal">

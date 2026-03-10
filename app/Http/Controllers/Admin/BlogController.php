@@ -27,7 +27,7 @@ class BlogController extends Controller
     public function create()
     {
         // Create Blog
-        $categories = Category::where('status', 1)->get();
+        $categories = Category::where('status', 1)->where('type', 4)->get();
         return view('admin.blog.create',compact('categories'));
     }
 
@@ -152,7 +152,7 @@ class BlogController extends Controller
     public function edit(Blog $blog)
     {
         // $categories = Category::where('status', 1)->get();
-        $categories = Category::all(); // Make sure to pass categories if not using a View Composer
+        $categories = Category::where('status', 1)->where('type', 4)->get();
         return view('admin.blog.edit', compact('blog', 'categories'));
     }
 

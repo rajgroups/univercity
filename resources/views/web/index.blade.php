@@ -151,6 +151,49 @@
         .blog-card:hover .card-img img {
             transform: scale(1.1); /* Smooth zoom effect */
         }
+
+        /* Project Status Badge */
+        .project-status-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 12px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            z-index: 10;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.2);
+            backdrop-filter: blur(4px);
+        }
+
+        .project-status-badge.badge-ongoing {
+            background: rgba(1, 125, 2, 0.88);
+            color: #fff;
+        }
+
+        .project-status-badge.badge-upcoming {
+            background: rgba(13, 110, 200, 0.88);
+            color: #fff;
+        }
+
+        .project-status-badge .badge-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #fff;
+            display: inline-block;
+            animation: badgePulse 1.4s ease-in-out infinite;
+        }
+
+        @keyframes badgePulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50%       { opacity: 0.4; transform: scale(0.7); }
+        }
         /* Vertical Marquee Animation */
         .news-marquee-container {
             height: 450px;
@@ -189,7 +232,7 @@
                                                 class="color-primary">Latest News</span> Feed</h3>
                                     </div>
                                     <div class="post-inner news-marquee-container">
-                                        <ul class="news-marquee-content" style="list-style: none">
+                                        <ul class="news-marquee-content p-0 m-0" style="list-style: none">
                                             {{-- @dd($blogs) --}}
                                             @foreach ($blogs as $blog)
                                                 <li>
@@ -278,8 +321,8 @@
                             <h2 class="fw-bold mb-3">{{ $settings->about_title ?? null }}</h2>
                         </div>
                         <p class="mb-36" style="text-align: justify;">{!! $settings->about_description ?? null !!}</p>
-                        <div class="d-flex align-items-center gap-24 mb-36">
-                            <div class="d-flex align-items-center gap-16"> <img
+                        <div class="row mt-3 mb-3">
+                            <div class="col-md-6 d-flex align-items-center gap-16"> <img
                                     src="{{ asset('resource/web/assets/media/vector/unique-course-vec.png') }}"
                                     class="content-vector" alt="Icon representing programs">
                                 <div>
@@ -287,7 +330,7 @@
                                     <p>Skill Programs</p>
                                 </div>
                             </div>
-                            <div class="d-flex align-items-center gap-16"> <img
+                            <div class="col-md-6 d-flex align-items-center gap-16"> <img
                                     src="{{ asset('resource/web/assets/media/vector/student-vector.png') }}"
                                     class="content-vector" alt="Icon representing beneficiaries">
                                 <div>
@@ -342,6 +385,38 @@
             </div>
         </div>
     </section> <!-- How We Operate Section End -->
+    <div class="stats-section py-5 mb-5 wow fadeInUp animated d-none d-lg-block" data-wow-delay="440ms">
+        <div class="container">
+            <div class="modern-card p-4 py-5 bg-primary text-white">
+                <div class="row text-center g-4">
+                    <div class="col-md-3">
+                        <div class="px-3 border-end border-white border-opacity-25">
+                            <h2 class="fw-bold mb-1 text-white">{{ $sectorCount ?? 0 }}+</h2>
+                            <p class="small mb-0 opacity-75 text-white">Sector</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="px-3 border-end border-white border-opacity-25">
+                            <h2 class="fw-bold mb-1 text-white">{{ $courseCount ?? 0 }}+</h2>
+                            <p class="small mb-0 opacity-75 text-white">Skill Courses</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="px-3 border-end border-white border-opacity-25">
+                            <h2 class="fw-bold mb-1 text-white">{{ $intlCourseCount ?? 0 }}+</h2>
+                            <p class="small mb-0 opacity-75 text-white">Global Pathway Courses</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="px-3">
+                            <h2 class="fw-bold mb-1 text-white">10+</h2>
+                            <p class="small mb-0 opacity-75 text-white">Training Partner</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
         <div class="blog-sec mt-80 mb-5">
         <div class="container-fluid">
             <div class="heading mb-10 text-start">
@@ -377,6 +452,9 @@
                                                 class="h6 fw-400 light-black">{{ \Carbon\Carbon::parse($project->created_at)->format('d') }}</span>
                                             <span
                                                 class="h6 fw-400 light-black">{{ \Carbon\Carbon::parse($project->created_at)->format('M') }}</span>
+                                        </span>
+                                        <span class="project-status-badge badge-upcoming">
+                                            <span class="badge-dot"></span> Upcoming
                                         </span>
                                     </a>
                                     <div class="card-content">
@@ -448,6 +526,9 @@
                                                         class="h6 fw-400 light-black">{{ \Carbon\Carbon::parse($project->created_at)->format('d') }}</span>
                                                     <span
                                                         class="h6 fw-400 light-black">{{ \Carbon\Carbon::parse($project->created_at)->format('M') }}</span>
+                                                </span>
+                                                <span class="project-status-badge badge-ongoing">
+                                                    <span class="badge-dot"></span> Ongoing
                                                 </span>
                                             </a>
                                             <div class="card-content bg-white">
@@ -546,7 +627,7 @@
             <div class="text-center mb-5">
                 <div class="section-tag">
                     <img src="{{ asset('resource/web/assets/media/hero/buld-vec.png') }}" class="bulb-vec-mini" alt="">
-                    <span>OUR EDUCATIONAL PROGRAMS</span>
+                    <span>Corporate Social Responsibility Programs</span>
                 </div>
                 <h3 class="vibrant-title mb-3">{{ $settings->program_project_main_title }} <span class="gradient-text">{{ $settings->program_project_main_sub_title }}</span></h3>
                 <p class="text-muted">{{ $settings->program_final_title }}</p>
@@ -574,25 +655,25 @@
                                             <p class="text-muted small mb-3">{{ Str::limit(strip_tags($program->description), 100) }}</p>
 
                                             <div class="d-flex justify-content-between align-items-center mt-auto">
-                                                <div class="share-wrapper">
-                                                    @php
-                                                        $progUrl = route('web.announcement.program', [$progCategorySlug, $program->slug]);
-                                                        $progText = $program->title;
-                                                    @endphp
+                                                @php
+                                                    $progUrl = route('web.announcement.program', [$progCategorySlug, $program->slug]);
+                                                    $progText = $program->title;
+                                                @endphp
+                                                <div class="share-wrapper" data-share-url="{{ $progUrl }}" data-share-text="{{ $progText }}">
                                                     <a href="javascript:void(0)" class="share-toggle share-icon-circle" title="Share this program">
                                                         <i class="bi bi-share"></i>
                                                     </a>
                                                     <div class="share-links-modern">
-                                                        <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ urlencode($progUrl) }}" target="_blank" class="share-icon-circle" title="LinkedIn">
-                                                            <img src="{{ asset('resource/web/assets/media/vector/linkedin.png') }}" alt="LinkedIn">
+                                                        <a href="#" target="_blank" class="share-icon-circle share-instagram" title="Instagram">
+                                                            <i class="bi bi-instagram"></i>
                                                         </a>
-                                                        <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode($progUrl) }}" target="_blank" class="share-icon-circle" title="Facebook">
+                                                        <a href="#" target="_blank" class="share-icon-circle share-facebook" title="Facebook">
                                                             <img src="{{ asset('resource/web/assets/media/vector/facebook.png') }}" alt="Facebook">
                                                         </a>
-                                                        <a href="https://x.com/intent/tweet?url={{ urlencode($progUrl) }}&text={{ urlencode($progText) }}" target="_blank" class="share-icon-circle" title="X (Twitter)">
+                                                        <a href="#" target="_blank" class="share-icon-circle share-twitter" title="X (Twitter)">
                                                             <i class="bi bi-twitter-x"></i>
                                                         </a>
-                                                        <a href="https://api.whatsapp.com/send?text={{ urlencode($progText . ' ' . $progUrl) }}" target="_blank" class="share-icon-circle" title="WhatsApp">
+                                                        <a href="#" target="_blank" class="share-icon-circle share-whatsapp" title="WhatsApp">
                                                             <i class="bi bi-whatsapp"></i>
                                                         </a>
                                                         <a href="javascript:void(0)" class="share-icon-circle copy-link" data-url="{{ $progUrl }}" title="Copy Link">
@@ -962,25 +1043,25 @@
                                             <p class="text-muted small mb-3">{{ Str::limit($scheme->subtitle, 80) }}</p>
 
                                             <div class="d-flex justify-content-between align-items-center mt-auto">
-                                                <div class="share-wrapper">
-                                                    @php
-                                                        $currentUrl = route('web.announcement.scheme', [$categorySlug, $scheme->slug]);
-                                                        $shareText = $scheme->title;
-                                                    @endphp
+                                                @php
+                                                    $currentUrl = route('web.announcement.scheme', [$categorySlug, $scheme->slug]);
+                                                    $shareText = $scheme->title;
+                                                @endphp
+                                                <div class="share-wrapper" data-share-url="{{ $currentUrl }}" data-share-text="{{ $shareText }}">
                                                     <a href="javascript:void(0)" class="share-toggle share-icon-circle" title="Share this scheme">
                                                         <i class="bi bi-share"></i>
                                                     </a>
                                                     <div class="share-links-modern">
-                                                        <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ urlencode($currentUrl) }}" target="_blank" class="share-icon-circle" title="LinkedIn">
-                                                            <img src="{{ asset('resource/web/assets/media/vector/linkedin.png') }}" alt="LinkedIn">
+                                                        <a href="#" target="_blank" class="share-icon-circle share-instagram" title="Instagram">
+                                                            <i class="bi bi-instagram"></i>
                                                         </a>
-                                                        <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode($currentUrl) }}" target="_blank" class="share-icon-circle" title="Facebook">
+                                                        <a href="#" target="_blank" class="share-icon-circle share-facebook" title="Facebook">
                                                             <img src="{{ asset('resource/web/assets/media/vector/facebook.png') }}" alt="Facebook">
                                                         </a>
-                                                        <a href="https://x.com/intent/tweet?url={{ urlencode($currentUrl) }}&text={{ urlencode($shareText) }}" target="_blank" class="share-icon-circle" title="X (Twitter)">
+                                                        <a href="#" target="_blank" class="share-icon-circle share-twitter" title="X (Twitter)">
                                                             <i class="bi bi-twitter-x"></i>
                                                         </a>
-                                                        <a href="https://api.whatsapp.com/send?text={{ urlencode($shareText . ' ' . $currentUrl) }}" target="_blank" class="share-icon-circle" title="WhatsApp">
+                                                        <a href="#" target="_blank" class="share-icon-circle share-whatsapp" title="WhatsApp">
                                                             <i class="bi bi-whatsapp"></i>
                                                         </a>
                                                         <a href="javascript:void(0)" class="share-icon-circle copy-link" data-url="{{ $currentUrl }}" title="Copy Link">
@@ -1141,8 +1222,8 @@
                                     <i class="bi bi-building text-primary"></i>
                                 </div>
                                 <div>
-                                    <h6 class="fw-bold mb-1">State and Central Government Schemes</h6>
-                                    <p class="small text-muted mb-0">Partnering with central programs for education and skills.</p>
+                                    <h6 class="fw-bold mb-1">Government Schemes</h6>
+                                    <p class="small text-muted mb-0">Partnering with State and Central programs for education and skills.</p>
                                 </div>
                             </div>
                             <div class="d-flex align-items-start gap-3">
@@ -1247,38 +1328,7 @@
             </div>
         </div>
     </div>
-    {{-- <div class="stats-section py-5 mb-5 wow fadeInUp animated d-none d-lg-block" data-wow-delay="440ms">
-        <div class="container">
-            <div class="modern-card p-4 py-5 bg-primary text-white">
-                <div class="row text-center g-4">
-                    <div class="col-md-3">
-                        <div class="px-3 border-end border-white border-opacity-25">
-                            <h2 class="fw-bold mb-1 text-white">250+</h2>
-                            <p class="small mb-0 opacity-75 text-white">Certified Trainers</p>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="px-3 border-end border-white border-opacity-25">
-                            <h2 class="fw-bold mb-1 text-white">1,000+</h2>
-                            <p class="small mb-0 opacity-75 text-white">Student Reviews</p>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="px-3 border-end border-white border-opacity-25">
-                            <h2 class="fw-bold mb-1 text-white">5,000+</h2>
-                            <p class="small mb-0 opacity-75 text-white">Skilled Students</p>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="px-3">
-                            <h2 class="fw-bold mb-1 text-white">15+</h2>
-                            <p class="small mb-0 opacity-75 text-white">National Recognitions</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> <!-- Content Block Section End --> --}}
+ <!-- Content Block Section End -->
     <!-- Online Learning Section Start -->
     <section class="learnig-journey-sec mb-120 mt-2 wow fadeInUp animated" data-wow-delay="490ms">
         <div class="container-fluid">
@@ -1571,11 +1621,30 @@
             document.addEventListener('click', function(e) {
                 const toggle = e.target.closest('.share-toggle');
                 const copyBtn = e.target.closest('.copy-link');
-                
+
                 if (toggle) {
                     const wrapper = toggle.closest('.share-wrapper');
                     const links = wrapper.querySelector('.share-links-modern');
-                    
+
+                    // ---- Dynamically set share URLs from data attributes (fixes Swiper clone issue) ----
+                    const shareUrl  = wrapper.dataset.shareUrl  || window.location.href;
+                    const shareText = wrapper.dataset.shareText || document.title;
+                    const encodedUrl  = encodeURIComponent(shareUrl);
+                    const encodedText = encodeURIComponent(shareText);
+
+                    const fbBtn  = wrapper.querySelector('.share-facebook');
+                    const twBtn  = wrapper.querySelector('.share-twitter');
+                    const waBtn  = wrapper.querySelector('.share-whatsapp');
+                    const igBtn  = wrapper.querySelector('.share-instagram');
+                    const cpBtn  = wrapper.querySelector('.copy-link');
+
+                    if (fbBtn)  fbBtn.href  = 'https://www.facebook.com/sharer/sharer.php?u=' + encodedUrl;
+                    if (twBtn)  twBtn.href  = 'https://x.com/intent/tweet?url=' + encodedUrl + '&text=' + encodedText;
+                    if (waBtn)  waBtn.href  = 'https://api.whatsapp.com/send?text=' + encodeURIComponent(shareText + ' ' + shareUrl);
+                    if (igBtn)  igBtn.dataset.shareUrl = shareUrl;   // store URL for instagram click handler
+                    if (cpBtn)  cpBtn.dataset.url = shareUrl;
+                    // ---------------------------------------------------------------------------------
+
                     // Close all other open share tooltips
                     document.querySelectorAll('.share-links-modern.active').forEach(item => {
                         if (item !== links) {
@@ -1586,7 +1655,7 @@
                     });
 
                     links.classList.toggle('active');
-                    
+
                     // Toggle share icon
                     const icon = toggle.querySelector('i');
                     if (links.classList.contains('active')) {
@@ -1594,7 +1663,7 @@
                     } else {
                         icon.classList.replace('bi-x-lg', 'bi-share');
                     }
-                    
+
                     e.preventDefault();
                     return;
                 }
@@ -1608,17 +1677,33 @@
                         copyBtn.style.background = '#018c01';
                         copyBtn.style.borderColor = '#018c01';
                         icon.style.color = '#fff';
-                        
+
                         setTimeout(() => {
                             icon.classList.replace('bi-check2', 'bi-link-45deg');
                             copyBtn.style.background = '';
                             icon.style.color = '';
                         }, 2000);
-                        
-                        // Using toastr if available (from layout)
+
                         if (typeof toastr !== 'undefined') {
                             toastr.success('Link copied to clipboard!');
                         }
+                    });
+                    e.preventDefault();
+                    return;
+                }
+
+                // Instagram Share — copy URL to clipboard then open Instagram
+                const igShareBtn = e.target.closest('.share-instagram');
+                if (igShareBtn) {
+                    const igUrl = igShareBtn.dataset.shareUrl || window.location.href;
+                    navigator.clipboard.writeText(igUrl).then(() => {
+                        if (typeof toastr !== 'undefined') {
+                            toastr.info('Link copied! Open Instagram and paste it in your story, bio, or DM.', 'Share on Instagram', { timeOut: 4000 });
+                        }
+                        setTimeout(() => { window.open('https://www.instagram.com/', '_blank'); }, 600);
+                    }).catch(() => {
+                        // Fallback if clipboard fails
+                        window.open('https://www.instagram.com/', '_blank');
                     });
                     e.preventDefault();
                     return;

@@ -205,6 +205,100 @@
                                 </div>
                             </div>
 
+                            <!-- Attachments (PDF) -->
+                            <div class="mb-4">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <label class="form-label mb-0 fw-bold">Attachments (PDF Only)</label>
+                                    <button type="button" class="btn btn-outline-primary btn-sm add-attachment">
+                                        <i class="ti ti-plus"></i> Add More
+                                    </button>
+                                </div>
+                                <div id="attachment-repeater">
+                                    @php
+                                        $attachments = json_decode($announcement->attachment_details, true) ?? [];
+                                    @endphp
+                                    @foreach($attachments as $index => $at)
+                                        <div class="row align-items-center mb-2 attachment-item">
+                                            <div class="col-md-4">
+                                                <input type="text" name="attachments[{{ $index }}][name]" class="form-control" value="{{ $at['name'] }}" placeholder="Document Name">
+                                                <input type="hidden" name="attachments[{{ $index }}][existing_file]" value="{{ $at['file'] }}">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="d-flex align-items-center">
+                                                    <a href="{{ asset($at['file']) }}" target="_blank" class="btn btn-link btn-sm text-primary me-2">
+                                                        <i class="ti ti-file-type-pdf"></i> View
+                                                    </a>
+                                                    <input type="file" name="attachments[{{ $index }}][file]" class="form-control" accept="application/pdf">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <button type="button" class="btn btn-outline-danger remove-attachment w-100">−</button>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                    @if(empty($attachments))
+                                        <div class="row align-items-center mb-2 attachment-item">
+                                            <div class="col-md-5">
+                                                <input type="text" name="attachments[0][name]" class="form-control" placeholder="Document Name">
+                                            </div>
+                                            <div class="col-md-5">
+                                                <input type="file" name="attachments[0][file]" class="form-control" accept="application/pdf">
+                                            </div>
+                                            <div class="col-md-2">
+                                                <button type="button" class="btn btn-outline-danger remove-attachment w-100" disabled>−</button>
+                                            </div>
+                                        </div>
+                                    @endif
+                                </div>
+                                @error('attachments')
+                                    <div class="text-danger mt-1">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <!-- Source Links -->
+                            <div class="mb-4">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <label class="form-label mb-0 fw-bold">Source Links</label>
+                                    <button type="button" class="btn btn-outline-primary btn-sm add-source-link">
+                                        <i class="ti ti-plus"></i> Add More
+                                    </button>
+                                </div>
+                                <div id="source-link-repeater">
+                                    @php
+                                        $links = json_decode($announcement->source_links, true) ?? [];
+                                    @endphp
+                                    @foreach($links as $index => $link)
+                                        <div class="row align-items-center mb-2 source-link-item">
+                                            <div class="col-md-5">
+                                                <input type="text" name="source_links[{{ $index }}][label]" class="form-control" value="{{ $link['label'] }}" placeholder="Link Label">
+                                            </div>
+                                            <div class="col-md-5">
+                                                <input type="url" name="source_links[{{ $index }}][url]" class="form-control" value="{{ $link['url'] }}" placeholder="https://example.com">
+                                            </div>
+                                            <div class="col-md-2">
+                                                <button type="button" class="btn btn-outline-danger remove-source-link w-100">−</button>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                    @if(empty($links))
+                                        <div class="row align-items-center mb-2 source-link-item">
+                                            <div class="col-md-5">
+                                                <input type="text" name="source_links[0][label]" class="form-control" placeholder="Link Label">
+                                            </div>
+                                            <div class="col-md-5">
+                                                <input type="url" name="source_links[0][url]" class="form-control" placeholder="https://example.com">
+                                            </div>
+                                            <div class="col-md-2">
+                                                <button type="button" class="btn btn-outline-danger remove-source-link w-100" disabled>−</button>
+                                            </div>
+                                        </div>
+                                    @endif
+                                </div>
+                                @error('source_links')
+                                    <div class="text-danger mt-1">{{ $message }}</div>
+                                @enderror
+                            </div>
+
                             <div class="col-sm-6 col-12">
                                 <div class="mb-3">
                                     <div class="mb-3">
@@ -273,11 +367,12 @@
             });
 
             document.addEventListener('click', function(e) {
+                // Bullet Points Logic
                 if (e.target.classList.contains('add-bullet')) {
                     e.preventDefault();
                     const group = `
-                        <div class="input-group mb-2">
-                            <input type="text" name="points[]" class="form-control" placeholder="Key - Value">
+                        <div class="input-group mb-2 border rounded p-1">
+                            <input type="text" name="points[]" class="form-control" placeholder="Example: Key - Value">
                             <button type="button" class="btn btn-outline-danger remove-bullet">−</button>
                         </div>`;
                     document.getElementById('bullet-points').insertAdjacentHTML('beforeend', group);
@@ -287,35 +382,55 @@
                     e.preventDefault();
                     e.target.closest('.input-group').remove();
                 }
+
+                // Attachment Logic
+                if (e.target.closest('.add-attachment')) {
+                    e.preventDefault();
+                    const container = document.getElementById('attachment-repeater');
+                    const index = container.getElementsByClassName('attachment-item').length;
+                    const html = `
+                    <div class="row align-items-center mb-2 attachment-item">
+                        <div class="col-md-5">
+                            <input type="text" name="attachments[${index}][name]" class="form-control" placeholder="Document Name">
+                        </div>
+                        <div class="col-md-5">
+                            <input type="file" name="attachments[${index}][file]" class="form-control" accept="application/pdf">
+                        </div>
+                        <div class="col-md-2">
+                            <button type="button" class="btn btn-outline-danger remove-attachment w-100">−</button>
+                        </div>
+                    </div>`;
+                    container.insertAdjacentHTML('beforeend', html);
+                }
+                if (e.target.closest('.remove-attachment')) {
+                    e.preventDefault();
+                    e.target.closest('.attachment-item').remove();
+                }
+
+                // Source Link Logic
+                if (e.target.closest('.add-source-link')) {
+                    e.preventDefault();
+                    const container = document.getElementById('source-link-repeater');
+                    const index = container.getElementsByClassName('source-link-item').length;
+                    const html = `
+                    <div class="row align-items-center mb-2 source-link-item">
+                        <div class="col-md-5">
+                            <input type="text" name="source_links[${index}][label]" class="form-control" placeholder="Link Label">
+                        </div>
+                        <div class="col-md-5">
+                            <input type="url" name="source_links[${index}][url]" class="form-control" placeholder="https://example.com">
+                        </div>
+                        <div class="col-md-2">
+                            <button type="button" class="btn btn-outline-danger remove-source-link w-100">−</button>
+                        </div>
+                    </div>`;
+                    container.insertAdjacentHTML('beforeend', html);
+                }
+                if (e.target.closest('.remove-source-link')) {
+                    e.preventDefault();
+                    e.target.closest('.source-link-item').remove();
+                }
             });
         });
     </script>
-@endpush
-
-@push('scripts')
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const bulletPointsContainer = document.getElementById('bullet-points');
-
-        bulletPointsContainer.addEventListener('click', function (e) {
-            if (e.target.classList.contains('add-bullet')) {
-                const newField = document.createElement('div');
-                newField.classList.add('input-group', 'mb-2');
-                newField.innerHTML = `
-                    <input type="text" name="points[]" class="form-control" placeholder="Example: Key - Value">
-                    <button type="button" class="btn btn-outline-danger remove-bullet">−</button>
-                `;
-                bulletPointsContainer.appendChild(newField);
-                // e.target.remove(); // remove the `+` button from the previous input
-            }
-
-            if (e.target.classList.contains('remove-bullet')) {
-                const inputGroup = e.target.closest('.input-group');
-                if (inputGroup) {
-                    inputGroup.remove();
-                }
-            }
-        });
-    });
-</script>
 @endpush

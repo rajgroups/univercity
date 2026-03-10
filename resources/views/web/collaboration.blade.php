@@ -174,6 +174,7 @@
                                     Partnerships</a>
                                 <a href="#academic" class="list-group-item list-group-item-action">Academic
                                     Collaborations</a>
+                                <a href="#ngo" class="list-group-item list-group-item-action">NGOs and Social Development</a>
                                 <a href="#volunteer" class="list-group-item list-group-item-action">Volunteer
                                     Collaboration</a>
                             </div>
@@ -1220,6 +1221,59 @@
                         </div>
                     </div>
 
+
+                    <!-- NGOs and Social Development Section -->
+                    <div id="ngo" class="collaboration-section mb-5">
+                        <div class="card shadow-sm border-0">
+                            <div class="card-header bg-primary text-white py-3 d-flex justify-content-between align-items-center">
+                                <h2 class="h4 mb-0 text-white"><i class="bi bi-diagram-3-fill me-2"></i>NGOs and Social Development</h2>
+                                <button class="btn btn-warning btn-sm fw-bold border-0 shadow-sm px-3" 
+                                    data-bs-toggle="modal" data-bs-target="#registerModal"
+                                    onclick="document.getElementById('collaborationType').value='NGO'"
+                                    style="background-color: #FF671F;">
+                                    Register Now
+                                </button>
+                            </div>
+                            <div class="card-body p-4 p-md-5">
+                                <p class="lead text-dark mb-4">ISICO collaborates with non-governmental organizations and social development institutions to expand the reach and impact of education, skill development, and community empowerment initiatives. Through collaborative partnerships, NGOs can integrate their programs within the ISICO skill ecosystem to strengthen implementation, outreach, and sustainable outcomes.</p>
+                                <p class="text-muted mb-5">ISICO supports partner NGOs by providing a structured platform that connects communities, training resources, government initiatives, and industry opportunities, enabling collective impact at regional and national levels.</p>
+
+                                <div class="row g-4 mb-5">
+                                    <div class="col-md-6">
+                                        <div class="card h-100 border-0 shadow-sm bg-light">
+                                            <div class="card-body">
+                                                <h3 class="h5 text-primary mb-4 fw-bold"><i class="bi bi-gear-fill me-2"></i>Areas of Collaboration</h3>
+                                                <ul class="list-unstyled mb-0">
+                                                    <li class="mb-3 d-flex align-items-start"><i class="bi bi-check-circle-fill text-primary me-3 mt-1"></i><span>Joint implementation of skill development programs</span></li>
+                                                    <li class="mb-3 d-flex align-items-start"><i class="bi bi-check-circle-fill text-primary me-3 mt-1"></i><span>Community outreach and awareness initiatives</span></li>
+                                                    <li class="mb-3 d-flex align-items-start"><i class="bi bi-check-circle-fill text-primary me-3 mt-1"></i><span>Women empowerment and livelihood projects</span></li>
+                                                    <li class="mb-3 d-flex align-items-start"><i class="bi bi-check-circle-fill text-primary me-3 mt-1"></i><span>Rural education and entrepreneurship development</span></li>
+                                                    <li class="mb-3 d-flex align-items-start"><i class="bi bi-check-circle-fill text-primary me-3 mt-1"></i><span>Government scheme support and implementation</span></li>
+                                                    <li class="d-flex align-items-start"><i class="bi bi-check-circle-fill text-primary me-3 mt-1"></i><span>Research, innovation, and social impact projects</span></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="card h-100 border-0 shadow-sm bg-light">
+                                            <div class="card-body">
+                                                <h3 class="h5 text-primary mb-4 fw-bold"><i class="bi bi-star-fill me-2"></i>Benefits for Partner NGOs</h3>
+                                                <ul class="list-unstyled mb-0">
+                                                    <li class="mb-3 d-flex align-items-start"><i class="bi bi-check-circle-fill text-success me-3 mt-1"></i><span>Access to ISICO’s sector-wise skill ecosystem network</span></li>
+                                                    <li class="mb-3 d-flex align-items-start"><i class="bi bi-check-circle-fill text-success me-3 mt-1"></i><span>Expanded outreach into rural and underserved communities</span></li>
+                                                    <li class="mb-3 d-flex align-items-start"><i class="bi bi-check-circle-fill text-success me-3 mt-1"></i><span>Collaboration with training institutions and industry partners</span></li>
+                                                    <li class="mb-3 d-flex align-items-start"><i class="bi bi-check-circle-fill text-success me-3 mt-1"></i><span>Opportunity to participate in CSR-supported initiatives</span></li>
+                                                    <li class="d-flex align-items-start"><i class="bi bi-check-circle-fill text-success me-3 mt-1"></i><span>Shared resources and ecosystem-driven implementation</span></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Volunteer Collaboration Section -->
                     <div id="volunteer" class="collaboration-section mb-5">
                         <div class="card shadow-sm border-0">
@@ -1313,8 +1367,8 @@
 
                                 <div class="call-to-action mt-5 p-5 bg-primary bg-opacity-10 rounded-4 text-center border border-primary border-opacity-25">
                                     <h4 class="h5 text-primary fw-bold mb-3">Ready to Make a Difference?</h4>
-                                    <p class="mb-4">ISICO invites you to join our mission and contribute to a more skilled and empowered India.</p>
-                                    <button class="btn btn-primary px-5 py-3 fw-bold rounded-pill shadow-sm" data-bs-toggle="modal" data-bs-target="#registerModal">
+                                    <p class="mb-4 text-white">ISICO invites you to join our mission and contribute to a more skilled and empowered India.</p>
+                                    <button class="btn btn-primary px-2 py-3 fw-bold rounded-pill shadow-sm" data-bs-toggle="modal" data-bs-target="#registerModal">
                                         Apply Now as a Volunteer <i class="bi bi-arrow-right ms-2"></i>
                                     </button>
                                 </div>
@@ -1373,6 +1427,7 @@
                                                 <option value="Government">Government Collaboration</option>
                                                 <option value="Academic">Academic Collaboration</option>
                                                 <option value="International">International Partnership</option>
+                                                <option value="NGO">NGOs and Social Development</option>
                                                 <option value="Volunteer">Volunteer Collaboration</option>
                                                 <option value="Other">Other</option>
                                             </select>

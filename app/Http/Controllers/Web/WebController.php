@@ -83,6 +83,10 @@ class WebController extends Controller
             ->latest()
             ->get();
 
+        $sectorCount = Sector::where('status', 1)->count();
+        $courseCount = Course::where('status', 1)->count();
+        $intlCourseCount = IntlCourse::where('publish_status', 1)->count();
+
         return view('web.index', compact(
             'upcomingProjects',
             'ongoingProjects',
@@ -92,7 +96,10 @@ class WebController extends Controller
             'banners',
             'testimonials',
             'brands',
-            'blogs'
+            'blogs',
+            'sectorCount',
+            'courseCount',
+            'intlCourseCount'
         ));
     }
     public function program($category, $slug){
@@ -392,7 +399,11 @@ class WebController extends Controller
 
     // 🏭 Sector filter
     if ($request->has('sectors') && !empty($request->sectors)) {
-        $query->whereIn('sector_id', $request->sectors);
+        $sectorIds = $request->sectors;
+        if (is_string($sectorIds)) {
+            $sectorIds = explode(',', $sectorIds);
+        }
+        $query->whereIn('sector_id', (array)$sectorIds);
     }
 
     // 🌍 Country filter
@@ -457,9 +468,7 @@ class WebController extends Controller
 }
     public function course(Request $request)
     {
-        $query = Course::query();
-
-        $query = $query->where('status',1);
+        $query = Course::with(['sector', 'category'])->where('status', 1);
 
         // 🔍 Search filter (by title or description)
         if ($request->has('search') && !empty($request->search)) {
@@ -547,6 +556,15 @@ class WebController extends Controller
             $query->whereIn('sector_id', (array)$sectors);
         }
 
+        // Category filter
+        if ($request->has('categories') && !empty($request->categories)) {
+            $categoriesFilter = $request->categories;
+            if (is_string($categoriesFilter)) {
+                $categoriesFilter = explode(',', $categoriesFilter);
+            }
+            $query->whereIn('category_id', (array)$categoriesFilter);
+        }
+
         // Mode of Study filter
         if ($request->has('modes') && !empty($request->modes)) {
             $query->whereIn('mode_of_study', $request->modes);
@@ -575,10 +593,16 @@ class WebController extends Controller
                 break;
         }
 
-        $courses = $query->paginate(10);
-        $sectors = Sector::where('type', 1)->orderBy('position', 'asc')->get();
+        $courses = $query->paginate(10)->appends($request->all());
+        $sectors = Sector::where('status', 1)->where('type', 1)->withCount(['courses' => function($q) {
+            $q->where('status', 1);
+        }])->orderBy('position', 'asc')->get();
 
-        return view('web.course', compact('courses', 'sectors'));
+        $categories = Category::where('status', 1)->where('type', 5)->withCount(['courses' => function($q) {
+            $q->where('status', 1);
+        }])->latest()->get();
+
+        return view('web.course', compact('courses', 'sectors', 'categories'));
     }
 
     public function globalcourseDetails(Request $request, $slug)
@@ -751,19 +775,28 @@ class WebController extends Controller
             $announcements->where('category_id', $request->category_id);
         }
 
-        // Filter: Type (Specific Sub-filters)
+        // Filter: Type (Specific Sub-filters and Category Type)
         if ($request->filled('type')) {
-             if ($request->type === 'project_3') {
-                // Completed Projects (assuming custom type key)
-                $projects->where('stage', 'completed');
-             } elseif ($request->type === 'project_1') {
-                $projects->where('stage', 'ongoing');
-            } elseif ($request->type === 'project_2') {
-                $projects->where('stage', 'upcoming');
-            } elseif ($request->type === 'announcement_1') {
-                $announcements->where('type', 1); // Program
-            } elseif ($request->type === 'announcement_2') {
-                $announcements->where('type', 2); // Scheme
+            $type = $request->type;
+            if (is_numeric($type)) {
+                $projects->whereHas('category', function($q) use ($type) {
+                    $q->where('type', $type);
+                });
+                $announcements->whereHas('category', function($q) use ($type) {
+                    $q->where('type', $type);
+                });
+            } else {
+                if ($type === 'project_3') {
+                    $projects->where('stage', 'completed');
+                } elseif ($type === 'project_1') {
+                    $projects->where('stage', 'ongoing');
+                } elseif ($type === 'project_2') {
+                    $projects->where('stage', 'upcoming');
+                } elseif ($type === 'announcement_1') {
+                    $announcements->where('type', 1); // Program
+                } elseif ($type === 'announcement_2') {
+                    $announcements->where('type', 2); // Scheme
+                }
             }
         }
 
@@ -808,9 +841,17 @@ class WebController extends Controller
             ['path' => $request->url(), 'query' => $request->query()]
         );
 
+        $categoryQuery = Category::query();
+        if ($mode === 'projects') {
+            $categoryQuery->where('type', 1); // Initiatives
+        } elseif ($mode === 'announcements') {
+            $categoryQuery->where('type', 2); // Schemes & Programs
+        }
+        $categories = $categoryQuery->get();
+
         return view('web.catalog', [
             'results' => $results,
-            'categories' => Category::all(),
+            'categories' => $categories,
             'pageType' => $mode
         ]);
     }
@@ -851,10 +892,10 @@ class WebController extends Controller
             'blog' => 1,
             'news' => 2,
             'collaboration' => 3,
-            'training' => 4,
+            'resource' => 4,
+            'training' => 4, // Mapping both for backward compatibility or if training is still used in URLs
             'research' => 5,
             'case-study' => 6,
-            'resource' => 7,
             'csr-initiatives' => 8
         ];
 
@@ -950,7 +991,12 @@ class WebController extends Controller
         }
 
         // Get all categories for filter sidebar
-        $categories = Category::get();
+        $categories = Category::where('status', 1)
+            ->where('type', 3)
+            ->withCount(['activities as events_count' => function ($q) {
+                $q->whereIn('status', [1, 2, 3, 4]);
+            }])
+            ->get();
 
         // Paginate results (15 items per page)
         $events = $events->paginate(15)->appends($request->all());

@@ -253,10 +253,44 @@
 </style>
 @endpush
 
+@php
+    $currentType = request('type');
+    $currentCategory = request('category_id');
+    
+    $heroTitle = "Insights & Perspectives";
+    $heroSubtitle = "Exploring the future of skill development, innovation, and entrepreneurship in the modern Indian landscape.";
+    
+    if ($currentType) {
+        $typeLabel = match((int)$currentType) {
+            1 => 'Our Blogs',
+            2 => 'Latest News',
+            4 => 'Resources & Library',
+            5 => 'Research & Publications',
+            6 => 'Industry Case Studies',
+            8 => 'CSR Initiatives',
+            default => 'Insights & Perspectives'
+        };
+        $heroTitle = $typeLabel;
+    }
+    
+    if ($currentCategory) {
+        $cat = $categories->where('id', $currentCategory)->first();
+        if ($cat) {
+            $heroTitle = $cat->name;
+            if ($currentType) {
+                $typeName = match((int)$currentType) {
+                    1 => 'Blogs', 2 => 'News', 4 => 'Resources', 5 => 'Research', 6 => 'Case Studies', 8 => 'CSR', default => ''
+                };
+                $heroTitle .= " " . $typeName;
+            }
+        }
+    }
+@endphp
+
 <div class="blog-hero">
     <div class="container text-center text-md-start">
-        <h1 class="blog-hero-title">Insights & <br class="d-none d-md-block"> Perspectives</h1>
-        <p class="blog-hero-subtitle text-white">Exploring the future of skill development, innovation, and entrepreneurship in the modern Indian landscape.</p>
+        <h1 class="blog-hero-title">{!! $heroTitle !!}</h1>
+        <p class="blog-hero-subtitle text-white">{{ $heroSubtitle }}</p>
     </div>
 </div>
 
@@ -267,23 +301,32 @@
         <form method="GET" action="{{ route('web.blog.filter') }}" id="blogFilterFormDesktop">
             <div class="row g-4">
                 {{-- Type Filter --}}
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <label for="type_desktop" class="form-label-custom">Content Type</label>
                     <select name="type" id="type_desktop" class="form-select form-select-custom">
                         <option value="">All Types</option>
                         <option value="1" {{ request('type') == '1' ? 'selected' : '' }}>Blog</option>
                         <option value="2" {{ request('type') == '2' ? 'selected' : '' }}>News</option>
-                        {{-- <option value="3" {{ request('type') == '3' ? 'selected' : '' }}>Collaboration</option> --}}
-                        <option value="4" {{ request('type') == '4' ? 'selected' : '' }}>Training Model</option>
+                        <option value="4" {{ request('type') == '4' ? 'selected' : '' }}>Resources</option>
                         <option value="5" {{ request('type') == '5' ? 'selected' : '' }}>Research and Publication</option>
                         <option value="6" {{ request('type') == '6' ? 'selected' : '' }}>Case Studies</option>
-                        {{-- <option value="7" {{ request('type') == '7' ? 'selected' : '' }}>Resource</option> --}}
                         <option value="8" {{ request('type') == '8' ? 'selected' : '' }}>CSR Initiatives</option>
                     </select>
                 </div>
 
+                {{-- Category Filter --}}
+                <div class="col-md-3">
+                    <label for="category_desktop" class="form-label-custom">Category</label>
+                    <select name="category_id" id="category_desktop" class="form-select form-select-custom">
+                        <option value="">All Categories</option>
+                        @foreach($categories as $cat)
+                            <option value="{{ $cat->id }}" {{ request('category_id') == $cat->id ? 'selected' : '' }}>{{ $cat->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
                 {{-- Search Input --}}
-                <div class="col-md-5">
+                <div class="col-md-3">
                     <label for="search_desktop" class="form-label-custom">Search Articles</label>
                     <div class="input-group">
                         <span class="input-group-text bg-white border-end-0 border-radius-custom-left">
@@ -328,10 +371,10 @@
                                 1 => 'Blog',
                                 2 => 'News',
                                 3 => 'Collaboration',
-                                4 => 'Training Model',
+                                4 => 'Resources',
                                 5 => 'Research and Publication',
                                 6 => 'Case Studies',
-                                7 => 'Resource',
+                                7 => 'Resources',
                                 8 => 'CSR Initiatives',
                                 default => 'Blog',
                             };
@@ -339,7 +382,7 @@
                                 1 => 'blog',
                                 2 => 'news',
                                 // 3 => 'collaboration',
-                                4 => 'training',
+                                4 => 'resource',
                                 5 => 'research',
                                 6 => 'case-study',
                                 // 7 => 'resource',
@@ -418,17 +461,24 @@
             // Adjust IDs and layout for mobile
             $clonedForm.attr('id', 'blogFilterFormMobile');
             
-            // Remove the desktop actions column as we want a full-width button
-            $clonedForm.find('.col-md-3').remove();
+            // Remove the desktop actions column (last col-md-3)
+            $clonedForm.find('.col-md-3').last().remove();
             
-            // Change column widths to 12 for vertical layout
-            $clonedForm.find('.col-md-4, .col-md-5').removeClass('col-md-4 col-md-5').addClass('col-12 mb-3');
+            // Change remaining column widths to 12 for vertical layout
+            $clonedForm.find('.col-md-3').removeClass('col-md-3').addClass('col-12 mb-3');
+            
+            // Fix search input icon spacing/border if needed
+            $clonedForm.find('.border-radius-custom-left').removeClass('border-radius-custom-left');
             
             // Add a dedicated mobile submit button
             const mobileBtn = `
                 <div class="col-12 mt-4 d-grid gap-2">
-                    <button type="submit" class="btn btn-primary py-3 rounded-3">Apply Filters</button>
-                    <a href="{{ route('web.blog.filter') }}" class="btn btn-light py-3 rounded-3 text-center">Reset All</a>
+                    <button type="submit" class="btn btn-primary py-3 rounded-3 shadow">
+                        <i class="bi bi-check-circle me-2"></i>Apply Filters
+                    </button>
+                    <a href="{{ route('web.blog.filter') }}" class="btn btn-outline-secondary py-3 rounded-3 text-center">
+                        <i class="bi bi-arrow-counterclockwise me-2"></i>Reset All
+                    </a>
                 </div>
             `;
             $clonedForm.find('.row').append(mobileBtn);

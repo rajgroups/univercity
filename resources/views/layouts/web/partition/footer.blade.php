@@ -109,7 +109,7 @@
                                 <div class="input-block">
                                     <input type="text" name="organization"
                                         class="form-control @error('organization') is-invalid @enderror"
-                                        placeholder="Organization / Company Name" value="{{ old('organization') }}">
+                                        placeholder="Company / Individual" value="{{ old('organization') }}">
                                 </div>
                                 @error('organization')
                                     <div class="invalid-feedback">{{ $message }}</div>

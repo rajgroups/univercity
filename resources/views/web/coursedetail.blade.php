@@ -79,6 +79,7 @@
         .badge-soft-success { background: rgba(25, 135, 84, 0.1); color: #198754; }
         .badge-soft-warning { background: rgba(255, 193, 7, 0.1); color: #856404; }
         .badge-soft-violet { background: rgba(138, 43, 226, 0.1); color: #8a2be2; }
+        .badge-soft-purple { background: rgba(111, 66, 193, 0.1); color: #6f42c1; }
 
         .hero-meta-item {
             display: flex;
@@ -144,7 +145,7 @@
             height: 100%;
             border: 1px solid transparent;
             transition: var(--transition);
-            text-align: end;
+            text-align: start;
         }
         .feature-box:hover {
             background: #fff;
@@ -232,6 +233,11 @@
                             <span class="badge badge-soft-primary px-3 py-2 rounded-pill">
                                 <i class="bi bi-grid-fill me-1"></i> {{ $course->sector->name ?? 'General Course' }}
                             </span>
+                            @if($course->category)
+                                <span class="badge badge-soft-purple px-3 py-2 rounded-pill">
+                                    <i class="bi bi-tags-fill me-1"></i> {{ $course->category->name }}
+                                </span>
+                            @endif
                             @if($course->internship)
                                 <span class="badge badge-soft-violet px-3 py-2 rounded-pill">
                                     <i class="bi bi-person-workspace me-1"></i> Internship Available
@@ -254,7 +260,7 @@
                                 <i class="bi bi-clock-fill"></i>
                                 <span>
                                     @if ($course->duration_number && $course->duration_unit)
-                                        {{ $course->duration_number }} {{ $course->duration_unit }}
+                                        {{ $course->duration_number }} {{ $course->duration_unit->label() }}
                                     @else
                                         {{ $course->duration ?? 'Flexible' }}
                                     @endif
@@ -266,7 +272,7 @@
                                     @php
                                         $languages = is_array($course->language) ? $course->language : [];
                                         echo count($languages) > 0
-                                            ? implode(', ', array_slice($languages, 0, 2)) . (count($languages) > 2 ? ' +' . (count($languages) - 2) . ' more' : '')
+                                            ? implode(', ', array_slice($languages, 0, 2)) . (count($languages) - 2 > 0 ? ' +' . (count($languages) - 2) . ' more' : '')
                                             : 'Multiple Languages';
                                     @endphp
                                 </span>
@@ -384,7 +390,7 @@
                                 </li>
                             </ul>
                         </div>
-                        <div class="card-body p-4 p-md-5">
+                        <div class="card-body p-1 p-md-5">
                             <div class="tab-content" id="courseTabsContent">
                                 <!-- Overview Tab -->
                                 <div class="tab-pane fade show active" id="overview" role="tabpanel">
@@ -448,117 +454,128 @@
 
                                 <!-- Details Tab -->
                                 <div class="tab-pane fade" id="details" role="tabpanel">
-                                    <h4 class="fw-bold mb-4 text-dark">Course Specifications</h4>
+                                    <h4 class="fw-bold mb-4 text-dark text-start">Course Specifications</h4>
+
                                     <div class="row g-4">
+
+                                        <!-- General Info -->
                                         <div class="col-md-6">
                                             <div class="feature-box">
                                                 <h6 class="text-primary fw-bold text-uppercase small mb-3">General Info</h6>
                                                 <ul class="list-unstyled mb-0">
+
                                                     @if ($course->provider)
-                                                    <li class="mb-3 d-flex justify-content-between border-bottom pb-2">
-                                                        <span class="text-muted">Provider</span>
+                                                    <li class="mb-3 border-bottom pb-2">
+                                                        <span class="text-muted">Provider :</span>
                                                         <span class="fw-semibold">{{ $course->provider }}</span>
                                                     </li>
                                                     @endif
+
                                                     @if ($course->certification_type)
-                                                    <li class="mb-3 d-flex justify-content-between border-bottom pb-2">
-                                                        <span class="text-muted">Certification</span>
+                                                    <li class="mb-3 border-bottom pb-2">
+                                                        <span class="text-muted">Certification :</span>
                                                         <span class="fw-semibold">{{ $course->certification_type }}</span>
                                                     </li>
                                                     @endif
+
                                                     @if ($course->mode_of_study)
-                                                    <li class="mb-3 d-flex justify-content-between border-bottom pb-2">
-                                                        <span class="text-muted">Mode</span>
+                                                    <li class="mb-3 border-bottom pb-2">
+                                                        <span class="text-muted">Mode :</span>
                                                         <span class="fw-semibold">{{ $course->mode_of_study->label() }}</span>
                                                     </li>
                                                     @endif
+
                                                     @if ($course->assessment_mode)
-                                                    <li class="d-flex justify-content-between">
-                                                        <span class="text-muted">Assessment</span>
+                                                    <li class="border-bottom pb-2">
+                                                        <span class="text-muted">Assessment :</span>
                                                         <span class="fw-semibold">{{ $course->assessment_mode }}</span>
                                                     </li>
                                                     @endif
+
                                                 </ul>
                                             </div>
                                         </div>
+
+                                        <!-- Program Details -->
                                         <div class="col-md-6">
                                             <div class="feature-box">
                                                 <h6 class="text-primary fw-bold text-uppercase small mb-3">Program Details</h6>
                                                 <ul class="list-unstyled mb-0">
+
                                                     @if ($course->program_by)
-                                                    <li class="mb-3 d-flex justify-content-between border-bottom pb-2">
-                                                        <span class="text-muted">Program By</span>
+                                                    <li class="mb-3 border-bottom pb-2">
+                                                        <span class="text-muted">Program By :</span>
                                                         <span class="fw-semibold">{{ $course->program_by }}</span>
                                                     </li>
                                                     @endif
+
                                                     @if ($course->initiative_of)
-                                                    <li class="mb-3 d-flex justify-content-between border-bottom pb-2">
-                                                        <span class="text-muted">Initiative Of</span>
+                                                    <li class="mb-3 border-bottom pb-2">
+                                                        <span class="text-muted">Initiative Of :</span>
                                                         <span class="fw-semibold">{{ $course->initiative_of }}</span>
                                                     </li>
                                                     @endif
+
                                                     @if ($course->domain)
-                                                    <li class="mb-3 d-flex justify-content-between border-bottom pb-2">
-                                                        <span class="text-muted">Domain</span>
+                                                    <li class="mb-3 border-bottom pb-2">
+                                                        <span class="text-muted">Domain :</span>
                                                         <span class="fw-semibold">{{ $course->domain }}</span>
                                                     </li>
                                                     @endif
+
                                                     @if ($course->course_code)
-                                                    <li class="mb-3 d-flex justify-content-between border-bottom pb-2">
-                                                        <span class="text-muted">Code</span>
+                                                    <li class="mb-3 border-bottom pb-2">
+                                                        <span class="text-muted">Code :</span>
                                                         <span class="fw-semibold">{{ $course->course_code }}</span>
                                                     </li>
                                                     @endif
+
                                                     @if ($course->nsqf_level)
-                                                    <li class="d-flex justify-content-between">
-                                                        <span class="text-muted">NSQF Level</span>
+                                                    <li class="border-bottom pb-2">
+                                                        <span class="text-muted">NSQF Level :</span>
                                                         <span class="fw-semibold">{{ $course->nsqf_level }}</span>
                                                     </li>
                                                     @endif
+
                                                 </ul>
                                             </div>
                                         </div>
+
                                     </div>
+
+
+                                    <!-- Locations + Languages -->
                                     <div class="row">
+
                                         @if (!empty($course->location) && count($course->location) > 0)
                                         <div class="col-md-6">
-                                        <div class="mt-4">
-                                            <h6 class="fw-bold mb-3">Available Locations</h6>
-                                            <div class="d-flex flex-wrap gap-2">
-                                                @foreach ($course->location as $location)
-                                                    <span class="badge bg-white text-dark border px-3 py-2 shadow-sm">{{ $location }}</span>
-                                                @endforeach
+                                            <div class="mt-4">
+                                                <h6 class="fw-bold mb-3">Available Locations</h6>
+                                                <div class="d-flex flex-wrap gap-2">
+                                                    @foreach ($course->location as $location)
+                                                        <span class="badge bg-white text-dark border px-3 py-2 shadow-sm">{{ $location }}</span>
+                                                    @endforeach
+                                                </div>
                                             </div>
                                         </div>
-                                        </div>
                                         @endif
+
 
                                         @if (!empty($course->language) && count($course->language) > 0)
                                         <div class="col-md-6">
-                                        <div class="mt-4">
-                                            <h6 class="fw-bold mb-3">Languages</h6>
-                                            <div class="d-flex flex-wrap gap-2">
-                                                @foreach ($course->language as $lang)
-                                                    <span class="badge bg-light text-dark border px-3 py-2">{{ $lang }}</span>
-                                                @endforeach
+                                            <div class="mt-4">
+                                                <h6 class="fw-bold mb-3">Languages</h6>
+                                                <div class="d-flex flex-wrap gap-2">
+                                                    @foreach ($course->language as $lang)
+                                                        <span class="badge bg-light text-dark border px-3 py-2">{{ $lang }}</span>
+                                                    @endforeach
+                                                </div>
                                             </div>
-                                        </div>
                                         </div>
                                         @endif
 
-                                        @if (!empty($course->occupations) && count($course->occupations) > 0)
-                                        <div class="col-md-12">
-                                        <div class="mt-4">
-                                            <h6 class="fw-bold mb-3">Who can join</h6>
-                                            <div class="d-flex flex-wrap gap-2">
-                                                @foreach ($course->occupations as $occupation)
-                                                    <span class="badge badge-soft-primary text-primary border border-light px-3 py-2">{{ $occupation }}</span>
-                                                @endforeach
-                                            </div>
-                                        </div>
-                                        </div>
-                                        @endif
                                     </div>
+
                                 </div>
 
                                 <!-- Eligibility Tab -->
@@ -623,6 +640,24 @@
                                         </div>
                                         @endif -->
                                     </div>
+
+                                    <!-- Who Can Join -->
+                                    @if (!empty($course->occupations) && count($course->occupations) > 0)
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="mt-4">
+                                                <h6 class="fw-bold mb-3">Who can join</h6>
+                                                <div class="d-flex flex-wrap gap-2">
+                                                    @foreach ($course->occupations as $occupation)
+                                                        <span class="badge bg-primary-subtle text-primary border px-3 py-2">
+                                                            {{ $occupation }}
+                                                        </span>
+                                                    @endforeach
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @endif
                                 </div>
 
                                 <!-- Learning Outcomes Tab -->
@@ -763,6 +798,18 @@
                                             <small class="text-muted d-block text-uppercase" style="font-size: 0.75rem; letter-spacing: 0.5px;">Stipend</small>
                                             <span class="fw-bold fs-6 text-success">
                                                 {{ $course->stipend_amount ? $course->stipend_amount : 'Yes' }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    @endif
+
+                                    @if($course->category)
+                                         <div class="list-group-item px-4 py-3 d-flex text-dark">
+                                        <i class="bi bi-tags-fill text-primary fs-5 me-3"></i>
+                                        <div>
+                                            <small class="text-muted d-block text-uppercase" style="font-size: 0.75rem; letter-spacing: 0.5px;">Category</small>
+                                            <span class="fw-bold fs-6 text-success">
+                                                {{ $course->category->name }}
                                             </span>
                                         </div>
                                     </div>

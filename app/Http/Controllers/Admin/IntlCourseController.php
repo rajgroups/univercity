@@ -286,17 +286,15 @@ class IntlCourseController extends Controller
             DB::commit();
 
             notyf()->addSuccess('International course created successfully!');
-            return redirect()->route('admin.intlcourse.index')
-                ->with('success', 'International course created successfully!');
+            return redirect()->route('admin.intlcourse.index');
         } catch (\Exception $e) {
             DB::rollBack();
 
             // Clean up uploaded files if error occurs
             $this->cleanupUploadedFiles($courseData);
 
-            return redirect()->back()
-                ->with('error', 'Error creating course: ' . $e->getMessage())
-                ->withInput();
+            notyf()->addError('Error creating course: ' . $e->getMessage());
+            return redirect()->back()->withInput();
         }
     }
 
@@ -644,15 +642,13 @@ class IntlCourseController extends Controller
 
             DB::commit();
 
-            notyf()->addSuccess('International course Updated successfully!');
-            return redirect()->route('admin.intlcourse.index')
-                ->with('success', 'International course Updated successfully!');
+            notyf()->addSuccess('International course updated successfully!');
+            return redirect()->route('admin.intlcourse.index');
         } catch (\Exception $e) {
             DB::rollBack();
 
-            return redirect()->back()
-                ->with('error', 'Error updating course: ' . $e->getMessage())
-                ->withInput();
+            notyf()->addError('Error updating course: ' . $e->getMessage());
+            return redirect()->back()->withInput();
         }
     }
     /**
@@ -695,14 +691,12 @@ class IntlCourseController extends Controller
             DB::commit();
 
             notyf()->addSuccess('International course deleted successfully!');
-            return redirect()->route('admin.intlcourse.index')
-                ->with('success', 'International course deleted successfully!');
+            return redirect()->route('admin.intlcourse.index');
         } catch (\Exception $e) {
             DB::rollBack();
 
             notyf()->addError('Error deleting course: ' . $e->getMessage());
-            return redirect()->back()
-                ->with('error', 'Error deleting course: ' . $e->getMessage());
+            return redirect()->back();
         }
     }
 

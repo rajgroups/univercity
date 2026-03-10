@@ -288,6 +288,26 @@
         .wrapper-dropdown.active svg {
             transform: rotate(180deg);
         }
+        .sticky-mobile-filter-bar {
+            transition: all 0.3s ease;
+        }
+
+        @media (max-width: 991.98px) {
+            .sticky-mobile-filter-bar {
+                position: sticky;
+                top: 0px;
+                z-index: 1000;
+                background: white;
+                margin: 0 -15px 24px -15px !important;
+                padding: 12px 15px;
+                border-bottom: 1px solid #eee;
+                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            }
+
+            .stricky-fixed + .main-wrapper .sticky-mobile-filter-bar {
+                top: 80px;
+            }
+        }
     </style>
 
     <!-- Title Banner Section Start -->
@@ -307,35 +327,39 @@
     <!-- Events Section -->
     <section class="events-sec mb-120">
         <div class="container-fluid">
-            <div class="d-flex align-items-center justify-content-sm-between justify-content-center row-gap-4 flex-wrap mb-24">
-                <h4 class="text-center">Events & Competitions</h4>
-                <div class="d-flex align-items-center gap-8">
-                    {{-- MOBILE FILTER BUTTON --}}
-                    <button class="btn btn-outline-primary d-md-none me-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileFilterOffcanvas" aria-controls="mobileFilterOffcanvas">
-                        <i class="bi bi-funnel"></i> Filters
-                    </button>
-                    {{-- END MOBILE FILTER BUTTON --}}
-
-                    {{-- BOOTSTRAP DROPDOWN REPLACEMENT --}}
-                    <div class="dropdown w-100 drop-container" style="max-width: 250px;">
-                        <button class="btn bg-white border d-flex align-items-center justify-content-between w-100 py-2 px-3 rounded-3" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <span class="selected-display text-dark fw-medium" id="currentSortLabel">Newest First</span>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                                <path d="M19.7337 4.81165C19.3788 4.45668 18.8031 4.45662 18.4481 4.81171L10.0002 13.2598L1.55191 4.81165C1.19694 4.45668 0.621303 4.45662 0.266273 4.81171C-0.0887576 5.16674 -0.0887576 5.74232 0.266273 6.09735L9.35742 15.1883C9.52791 15.3587 9.75912 15.4545 10.0002 15.4545C10.2413 15.4545 10.4726 15.3587 10.643 15.1882L19.7337 6.09729C20.0888 5.74232 20.0888 5.16668 19.7337 4.81165Z" fill="#92949F"/>
-                            </svg>
+            <div class="row align-items-center mb-4 sticky-mobile-filter-bar py-2">
+                <div class="col-6 col-lg-6">
+                    <h4 class="mb-0 fs-6 fs-lg-4">Events & Competitions</h4>
+                    <div class="d-lg-none text-muted smallest" style="font-size: 10px;">
+                         <strong>{{ $events->total() }}</strong> Results
+                    </div>
+                </div>
+                <div class="col-6 col-lg-6">
+                    <div class="d-flex align-items-center justify-content-end gap-2">
+                        {{-- MOBILE FILTER BUTTON --}}
+                        <button class="btn btn-sm btn-outline-primary d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileFilterOffcanvas" aria-controls="mobileFilterOffcanvas">
+                            <i class="bi bi-funnel"></i>
                         </button>
-                        <ul class="dropdown-menu w-100 shadow border-0 mt-1 p-1" style="border-radius: 8px;">
-                            <li><a class="dropdown-item sort-option rounded-2 py-2" href="#" data-value="newest_first">Newest First</a></li>
-                            <li><a class="dropdown-item sort-option rounded-2 py-2" href="#" data-value="date_soonest">Date (Soonest)</a></li>
-                            <li><a class="dropdown-item sort-option rounded-2 py-2" href="#" data-value="popular">Popular</a></li>
-                        </ul>
+                        {{-- END MOBILE FILTER BUTTON --}}
+
+                        {{-- BOOTSTRAP DROPDOWN REPLACEMENT --}}
+                        <div class="dropdown">
+                            <button class="btn btn-sm bg-white border d-flex align-items-center justify-content-between w-100" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="font-size: 12px;">
+                                <i class="bi bi-sort-down"></i>
+                            </button>
+                            <ul class="dropdown-menu shadow-sm border-0 mt-1 p-1">
+                                <li><a class="dropdown-item sort-option rounded-2 small py-2" href="#" data-value="newest_first">Newest First</a></li>
+                                <li><a class="dropdown-item sort-option rounded-2 small py-2" href="#" data-value="date_soonest">Date (Soonest)</a></li>
+                                <li><a class="dropdown-item sort-option rounded-2 small py-2" href="#" data-value="popular">Popular</a></li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <div class="row">
                 <!-- Desktop Filters Column -->
-                <div class="col-md-3 d-none d-md-block">
+                <div class="col-lg-3 d-none d-lg-block">
                     <form action="{{ route('web.activity') }}" method="GET" id="eventFiltersDesktop">
                         <input type="hidden" name="sort" id="sortInput" value="{{ request('sort', 'newest_first') }}">
                         
@@ -438,7 +462,7 @@
                 </div>
 
                 <!-- Events Grid Column -->
-                <div class="col-12 col-md-9">
+                <div class="col-12 col-lg-9">
                     <div class="row g-2">
                         @forelse ($events as $event)
                             <div class="col-sm-6 col-lg-4 mb-4">
@@ -642,14 +666,21 @@
             // Update Accordion Data Attributes
             $mobileForm.find('[data-bs-toggle="collapse"]').each(function() {
                 var target = $(this).attr('data-bs-target');
-                var parent = $(this).attr('data-bs-parent');
-
                 if (target) {
                     var newTarget = target.replace('#', '#mobile_');
                     $(this).attr('data-bs-target', newTarget);
                     $(this).attr('aria-controls', newTarget.substring(1));
                 }
                 
+                var parent = $(this).attr('data-bs-parent');
+                if (parent) {
+                    $(this).attr('data-bs-parent', parent.replace('#', '#mobile_'));
+                }
+            });
+
+            // Update Accordion Collapse elements directly (CRITICAL for closing behavior)
+            $mobileForm.find('.accordion-collapse').each(function() {
+                var parent = $(this).attr('data-bs-parent');
                 if (parent) {
                     $(this).attr('data-bs-parent', parent.replace('#', '#mobile_'));
                 }

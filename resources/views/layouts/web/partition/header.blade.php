@@ -131,7 +131,7 @@
                     style="background-color: #fafafa;border-bottom: 0px solid rgb(202, 202, 202);">
                     <div class="hero-topbar-block py-2 bg-white"
                         style="background-color: #fafafa;border-bottom: 0px solid rgb(202, 202, 202);">
-                        <div class="row align-items-center justify-content-between gy-2">
+                        <div class="row align-items-center justify-content-between">
                             <!-- Search Bar (Always First on Mobile) -->
                             <form method="GET" action="{{ route('web.course.index') }}">
                                 <div class="col-12 d-block d-md-none order-1">
@@ -146,13 +146,13 @@
                                 </div>
                             </form>
                             <!-- Logos -->
-                            <div class="col-md-3 text-center text-md-start">
+                            <div class="col-md-5 col-lg-6 col-xl-6 col-xxl-6 text-center text-md-start">
                                 <a href="/"> <img src="{{ asset($defaultSettings->site_logo ?? null) }}"
                                         alt="{{ $defaultSettings->site_title ?? null }}" style="height: 90px; max-width: 100%; object-fit: contain;"></a>
                             </div>
 
                             <!-- Search Bar (Visible on md+ screens only) -->
-                            <div class="col-md-6 my-2 d-none d-md-block order-md-2 mt-2">
+                            <div class="col-md-6 col-lg-6 col-xl-6 col-xxl-4 my-2 d-none d-md-block order-md-2 mt-2">
                                 <form method="GET" action="{{ route('web.course.index') }}">
                                     <div class="input-group rounded-pill overflow-hidden shadow-sm border" style="background: #fff;">
                                         <span class="input-group-text bg-white border-0 ps-3">
@@ -176,7 +176,7 @@
                             </form>
 
                             <!-- Right Buttons -->
-                            <div class="col-md-3 text-end gap-2 order-3 d-flex justify-content-end align-items-center d-none-mobile">
+                            <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-2 text-end gap-2 order-3 d-flex justify-content-end align-items-center d-none-mobile">
                                 <!-- Register Button -->
                                 <button class="btn btn-warning text-white btn-sm fw-bold px-3 py-2 rounded-pill shadow-sm"
                                     data-bs-toggle="modal" data-bs-target="#registerModal" style="background-color: #FF671F; border: none; font-size: 0.85rem;">
@@ -251,19 +251,18 @@
 
                                                     {{-- Projects --}}
                                                     <li>
-                                                        <a href="{{ route('web.projects') }}">1. Projects</a>
+                                                        <a href="{{ route('web.projects') }}">ISICO Projects</a>
                                                     </li>
 
                                                     {{-- Programs & Schemes --}}
                                                     <li>
-                                                        <a href="{{ route('web.announcements') }}">2. Programs & Schemes</a>
+                                                        <a href="{{ route('web.announcements') }}">Csr Programs & Govt.Scheme</a>
                                                     </li>
 
                                                     {{-- CSR Initiatives --}}
                                                     <li>
                                                         <a
-                                                            href="{{ route('web.blog.filter', ['category_id' => '', 'type' => 8]) }}">3.
-                                                            CSR Initiatives</a>
+                                                            href="{{ route('web.blog.filter', ['category_id' => '', 'type' => 8]) }}">CSR Initiatives</a>
                                                         {{-- <ul class="sub-menu">
                                                             @foreach ($csrPrograms as $program)
                                                                 <li><a
@@ -322,7 +321,7 @@
                                         <span class="text"> Donate Now</span>
                                     </a>
                                     <a href="{{ route('web.activity') }}" class="cus-btn-2">
-                                        <span class="text">NTI Competetions/Events</span>
+                                        <span class="text">NTI Competitions/Events</span>
                                     </a>
                                 </div>
                                 <a href="#" class="main-menu__toggler mobile-nav__toggler">

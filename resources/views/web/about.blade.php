@@ -240,9 +240,19 @@
 
         @media (max-width: 991px) {
             .page-header-banner { padding: 80px 0 60px; }
-            .banner-title { font-size: 2.8rem; }
+            .banner-title { font-size: 27px; }
             .quote-box { padding: 30px; }
             .quote-box blockquote { font-size: 1.25rem; }
+        }
+        @media (max-width: 576px) {
+            .banner-title { font-size: 27px; }
+        }
+        .hover-lift {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .hover-lift:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15) !important;
         }
     </style>
 
@@ -257,7 +267,7 @@
                         <span class="mx-2 text-white-50">/</span>
                         <span class="text-white">About Us</span>
                     </div>
-                    <h1 class="banner-title wow fadeInUp text-white" data-wow-delay="0.1s">Indian Skill Institute <br>Co-operation (ISICO)</h1>
+                    <h1 class="banner-title wow fadeInUp text-white" data-wow-delay="0.1s">Indian Skill Institute <br>Co-operation (ISICO)<sup>&reg;</sup></h1>
                     <p class="banner-subtitle mx-auto wow fadeInUp text-white" data-wow-delay="0.2s">
                         Building a connected skill ecosystem that transforms learning into livelihood and capability into national growth.
                     </p>
@@ -269,10 +279,10 @@
     <!-- Overview Section -->
     <section class="py-100 overflow-hidden">
         <div class="container">
-            <div class="row align-items-center">
+            <div class="row align-items-center mt-3 mb-3">
                 <div class="col-lg-6 mb-4 mb-lg-0 wow fadeInLeft">
                     <div class="position-relative">
-                        <img src="{{ asset('resource/web/assets/media/images/isico_overview.png') }}" 
+                        <img src="{{ asset('resource/web/assets/media/images/isico_overview.png') }}"
                              alt="Skill Development" class="img-fluid rounded-4 shadow-lg">
                         <div class="position-absolute bottom-0 end-0 bg-white p-4 rounded-4 shadow-lg m-4 d-none d-md-block">
                             <h2 class="text-primary fw-800 mb-0">2020</h2>
@@ -306,8 +316,8 @@
                     <h2 class="section-title">Our Vision & Mission</h2>
                 </div>
             </div>
-            <div class="row g-4">
-                <div class="col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+            <div class="row g-1">
+                <div class="col-md-6 wow fadeInUp mt-2" data-wow-delay="0.1s">
                     <div class="mv-card vision-card text-start">
                         <div class="fs-1 mb-3"><i class="bi bi-eye"></i></div>
                         <h3>Our Vision</h3>
@@ -316,7 +326,7 @@
                         </p>
                     </div>
                 </div>
-                <div class="col-md-6 wow fadeInUp" data-wow-delay="0.2s">
+                <div class="col-md-6 wow fadeInUp mt-2" data-wow-delay="0.2s">
                     <div class="mv-card mission-card text-start">
                         <div class="fs-1 mb-3"><i class="bi bi-bullseye"></i></div>
                         <h3>Our Mission</h3>
@@ -334,7 +344,7 @@
     </section>
 
     <!-- Why ISICO -->
-    <section class="py-100">
+    <section class="py-100 mt-5">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-5 wow fadeInDown">
@@ -442,7 +452,7 @@
     </section>
 
     <!-- Global Course Platform -->
-    <section class="py-100 overflow-hidden">
+    <section class="py-100 overflow-hidden mt-5">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-6 mb-5 mb-lg-0 wow fadeInLeft">
@@ -461,10 +471,10 @@
                             <p class="small text-muted">Explore international programs including vocational pathways and certifications.</p>
                         </div>
                     </div>
-                    <a href="{{ url('/catalog') }}" class="btn btn-primary rounded-pill px-4 mt-4 py-2">Explore Courses</a>
+                    <!-- <a href="{{ url('/catalog') }}" class="btn btn-primary rounded-pill px-4 mt-4 py-2">Explore Courses</a> -->
                 </div>
                 <div class="col-lg-6 wow fadeInRight text-lg-end">
-                    <img src="{{ asset('resource/web/assets/media/images/isico_teamwork.png') }}" 
+                    <img src="{{ asset('resource/web/assets/media/images/isico_teamwork.png') }}"
                          alt="Teamwork" class="img-fluid rounded-4 shadow-lg w-75">
                 </div>
             </div>
@@ -472,9 +482,9 @@
     </section>
 
     <!-- Project Initiatives & Roles -->
-    <section class="py-100 bg-dark text-white">
+    <section class="py-100 bg-dark text-white mt-2">
         <div class="container">
-            <div class="row g-5">
+            <div class="row g-5 mt-3">
                 <div class="col-lg-4 wow fadeInUp">
                     <h2 class="fw-800 mb-4 text-white">Our Role in the Value Chain</h2>
                     <ul class="check-list text-white">
@@ -497,7 +507,7 @@
     </section>
 
     <!-- Alignment Section -->
-    <section class="py-100">
+    <section class="py-100 mt-5">
         <div class="container">
             <div class="row text-center mb-60">
                 <div class="col-lg-8 mx-auto">
@@ -519,11 +529,22 @@
                 <div class="col-md-6 wow fadeInRight">
                     <div class="bg-primary bg-opacity-10 p-5 rounded-4 h-100">
                         <h4 class="fw-bold mb-4 text-white">Global SDG Contribution</h4>
-                        <div class="d-flex flex-wrap gap-2">
-                            <span class="badge rounded-pill bg-primary px-3 py-2">SDG 4: Quality Education</span>
-                            <span class="badge rounded-pill bg-primary px-3 py-2">SDG 5: Gender Equality</span>
-                            <span class="badge rounded-pill bg-primary px-3 py-2">SDG 8: Decent Work</span>
-                            <span class="badge rounded-pill bg-primary px-3 py-2">SDG 17: Partnerships</span>
+                        <div class="row g-2">
+                            @php
+                                $aboutSdgs = [4, 5, 8, 17];
+                            @endphp
+                            @foreach($aboutSdgs as $sdgId)
+                                @php
+                                    $sdg = App\Helpers\SDGHelper::getSDGById($sdgId);
+                                @endphp
+                                <div class="col-6 col-md-3">
+                                    <a href="https://sdgs.un.org/goals" target="_blank" class="d-block hover-lift">
+                                        <img src="{{ $sdg['image_url'] ?? '' }}" 
+                                             alt="SDG {{ $sdgId }}" 
+                                             class="img-fluid rounded shadow-sm">
+                                    </a>
+                                </div>
+                            @endforeach
                         </div>
                     </div>
                 </div>

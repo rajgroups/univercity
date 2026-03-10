@@ -18,10 +18,10 @@
         1 => 'Blog',
         2 => 'News',
         3 => 'Collaboration',
-        4 => 'Training Model',
+        4 => 'Resources',
         5 => 'Research',
         6 => 'Case Studies',
-        7 => 'Resource',
+        7 => 'Resources',
         8 => 'CSR Initiatives',
         default => 'Blog',
     };
@@ -151,7 +151,7 @@
                                         @forelse($similars as $similar)
                                             @php
                                                 $sTypeSlug = match($similar->type) {
-                                                    1 => 'blog', 2 => 'news', 3 => 'collaboration', 4 => 'training',
+                                                    1 => 'blog', 2 => 'news', 3 => 'collaboration', 4 => 'resource',
                                                     5 => 'research', 6 => 'case-study', 7 => 'resource', default => 'blog',
                                                 };
                                             @endphp

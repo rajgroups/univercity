@@ -79,15 +79,15 @@
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <label class="form-label">Category Type <span class="text-danger">*</span></label>
-                                        <select name="type" class="form-select @error('type') is-invalid @enderror" required>
-                                            <option value="" disabled>Select type</option>
-                                            <option value="1" {{ old('type', $category->type) == 1 ? 'selected' : '' }}>Education Program</option>
-                                            <option value="2" {{ old('type', $category->type) == 2 ? 'selected' : '' }}>Skill Development Program</option>
-                                            <option value="3" {{ old('type', $category->type) == 3 ? 'selected' : '' }}>Women Scheme</option>
-                                            <option value="4" {{ old('type', $category->type) == 4 ? 'selected' : '' }}>General Scheme</option>
-                                            <option value="5" {{ old('type', $category->type) == 5 ? 'selected' : '' }}>Course</option>
-                                            <option value="6" {{ old('type', $category->type) == 6 ? 'selected' : '' }}>Intl Course</option>
-                                        </select>
+                                      <select name="type" class="form-select @error('type') is-invalid @enderror" required>
+                                        <option value="" disabled>Select type</option>
+                                        <option value="1" {{ old('type', $category->type) == 1 ? 'selected' : '' }}>Initiatives</option>
+                                        <option value="2" {{ old('type', $category->type) == 2 ? 'selected' : '' }}>Schemes & Programs</option>
+                                        <option value="3" {{ old('type', $category->type) == 3 ? 'selected' : '' }}>Events & Competition</option>
+                                        <option value="4" {{ old('type', $category->type) == 4 ? 'selected' : '' }}>Resources</option>
+                                        <option value="5" {{ old('type', $category->type) == 5 ? 'selected' : '' }}>Skill Courses</option>
+                                        <option value="6" {{ old('type', $category->type) == 6 ? 'selected' : '' }}>Global Pathway</option>
+                                    </select>
                                         @error('type')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror

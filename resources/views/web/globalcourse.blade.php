@@ -175,33 +175,37 @@
 
     <section class="couses-sec mb-120">
         <div class="container-fluid">
-            <div class="d-flex align-items-center justify-content-sm-between justify-content-center row-gap-4 flex-wrap mb-5">
-                <div class="text-center text-sm-start">
-                    <h4 class="mb-1">Global Learning Pathways</h4>
-                    <p class="text-muted small mb-0 d-md-none">Showing <strong>{{ $courses->firstItem() ?? 0 }}-{{ $courses->lastItem() ?? 0 }}</strong> of <strong>{{ $courses->total() }}</strong> courses</p>
+            <div class="row align-items-center mb-4 sticky-mobile-filter-bar py-2">
+                <div class="col-6 col-lg-7">
+                    <h4 class="mb-0 fs-6 fs-lg-4">Global Pathways</h4>
+                    <div class="d-lg-none text-muted smallest" style="font-size: 10px;">
+                        <strong>{{ $courses->total() }}</strong> Courses
+                    </div>
+                    <p class="text-muted small mb-0 d-lg-block">Showing <strong>{{ $courses->firstItem() ?? 0 }}-{{ $courses->lastItem() ?? 0 }}</strong> of <strong>{{ $courses->total() }}</strong> courses</p>
                 </div>
-                <div class="d-flex align-items-center gap-8">
-                    {{-- MOBILE FILTER BUTTON --}}
-                    <button class="btn btn-outline-primary d-md-none me-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileFilterOffcanvas" aria-controls="mobileFilterOffcanvas">
-                        <i class="bi bi-funnel"></i> Filters
-                    </button>
+                <div class="col-6 col-lg-5">
+                    <div class="d-flex align-items-center justify-content-end gap-2">
+                        {{-- MOBILE FILTER BUTTON --}}
+                        <button class="btn btn-sm btn-outline-primary d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileFilterOffcanvas" aria-controls="mobileFilterOffcanvas">
+                            <i class="bi bi-funnel"></i>
+                        </button>
 
-                    {{-- Sort Dropdown --}}
-                    {{-- Sort Select --}}
-                    <div style="min-width: 200px;">
-                        <select class="form-select form-select-sm border-secondary-subtle" id="sortSelect" aria-label="Sort by">
-                            <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>Newest First</option>
-                            <option value="oldest" {{ request('sort') == 'oldest' ? 'selected' : '' }}>Oldest First</option>
-                            <option value="name_asc" {{ request('sort') == 'name_asc' ? 'selected' : '' }}>Name (A-Z)</option>
-                            <option value="name_desc" {{ request('sort') == 'name_desc' ? 'selected' : '' }}>Name (Z-A)</option>
-                        </select>
+                        {{-- Sort Select --}}
+                        <div style="min-width: 100px;">
+                            <select class="form-select form-select-sm border-secondary-subtle" id="sortSelect" aria-label="Sort by" style="font-size: 12px;">
+                                <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>Newest</option>
+                                <option value="oldest" {{ request('sort') == 'oldest' ? 'selected' : '' }}>Oldest</option>
+                                <option value="name_asc" {{ request('sort') == 'name_asc' ? 'selected' : '' }}>A-Z</option>
+                                <option value="name_desc" {{ request('sort') == 'name_desc' ? 'selected' : '' }}>Z-A</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <div class="row">
                 {{-- Desktop Filters --}}
-                <div class="col-md-3 d-none d-md-block">
+                <div class="col-lg-3 d-none d-lg-block">
                     <form action="{{ route('web.global.course') }}" method="GET" id="courseFilters">
                         <input type="hidden" name="sort" id="sortInput" value="{{ request('sort', 'newest') }}">
                         <div class="mb-4">
@@ -373,7 +377,7 @@
 
                 {{-- Course Grid --}}
 {{-- Course Grid --}}
-<div class="col-12 col-md-9">
+<div class="col-12 col-lg-9">
     @if($courses->count() > 0)
         <div class="row g-2 ">
             @foreach ($courses as $course)
@@ -614,6 +618,27 @@
         }
         .course-btn:hover:before {
             width: 100%;
+        }
+
+        .sticky-mobile-filter-bar {
+            transition: all 0.3s ease;
+        }
+
+        @media (max-width: 991.98px) {
+            .sticky-mobile-filter-bar {
+                position: sticky;
+                top: 0px;
+                z-index: 1000;
+                background: white;
+                margin: 0 -15px 24px -15px !important;
+                padding: 12px 15px;
+                border-bottom: 1px solid #eee;
+                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            }
+
+            .stricky-fixed + .main-wrapper .sticky-mobile-filter-bar {
+                top: 80px;
+            }
         }
 
         /* Dropdown Styling */

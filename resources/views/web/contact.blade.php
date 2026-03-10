@@ -182,6 +182,7 @@
     <section class="contact-sec mb-120">
         <div class="container">
             <div class="row g-5">
+                <!-- Contact Information -->
                 <div class="col-lg-5">
                     <div class="contact-info-card">
                         <h3 class="fw-bold mb-4 text-dark">Contact Information</h3>
@@ -227,16 +228,82 @@
                     </div>
                 </div>
 
+                <!-- Modern Contact Form -->
                 <div class="col-lg-7">
-                    <div class="map-container">
-                        @if(!empty($defaultSettings->contact_map_embed))
-                            {!! $defaultSettings->contact_map_embed !!}
-                        @else
-                            {{-- Placeholder Map if none provided --}}
-                             <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14008.11235948332!2d77.209021!3d28.613939!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390ce2db961be393%3A0xf6c250060fadcd!2sNew%20Delhi%2C%20Delhi!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-                        @endif
+                    <div class="contact-form-card bg-white p-4 p-md-5 rounded-4 shadow-sm border h-100" style="position: relative; overflow: hidden;">
+                        <div class="position-absolute top-0 end-0 p-4 opacity-10">
+                            <i class="bi bi-send-check display-1"></i>
+                        </div>
+                        
+                        <div class="position-relative z-1">
+                            <h3 class="fw-bold mb-2">Send us a Message</h3>
+                            <p class="text-muted mb-4">Fill out the form below and we will get back to you as soon as possible.</p>
+
+                            <form action="{{ route('web.enquiry') }}" method="POST">
+                                @csrf
+                                <!-- Type 1 is a general enquiry type in the EnquiryController -->
+                                <input type="hidden" name="type" value="1">
+                                
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <div class="form-floating mb-3">
+                                            <input type="text" class="form-control" id="name" name="name" placeholder="John Doe" required>
+                                            <label for="name">Your Name <span class="text-danger">*</span></label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-floating mb-3">
+                                            <input type="email" class="form-control" id="email" name="email" placeholder="name@example.com" required>
+                                            <label for="email">Email Address <span class="text-danger">*</span></label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-floating mb-3">
+                                            <input type="tel" class="form-control" id="mobile" name="mobile" placeholder="9876543210" pattern="[0-9]+" required>
+                                            <label for="mobile">Mobile Number <span class="text-danger">*</span></label>
+                                            <div class="form-text small text-muted">Digits only, no spaces or special characters.</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-floating mb-3">
+                                            <input type="text" class="form-control" id="organization" name="organization" placeholder="Your Company">
+                                            <label for="organization">Organization / Institute</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-floating mb-3">
+                                            <textarea class="form-control" placeholder="Leave a message here" id="message" name="message" style="height: 120px" required></textarea>
+                                            <label for="message">Message <span class="text-danger">*</span></label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 mt-4">
+                                        <button type="submit" class="btn btn-primary btn-lg w-100 fw-bold shadow-sm d-flex align-items-center justify-content-center py-3" style="border-radius: 12px; transition: all 0.3s ease;">
+                                            <span>Send Message</span>
+                                            <i class="bi bi-arrow-right ms-2 fs-5"></i>
+                                        </button>
+                                        <p class="text-center small text-muted mt-3 mb-0">
+                                            <i class="bi bi-shield-lock me-1"></i> Your information is safe and secure.
+                                        </p>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Map Section -->
+    <section class="map-sec pb-120">
+        <div class="container-fluid px-0">
+            <div class="map-container" style="border-radius: 0; box-shadow: none;">
+                @if(!empty($defaultSettings->contact_map_embed))
+                    {!! $defaultSettings->contact_map_embed !!}
+                @else
+                    {{-- Placeholder Map if none provided --}}
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14008.11235948332!2d77.209021!3d28.613939!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390ce2db961be393%3A0xf6c250060fadcd!2sNew%20Delhi%2C%20Delhi!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                @endif
             </div>
         </div>
     </section>

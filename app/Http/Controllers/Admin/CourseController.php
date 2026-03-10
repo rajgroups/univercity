@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Course;
 use App\Models\Sector;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -17,7 +18,7 @@ class CourseController extends Controller
      */
     public function index()
     {
-        $courses = Course::with('sector')->latest()->get();
+        $courses = Course::with(['sector', 'category'])->latest()->get();
         return view('admin.course.list', compact('courses'));
     }
 
@@ -27,7 +28,8 @@ class CourseController extends Controller
     public function create()
     {
         $sectors = Sector::where('status', 1)->where('type', 1)->get();
-        return view('admin.course.create', compact('sectors'));
+        $categories = Category::where('status', 1)->where('type', 5)->get();
+        return view('admin.course.create', compact('sectors', 'categories'));
     }
 
     /**
@@ -47,6 +49,7 @@ class CourseController extends Controller
             'duration_unit'             => 'nullable|in:days,weeks,months,years',
             'paid_type'                 => 'required|in:free,paid,na',
             'sector_id'                 => 'required|exists:sectors,id',
+            'category_id'               => 'nullable|exists:category,id',
             'short_description'         => 'nullable|string',
             'long_description'          => 'nullable|string',
             'provider'                  => 'nullable|string|max:255',
@@ -258,6 +261,7 @@ class CourseController extends Controller
     {
         $course = Course::findOrFail($id);
         $sectors = Sector::where('status', 1)->where('type', 1)->get();
+        $categories = Category::where('status', 1)->where('type', 5)->get();
 
         // Decode JSON fields for editing
         $jsonFields = ['language', 'location', 'occupations', 'minimum_education', 'learning_tools', 'topics', 'other_specifications'];
@@ -272,7 +276,7 @@ class CourseController extends Controller
             // If it's already an array, leave it as is
         }
 
-        return view('admin.course.edit', compact('course', 'sectors'));
+        return view('admin.course.edit', compact('course', 'sectors', 'categories'));
     }
 
     /**
@@ -293,6 +297,7 @@ class CourseController extends Controller
             'duration_unit'             => 'nullable|in:days,weeks,months,years',
             'paid_type'                 => 'required|in:free,paid,na',
             'sector_id'                 => 'required|exists:sectors,id',
+            'category_id'               => 'nullable|exists:category,id',
             'short_description'         => 'nullable|string',
             'long_description'          => 'nullable|string',
             'provider'                  => 'nullable|string|max:255',

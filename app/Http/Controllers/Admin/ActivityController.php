@@ -33,7 +33,7 @@ class ActivityController extends Controller
     public function create()
     {
         $organizers = User::all();
-        $categories = Category::get();
+        $categories = Category::where('status', 1)->where('type', 3)->get();
 
         return view('admin.activity.create', compact('organizers', 'categories'));
     }
@@ -157,7 +157,7 @@ class ActivityController extends Controller
     public function edit(Activity $activity)
     {
         $organizers = User::all();
-        $categories = Category::get();
+        $categories = Category::where('status', 1)->where('type', 3)->get();
 
         return view('admin.activity.edit', compact('activity', 'organizers', 'categories'));
     }

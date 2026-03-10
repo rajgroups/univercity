@@ -143,6 +143,12 @@
             background-color: #dc3545 !important; /* Red */
             color: #fff !important;
         }
+        .bg-purple {
+            background-color: #6f42c1 !important;
+        }
+        .text-purple {
+            color: #6f42c1 !important;
+        }
     </style>
 
     <!-- Title Banner Section Start -->
@@ -162,9 +168,7 @@
                          $sectorIds = explode(',', $sectorIds);
                      }
                      if (is_array($sectorIds) && count($sectorIds) > 0) {
-                        // Assuming $sectors is available in this view as well
-                        // Based on controller, it is typically passed
-                        $firstSectorId = Arr::first($sectorIds);
+                        $firstSectorId = $sectorIds[0] ?? null;
                         $foundSector = isset($sectors) ? $sectors->firstWhere('id', $firstSectorId) : null;
                         if ($foundSector) {
                             $sectorName = $foundSector->name;
@@ -183,36 +187,39 @@
     <section class="courses-sec mb-120">
         <div class="container-fluid">
             <!-- Header Section -->
-            <div class="row align-items-center mb-4">
-                <div class="col-md-6">
-                    <h4 class="text-primary mb-2">Skill Development Courses</h4>
-                    <p class="text-muted mb-0">Showing {{ $courses->total() }} courses</p>
+            <div class="row align-items-center mb-4 sticky-mobile-filter-bar py-2">
+                <div class="col-6 col-lg-6">
+                    <h4 class="text-primary mb-0 fs-6 fs-lg-4">Skill Development</h4>
+                    <div class="d-lg-none text-muted smallest" style="font-size: 10px;">
+                        <strong>{{ $courses->total() }}</strong> Courses
+                    </div>
+                    <p class="text-muted mb-0 d-none d-lg-block">Showing {{ $courses->total() }} courses</p>
                 </div>
-                <div class="col-md-6">
-                    <div class="d-flex align-items-center justify-content-md-end gap-3">
+                <div class="col-6 col-lg-6">
+                    <div class="d-flex align-items-center justify-content-end gap-2">
                         <!-- Mobile Filter Button -->
-                        <button class="btn btn-outline-primary d-md-none" type="button" data-bs-toggle="offcanvas"
+                        <button class="btn btn-sm btn-outline-primary d-lg-none" type="button" data-bs-toggle="offcanvas"
                             data-bs-target="#mobileFilters">
-                            <i class="bi bi-funnel me-2"></i>Filters
-                            @if (request()->anyFilled(['search', 'sectors', 'languages', 'durations', 'prices']))
-                                <span class="badge bg-primary  text-white ms-1">!</span>
+                            <i class="bi bi-funnel"></i>
+                            @if (request()->anyFilled(['search', 'sectors', 'categories', 'languages', 'durations', 'prices', 'levels']))
+                                <span class="badge bg-primary text-white p-1 ms-1" style="font-size: 8px;">!</span>
                             @endif
                         </button>
 
                         <!-- Sort Dropdown -->
                         <div class="dropdown">
-                            <button class="btn btn-outline-secondary dropdown-toggle" type="button"
-                                data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="bi bi-sort-down me-2"></i>Sort By
+                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button"
+                                data-bs-toggle="dropdown" aria-expanded="false" style="font-size: 12px;">
+                                <i class="bi bi-sort-down"></i>
                             </button>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item"
+                            <ul class="dropdown-menu shadow-sm border-0">
+                                <li><a class="dropdown-item small"
                                         href="{{ request()->fullUrlWithQuery(['sort' => 'newest']) }}">Newest First</a></li>
-                                <li><a class="dropdown-item"
+                                <li><a class="dropdown-item small"
                                         href="{{ request()->fullUrlWithQuery(['sort' => 'oldest']) }}">Oldest First</a></li>
-                                <li><a class="dropdown-item"
+                                <li><a class="dropdown-item small"
                                         href="{{ request()->fullUrlWithQuery(['sort' => 'name']) }}">Name A-Z</a></li>
-                                <li><a class="dropdown-item"
+                                <li><a class="dropdown-item small"
                                         href="{{ request()->fullUrlWithQuery(['sort' => 'name_desc']) }}">Name Z-A</a></li>
                             </ul>
                         </div>
@@ -227,7 +234,7 @@
                         <div class="card-header bg-white border-bottom">
                             <h5 class="mb-0">
                                 <i class="bi bi-funnel me-2 text-primary"></i>Filters
-                                @if (request()->anyFilled(['search', 'sectors', 'languages', 'durations', 'prices']))
+                                @if (request()->anyFilled(['search', 'sectors', 'categories', 'languages', 'durations', 'prices', 'levels']))
                                     <a href="{{ route('web.course.index') }}"
                                         class="btn btn-sm btn-outline-danger float-end">
                                         Clear All
@@ -244,6 +251,14 @@
                                     }
                                     if (!is_array($selectedSectors)) {
                                         $selectedSectors = [];
+                                    }
+
+                                    $selectedCategories = request('categories', []);
+                                    if (is_string($selectedCategories)) {
+                                        $selectedCategories = explode(',', $selectedCategories);
+                                    }
+                                    if (!is_array($selectedCategories)) {
+                                        $selectedCategories = [];
                                     }
                                 @endphp
                                 <!-- Search -->
@@ -263,12 +278,22 @@
                                     <div class="mb-4">
                                         <label class="form-label fw-semibold">Active Filters</label>
                                         <div class="d-flex flex-wrap gap-2">
-                                            {{-- @foreach ($selectedSectors as $sectorId)
-                                                @php $sector = $sectors->firstWhere('id', $sectorId); @endphp
+                                            @foreach ($selectedSectors as $sectorId)
+                                                @php $sector = isset($sectors) ? $sectors->firstWhere('id', $sectorId) : null; @endphp
                                                 @if ($sector)
                                                     <span class="badge bg-primary">
                                                         {{ $sector->name }}
                                                         <a href="{{ request()->fullUrlWithQuery(['sectors' => array_diff($selectedSectors, [$sectorId])]) }}"
+                                                            class="text-white ms-1">×</a>
+                                                    </span>
+                                                @endif
+                                            @endforeach
+                                            @foreach ($selectedCategories as $catId)
+                                                @php $cat = isset($categories) ? $categories->firstWhere('id', $catId) : null; @endphp
+                                                @if ($cat)
+                                                    <span class="badge bg-purple text-white">
+                                                        {{ $cat->name }}
+                                                        <a href="{{ request()->fullUrlWithQuery(['categories' => array_diff($selectedCategories, [$catId])]) }}"
                                                             class="text-white ms-1">×</a>
                                                     </span>
                                                 @endif
@@ -279,7 +304,7 @@
                                                     <a href="{{ request()->fullUrlWithQuery(['languages' => array_diff(request('languages', []), [$language])]) }}"
                                                         class="text-white ms-1">×</a>
                                                 </span>
-                                            @endforeach --}}
+                                            @endforeach
                                             @foreach (request('durations', []) as $duration)
                                                 <span class="badge bg-warning text-dark">
                                                     {{ $duration }}
@@ -294,142 +319,127 @@
                                                         class="text-white ms-1">×</a>
                                                 </span>
                                             @endforeach
-                                            {{-- @foreach (request('prices', []) as $price)
+                                            @foreach (request('prices', []) as $price)
                                                 <span class="badge bg-{{ $price == 'free' ? 'success' : 'warning' }}">
                                                     {{ ucfirst($price) }}
                                                     <a href="{{ request()->fullUrlWithQuery(['prices' => array_diff(request('prices', []), [$price])]) }}"
                                                         class="text-white ms-1">×</a>
                                                 </span>
-                                            @endforeach --}}
+                                            @endforeach
                                         </div>
                                     </div>
                                 @endif
 
-                                <!-- Sector Filter -->
-                                <div class="mb-4">
-                                    <label class="form-label fw-semibold d-flex justify-content-between">
-                                        <span>Sector</span>
-                                        <span class="badge bg-primary">{{ count($selectedSectors) }}</span>
-                                    </label>
-                                    <div class="filter-options">
-                                        @foreach ($sectors as $sector)
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" name="sectors[]"
-                                                    id="sectorDesktop{{ $sector->id }}" value="{{ $sector->id }}"
-                                                    {{ in_array($sector->id, $selectedSectors) ? 'checked' : '' }}>
-                                                <label class="form-check-label d-flex justify-content-between w-100"
-                                                    for="sectorDesktop{{ $sector->id }}">
-                                                    <span>{{ $sector->name }}</span>
-                                                    <span
-                                                        class="text-muted small">{{ $sector->courses_count ?? 0 }}</span>
-                                                </label>
+                                <!-- Filter Accordion -->
+                                <div class="accordion" id="filterAccordion">
+                                    <!-- Sector Filter -->
+                                    <div class="accordion-item border-0 mb-3 shadow-sm rounded-3 overflow-hidden">
+                                        <h2 class="accordion-header" id="headingSector">
+                                            <button class="accordion-button shadow-none bg-light fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSector" aria-expanded="{{ count($selectedSectors) > 0 ? 'true' : 'false' }}">
+                                                <i class="bi bi-grid me-2 text-primary"></i> Sector
+                                                @if(count($selectedSectors) > 0)
+                                                    <span class="badge bg-primary ms-2">{{ count($selectedSectors) }}</span>
+                                                @endif
+                                            </button>
+                                        </h2>
+                                        <div id="collapseSector" class="accordion-collapse collapse {{ count($selectedSectors) > 0 ? 'show' : '' }}" aria-labelledby="headingSector" data-bs-parent="#filterAccordion">
+                                            <div class="accordion-body pt-2 filter-options">
+                                                @foreach ($sectors as $sector)
+                                                    <div class="form-check mb-2">
+                                                        <input class="form-check-input" type="checkbox" name="sectors[]"
+                                                            id="sectorDesktop{{ $sector->id }}" value="{{ $sector->id }}"
+                                                            {{ in_array($sector->id, $selectedSectors) ? 'checked' : '' }}>
+                                                        <label class="form-check-label d-flex justify-content-between w-100"
+                                                            for="sectorDesktop{{ $sector->id }}">
+                                                            <span class="text-dark small">{{ $sector->name }}</span>
+                                                            <span class="text-muted smallest">{{ $sector->courses_count ?? 0 }}</span>
+                                                        </label>
+                                                    </div>
+                                                @endforeach
                                             </div>
-                                        @endforeach
-                                    </div>
-                                </div>
-
-                                <!-- Language Filter -->
-                                <div class="mb-4">
-                                    <label class="form-label fw-semibold d-flex justify-content-between">
-                                        <span>Language</span>
-                                        <span class="badge bg-primary">{{ count(request('languages', [])) }}</span>
-                                    </label>
-                                    <div class="filter-options">
-                                        @foreach (['English', 'Hindi', 'Tamil', 'Telugu', 'Kannada', 'Malayalam', 'Marathi', 'Bengali'] as $language)
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" name="languages[]"
-                                                    id="langDesktop{{ $loop->index }}" value="{{ $language }}"
-                                                    {{ in_array($language, request('languages', [])) ? 'checked' : '' }}>
-                                                <label class="form-check-label" for="langDesktop{{ $loop->index }}">
-                                                    {{ $language }}
-                                                </label>
-                                            </div>
-                                        @endforeach
-                                    </div>
-                                </div>
-
-                                <!-- Duration Filter -->
-                                {{-- <div class="mb-4">
-                                    <label class="form-label fw-semibold d-flex justify-content-between">
-                                        <span>Duration</span>
-                                        <span class="badge bg-primary">{{ count(request('durations', [])) }}</span>
-                                    </label>
-                                    <div class="filter-options">
-                                        @foreach (['1-3 months', '3-6 months', '6-12 months', '1+ years'] as $duration)
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" name="durations[]"
-                                                    id="durDesktop{{ $loop->index }}" value="{{ $duration }}"
-                                                    {{ in_array($duration, request('durations', [])) ? 'checked' : '' }}>
-                                                <label class="form-check-label" for="durDesktop{{ $loop->index }}">
-                                                    {{ $duration }}
-                                                </label>
-                                            </div>
-                                        @endforeach
-                                    </div>
-                                </div> --}}
-
-                                <!-- Level Filter -->
-                                <div class="mb-4">
-                                    <label class="form-label fw-semibold d-flex justify-content-between">
-                                        <span>Course Level</span>
-                                        <span class="badge bg-primary">{{ count(request('levels', [])) }}</span>
-                                    </label>
-                                    <div class="filter-options">
-                                        @foreach (['Awareness', 'Foundation', 'Intermediate', 'Professional', 'Advanced'] as $level)
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" name="levels[]"
-                                                    id="levelDesktop{{ $loop->index }}" value="{{ $level }}"
-                                                    {{ in_array($level, request('levels', [])) ? 'checked' : '' }}>
-                                                <label class="form-check-label" for="levelDesktop{{ $loop->index }}">
-                                                    {{ $level }}
-                                                </label>
-                                            </div>
-                                        @endforeach
-                                    </div>
-                                </div>
-
-                                <!-- Price Filter -->
-                                {{-- <div class="mb-4">
-                                    <label class="form-label fw-semibold d-flex justify-content-between">
-                                        <span>Price Type</span>
-                                        <span class="badge bg-primary">{{ count(request('prices', [])) }}</span>
-                                    </label>
-                                    <div class="filter-options">
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="prices[]"
-                                                id="priceFreeDesktop" value="free"
-                                                {{ in_array('free', request('prices', [])) ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="priceFreeDesktop">
-                                                Free Courses
-                                            </label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="prices[]"
-                                                id="pricePaidDesktop" value="paid"
-                                                {{ in_array('paid', request('prices', [])) ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="pricePaidDesktop">
-                                                Paid Courses
-                                            </label>
                                         </div>
                                     </div>
-                                </div> --}}
 
-                                <!-- Mode of Study Filter -->
-                                {{-- <div class="mb-4">
-                                    <label class="form-label fw-semibold">Mode of Study</label>
-                                    <div class="filter-options">
-                                        @foreach ([1 => 'Online', 2 => 'In-Centre', 3 => 'Hybrid', 4 => 'On-Demand'] as $value => $label)
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" name="modes[]"
-                                                    id="modeDesktop{{ $value }}" value="{{ $value }}"
-                                                    {{ in_array($value, request('modes', [])) ? 'checked' : '' }}>
-                                                <label class="form-check-label" for="modeDesktop{{ $value }}">
-                                                    {{ $label }}
-                                                </label>
+                                    <!-- Category Filter -->
+                                    <div class="accordion-item border-0 mb-3 shadow-sm rounded-3 overflow-hidden">
+                                        <h2 class="accordion-header" id="headingCategory">
+                                            <button class="accordion-button collapsed shadow-none bg-light fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCategory" aria-expanded="{{ count($selectedCategories) > 0 ? 'true' : 'false' }}">
+                                                <i class="bi bi-tags me-2 text-primary"></i> Category
+                                                @if(count($selectedCategories) > 0)
+                                                    <span class="badge bg-primary ms-2">{{ count($selectedCategories) }}</span>
+                                                @endif
+                                            </button>
+                                        </h2>
+                                        <div id="collapseCategory" class="accordion-collapse collapse {{ count($selectedCategories) > 0 ? 'show' : '' }}" aria-labelledby="headingCategory" data-bs-parent="#filterAccordion">
+                                            <div class="accordion-body pt-2 filter-options">
+                                                @foreach ($categories as $category)
+                                                    <div class="form-check mb-2">
+                                                        <input class="form-check-input" type="checkbox" name="categories[]"
+                                                            id="categoryDesktop{{ $category->id }}" value="{{ $category->id }}"
+                                                            {{ in_array($category->id, $selectedCategories) ? 'checked' : '' }}>
+                                                        <label class="form-check-label d-flex justify-content-between w-100"
+                                                            for="categoryDesktop{{ $category->id }}">
+                                                            <span class="text-dark small">{{ $category->name }}</span>
+                                                            <span class="text-muted smallest">{{ $category->courses_count ?? 0 }}</span>
+                                                        </label>
+                                                    </div>
+                                                @endforeach
                                             </div>
-                                        @endforeach
+                                        </div>
                                     </div>
-                                </div> --}}
+
+                                    <!-- Language Filter -->
+                                    <div class="accordion-item border-0 mb-3 shadow-sm rounded-3 overflow-hidden">
+                                        <h2 class="accordion-header" id="headingLanguage">
+                                            <button class="accordion-button collapsed shadow-none bg-light fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseLanguage" aria-expanded="{{ count(request('languages', [])) > 0 ? 'true' : 'false' }}">
+                                                <i class="bi bi-translate me-2 text-primary"></i> Language
+                                                @if(count(request('languages', [])) > 0)
+                                                    <span class="badge bg-primary ms-2">{{ count(request('languages', [])) }}</span>
+                                                @endif
+                                            </button>
+                                        </h2>
+                                        <div id="collapseLanguage" class="accordion-collapse collapse {{ count(request('languages', [])) > 0 ? 'show' : '' }}" aria-labelledby="headingLanguage" data-bs-parent="#filterAccordion">
+                                            <div class="accordion-body pt-2 filter-options">
+                                                @foreach (['English', 'Hindi', 'Tamil', 'Telugu', 'Kannada', 'Malayalam', 'Marathi', 'Bengali'] as $language)
+                                                    <div class="form-check mb-2">
+                                                        <input class="form-check-input" type="checkbox" name="languages[]"
+                                                            id="langDesktop{{ $loop->index }}" value="{{ $language }}"
+                                                            {{ in_array($language, request('languages', [])) ? 'checked' : '' }}>
+                                                        <label class="form-check-label small" for="langDesktop{{ $loop->index }}">
+                                                            {{ $language }}
+                                                        </label>
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Level Filter -->
+                                    <div class="accordion-item border-0 mb-3 shadow-sm rounded-3 overflow-hidden">
+                                        <h2 class="accordion-header" id="headingLevel">
+                                            <button class="accordion-button collapsed shadow-none bg-light fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseLevel" aria-expanded="{{ count(request('levels', [])) > 0 ? 'true' : 'false' }}">
+                                                <i class="bi bi-bar-chart-steps me-2 text-primary"></i> Course Level
+                                                @if(count(request('levels', [])) > 0)
+                                                    <span class="badge bg-primary ms-2">{{ count(request('levels', [])) }}</span>
+                                                @endif
+                                            </button>
+                                        </h2>
+                                        <div id="collapseLevel" class="accordion-collapse collapse {{ count(request('levels', [])) > 0 ? 'show' : '' }}" aria-labelledby="headingLevel" data-bs-parent="#filterAccordion">
+                                            <div class="accordion-body pt-2 filter-options">
+                                                @foreach (['Awareness', 'Foundation', 'Intermediate', 'Professional', 'Advanced'] as $level)
+                                                    <div class="form-check mb-2">
+                                                        <input class="form-check-input" type="checkbox" name="levels[]"
+                                                            id="levelDesktop{{ $loop->index }}" value="{{ $level }}"
+                                                            {{ in_array($level, request('levels', [])) ? 'checked' : '' }}>
+                                                        <label class="form-check-label small" for="levelDesktop{{ $loop->index }}">
+                                                            {{ $level }}
+                                                        </label>
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
                                 <!-- Filter Actions -->
                                 <div class="d-grid gap-2">
@@ -476,13 +486,18 @@
                                         <div class="card-body d-flex flex-column">
                                             <h6 class="card-title text-primary mb-2 line-clamp-2"
                                                 style="min-height: 3rem;">
-                                                {{ $course->name }}
+                                                {{ Str::words($course->name, 3, '...') }}
                                             </h6>
                                             <p class="text-muted small mb-2">
                                                 <i class="bi bi-building me-1"></i>{{ $course->provider ?? 'ISICO' }}
                                             </p>
                                             <p class="text-warning small mb-2">
-                                                <i class="bi bi-tags me-1"></i>{{ $course->sector->name ?? 'General' }}
+                                                <i class="bi bi-tags me-1"></i>
+                                                {{ $course->sector->name ?? 'General' }}
+                                                @if($course->category)
+                                                    <span class="mx-1 text-muted">|</span>
+                                                    <span class="text-purple fw-semibold">{{ $course->category->name }}</span>
+                                                @endif
                                             </p>
                                             <div class="course-meta d-flex justify-content-between text-muted small mb-3">
                                                 <span class="d-flex align-items-center">
@@ -605,7 +620,7 @@
         <div class="offcanvas-header border-bottom">
             <h5 class="offcanvas-title flex-grow-1">
                 <i class="bi bi-funnel me-2 text-primary"></i>Filters
-                @if (request()->anyFilled(['search', 'sectors', 'languages', 'durations', 'prices', 'levels']))
+                @if (request()->anyFilled(['search', 'sectors', 'categories', 'languages', 'durations', 'prices', 'levels']))
                     <a href="{{ route('web.course.index') }}"
                         class="btn btn-sm btn-outline-danger float-end me-3">
                         Clear All
@@ -668,10 +683,54 @@
             z-index: 100;
         }
 
+        .sticky-mobile-filter-bar {
+            transition: all 0.3s ease;
+        }
+
+        @media (max-width: 991.98px) {
+            .sticky-mobile-filter-bar {
+                position: sticky;
+                top: 0px;
+                z-index: 1000;
+                background: white;
+                margin: 0 -15px 20px -15px;
+                padding: 10px 15px;
+                border-bottom: 1px solid #eee;
+                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            }
+
+            .stricky-fixed + .main-wrapper .sticky-mobile-filter-bar {
+                top: 80px;
+            }
+        }
+
         .filter-options {
-            max-height: 200px;
+            max-height: 250px;
             overflow-y: auto;
             padding-right: 10px;
+        }
+
+        .accordion-button:not(.collapsed) {
+            background-color: #f8f9fa;
+            color: var(--bs-primary);
+        }
+
+        .accordion-button::after {
+            background-size: 1rem;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .accordion-item {
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0,0,0,0.05) !important;
+        }
+
+        .accordion-item:hover {
+            box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.08) !important;
+        }
+
+        .smallest {
+            font-size: 0.7rem;
         }
 
         .filter-options::-webkit-scrollbar {
@@ -724,7 +783,7 @@
             // Handle Apply Filters button loading state (using delegation for mobile compatibility)
             document.addEventListener('submit', function(e) {
                 const form = e.target;
-                if (form.id === 'courseFiltersDesktop' || form.id === 'courseFiltersMobile') {
+                if (form && (form.id === 'courseFiltersDesktop' || form.id === 'courseFiltersMobile')) {
                     const btn = form.querySelector('button[type="submit"]');
                     if (btn && btn.innerText.includes('Apply Filters')) {
                         btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Loading...';
@@ -739,52 +798,108 @@
 
             if (mobileFilters && mobileFilterContent) {
                 mobileFilters.addEventListener('show.bs.offcanvas', function() {
-                    if (!mobileFilterContent.innerHTML) {
+                    // Check if content is already loaded/valid
+                    if (!mobileFilterContent.innerHTML || !mobileFilterContent.innerHTML.trim()) {
                         const desktopForm = document.getElementById('courseFiltersDesktop');
                         if (desktopForm) {
-                            const mobileForm = document.createElement('form');
-                            mobileForm.id = 'courseFiltersMobile';
-                            mobileForm.method = 'GET';
-                            mobileForm.action = desktopForm.action;
-                            mobileForm.innerHTML = desktopForm.innerHTML;
-                            
-                            mobileForm.querySelectorAll('[id]').forEach(el => {
-                                el.id = 'mobile_' + el.id;
-                            });
-                            mobileForm.querySelectorAll('[for]').forEach(el => {
-                                el.setAttribute('for', 'mobile_' + el.getAttribute('for'));
-                            });
+                            try {
+                                const mobileForm = desktopForm.cloneNode(true);
+                                mobileForm.id = 'courseFiltersMobile';
+                                
+                                // 1. Global ID and Label update
+                                const allElementsWithId = mobileForm.querySelectorAll('[id]');
+                                allElementsWithId.forEach(el => {
+                                    const oldId = el.id;
+                                    if (oldId) {
+                                        const newId = 'mobile_' + oldId;
+                                        el.id = newId;
+                                        
+                                        // Update associated labels
+                                        try {
+                                            const label = mobileForm.querySelector(`label[for="${oldId}"]`);
+                                            if (label) {
+                                                label.setAttribute('for', newId);
+                                            }
+                                        } catch (e) { /* Ignore invalid selector errors */ }
+                                    }
+                                });
 
-                            mobileFilterContent.innerHTML = '';
-                            mobileFilterContent.appendChild(mobileForm);
+                                // 2. Accordion Root Update
+                                mobileForm.querySelectorAll('.accordion').forEach(acc => {
+                                    if (acc.id) {
+                                        // Ensure it was updated in step 1, or do it here
+                                        if (!acc.id.startsWith('mobile_')) acc.id = 'mobile_' + acc.id;
+                                    }
+                                });
+
+                                // 3. Accordion Collapse Elements (CRITICAL for closing behavior)
+                                mobileForm.querySelectorAll('.accordion-collapse').forEach(collapse => {
+                                    if (collapse.id && !collapse.id.startsWith('mobile_')) {
+                                        collapse.id = 'mobile_' + collapse.id;
+                                    }
+                                    
+                                    // Update parent reference so items close correctly
+                                    const parent = collapse.getAttribute('data-bs-parent');
+                                    if (parent && parent.startsWith('#')) {
+                                        collapse.setAttribute('data-bs-parent', '#mobile_' + parent.substring(1));
+                                    }
+                                    
+                                    const labelledBy = collapse.getAttribute('aria-labelledby');
+                                    if (labelledBy && !labelledBy.startsWith('mobile_')) {
+                                        collapse.setAttribute('aria-labelledby', 'mobile_' + labelledBy);
+                                    }
+                                });
+
+                                // 4. Accordion Triggers (buttons)
+                                mobileForm.querySelectorAll('[data-bs-toggle="collapse"]').forEach(btn => {
+                                    const target = btn.getAttribute('data-bs-target');
+                                    if (target && target.startsWith('#')) {
+                                        const newTarget = '#mobile_' + target.substring(1);
+                                        btn.setAttribute('data-bs-target', newTarget);
+                                        btn.setAttribute('aria-controls', newTarget.substring(1));
+                                    }
+                                    
+                                    // Some themes put data-bs-parent on the button
+                                    const btnParent = btn.getAttribute('data-bs-parent');
+                                    if (btnParent && btnParent.startsWith('#')) {
+                                        btn.setAttribute('data-bs-parent', '#mobile_' + btnParent.substring(1));
+                                    }
+                                });
+
+                                // Clear and Mount
+                                mobileFilterContent.innerHTML = '';
+                                mobileFilterContent.appendChild(mobileForm);
+                                
+                            } catch (err) {
+                                console.error('Error cloning mobile filters:', err);
+                            }
                         }
                     }
                 });
             }
-        });
+            // Initialize tooltips and popovers (with safety check)
+            if (typeof bootstrap !== 'undefined') {
+                const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+                tooltipTriggerList.map(function(tooltipTriggerEl) {
+                    return new bootstrap.Tooltip(tooltipTriggerEl);
+                });
 
-        // Initialize tooltips and popovers
-        document.addEventListener('DOMContentLoaded', function() {
-            // Tooltip initialization
-            const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-            const tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
-                return new bootstrap.Tooltip(tooltipTriggerEl);
-            });
+                const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
+                popoverTriggerList.map(function(popoverTriggerEl) {
+                    return new bootstrap.Popover(popoverTriggerEl);
+                });
+            }
 
-            // Popover initialization
-            const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
-            const popoverList = popoverTriggerList.map(function(popoverTriggerEl) {
-                return new bootstrap.Popover(popoverTriggerEl);
-            });
-
-            // Read more functionality for Option 4
+            // Read more functionality
             const readMoreLinks = document.querySelectorAll('.read-more');
             readMoreLinks.forEach(link => {
                 link.addEventListener('click', function(e) {
                     e.preventDefault();
                     const parent = this.closest('.language-truncate');
-                    const fullText = parent.getAttribute('data-full-text');
-                    parent.innerHTML = fullText;
+                    if (parent) {
+                        const fullText = parent.getAttribute('data-full-text');
+                        parent.innerHTML = fullText;
+                    }
                 });
             });
         });

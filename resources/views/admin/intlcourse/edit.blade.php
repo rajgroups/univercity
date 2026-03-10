@@ -504,13 +504,38 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="form-label fw-bold">Total Fees (Approx.)</label>
+                                        @php
+                                            $oldTotalFees = old('total_fees', $course->total_fees ?? '');
+                                            $feesCurrency = 'USD'; // default
+                                            $feesAmount = trim($oldTotalFees);
+                                            
+                                            $possibleCurrencies = ['USD', 'INR', 'EUR', 'GBP', 'AUD', 'SGD', 'CAD'];
+                                            foreach($possibleCurrencies as $curr) {
+                                                if(str_starts_with($feesAmount, $curr . ' ')) {
+                                                    $feesCurrency = $curr;
+                                                    $feesAmount = trim(substr($feesAmount, strlen($curr) + 1));
+                                                    break;
+                                                }
+                                            }
+                                        @endphp
                                         <div class="input-group">
-                                            <span class="input-group-text"><i class="fas fa-rupee-sign"></i></span>
-                                            <input type="text" name="total_fees" class="form-control"
-                                                   value="{{ old('total_fees', $course->total_fees) }}"
-                                                   placeholder="Approx. INR 4.1 Lakhs">
+                                            <select id="total_fees_currency" class="form-select" style="max-width: 100px;">
+                                                <option value="USD" {{ $feesCurrency == 'USD' ? 'selected' : '' }}>USD</option>
+                                                <option value="INR" {{ $feesCurrency == 'INR' ? 'selected' : '' }}>INR</option>
+                                                <option value="EUR" {{ $feesCurrency == 'EUR' ? 'selected' : '' }}>EUR</option>
+                                                <option value="GBP" {{ $feesCurrency == 'GBP' ? 'selected' : '' }}>GBP</option>
+                                                <option value="AUD" {{ $feesCurrency == 'AUD' ? 'selected' : '' }}>AUD</option>
+                                                <option value="SGD" {{ $feesCurrency == 'SGD' ? 'selected' : '' }}>SGD</option>
+                                                <option value="CAD" {{ $feesCurrency == 'CAD' ? 'selected' : '' }}>CAD</option>
+                                            </select>
+                                            <input type="text" id="total_fees_amount" class="form-control"
+                                                   value="{{ old('total_fees_amount', $feesAmount) }}"
+                                                   placeholder="e.g. 5000">
                                         </div>
-                                        <div class="form-text text-muted">Must clearly mention "Approx"</div>
+                                        {{-- Hidden field that stores concatenated value e.g. "USD 5000" --}}
+                                        <input type="hidden" name="total_fees" id="total_fees_combined"
+                                               value="{{ $oldTotalFees }}">
+                                        <div class="form-text text-muted">Select currency and enter the approximate amount</div>
                                     </div>
                                 </div>
 
@@ -683,7 +708,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-12">
+                                <div class="col-12" id="visa_notes_div" style="display: {{ $course->visa_support_included ? 'block' : 'none' }};">
                                     <div class="form-group">
                                         <label class="form-label fw-bold">Visa Notes</label>
                                         <textarea name="visa_notes" class="form-control" rows="3"
@@ -691,7 +716,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-12">
+                                <div class="col-12" id="accommodation_notes_div" style="display: {{ $course->accommodation_support ? 'block' : 'none' }};">
                                     <div class="form-group">
                                         <label class="form-label fw-bold">Accommodation Notes</label>
                                         <textarea name="accommodation_notes" class="form-control" rows="3"
@@ -1119,6 +1144,48 @@ $(document).ready(function() {
         }
     }
 
+    // Helper to validate custom required checkbox groups
+    function validateCustomGroups(container) {
+        const groups = [
+            { name: 'mode_of_study[]', label: 'Mode of Study' },
+            { name: 'intake_months[]', label: 'Intake Months' },
+            { name: 'language_of_instruction[]', label: 'Language of Instruction' }
+        ];
+        
+        let valid = true;
+        groups.forEach(group => {
+            const inputs = container.find(`input[name="${group.name}"]`);
+            const hasCheckboxes = inputs.filter('[type="checkbox"]').length > 0;
+            
+            if (hasCheckboxes) {
+                 const hasChecked = inputs.filter('[type="checkbox"]:checked').length > 0;
+                 const hasTextVal = inputs.filter('[type="text"]').filter(function() { return $(this).val().trim() !== ''; }).length > 0;
+                 
+                 if (!hasChecked && !hasTextVal) {
+                     valid = false;
+                     if(typeof notyf !== 'undefined') {
+                         notyf.error(`Please select at least one ${group.label}.`);
+                     } else {
+                         alert(`Please select at least one ${group.label}.`);
+                     }
+                 }
+            }
+        });
+        
+        // Also validate readonly total duration if it exists in this container
+        const totalDuration = container.find('#total_duration');
+        if (totalDuration.length > 0 && totalDuration.val().trim() === '') {
+            valid = false;
+            if(typeof notyf !== 'undefined') {
+                notyf.error('Total Duration is required.');
+            } else {
+                alert('Total Duration is required.');
+            }
+        }
+        
+        return valid;
+    }
+
     // Navigation with Validation
     $('#next-btn').click(function() {
         const currentSection = $(`.section-card[data-section="${currentStep}"]`);
@@ -1129,6 +1196,10 @@ $(document).ready(function() {
         if (invalidInputs.length > 0) {
             invalidInputs[0].reportValidity();
             currentSection.closest('form').addClass('was-validated');
+            return;
+        }
+
+        if (!validateCustomGroups(currentSection)) {
             return;
         }
 
@@ -1185,6 +1256,16 @@ $(document).ready(function() {
     // Toggle loan notes
     $('#loan_switch').change(function() {
         $('#loan_notes_div').toggle(this.checked);
+    });
+
+    // Toggle visa notes
+    $('#visa_switch').change(function() {
+        $('#visa_notes_div').toggle(this.checked);
+    });
+
+    // Toggle accommodation notes
+    $('#accommodation_switch').change(function() {
+        $('#accommodation_notes_div').toggle(this.checked);
     });
 
     // Repeater Functionality
@@ -1403,6 +1484,21 @@ $(document).ready(function() {
             e.preventDefault();
             e.stopPropagation();
             return false;
+        }
+
+        if (!validateCustomGroups($('form'))) {
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+        }
+
+        // Combine Total Fees: currency + amount -> hidden field
+        const feesCurrency = $('#total_fees_currency').val();
+        const feesAmount   = $('#total_fees_amount').val().trim();
+        if (feesAmount !== '') {
+            $('#total_fees_combined').val(feesCurrency + ' ' + feesAmount);
+        } else {
+            $('#total_fees_combined').val('');
         }
 
         if (!this.checkValidity()) {

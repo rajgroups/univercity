@@ -366,7 +366,7 @@
                                     <div class="form-group">
                                         <label class="form-label fw-bold">Overseas Duration <span class="text-danger">*</span></label>
                                         <div class="input-group">
-                                            <input type="number" class="form-control duration-input" id="overseas_val" placeholder="12" min="1">
+                                            <input type="number" class="form-control duration-input" id="overseas_val" placeholder="12" min="1" required>
                                             <select class="form-select duration-unit" id="overseas_unit">
                                                 <option value="Months">Months</option>
                                                 <option value="Years">Years</option>
@@ -440,7 +440,7 @@
                                 <div class="col-12">
                                     <div class="form-group">
                                         <label class="form-label fw-bold">Total Duration (Auto)</label>
-                                        <input type="text" name="total_duration" class="form-control" id="total_duration" readonly
+                                        <input type="text" name="total_duration" class="form-control" id="total_duration" readonly required
                                                placeholder="Calculated automatically...">
                                     </div>
                                 </div>
@@ -460,12 +460,23 @@
                                     <div class="form-group">
                                         <label class="form-label fw-bold">Total Fees (Approx.)</label>
                                         <div class="input-group">
-                                            <span class="input-group-text"><i class="fas fa-rupee-sign"></i></span>
-                                            <input type="text" name="total_fees" class="form-control"
-                                                   value="{{ old('total_fees') }}"
-                                                   placeholder="Approx. INR 4.1 Lakhs">
+                                            <select id="total_fees_currency" class="form-select" style="max-width: 100px;">
+                                                <option value="USD" {{ old('total_fees_currency', 'USD') == 'USD' ? 'selected' : '' }}>USD</option>
+                                                <option value="INR" {{ old('total_fees_currency') == 'INR' ? 'selected' : '' }}>INR</option>
+                                                <option value="EUR" {{ old('total_fees_currency') == 'EUR' ? 'selected' : '' }}>EUR</option>
+                                                <option value="GBP" {{ old('total_fees_currency') == 'GBP' ? 'selected' : '' }}>GBP</option>
+                                                <option value="AUD" {{ old('total_fees_currency') == 'AUD' ? 'selected' : '' }}>AUD</option>
+                                                <option value="SGD" {{ old('total_fees_currency') == 'SGD' ? 'selected' : '' }}>SGD</option>
+                                                <option value="CAD" {{ old('total_fees_currency') == 'CAD' ? 'selected' : '' }}>CAD</option>
+                                            </select>
+                                            <input type="text" id="total_fees_amount" class="form-control"
+                                                   value="{{ old('total_fees_amount') }}"
+                                                   placeholder="e.g. 5000">
                                         </div>
-                                        <div class="form-text text-muted">Must clearly mention "Approx"</div>
+                                        {{-- Hidden field that stores concatenated value e.g. "USD 5000" --}}
+                                        <input type="hidden" name="total_fees" id="total_fees_combined"
+                                               value="{{ old('total_fees') }}">
+                                        <div class="form-text text-muted">Select currency and enter the approximate amount</div>
                                     </div>
                                 </div>
 
@@ -691,7 +702,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-12">
+                                <div class="col-12" id="visa_notes_div" style="display: {{ old('visa_support_included') ? 'block' : 'none' }};">
                                     <div class="form-group">
                                         <label class="form-label fw-bold">Visa Notes</label>
                                         <textarea name="visa_notes" class="form-control" rows="3"
@@ -699,7 +710,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-12">
+                                <div class="col-12" id="accommodation_notes_div" style="display: {{ old('accommodation_support') ? 'block' : 'none' }};">
                                     <div class="form-group">
                                         <label class="form-label fw-bold">Accommodation Notes</label>
                                         <textarea name="accommodation_notes" class="form-control" rows="3"
@@ -1236,6 +1247,48 @@ $(document).ready(function() {
         }
     }
 
+    // Helper to validate custom required checkbox groups
+    function validateCustomGroups(container) {
+        const groups = [
+            { name: 'mode_of_study[]', label: 'Mode of Study' },
+            { name: 'intake_months[]', label: 'Intake Months' },
+            { name: 'language_of_instruction[]', label: 'Language of Instruction' }
+        ];
+        
+        let valid = true;
+        groups.forEach(group => {
+            const inputs = container.find(`input[name="${group.name}"]`);
+            const hasCheckboxes = inputs.filter('[type="checkbox"]').length > 0;
+            
+            if (hasCheckboxes) {
+                 const hasChecked = inputs.filter('[type="checkbox"]:checked').length > 0;
+                 const hasTextVal = inputs.filter('[type="text"]').filter(function() { return $(this).val().trim() !== ''; }).length > 0;
+                 
+                 if (!hasChecked && !hasTextVal) {
+                     valid = false;
+                     if(typeof notyf !== 'undefined') {
+                         notyf.error(`Please select at least one ${group.label}.`);
+                     } else {
+                         alert(`Please select at least one ${group.label}.`);
+                     }
+                 }
+            }
+        });
+        
+        // Also validate readonly total duration if it exists in this container
+        const totalDuration = container.find('#total_duration');
+        if (totalDuration.length > 0 && totalDuration.val().trim() === '') {
+            valid = false;
+            if(typeof notyf !== 'undefined') {
+                notyf.error('Total Duration is required.');
+            } else {
+                alert('Total Duration is required.');
+            }
+        }
+        
+        return valid;
+    }
+
     // Navigation with Validation
     $('#next-btn').click(function() {
         const currentSection = $(`.section-card[data-section="${currentStep}"]`);
@@ -1248,6 +1301,10 @@ $(document).ready(function() {
             invalidInputs[0].reportValidity();
             // Add bootstrap validation class for visual feedback
             currentSection.closest('form').addClass('was-validated');
+            return;
+        }
+
+        if (!validateCustomGroups(currentSection)) {
             return;
         }
 
@@ -1304,6 +1361,16 @@ $(document).ready(function() {
     // Toggle loan notes
     $('#loan_switch').change(function() {
         $('#loan_notes_div').toggle(this.checked);
+    });
+
+    // Toggle visa notes
+    $('#visa_switch').change(function() {
+        $('#visa_notes_div').toggle(this.checked);
+    });
+
+    // Toggle accommodation notes
+    $('#accommodation_switch').change(function() {
+        $('#accommodation_notes_div').toggle(this.checked);
     });
 
     // Topics/Syllabus repeater
@@ -1503,7 +1570,22 @@ $(document).ready(function() {
             return false;
         }
 
-        // 2. Prepare JSON for Repeater fields
+        if (!validateCustomGroups($('form'))) {
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+        }
+
+        // 2. Combine Total Fees: currency + amount -> hidden field
+        const feesCurrency = $('#total_fees_currency').val();
+        const feesAmount   = $('#total_fees_amount').val().trim();
+        if (feesAmount !== '') {
+            $('#total_fees_combined').val(feesCurrency + ' ' + feesAmount);
+        } else {
+            $('#total_fees_combined').val('');
+        }
+
+        // 3. Prepare JSON for Repeater fields
         // Career Outcomes
         let outcomes = [];
         $('input[name="career_outcomes_list[]"]').each(function() {
@@ -1511,10 +1593,6 @@ $(document).ready(function() {
                 outcomes.push($(this).val().trim());
             }
         });
-        if (outcomes.length === 0) {
-           // Allow empty? Field is required in HTML.
-           // Browser validation should catch if empty.
-        }
         $('#career_outcomes_final').val(JSON.stringify(outcomes));
 
         // Next Pathways

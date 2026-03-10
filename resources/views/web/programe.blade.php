@@ -383,6 +383,50 @@
     .row-gap-4 {
         row-gap: 0.25rem !important;
     }
+    /* Attachment & Link Cards */
+    .resource-card {
+        background: white;
+        border-radius: 20px;
+        padding: 24px;
+        border: 1px solid rgba(106, 27, 154, 0.08);
+        transition: var(--transition-soft);
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        text-decoration: none;
+        margin-bottom: 16px;
+    }
+
+    .resource-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(106, 27, 154, 0.08);
+        border-color: var(--prog-primary);
+    }
+
+    .resource-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+        flex-shrink: 0;
+    }
+
+    .pdf-icon { background: #ffebee; color: #d32f2f; }
+    .link-icon { background: #e3f2fd; color: #1976d2; }
+
+    .resource-info h6 {
+        margin-bottom: 2px;
+        font-weight: 700;
+        color: var(--prog-secondary);
+    }
+
+    .resource-info span {
+        font-size: 0.8rem;
+        color: #78909c;
+    }
 </style>
 
 <!-- Modern Hero Section -->
@@ -400,13 +444,13 @@
                 <p class="prog-subtitle-modern text-white">{{ $program->subtitle ?? 'Advanced training and skill development program for career growth.' }}</p>
 
                 <div class="prog-meta-grid">
-                    <div class="prog-meta-item">
+                    {{-- <div class="prog-meta-item">
                         <i class="bi bi-calendar-check"></i>
                         <div class="prog-meta-text">
                             <span>Published On</span>
                             <strong>{{ $program->created_at ? \Carbon\Carbon::parse($program->created_at)->format('M d, Y') : 'N/A' }}</strong>
                         </div>
-                    </div>
+                    </div> --}}
                     <div class="prog-meta-item">
                         <i class="bi bi-bookmarks"></i>
                         <div class="prog-meta-text">
@@ -414,13 +458,13 @@
                             <strong>{{ $program->category->name ?? 'N/A' }}</strong>
                         </div>
                     </div>
-                    <div class="prog-meta-item">
+                    {{-- <div class="prog-meta-item">
                         <i class="bi bi-clock"></i>
                         <div class="prog-meta-text">
                             <span>Duration</span>
                             <strong>{{ $program->duration ?? 'Self-Paced / Guided' }}</strong>
                         </div>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
         </div>
@@ -468,6 +512,53 @@
                         {!! $program->description ?? '<p class="text-muted">No description available for this program.</p>' !!}
                     </div>
                 </div>
+
+                @php
+                    $attachments = json_decode($program->attachment_details, true) ?? [];
+                    $source_links = json_decode($program->source_links, true) ?? [];
+                @endphp
+
+                @if(!empty($attachments) || !empty($source_links))
+                    <div class="row g-4 mb-5">
+                        @if(!empty($attachments))
+                            <div class="col-md-6">
+                                <span class="section-label">Resources</span>
+                                <h3 class="fw-bold mb-4">Downloads & Documents</h3>
+                                @foreach($attachments as $at)
+                                    <a href="{{ asset($at['file']) }}" target="_blank" class="resource-card">
+                                        <div class="resource-icon pdf-icon">
+                                            <i class="bi bi-file-earmark-pdf"></i>
+                                        </div>
+                                        <div class="resource-info">
+                                            <h6>{{ $at['name'] }}</h6>
+                                            <span>PDF Document</span>
+                                        </div>
+                                        <i class="bi bi-download ms-auto text-muted"></i>
+                                    </a>
+                                @endforeach
+                            </div>
+                        @endif
+
+                        @if(!empty($source_links))
+                            <div class="col-md-6">
+                                <span class="section-label">External Links</span>
+                                <h3 class="fw-bold mb-4">Official Sources</h3>
+                                @foreach($source_links as $link)
+                                    <a href="{{ $link['url'] }}" target="_blank" class="resource-card">
+                                        <div class="resource-icon link-icon">
+                                            <i class="bi bi-link-45deg"></i>
+                                        </div>
+                                        <div class="resource-info">
+                                            <h6>{{ $link['label'] }}</h6>
+                                            <span>External Source</span>
+                                        </div>
+                                        <i class="bi bi-box-arrow-up-right ms-auto text-muted"></i>
+                                    </a>
+                                @endforeach
+                            </div>
+                        @endif
+                    </div>
+                @endif
 
                 @php
                     $points = [];

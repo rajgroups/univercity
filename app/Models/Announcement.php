@@ -25,6 +25,8 @@ class Announcement extends Model
         'type',
         'status',
         'duration',
+        'attachment_details',
+        'source_links',
     ];
 
     // Auto-generate slug from title if not provided

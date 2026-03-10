@@ -75,43 +75,57 @@
                             <!-- Preserve Search if current -->
                             @if(request('search')) <input type="hidden" name="search" value="{{ request('search') }}"> @endif
 
-                            <!-- Initiative Type -->
+                            <!-- Category Type -->
+                            @if(!$pageType)
+                            <div class="mb-4">
+                                <label class="form-label small fw-bold text-uppercase text-muted mb-3">Initiative Type</label>
+                                <select name="type" class="form-select border-0 bg-light rounded-3" onchange="this.form.submit()">
+                                    <option value="">All Types</option>
+                                    <option value="1" {{ request('type') == 1 ? 'selected' : '' }}>Initiatives</option>
+                                    <option value="2" {{ request('type') == 2 ? 'selected' : '' }}>Schemes & Programs</option>
+                                    <option value="3" {{ request('type') == 3 ? 'selected' : '' }}>Events & Competition</option>
+                                    <option value="4" {{ request('type') == 4 ? 'selected' : '' }}>Resources</option>
+                                    <option value="5" {{ request('type') == 5 ? 'selected' : '' }}>Skill Courses</option>
+                                    <option value="6" {{ request('type') == 6 ? 'selected' : '' }}>Global Pathway</option>
+                                </select>
+                            </div>
+                            @endif
+
+                             <!-- Initiative Sub-type (Only for specific modes) -->
+                            @if($pageType)
                             <div class="mb-4">
                                 <label class="form-label small fw-bold text-uppercase text-muted mb-3">
-                                    @if($pageType === 'projects') Project Status
-                                    @elseif($pageType === 'announcements') Announcement Type
-                                    @else Initiative Type
-                                    @endif
+                                    {{ $pageType === 'projects' ? 'Project Status' : 'Announcement Type' }}
                                 </label>
                                 <div class="filter-pills d-flex flex-column gap-2">
                                     <label class="filter-pill-label">
                                         <input type="radio" name="type" value="" {{ !request('type') ? 'checked' : '' }} onchange="this.form.submit()">
                                         <span class="pill-content">
-                                            <i class="bi bi-grid me-2"></i>All Results
+                                            <i class="bi bi-grid me-2"></i>All
                                         </span>
                                     </label>
-                                    @if($pageType === 'projects' || !$pageType)
+                                    @if($pageType === 'projects')
                                     <label class="filter-pill-label">
                                         <input type="radio" name="type" value="project_1" {{ request('type') == 'project_1' ? 'checked' : '' }} onchange="this.form.submit()">
                                         <span class="pill-content">
-                                            <i class="bi bi-activity me-2"></i>Ongoing Projects
+                                            <i class="bi bi-activity me-2"></i>Ongoing
                                         </span>
                                     </label>
                                     <label class="filter-pill-label">
                                         <input type="radio" name="type" value="project_2" {{ request('type') == 'project_2' ? 'checked' : '' }} onchange="this.form.submit()">
                                         <span class="pill-content">
-                                            <i class="bi bi-rocket me-2"></i>Upcoming Projects
+                                            <i class="bi bi-rocket me-2"></i>Upcoming
                                         </span>
                                     </label>
                                     <label class="filter-pill-label">
                                         <input type="radio" name="type" value="project_3" {{ request('type') == 'project_3' ? 'checked' : '' }} onchange="this.form.submit()">
                                         <span class="pill-content">
-                                            <i class="bi bi-check-circle me-2"></i>Completed Projects
+                                            <i class="bi bi-check-circle me-2"></i>Completed
                                         </span>
                                     </label>
                                     @endif
 
-                                    @if($pageType === 'announcements' || !$pageType)
+                                    @if($pageType === 'announcements')
                                     <label class="filter-pill-label">
                                         <input type="radio" name="type" value="announcement_1" {{ request('type') == 'announcement_1' ? 'checked' : '' }} onchange="this.form.submit()">
                                         <span class="pill-content">
@@ -127,6 +141,7 @@
                                     @endif
                                 </div>
                             </div>
+                            @endif
 
                             <!-- Categories -->
                             <div class="mb-4">

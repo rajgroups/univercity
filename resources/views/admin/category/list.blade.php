@@ -51,11 +51,12 @@
     @endif
     @php
         $typeLabels = [
-            1 => 'Education Program',
-            2 => 'Skill Development Program',
-            3 => 'Women Scheme',
-            4 => 'General Scheme',
-            5 => 'Course',
+            1 => 'Initiatives',
+            2 => 'Schemes & Programs',
+            3 => 'Events & Competition',
+            4 => 'Resources',
+            5 => 'Skill Courses',
+            6 => 'Global Pathway',
         ];
     @endphp
     <div class="card">

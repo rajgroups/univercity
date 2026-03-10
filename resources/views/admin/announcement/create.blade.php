@@ -236,6 +236,58 @@
                                     <p class="fs-14 mt-1">Maximum 60 Words</p>
                                 </div>
                             </div>
+                            <!-- Attachments (PDF) -->
+                            <div class="mb-4">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <label class="form-label mb-0 fw-bold">Attachments (PDF Only)</label>
+                                    <button type="button" class="btn btn-outline-primary btn-sm add-attachment">
+                                        <i class="ti ti-plus"></i> Add More
+                                    </button>
+                                </div>
+                                <div id="attachment-repeater">
+                                    <div class="row align-items-center mb-2 attachment-item">
+                                        <div class="col-md-5">
+                                            <input type="text" name="attachments[0][name]" class="form-control" placeholder="Document Name (e.g. Brochure)">
+                                        </div>
+                                        <div class="col-md-5">
+                                            <input type="file" name="attachments[0][file]" class="form-control" accept="application/pdf">
+                                        </div>
+                                        <div class="col-md-2">
+                                            <button type="button" class="btn btn-outline-danger remove-attachment w-100" disabled>−</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                @error('attachments')
+                                    <div class="text-danger mt-1">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <!-- Source Links -->
+                            <div class="mb-4">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <label class="form-label mb-0 fw-bold">Source Links</label>
+                                    <button type="button" class="btn btn-outline-primary btn-sm add-source-link">
+                                        <i class="ti ti-plus"></i> Add More
+                                    </button>
+                                </div>
+                                <div id="source-link-repeater">
+                                    <div class="row align-items-center mb-2 source-link-item">
+                                        <div class="col-md-5">
+                                            <input type="text" name="source_links[0][label]" class="form-control" placeholder="Link Label (e.g. Official Website)">
+                                        </div>
+                                        <div class="col-md-5">
+                                            <input type="url" name="source_links[0][url]" class="form-control" placeholder="https://example.com">
+                                        </div>
+                                        <div class="col-md-2">
+                                            <button type="button" class="btn btn-outline-danger remove-source-link w-100" disabled>−</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                @error('source_links')
+                                    <div class="text-danger mt-1">{{ $message }}</div>
+                                @enderror
+                            </div>
+
                             <div class="col-sm-6 col-12">
                                 <div class="mb-3">
                                     <label class="form-label">Gallery Images </label>
@@ -301,19 +353,67 @@
 
     <script>
         document.addEventListener('click', function(e) {
+            // Bullet Points Logic
             if (e.target.classList.contains('add-bullet')) {
                 e.preventDefault();
                 const group = `
                 <div class="input-group mb-2">
-                    <input type="text" name="bullets[]" class="form-control" placeholder="Key - Value">
+                    <input type="text" name="points[]" class="form-control" placeholder="Key - Value">
                     <button type="button" class="btn btn-outline-danger remove-bullet">−</button>
                 </div>`;
                 document.getElementById('bullet-points').insertAdjacentHTML('beforeend', group);
             }
-
             if (e.target.classList.contains('remove-bullet')) {
                 e.preventDefault();
                 e.target.closest('.input-group').remove();
+            }
+
+            // Attachment Logic
+            if (e.target.closest('.add-attachment')) {
+                e.preventDefault();
+                const container = document.getElementById('attachment-repeater');
+                const index = container.getElementsByClassName('attachment-item').length;
+                const html = `
+                <div class="row align-items-center mb-2 attachment-item">
+                    <div class="col-md-5">
+                        <input type="text" name="attachments[${index}][name]" class="form-control" placeholder="Document Name">
+                    </div>
+                    <div class="col-md-5">
+                        <input type="file" name="attachments[${index}][file]" class="form-control" accept="application/pdf">
+                    </div>
+                    <div class="col-md-2">
+                        <button type="button" class="btn btn-outline-danger remove-attachment w-100">−</button>
+                    </div>
+                </div>`;
+                container.insertAdjacentHTML('beforeend', html);
+            }
+            if (e.target.closest('.remove-attachment')) {
+                e.preventDefault();
+                e.target.closest('.attachment-item').remove();
+            }
+
+            // Source Link Logic
+            if (e.target.closest('.add-source-link')) {
+                e.preventDefault();
+                const container = document.getElementById('source-link-repeater');
+                const index = container.getElementsByClassName('source-link-item').length;
+                const html = `
+                <div class="row align-items-center mb-2 source-link-item">
+                    <div class="col-md-5">
+                        <input type="text" name="source_links[${index}][label]" class="form-control" placeholder="Link Label">
+                    </div>
+                    <div class="col-md-5">
+                        <input type="url" name="source_links[${index}][url]" class="form-control" placeholder="https://example.com">
+                    </div>
+                    <div class="col-md-2">
+                        <button type="button" class="btn btn-outline-danger remove-source-link w-100">−</button>
+                    </div>
+                </div>`;
+                container.insertAdjacentHTML('beforeend', html);
+            }
+            if (e.target.closest('.remove-source-link')) {
+                e.preventDefault();
+                e.target.closest('.source-link-item').remove();
             }
         });
     </script>

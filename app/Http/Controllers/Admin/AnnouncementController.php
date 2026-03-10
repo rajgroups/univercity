@@ -26,7 +26,7 @@ class AnnouncementController extends Controller
     public function create()
     {
         // Create Announcement
-        $categories = Category::where('status', 1)->get();
+        $categories = Category::where('status', 1)->where('type', 2)->get();
         return view('admin.announcement.create',compact('categories'));
     }
 
@@ -58,6 +58,12 @@ class AnnouncementController extends Controller
             ],
             'category_id'       => 'nullable|exists:category,id',
             'duration'          => 'nullable|string|max:191',
+            'attachments'       => 'nullable|array',
+            'attachments.*.name' => 'nullable|string|max:255',
+            'attachments.*.file' => 'nullable|file|mimes:pdf|max:10240',
+            'source_links'       => 'nullable|array',
+            'source_links.*.label' => 'nullable|string|max:255',
+            'source_links.*.url'   => 'nullable|url|max:255',
         ]);
 
 
@@ -81,6 +87,37 @@ class AnnouncementController extends Controller
             $banner->move(public_path('uploads/announcements'), $bannerName);
             $validated['banner_image'] = 'uploads/announcements/' . $bannerName;
         }
+
+        // Handle PDF Attachments
+        $attachmentDetails = [];
+        if ($request->has('attachments')) {
+            foreach ($request->attachments as $key => $attachment) {
+                if ($request->hasFile("attachments.$key.file")) {
+                    $file = $request->file("attachments.$key.file");
+                    $fileName = time() . "_$key." . $file->getClientOriginalExtension();
+                    $file->move(public_path('uploads/announcements/attachments'), $fileName);
+                    $attachmentDetails[] = [
+                        'name' => $attachment['name'] ?? $file->getClientOriginalName(),
+                        'file' => 'uploads/announcements/attachments/' . $fileName
+                    ];
+                }
+            }
+        }
+        $validated['attachment_details'] = !empty($attachmentDetails) ? json_encode($attachmentDetails) : null;
+
+        // Handle Source Links
+        $sourceLinks = [];
+        if ($request->has('source_links')) {
+            foreach ($request->source_links as $link) {
+                if (!empty($link['label']) && !empty($link['url'])) {
+                    $sourceLinks[] = [
+                        'label' => $link['label'],
+                        'url'   => $link['url']
+                    ];
+                }
+            }
+        }
+        $validated['source_links'] = !empty($sourceLinks) ? json_encode($sourceLinks) : null;
 
         // Save points JSON
         $validated['points'] = $request->filled('points') ? json_encode(array_filter($request->input('points'))) : null;
@@ -122,7 +159,7 @@ class AnnouncementController extends Controller
     public function edit($id)
     {
         $announcement = Announcement::findOrFail($id);
-        $categories = Category::all(); // Assuming you list categories
+        $categories = Category::where('status', 1)->where('type', 2)->get();
 
         return view('admin.announcement.edit', compact('announcement', 'categories'));
     }
@@ -150,6 +187,12 @@ class AnnouncementController extends Controller
             ],
             'category_id'       => 'nullable|exists:category,id',
             'duration'          => 'nullable|string|max:191',
+            'attachments'       => 'nullable|array',
+            'attachments.*.name' => 'nullable|string|max:255',
+            'attachments.*.file' => 'nullable|file|mimes:pdf|max:10240',
+            'source_links'       => 'nullable|array',
+            'source_links.*.label' => 'nullable|string|max:255',
+            'source_links.*.url'   => 'nullable|url|max:255',
         ]);
 
         // Handle image upload
@@ -211,6 +254,45 @@ class AnnouncementController extends Controller
         $announcement->subtitle         = $request->subtitle;
         $announcement->duration         = $request->duration;
         $announcement->category_id      = $request->category_id;
+
+        // Handle PDF Attachments for Update
+        $finalAttachments = [];
+        if ($request->has('attachments')) {
+            foreach ($request->attachments as $key => $attachment) {
+                $item = ['name' => $attachment['name'] ?? null, 'file' => null];
+                
+                if ($request->hasFile("attachments.$key.file")) {
+                    // Upload new file
+                    $file = $request->file("attachments.$key.file");
+                    $fileName = time() . "_$key." . $file->getClientOriginalExtension();
+                    $file->move(public_path('uploads/announcements/attachments'), $fileName);
+                    $item['file'] = 'uploads/announcements/attachments/' . $fileName;
+                    $item['name'] = $item['name'] ?: $file->getClientOriginalName();
+                } elseif (!empty($attachment['existing_file'])) {
+                    // Keep existing file
+                    $item['file'] = $attachment['existing_file'];
+                }
+
+                if ($item['file'] && $item['name']) {
+                    $finalAttachments[] = $item;
+                }
+            }
+        }
+        $announcement->attachment_details = !empty($finalAttachments) ? json_encode($finalAttachments) : null;
+
+        // Handle Source Links for Update
+        $sourceLinks = [];
+        if ($request->has('source_links')) {
+            foreach ($request->source_links as $link) {
+                if (!empty($link['label']) && !empty($link['url'])) {
+                    $sourceLinks[] = [
+                        'label' => $link['label'],
+                        'url'   => $link['url']
+                    ];
+                }
+            }
+        }
+        $announcement->source_links = !empty($sourceLinks) ? json_encode($sourceLinks) : null;
 
         // Save bullet points as JSON
         $announcement->points = json_encode(array_filter($request->points ?? [])); // Save cleaned array

@@ -16,6 +16,7 @@ class Course extends Model
 
     protected $fillable = [
         'sector_id',
+        'category_id',
         'name',
         'slug',
         'level',
@@ -84,6 +85,14 @@ class Course extends Model
     public function sector(): BelongsTo
     {
         return $this->belongsTo(Sector::class);
+    }
+
+    /**
+     * Relationship with Category
+     */
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(Category::class);
     }
     /**
      * Get mode of study text using enum

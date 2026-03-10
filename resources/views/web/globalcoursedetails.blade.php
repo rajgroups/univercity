@@ -417,26 +417,46 @@
 
                             <!-- Fees Tab -->
                             <div class="tab-pane fade" id="fees">
-                                <h3 class="fw-bold mb-4 text-dark">Fees & Funding</h3>
-                                                                <!-- Total Cost Card -->
+                                <h3 class="fw-bold mb-4 text-dark">Fees  Details</h3>
+                                <!-- Total Cost Card -->
                                 <div class="card border-0 bg-primary bg-gradient text-white overflow-hidden mb-5 shadow-lg rounded-4 position-relative">
+
                                     <div class="position-absolute top-0 end-0 p-4 opacity-10">
                                         <i class="bi bi-wallet2 display-1"></i>
                                     </div>
+
                                     <div class="card-body p-4 p-md-5 position-relative z-1">
                                         <div class="row align-items-center">
+
                                             <div class="col-md-7">
-                                                <small class="text-uppercase fw-bold text-white-50 ls-2 mb-2 d-block">Approximate Cost</small>
-                                                <h2 class="fs-5 fw-bold mb-1 text-white">{{ $course->total_fees ?? 'Contact for Pricing' }}</h2>
-                                                <!-- <p class="mb-0 text-white-50">*Includes tuition and estimated living expenses</p> -->
+                                                <small class="text-uppercase fw-bold text-white-50 ls-2 mb-2 d-block">
+                                                    Approximate Cost
+                                                </small>
+
+                                                <h2 class="fs-5 fw-bold mb-1 text-white">
+                                                    {{ $course->total_fees ?? 'Contact for Pricing' }}
+                                                </h2>
                                             </div>
+
                                             <div class="col-md-5 text-md-end mt-3 mt-md-0">
-                                                <button class="btn btn-light text-primary fw-bold px-4 py-3 rounded-pill shadow-sm hover-scale" onclick="document.getElementById('enquiryForm').scrollIntoView({behavior: 'smooth'})">
+                                                <button class="btn btn-light text-primary fw-bold px-4 py-3 rounded-pill shadow-sm hover-scale"
+                                                    onclick="document.getElementById('enquiryForm').scrollIntoView({behavior: 'smooth'})">
                                                     Get Detailed Quote <i class="bi bi-arrow-right ms-2"></i>
                                                 </button>
                                             </div>
+
                                         </div>
+
+                                        <!-- Note Section -->
+                                        <div class="mt-4 pt-3 border-top border-white border-opacity-25">
+                                            <p class="mb-0 small text-white-50">
+                                                <strong>Note:</strong> Fees indicated are approximate and subject to revision by the respective institution.
+                                                The final payable amount will be confirmed upon issuance of the official admission offer.
+                                            </p>
+                                        </div>
+
                                     </div>
+
                                 </div>
 
                                 @if($course->overseas_fee_breakdown && count($course->overseas_fee_breakdown) > 0)
@@ -445,7 +465,7 @@
                                     <table class="table table-borderless bg-light rounded-3 overflow-hidden">
                                         <thead class="bg-light border-bottom">
                                             <tr>
-                                                <th class="ps-4 py-3 text-muted text-uppercase small fw-bold">Item</th>
+                                                <th class="ps-4 py-3 text-muted text-uppercase small fw-bold">Description</th>
                                                 <th class="pe-4 py-3 text-end text-muted text-uppercase small fw-bold">Amount</th>
                                             </tr>
                                         </thead>
@@ -454,29 +474,6 @@
                                             <tr>
                                                 <td class="ps-4 py-3 fw-medium">{{ $fee['label'] }}</td>
                                                 <td class="pe-4 py-3 text-end fw-bold">{{ $fee['amount'] }} {{ $fee['currency'] ?? '' }}</td>
-                                            </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
-                                @endif
-
-                                {{-- Local Training Fees --}}
-                                @if($course->local_training && $course->local_training_fee && count($course->local_training_fee) > 0)
-                                <h5 class="fw-bold mb-3">Local Training Fees</h5>
-                                <div class="table-responsive mb-4">
-                                    <table class="table table-borderless bg-light rounded-3 overflow-hidden">
-                                        <thead class="bg-light border-bottom">
-                                            <tr>
-                                                <th class="ps-4 py-3 text-muted text-uppercase small fw-bold">Item</th>
-                                                <th class="pe-4 py-3 text-end text-muted text-uppercase small fw-bold">Amount</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach($course->local_training_fee as $fee)
-                                            <tr>
-                                                <td class="ps-4 py-3 fw-medium">{{ $fee['label'] ?? 'Fee' }}</td>
-                                                <td class="pe-4 py-3 text-end fw-bold">{{ $fee['amount'] ?? '--' }} {{ $fee['currency'] ?? '' }}</td>
                                             </tr>
                                             @endforeach
                                         </tbody>
@@ -500,6 +497,29 @@
                                             <tr>
                                                 <td class="ps-4 py-3 fw-medium">{{ $cost['label'] ?? $cost['item'] ?? 'Expense' }}</td>
                                                 <td class="pe-4 py-3 text-end fw-bold">{{ $cost['amount'] ?? $cost['cost'] ?? '--' }} {{ $cost['currency'] ?? '' }}</td>
+                                            </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                                @endif
+
+                                {{-- Local Training Fees --}}
+                                @if($course->local_training && $course->local_training_fee && count($course->local_training_fee) > 0)
+                                <h5 class="fw-bold mb-3">Local Training Fees</h5>
+                                <div class="table-responsive mb-4">
+                                    <table class="table table-borderless bg-light rounded-3 overflow-hidden">
+                                        <thead class="bg-light border-bottom">
+                                            <tr>
+                                                <th class="ps-4 py-3 text-muted text-uppercase small fw-bold">Description</th>
+                                                <th class="pe-4 py-3 text-end text-muted text-uppercase small fw-bold">Amount</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach($course->local_training_fee as $fee)
+                                            <tr>
+                                                <td class="ps-4 py-3 fw-medium">{{ $fee['label'] ?? 'Fee' }}</td>
+                                                <td class="pe-4 py-3 text-end fw-bold">{{ $fee['amount'] ?? '--' }} {{ $fee['currency'] ?? '' }}</td>
                                             </tr>
                                             @endforeach
                                         </tbody>
@@ -673,6 +693,16 @@
                                             {{ is_array($course->language_of_instruction) ? implode(', ', $course->language_of_instruction) : $course->language_of_instruction }}
                                         @else
                                             English
+                                        @endif
+                                    </span>
+                                </li>
+                                <li class="d-flex justify-content-between py-2 border-bottom">
+                                    <span class="text-muted">Internship</span>
+                                    <span class="fw-bold text-dark">
+                                        @if($course->internship_included)
+                                            Yes {{ $course->internship_duration ? '(' . $course->internship_duration . ')' : '' }}
+                                        @else
+                                            No
                                         @endif
                                     </span>
                                 </li>

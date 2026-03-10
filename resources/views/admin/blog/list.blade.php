@@ -109,10 +109,10 @@
                                     1 => 'Blog',
                                     2 => 'News',
                                     3 => 'Collaboration',
-                                    4 => 'Training Model',
+                                    4 => 'Resources',
                                     5 => 'Research and Publication',
                                     6 => 'Case Studies',
-                                    7 => 'Resource',
+                                    7 => 'Resources',
                                     8 => 'CSR Initiatives',
                                     9 => 'Other',
                                 ];
