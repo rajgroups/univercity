@@ -691,7 +691,7 @@
             .sticky-mobile-filter-bar {
                 position: sticky;
                 top: 0px;
-                z-index: 1000;
+                z-index: 999;
                 background: white;
                 margin: 0 -15px 20px -15px;
                 padding: 10px 15px;
