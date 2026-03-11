@@ -765,10 +765,8 @@
                                 </div>
                             </div>
                         @endforeach
-                    </div>
-                @endif
 
-                 <!-- Sidebar -->
+                                         <!-- Sidebar -->
             <div class="col-lg-4">
                 <div class="sticky-nav-card shadow-sm border-0">
                     <h5 class="fw-bold mb-4 d-flex align-items-center gap-2">
@@ -803,7 +801,8 @@
                 </div>
             </div>
         </div>
-
+                    </div>
+                @endif
 
         <!-- Similar Schemes -->
         @if (isset($similars) && $similars->count() > 0)

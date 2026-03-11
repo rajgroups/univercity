@@ -757,8 +757,8 @@
                                         @foreach ($similarEvents as $similar)
                                             <div class="similar-event-card">
                                                 <div class="d-flex">
-                                                    <img src="{{ asset($similar->image) }}" class="rounded me-3"
-                                                        width="80" height="80" alt="{{ $similar->title }}">
+                                                    <img src="{{ asset($similar->thumbnail_image ?? 'default.jpg') }}" class="rounded me-3"
+                                                        style="width: 80px; height: 80px; object-fit: cover;" alt="{{ $similar->title }}">
                                                     <div>
                                                         <h6 class="mb-1">
                                                             <a href="{{ route('web.activity.show', $similar->slug) }}"
