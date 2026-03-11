@@ -593,7 +593,7 @@ class WebController extends Controller
                 break;
         }
 
-        $courses = $query->paginate(10)->appends($request->all());
+        $courses = $query->paginate(12)->appends($request->all());
         $sectors = Sector::where('status', 1)->where('type', 1)->withCount(['courses' => function($q) {
             $q->where('status', 1);
         }])->orderBy('position', 'asc')->get();
