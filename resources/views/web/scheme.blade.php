@@ -767,7 +767,7 @@
                         @endforeach
 
                                          <!-- Sidebar -->
-            <div class="col-lg-4">
+
                 <div class="sticky-nav-card shadow-sm border-0">
                     <h5 class="fw-bold mb-4 d-flex align-items-center gap-2">
                         <i class="bi bi-list-stars text-primary"></i> Quick Navigation
@@ -799,9 +799,7 @@
                             Us</a>
                     </div>
                 </div>
-            </div>
-        </div>
-                    </div>
+            </div>    </div>
                 @endif
 
         <!-- Similar Schemes -->
