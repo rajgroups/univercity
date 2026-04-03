@@ -20,7 +20,7 @@
             </ul>
             <div class="page-btn mt-0">
                 <a href="{{ route('admin.blog.index') }}" class="btn btn-secondary">
-                    <i class="feather feather-arrow-left me-2"></i>Back to List
+                    <i class="bi bi-arrow-left me-2"></i>Back to List
                 </a>
             </div>
         </div>
@@ -45,217 +45,245 @@
         @endif
         <form action="{{ route('admin.blog.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
-            <div class="add-product">
-                <div class="accordions-items-seperate" id="accordionSpacingExample">
-                    <div class="accordion-item border mb-4">
-                        <h2 class="accordion-header" id="headingSpacingOne">
-                            <div class="accordion-button collapsed bg-white" data-bs-toggle="collapse"
-                                data-bs-target="#SpacingOne">
-                                <div class="d-flex align-items-center justify-content-between flex-fill">
-                                    <h5 class="d-flex align-items-center">
-                                        <i class="feather feather-info text-primary me-2"></i>
-                                        <span>Blog News Information</span>
-                                    </h5>
+            
+            <div class="row">
+                <!-- Left Column: Main Content -->
+                <div class="col-lg-8">
+                    <!-- General Information Card -->
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-header bg-white border-bottom p-3">
+                            <div class="d-flex align-items-center">
+                                <div class="p-2 rounded me-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; background: rgba(var(--bs-primary-rgb), 0.1);">
+                                    <i class="bi bi-file-text text-primary fs-5"></i>
+                                </div>
+                                <div>
+                                    <h5 class="mb-0 fw-bold">General Information</h5>
+                                    <span class="fs-13 text-muted">Basic details and categorization</span>
                                 </div>
                             </div>
-                        </h2>
-                        <div id="SpacingOne" class="accordion-collapse collapse show">
-                            <div class="accordion-body border-top">
-                                <div class="row mb-3">
-                                    {{-- <div class="col-md-6">
-                                        <label for="title" class="form-label">Blog Title <span
-                                                class="text-danger">*</span></label>
-                                        <input type="text" name="title"
-                                            class="form-control @error('title') is-invalid @enderror" id="title"
-                                            value="{{ old('title') }}" required>
-                                        @error('title')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div> --}}
-                                    <div class="col-md-6">
-                                        <label for="title" class="form-label">Blog Title <span class="text-danger">*</span></label>
-                                        <input type="text" name="title"
-                                            class="form-control @error('title') is-invalid @enderror"
-                                            id="title" value="{{ old('title') }}" required>
-                                        @error('title')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="menu_title" class="form-label">Menu Title</label>
-                                        <input type="text" name="menu_title"
-                                            class="form-control @error('menu_title') is-invalid @enderror" id="menu_title"
-                                            value="{{ old('menu_title') }}">
-                                        @error('menu_title')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
+                        </div>
+                        <div class="card-body p-4">
+                            <div class="row g-3">
+                                <div class="col-md-6 mb-3">
+                                    <label for="title" class="form-label fw-semibold">Blog Title <span class="text-danger">*</span></label>
+                                    <input type="text" name="title" class="form-control px-3 py-2 shadow-sm @error('title') is-invalid @enderror" id="title" value="{{ old('title') }}" required placeholder="Enter main title">
+                                    @error('title')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                 </div>
-
-                                <div class="row mb-3">
-                                    <div class="col-md-6">
-                                        <label for="category_id" class="form-label">Category</label>
-                                        <select name="category_id" id="category_id"
-                                            class="form-select @error('category_id') is-invalid @enderror">
-                                            <option value="">Select Category</option>
-                                            @foreach ($categories as $category)
-                                                <option value="{{ $category->id }}"
-                                                    {{ old('category_id') == $category->id ? 'selected' : '' }}>
-                                                    {{ $category->name }}</option>
-                                            @endforeach
-                                        </select>
-                                        @error('category_id')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="subtitle" class="form-label">Subtitle</label>
-                                        <input type="text" name="subtitle"
-                                            class="form-control @error('subtitle') is-invalid @enderror" id="subtitle"
-                                            value="{{ old('subtitle') }}">
-                                        @error('subtitle')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="menu_title" class="form-label fw-semibold">Menu Title</label>
+                                    <input type="text" name="menu_title" class="form-control px-3 py-2 shadow-sm @error('menu_title') is-invalid @enderror" id="menu_title" value="{{ old('menu_title') }}" placeholder="Enter menu title">
+                                    @error('menu_title')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                 </div>
-
-                                <div class="row mb-3">
-                                    <div class="mb-3">
-                                        <label for="short_description" class="form-label">Short Description <span
-                                                class="text-danger">*</span></label>
-                                        <input type="text" name="short_description"
-                                            class="form-control @error('short_description') is-invalid @enderror"
-                                            id="short_description" value="{{ old('short_description') }}" required>
-                                        @error('short_description')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div>
-
-                                {{-- <div class="mb-3">
-                                    <label for="slug" class="form-label">Slug <span class="text-danger">*</span></label>
-                                    <input type="text" name="slug"
-                                        class="form-control @error('slug') is-invalid @enderror" id="slug"
-                                        value="{{ old('slug') }}" required>
-                                    @error('slug')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div> --}}
-                                <div class="mb-3">
-                                    <label for="slug" class="form-label">Slug <span class="text-danger">*</span></label>
-                                    <input type="text" name="slug"
-                                        class="form-control @error('slug') is-invalid @enderror"
-                                        id="slug" value="{{ old('slug') }}" required>
-                                    @error('slug')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                                <div class="row mb-3">
-                                    <div class="col-md-6">
-                                        <label for="image" class="form-label">Thumbnail Image</label>
-                                        <input type="file" name="image"
-                                            class="form-control @error('image') is-invalid @enderror" id="image">
-                                        @error('image')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="banner_image" class="form-label">Banner Image</label>
-                                        <input type="file" name="banner_image"
-                                            class="form-control @error('banner_image') is-invalid @enderror"
-                                            id="banner_image">
-                                        @error('banner_image')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <div class="row mb-3">
-                                    <div class="col-md-12">
-                                        <label class="form-label">Gallery Images</label>
-                                        <input type="file" class="form-control @error('gallery') is-invalid @enderror" name="gallery[]" accept="image/*" multiple>
-                                        @error('gallery')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                        <small class="form-text text-muted">Recommended: 1200×400px (Max 3MB)</small>
-                                    </div>
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="type" class="form-label">Blog Type</label>
-                                    <select name="type" id="type" class="form-select @error('type') is-invalid @enderror">
-                                        <option value="1" {{ old('type') == '1' ? 'selected' : '' }}>Blog</option>
-                                        <option value="2" {{ old('type') == '2' ? 'selected' : '' }}>News</option>
-                                        {{-- <option value="3" {{ old('type') == '3' ? 'selected' : '' }}>Collaboration</option> --}}
-                                        <option value="4" {{ old('type') == '4' ? 'selected' : '' }}>Resources</option>
-                                        <option value="5" {{ old('type') == '5' ? 'selected' : '' }}>Research and Publication</option>
-                                        <option value="6" {{ old('type') == '6' ? 'selected' : '' }}>Case Studies</option>
-                                        {{-- <option value="7" {{ old('type') == '7' ? 'selected' : '' }}>Resource</option> --}}
-                                        <option value="8" {{ old('type') == '8' ? 'selected' : '' }}>CSR Initiatives</option>
-                                    </select>
-                                    @error('type')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-
-                                <div class="col-lg-12">
-                                    <div class="summer-description-box">
-                                        <label class="form-label">Description</label>
-                                        <textarea name="description" id="summernote" cols="30" rows="10"
-                                            class="form-control @error('description') is-invalid @enderror">{{ old('description') }}</textarea>
-                                        <p class="fs-14 mt-1">Maximum 300 Words</p>
-                                        @error('description')
-                                            <div class="invalid-feedback d-block">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div>
-
-                                                           <!-- Bullet Points -->
-                            <div class="mb-3">
-                                <label class="form-label">Bullet Points (key - value)</label>
-                                <div id="bullet-points">
-                                    {{-- Loop through old 'points' to repopulate existing ones --}}
-                                    @if (old('points'))
-                                        @foreach (old('points') as $index => $point)
-                                            <div class="input-group mb-2">
-                                                <input type="text" name="points[]"
-                                                    class="form-control @error('points.' . $index) is-invalid @enderror"
-                                                    placeholder="Example: Curriculum Integration - Blending vocational skills with academics"
-                                                    value="{{ $point }}">
-                                                <button type="button" class="btn btn-outline-danger remove-bullet">−</button>
-                                            </div>
-                                            @error('points.' . $index)
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
+                                <div class="col-md-6 mb-3">
+                                    <label for="category_id" class="form-label fw-semibold">Category <span class="text-danger">*</span></label>
+                                    <select name="category_id" id="category_id" class="form-select px-3 py-2 shadow-sm @error('category_id') is-invalid @enderror" required>
+                                        <option value="">Select Category</option>
+                                        @foreach ($categories as $category)
+                                            <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
                                         @endforeach
-                                    @else
-                                        {{-- Initial empty input for new announcement --}}
-                                        <div class="input-group mb-2">
-                                            <input type="text" name="points[]" class="form-control" placeholder="Example: Curriculum Integration - Blending vocational skills with academics">
-                                            <button type="button" class="btn btn-outline-secondary add-bullet">+</button>
-                                        </div>
-                                    @endif
+                                    </select>
+                                    @error('category_id')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                 </div>
-                                {{-- This is for a general error related to the 'points' array itself (e.g., if it's test) --}}
-                                @error('points')
-                                    <div class="text-danger mt-1">{{ $message }}</div>
-                                @enderror
-                            </div>
-
-                              <div class="mb-3">
-                                <label for="status" class="form-label">Status</label>
-                                <select name="status" id="status" class="form-select @error('status') is-invalid @enderror">
-                                    <option value="1" {{ old('status', true) ? 'selected' : '' }}>Active</option>
-                                    <option value="0" {{ !old('status', true) ? 'selected' : '' }}>Inactive</option>
-                                </select>
-                                @error('status')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-
-                                <button type="submit" class="btn btn-primary">Submit</button>
+                                <div class="col-md-6 mb-3">
+                                    <label for="subtitle" class="form-label fw-semibold">Subtitle</label>
+                                    <input type="text" name="subtitle" class="form-control px-3 py-2 shadow-sm @error('subtitle') is-invalid @enderror" id="subtitle" value="{{ old('subtitle') }}" placeholder="Enter subtitle">
+                                    @error('subtitle')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                                </div>
+                                <div class="col-md-12 mb-3">
+                                    <label for="slug" class="form-label fw-semibold">Slug (URL) <span class="text-danger">*</span></label>
+                                    <div class="input-group shadow-sm rounded-3">
+                                        <span class="input-group-text bg-light text-muted border-end-0">/</span>
+                                        <input type="text" name="slug" class="form-control px-3 border-start-0 ps-0 @error('slug') is-invalid @enderror" id="slug" value="{{ old('slug') }}" required placeholder="auto-generated-slug">
+                                    </div>
+                                    @error('slug')<div class="text-danger fs-14 mt-1">{{ $message }}</div>@enderror
+                                </div>
+                                <div class="col-md-12">
+                                    <label for="short_description" class="form-label fw-semibold">Short Description <span class="text-danger">*</span></label>
+                                    <textarea name="short_description" class="form-control px-3 py-2 shadow-sm @error('short_description') is-invalid @enderror" id="short_description" rows="3" required placeholder="Brief summary for listings">{{ old('short_description') }}</textarea>
+                                    @error('short_description')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                                </div>
                             </div>
                         </div>
                     </div>
+
+                    <!-- Content Details Card -->
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-header bg-white border-bottom p-3">
+                            <div class="d-flex align-items-center">
+                                <div class="p-2 rounded me-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; background: rgba(var(--bs-primary-rgb), 0.1);">
+                                    <i class="bi bi-pencil-square text-primary fs-5"></i>
+                                </div>
+                                <div>
+                                    <h5 class="mb-0 fw-bold">Content Details</h5>
+                                    <span class="fs-13 text-muted">Full explanation and highlights</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body p-4">
+                            <div class="mb-5">
+                                <label class="form-label fw-semibold">Full Description <span class="text-danger">*</span></label>
+                                <textarea name="description" id="summernote" cols="30" rows="10" class="form-control shadow-sm @error('description') is-invalid @enderror">{{ old('description') }}</textarea>
+                                <p class="fs-13 text-muted mt-2 mb-0"><i class="bi bi-info-circle me-1"></i> Maximum 300 Words</p>
+                                @error('description')<div class="text-danger d-block mt-1 fs-14">{{ $message }}</div>@enderror
+                            </div>
+
+                            <!-- Bullet Points Repeater -->
+                            <div class="mb-2">
+                                <label class="form-label fw-semibold">Key Highlights (Bullet Points)</label>
+                                <p class="fs-13 text-muted mb-3">Add structured bullet points to showcase main features or outcomes in a clear list format.</p>
+                                
+                                <div id="bullet-points-container">
+                                    <div id="bullet-points">
+                                        @empty(old('points'))
+                                            <div class="bullet-item border rounded-3 bg-white p-3 mb-3 position-relative shadow-sm transition-all hover-shadow">
+                                                <button type="button" class="btn btn-sm btn-outline-danger remove-bullet position-absolute" style="top: 10px; right: 10px; z-index: 2;" title="Remove this point">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                                <div class="row gx-3 align-items-end pe-4">
+                                                    <div class="col-md-4 mb-2 mb-md-0">
+                                                        <label class="form-label fs-13 text-muted fw-semibold mb-1">Highlight Title</label>
+                                                        <input type="text" class="form-control form-control-sm point-title" placeholder="e.g. Approach">
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        <label class="form-label fs-13 text-muted fw-semibold mb-1">Highlight Description</label>
+                                                        <input type="text" class="form-control form-control-sm point-desc" placeholder="e.g. Hands-on learning experiences...">
+                                                    </div>
+                                                </div>
+                                                <input type="hidden" name="points[]" class="point-hidden" value="">
+                                            </div>
+                                        @else
+                                            @foreach (old('points') as $index => $point)
+                                                @php
+                                                    $parts = explode('-', $point, 2);
+                                                    $title = trim($parts[0] ?? '');
+                                                    $desc = trim($parts[1] ?? '');
+                                                @endphp
+                                                <div class="bullet-item border rounded-3 bg-white p-3 mb-3 position-relative shadow-sm transition-all hover-shadow">
+                                                    <button type="button" class="btn btn-sm btn-outline-danger remove-bullet position-absolute" style="top: 10px; right: 10px; z-index: 2;" title="Remove this point">
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+                                                    <div class="row gx-3 align-items-end pe-4">
+                                                        <div class="col-md-4 mb-2 mb-md-0">
+                                                            <label class="form-label fs-13 text-muted fw-semibold mb-1">Highlight Title</label>
+                                                            <input type="text" class="form-control form-control-sm point-title @error('points.' . $index) is-invalid @enderror" placeholder="e.g. Approach" value="{{ $title }}">
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <label class="form-label fs-13 text-muted fw-semibold mb-1">Highlight Description</label>
+                                                            <input type="text" class="form-control form-control-sm point-desc @error('points.' . $index) is-invalid @enderror" placeholder="e.g. Hands-on learning experiences..." value="{{ $desc }}">
+                                                        </div>
+                                                    </div>
+                                                    <input type="hidden" name="points[]" class="point-hidden" value="{{ $point }}">
+                                                </div>
+                                                @error('points.' . $index)
+                                                    <div class="text-danger mt-1 mb-2 fs-14">{{ $message }}</div>
+                                                @enderror
+                                            @endforeach
+                                        @endempty
+                                    </div>
+                                    <div class="mt-3">
+                                        <button type="button" class="btn border-primary text-primary w-100 add-bullet py-2" style="border-style: dashed; border-width: 2px; background: rgba(var(--bs-primary-rgb), 0.05);">
+                                            <i class="bi bi-plus-circle me-1"></i> Add Another Highlight
+                                        </button>
+                                    </div>
+                                </div>
+                                @error('points')<div class="text-danger mt-1 fs-14">{{ $message }}</div>@enderror
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Settings & Publishing -->
+                <div class="col-lg-4">
+                    
+                    <!-- Publishing Card -->
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-header bg-white border-bottom p-3">
+                            <h5 class="mb-0 fw-bold d-flex align-items-center">
+                                <i class="bi bi-gear text-primary me-2"></i> Publishing
+                            </h5>
+                        </div>
+                        <div class="card-body p-4">
+                            <div class="mb-3">
+                                <label for="status" class="form-label fw-semibold">Visibility Status</label>
+                                <select name="status" id="status" class="form-select px-3 py-2 shadow-sm @error('status') is-invalid @enderror">
+                                    <option value="1" {{ old('status', true) ? 'selected' : '' }}>🟢 Published (Active)</option>
+                                    <option value="0" {{ !old('status', true) ? 'selected' : '' }}>🔴 Hidden (Inactive)</option>
+                                </select>
+                                @error('status')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label for="type" class="form-label fw-semibold">Content Type</label>
+                                <select name="type" id="type" class="form-select px-3 py-2 shadow-sm @error('type') is-invalid @enderror">
+                                    <option value="1" {{ old('type') == '1' ? 'selected' : '' }}>Blog Post</option>
+                                    <option value="2" {{ old('type') == '2' ? 'selected' : '' }}>News Article</option>
+                                    <option value="4" {{ old('type') == '4' ? 'selected' : '' }}>Resources</option>
+                                    <option value="5" {{ old('type') == '5' ? 'selected' : '' }}>Research / Publication</option>
+                                    <option value="6" {{ old('type') == '6' ? 'selected' : '' }}>Case Studies</option>
+                                    <option value="8" {{ old('type') == '8' ? 'selected' : '' }}>CSR Initiatives</option>
+                                </select>
+                                @error('type')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                            </div>
+                            
+                            <hr class="text-muted border-dashed mb-4">
+
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary fw-semibold py-2 d-flex align-items-center justify-content-center shadow-sm">
+                                    <i class="bi bi-check-circle me-2"></i> Save & Publish Content
+                                </button>
+                                <a href="{{ route('admin.blog.index') }}" class="btn btn-light fw-medium border shadow-sm py-2">
+                                    Cancel
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Media Assets Card -->
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-header bg-white border-bottom p-3">
+                            <h5 class="mb-0 fw-bold d-flex align-items-center">
+                                <i class="bi bi-image text-primary me-2"></i> Media Assets
+                            </h5>
+                        </div>
+                        <div class="card-body p-4">
+                            <div class="mb-4">
+                                <label for="image" class="form-label fw-semibold">Thumbnail Cover</label>
+                                <div class="p-4 border rounded-3 bg-light text-center" style="border-style: dashed !important; border-width: 2px !important;">
+                                    <div class="bg-white rounded-circle shadow-sm d-inline-flex align-items-center justify-content-center mb-2" style="width: 45px; height: 45px;">
+                                        <i class="bi bi-image fs-5 text-primary"></i>
+                                    </div>
+                                    <input type="file" name="image" class="form-control form-control-sm @error('image') is-invalid @enderror mt-2 shadow-sm" id="image">
+                                    <span class="fs-12 text-muted mt-2 d-block">Recommended: 800x600px. Max 5MB.</span>
+                                </div>
+                                @error('image')<div class="text-danger mt-1 fs-14">{{ $message }}</div>@enderror
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label for="banner_image" class="form-label fw-semibold">Banner Image</label>
+                                <div class="p-4 border rounded-3 bg-light text-center" style="border-style: dashed !important; border-width: 2px !important;">
+                                    <div class="bg-white rounded-circle shadow-sm d-inline-flex align-items-center justify-content-center mb-2" style="width: 45px; height: 45px;">
+                                        <i class="bi bi-display fs-5 text-primary"></i>
+                                    </div>
+                                    <input type="file" name="banner_image" class="form-control form-control-sm @error('banner_image') is-invalid @enderror mt-2 shadow-sm" id="banner_image">
+                                    <span class="fs-12 text-muted mt-2 d-block">Recommended: 1920x600px. Max 5MB.</span>
+                                </div>
+                                @error('banner_image')<div class="text-danger mt-1 fs-14">{{ $message }}</div>@enderror
+                            </div>
+                            
+                            <div class="mb-2">
+                                <label class="form-label fw-semibold">Gallery Additions</label>
+                                <div class="p-4 border rounded-3 bg-light text-center" style="border-style: dashed !important; border-width: 2px !important;">
+                                    <div class="bg-white rounded-circle shadow-sm d-inline-flex align-items-center justify-content-center mb-2" style="width: 45px; height: 45px;">
+                                        <i class="bi bi-layers fs-5 text-primary"></i>
+                                    </div>
+                                    <input type="file" class="form-control form-control-sm @error('gallery') is-invalid @enderror mt-2 shadow-sm" name="gallery[]" accept="image/*" multiple>
+                                    <span class="fs-12 text-muted mt-2 d-block">Select multiple files (Max 3MB each).</span>
+                                </div>
+                                @error('gallery')<div class="text-danger mt-1 fs-14">{{ $message }}</div>@enderror
+                            </div>
+                        </div>
+                    </div>
+                    
                 </div>
             </div>
         </form>
@@ -278,19 +306,53 @@
     </script>
       <script>
         document.addEventListener('click', function(e) {
-            if (e.target.classList.contains('add-bullet')) {
+            if (e.target.classList.contains('add-bullet') || e.target.closest('.add-bullet')) {
                 e.preventDefault();
                 const group = `
-                <div class="input-group mb-2">
-                    <input type="text" name="bullets[]" class="form-control" placeholder="Key - Value">
-                    <button type="button" class="btn btn-outline-danger remove-bullet">−</button>
+                <div class="bullet-item border rounded-3 bg-light p-3 mb-3 position-relative shadow-sm" style="display: none;">
+                    <button type="button" class="btn btn-sm btn-outline-danger remove-bullet position-absolute" style="top: 10px; right: 10px; z-index: 2;" title="Remove this point">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                    <div class="row gx-3 align-items-end pe-4">
+                        <div class="col-md-4 mb-2 mb-md-0">
+                            <label class="form-label fs-13 text-muted fw-semibold mb-1">Point Title</label>
+                            <input type="text" class="form-control point-title" placeholder="e.g. Approach">
+                        </div>
+                        <div class="col-md-8">
+                            <label class="form-label fs-13 text-muted fw-semibold mb-1">Point Description</label>
+                            <input type="text" class="form-control point-desc" placeholder="e.g. Hands-on learning...">
+                        </div>
+                    </div>
+                    <input type="hidden" name="points[]" class="point-hidden" value="">
                 </div>`;
-                document.getElementById('bullet-points').insertAdjacentHTML('beforeend', group);
+                const container = document.getElementById('bullet-points');
+                container.insertAdjacentHTML('beforeend', group);
+                $(container.lastElementChild).fadeIn(300);
             }
 
-            if (e.target.classList.contains('remove-bullet')) {
+            if (e.target.classList.contains('remove-bullet') || e.target.closest('.remove-bullet')) {
                 e.preventDefault();
-                e.target.closest('.input-group').remove();
+                $(e.target.closest('.bullet-item')).fadeOut(300, function() { $(this).remove(); });
+            }
+        });
+
+        // Sync hidden inputs
+        document.addEventListener('input', function(e) {
+            if (e.target.classList.contains('point-title') || e.target.classList.contains('point-desc')) {
+                const row = e.target.closest('.bullet-item');
+                let title = row.querySelector('.point-title').value.trim();
+                let desc = row.querySelector('.point-desc').value.trim();
+                const hidden = row.querySelector('.point-hidden');
+                
+                // Replace hyphens to prevent validation issues
+                title = title.replace(/-/g, ' ');
+                desc = desc.replace(/-/g, ' ');
+                
+                if (title || desc) {
+                    hidden.value = title + ' - ' + desc;
+                } else {
+                    hidden.value = '';
+                }
             }
         });
     </script>

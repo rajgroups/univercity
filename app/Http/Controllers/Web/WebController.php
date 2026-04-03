@@ -84,8 +84,14 @@ class WebController extends Controller
             ->get();
 
         $sectorCount = Sector::where('status', 1)->count();
-        $courseCount = Course::where('status', 1)->count();
-        $intlCourseCount = IntlCourse::where('publish_status', 1)->count();
+        $courseCount = Course::where('status', 1)
+            ->whereHas('category', function($q) {
+                $q->where('status', 1);
+            })->count();
+        $intlCourseCount = IntlCourse::where('publish_status', 1)
+            ->whereHas('category', function($q) {
+                $q->where('status', 1);
+            })->count();
 
         return view('web.index', compact(
             'upcomingProjects',
@@ -363,7 +369,10 @@ class WebController extends Controller
     $query = IntlCourse::query();
 
     // ✅ Must Active Course Only (using publish_status instead of status)
-    $query->where('publish_status', 1);
+    $query->where('publish_status', 1)
+          ->whereHas('category', function($q) {
+              $q->where('status', 1);
+          });
 
     // 🔍 Search filter (by course_title or short_description)
     if ($request->has('search') && !empty($request->search)) {
@@ -462,13 +471,17 @@ class WebController extends Controller
     // Dropdown filter options
     $sectors = Sector::where('status', 1)->where('type', 2)->orderBy('position', 'asc')->get();
     $countries = Country::where('status', 1)->get();
-    $categories = Category::where('type', 6)->get();
+    $categories = Category::where('status', 1)->where('type', 6)->get();
 
     return view('web.globalcourse', compact('courses', 'sectors', 'countries', 'categories'));
 }
     public function course(Request $request)
     {
-        $query = Course::with(['sector', 'category'])->where('status', 1);
+        $query = Course::with(['sector', 'category'])
+            ->where('status', 1)
+            ->whereHas('category', function($q) {
+                $q->where('status', 1);
+            });
 
         // 🔍 Search filter (by title or description)
         if ($request->has('search') && !empty($request->search)) {
@@ -595,7 +608,9 @@ class WebController extends Controller
 
         $courses = $query->paginate(12)->appends($request->all());
         $sectors = Sector::where('status', 1)->where('type', 1)->withCount(['courses' => function($q) {
-            $q->where('status', 1);
+            $q->where('status', 1)->whereHas('category', function($categoryQuery) {
+                $categoryQuery->where('status', 1);
+            });
         }])->orderBy('position', 'asc')->get();
 
         $categories = Category::where('status', 1)->where('type', 5)->withCount(['courses' => function($q) {
@@ -621,11 +636,17 @@ class WebController extends Controller
             ])
             ->where('slug', $slug)
             ->where('publish_status', 1)
+            ->whereHas('category', function($q) {
+                $q->where('status', 1);
+            })
             ->firstOrFail();
 
         // Get other related courses (same sector or category)
         $otherCourses = IntlCourse::where('slug', '!=', $slug)
             ->where('publish_status', 1)
+            ->whereHas('category', function($q) {
+                $q->where('status', 1);
+            })
             ->where(function($query) use ($course) {
                 $query->where('sector_id', $course->sector_id)
                     ->orWhere('category_id', $course->category_id)
@@ -644,7 +665,11 @@ class WebController extends Controller
     public function courseDetails(Request $request, $slug)
     {
         // Find Course Record From Course table
-        $course = Course::where('slug', $slug)->first();
+        $course = Course::where('slug', $slug)
+            ->whereHas('category', function($q) {
+                $q->where('status', 1);
+            })
+            ->first();
 
         if (!$course) {
             abort(404);
@@ -677,6 +702,9 @@ class WebController extends Controller
         $relatedCourses = Course::where('sector_id', $course->sector_id)
             ->where('id', '!=', $course->id)
             ->where('status', 1)
+            ->whereHas('category', function($q) {
+                $q->where('status', 1);
+            })
             ->latest()
             ->limit(10)
             ->get();
@@ -841,7 +869,7 @@ class WebController extends Controller
             ['path' => $request->url(), 'query' => $request->query()]
         );
 
-        $categoryQuery = Category::query();
+        $categoryQuery = Category::where('status', 1);
         if ($mode === 'projects') {
             $categoryQuery->where('type', 1); // Initiatives
         } elseif ($mode === 'announcements') {
