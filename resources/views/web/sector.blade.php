@@ -197,8 +197,12 @@
                                         <img src="{{ asset($item->image)}}" alt="img">
                                     </a>
                                     <div class="card-content">
-                                        <a href="{{ route('web.course.index', ['sectors' => $item->id]) }}" class="h5 fw-500 mb-16">{{ $item->name }}</a>
-                                        <p>{{ \Illuminate\Support\Str::limit(strip_tags($item->description), 100) }}</p>
+                                        {{-- <a href="{{ route('web.course.index', ['sectors' => $item->id]) }}" class="h5 
+                                            fw-500 mb-16">{{ $item->name }}</a> --}}
+                                            <a href="{{ route('web.course.index', ['sectors' => $item->id]) }}" class="h5 fw-500 mb-16">
+                                                {{ \Illuminate\Support\Str::limit($item->name, 20, '...') }}
+                                            </a>
+                                        <p class="text-justify">{{ \Illuminate\Support\Str::limit(strip_tags($item->description), 100) }}</p>
                                     </div>
                                 </div>
                             </div>

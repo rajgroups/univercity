@@ -130,7 +130,7 @@
         /* Cards and Items */
         .feature-card {
             background: #fff;
-            padding: 40px;
+            padding: 30px;
             border-radius: 20px;
             border: 1px solid #f0f0f0;
             height: 100%;
@@ -173,6 +173,7 @@
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
             height: 100%;
             border-top: 4px solid var(--isico-primary);
+            text-align: center;
         }
 
         .eco-grid-item h5 {
@@ -312,30 +313,30 @@
         <div class="container text-center">
             <div class="row justify-content-center mb-60">
                 <div class="col-lg-8">
-                    <span class="section-tag">Purpose & Direction</span>
+                    <span class="section-tag mt-4">Purpose & Direction</span>
                     <h2 class="section-title">Our Vision & Mission</h2>
                 </div>
             </div>
             <div class="row g-1">
                 <div class="col-md-6 wow fadeInUp mt-2" data-wow-delay="0.1s">
                     <div class="mv-card vision-card text-start">
-                        <div class="fs-1 mb-3"><i class="bi bi-eye"></i></div>
+                        <div class="fs-1 mb-3"><i style="display: flex !important; justify-content: flex-start;" class="bi bi-eye"></i></div>
                         <h3>Our Vision</h3>
-                        <p class="mb-0 text-white">
+                        <p class="mb-0 text-white mt-3">
                             To create a skill-powered society by building an integrated ecosystem where education, skills, entrepreneurship, and global collaboration enable sustainable livelihoods and inclusive national development.
                         </p>
                     </div>
                 </div>
                 <div class="col-md-6 wow fadeInUp mt-2" data-wow-delay="0.2s">
                     <div class="mv-card mission-card text-start">
-                        <div class="fs-1 mb-3"><i class="bi bi-bullseye"></i></div>
+                        <div class="fs-1 mb-3"><i style="display: flex !important; justify-content: flex-start;" class="bi bi-bullseye d-flex"></i></div>
                         <h3>Our Mission</h3>
-                        <ul class="list-unstyled mb-0">
-                            <li class="mb-2"><i class="bi bi-check2-circle me-2"></i> Develop a nationwide sector-wise skill ecosystem platform</li>
-                            <li class="mb-2"><i class="bi bi-check2-circle me-2"></i> Connect training partners and communities through accessible learning hubs</li>
-                            <li class="mb-2"><i class="bi bi-check2-circle me-2"></i> Support State and Central Government skill initiatives</li>
-                            <li class="mb-2"><i class="bi bi-check2-circle me-2"></i> Promote volunteering and community participation</li>
-                            <li class="mb-0"><i class="bi bi-check2-circle me-2"></i> Enable international skill certification and higher education pathways</li>
+                        <ul class="list-unstyled mb-0 mt-3">
+                            <li class="mb-2 d-flex"><i class="bi bi-check2-circle fs-4 me-2"></i> Develop a nationwide sector-wise skill ecosystem platform</li>
+                            <li class="mb-2 d-flex"><i class="bi bi-check2-circle fs-4 me-2"></i> Connect training partners and communities through accessible learning hubs</li>
+                            <li class="mb-2 d-flex"><i class="bi bi-check2-circle fs-4 me-2"></i> Support State and Central Government skill initiatives</li>
+                            <li class="mb-2 d-flex"><i class="bi bi-check2-circle fs-4 me-2"></i> Promote volunteering and community participation</li>
+                            <li class="mb-0 d-flex"><i class="bi bi-check2-circle fs-4 me-2"></i> Enable international skill certification and higher education pathways</li>
                         </ul>
                     </div>
                 </div>
@@ -344,9 +345,9 @@
     </section>
 
     <!-- Why ISICO -->
-    <section class="py-100 mt-5">
+    <section class="py-100 mt-5 mb-4">
         <div class="container">
-            <div class="row align-items-center">
+            <div class="row align-items-center mb-3">
                 <div class="col-lg-5 wow fadeInDown">
                     <span class="section-tag">The Need</span>
                     <h2 class="section-title">Why ISICO Was Created</h2>
@@ -358,32 +359,32 @@
                         <p class="small mb-0 text-dark">We create a connected ecosystem where opportunities reach underserved communities and translate into real outcomes.</p>
                     </div>
                 </div>
-                <div class="col-lg-7 mt-5 mt-lg-0 wow fadeInUp">
+                <div class="col-lg-7 mt-4 mt-lg-0 wow fadeInUp">
                     <div class="row g-4 ps-lg-5">
-                        <div class="col-sm-6">
+                        <div class="col-sm-6 mt-3">
                             <div class="feature-card">
-                                <span class="badge bg-primary-soft text-primary mb-2">Outcome</span>
+                                <span class="badge bg-primary-soft text-primary mb-2 fs-6">Outcome</span>
                                 <h5 class="fw-800">Underserved Outreach</h5>
                                 <p class="small text-muted mb-0">Skill opportunities reaching those who need them most in rural heartlands.</p>
                             </div>
                         </div>
-                        <div class="col-sm-6">
+                        <div class="col-sm-6 mt-3">
                             <div class="feature-card">
-                                <span class="badge bg-secondary-soft text-secondary mb-2">Impact</span>
+                                <span class="badge bg-secondary-soft text-secondary mb-2 fs-6">Impact</span>
                                 <h5 class="fw-800">Govt Translations</h5>
                                 <p class="small text-muted mb-0">Converting government initiatives into tangible vocational outcomes.</p>
                             </div>
                         </div>
-                        <div class="col-sm-6">
+                        <div class="col-sm-6 mt-3">
                             <div class="feature-card">
-                                <span class="badge bg-info-soft text-info mb-2">Scale</span>
+                                <span class="badge bg-info-soft text-info mb-2 fs-6">Scale</span>
                                 <h5 class="fw-800">Structured Training</h5>
                                 <p class="small text-muted mb-0">Enabling training partners with structured outreach and platform visibility.</p>
                             </div>
                         </div>
-                        <div class="col-sm-6">
+                        <div class="col-sm-6 mt-3 mb-3">
                             <div class="feature-card">
-                                <span class="badge bg-warning-soft text-warning mb-2">Future</span>
+                                <span class="badge bg-warning-soft text-warning mb-2 fs-6">Future</span>
                                 <h5 class="fw-800">Global Accessibility</h5>
                                 <p class="small text-muted mb-0">Bringing international learning beyond the reach of metropolitan cities.</p>
                             </div>
@@ -399,56 +400,64 @@
         <div class="container">
             <div class="row mb-60 text-center mt-2">
                 <div class="col-lg-8 mx-auto">
-                    <span class="section-tag">Operational Framework</span>
+                    <span class="section-tag mt-4">Operational Framework</span>
                     <h2 class="section-title">The ISICO Skill Ecosystem Model</h2>
                     <p class="text-muted mb-2">A multi-layer framework connecting stakeholders into one unified ecosystem.</p>
                 </div>
             </div>
-            <div class="row g-4">
-                <div class="col-md-4 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
+            <div class="row g-4 mt-3">
+                <div class="col-md-4 col-sm-6 mt-3 wow fadeInUp mb-3" data-wow-delay="0.1s">
                     <div class="eco-grid-item">
-                        <div class="fs-2 mb-3 text-secondary"><i class="bi bi-diagram-3"></i></div>
+                        <div class="fs-2 mb-3 text-secondary"><i class="bi bi-diagram-3 mlt"></i></div>
                         <h5>Skill Sector Platform</h5>
                         <p class="small text-muted mb-0">Sector-wise organization across manufacturing, agriculture, digital technology, and more.</p>
                     </div>
                 </div>
-                <div class="col-md-4 col-sm-6 wow fadeInUp" data-wow-delay="0.2s">
+                <div class="col-md-4 col-sm-6 mt-3 wow fadeInUp mb-3" data-wow-delay="0.2s">
                     <div class="eco-grid-item">
-                        <div class="fs-2 mb-3 text-secondary"><i class="bi bi-people"></i></div>
+                        <div class="fs-2 mb-3 text-secondary"><i class="bi bi-people mlt"></i></div>
                         <h5>Training Partner Integration</h5>
                         <p class="small text-muted mb-0">Collaboration with certified training institutes delivering programs through our platform.</p>
                     </div>
                 </div>
-                <div class="col-md-4 col-sm-6 wow fadeInUp" data-wow-delay="0.3s">
+                <div class="col-md-4 col-sm-6 mt-3 wow fadeInUp mb-3" data-wow-delay="0.3s">
                     <div class="eco-grid-item">
-                        <div class="fs-2 mb-3 text-secondary"><i class="bi bi-building"></i></div>
+                        <div class="fs-2 mb-3 text-secondary"><i class="bi bi-building mlt"></i></div>
                         <h5>Learning Infrastructure</h5>
                         <p class="small text-muted mb-0">Activation of schools, panchayat halls, and centers as accessible learning hubs.</p>
                     </div>
                 </div>
-                <div class="col-md-4 col-sm-6 wow fadeInUp" data-wow-delay="0.4s">
+                <div class="col-md-4 col-sm-6 mt-3 wow fadeInUp mb-4" data-wow-delay="0.4s">
                     <div class="eco-grid-item">
-                        <div class="fs-2 mb-3 text-secondary"><i class="bi bi-journal-check"></i></div>
+                        <div class="fs-2 mb-3 text-secondary"><i class="bi bi-journal-check mlt"></i></div>
                         <h5>Scheme Alignment</h5>
                         <p class="small text-muted mb-0">Implementation aligned with NEP 2020, Skill India, and State/Central schemes.</p>
                     </div>
                 </div>
-                <div class="col-md-4 col-sm-6 wow fadeInUp" data-wow-delay="0.5s">
+                <div class="col-md-4 col-sm-6 mt-3 wow fadeInUp mb-4" data-wow-delay="0.5s">
                     <div class="eco-grid-item">
-                        <div class="fs-2 mb-3 text-secondary"><i class="bi bi-hand-thumbs-up"></i></div>
+                        <div class="fs-2 mb-3 text-secondary"><i class="bi bi-hand-thumbs-up mlt"></i></div>
                         <h5>Volunteering Participation</h5>
                         <p class="small text-muted mb-0">Structured opportunities for professionals and community members to contribute.</p>
                     </div>
                 </div>
-                <div class="col-md-4 col-sm-6 wow fadeInUp" data-wow-delay="0.6s">
+                <div class="col-md-4 col-sm-6 mt-3 wow fadeInUp mb-4" data-wow-delay="0.6s">
                     <div class="eco-grid-item">
-                        <div class="fs-2 mb-3 text-secondary"><i class="bi bi-globe"></i></div>
+                        <div class="fs-2 mb-3 text-secondary"><i class="bi bi-globe mlt"></i></div>
                         <h5>Global Pathways</h5>
                         <p class="small text-muted mb-0">Collaborations enabling global certifications and vocational programs abroad.</p>
                     </div>
                 </div>
             </div>
         </div>
+        <style>
+            i.bi.bi.mlt {
+                text-align: center;
+                display: flex;
+                justify-content: center;
+                font-size: xxx-large;
+            }
+        </style>
     </section>
 
     <!-- Global Course Platform -->
@@ -461,13 +470,13 @@
                     <p class="text-muted mb-4">
                         ISICO operates a sector-wise skill network model that organizes training opportunities by industry sectors and connects approved training partners through a unified platform.
                     </p>
-                    <div class="row g-4">
-                        <div class="col-sm-6">
-                            <h5 class="fw-bold"><i class="bi bi-shop me-2 text-primary"></i> Partner Showcase</h5>
+                    <div class="row g-4 mb-3">
+                        <div class="col-sm-6 text-center mt-3">
+                            <h5 class="fw-bold"><i class="bi bi-shop me-2 text-primary mb-3"></i> Partner Showcase</h5>
                             <p class="small text-muted">Institutions gain wider rural outreach and structured visibility for their programs.</p>
                         </div>
-                        <div class="col-sm-6">
-                            <h5 class="fw-bold"><i class="bi bi-airplane me-2 text-primary"></i> Global Access</h5>
+                        <div class="col-sm-6 text-center mt-3">
+                            <h5 class="fw-bold"><i class="bi bi-airplane me-2 text-primary mb-3"></i> Global Access</h5>
                             <p class="small text-muted">Explore international programs including vocational pathways and certifications.</p>
                         </div>
                     </div>
@@ -486,7 +495,7 @@
         <div class="container">
             <div class="row g-5 mt-3">
                 <div class="col-lg-4 wow fadeInUp">
-                    <h2 class="fw-800 mb-4 text-white">Our Role in the Value Chain</h2>
+                    <h2 class="fw-800 mb-4 mt-3 text-white">Our Role in the Value Chain</h2>
                     <ul class="check-list text-white">
                         <li class="text-white-50"><strong class="text-white">Facilitator</strong> — Enables access to learning opportunities</li>
                         <li class="text-white-50"><strong class="text-white">Integrator</strong> — Connects stakeholders into one ecosystem</li>
@@ -495,7 +504,7 @@
                     </ul>
                 </div>
                 <div class="col-lg-8 wow fadeInUp" data-wow-delay="0.2s">
-                    <div class="quote-box">
+                    <div class="quote-box mb-4 mt-3">
                         <div class="fs-1 text-white-50 opacity-25 mb-3"><i class="bi bi-quote"></i></div>
                         <blockquote>
                             ISICO initiatives bring together CSR partners, philanthropists, public contributors, and volunteers to jointly build a sustainable skill ecosystem for future generations through collaborative participation and social investment.
@@ -517,7 +526,7 @@
             </div>
             <div class="row g-4 align-items-center">
                 <div class="col-md-6 wow fadeInLeft">
-                    <div class="bg-light p-5 rounded-4 h-100">
+                    <div class="bg-light p-5 rounded-4 h-100 mb-4">
                         <h4 class="fw-bold mb-4">National Initiatives</h4>
                         <ul class="check-list">
                             <li>National Education Policy (NEP) 2020</li>

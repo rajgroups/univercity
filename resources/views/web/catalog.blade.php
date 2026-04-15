@@ -42,7 +42,8 @@
                         <i class="bi bi-search text-muted me-2"></i>
                         <input type="text" name="search" value="{{ request('search') }}"
                                class="form-control border-0 shadow-none border-0"
-                               placeholder="Search for projects, schemes or programs...">
+                               placeholder="Search  projects">
+                               {{-- placeholder="Search for projects, schemes or programs..."> --}}
                     </div>
                     @if(request('type')) <input type="hidden" name="type" value="{{ request('type') }}"> @endif
                     @if(request('category_id')) <input type="hidden" name="category_id" value="{{ request('category_id') }}"> @endif
@@ -179,7 +180,7 @@
 
             <div class="row g-4">
                 @forelse($results as $item)
-                    <div class="col-md-6 col-xl-4">
+                    <div class="col-md-6 col-xl-4 mt-4">
                         <div class="card catalog-card h-100 border-0 shadow-sm overflow-hidden transition-all">
                             <!-- Card Image -->
                             <div class="position-relative card-img-wrapper">
@@ -228,7 +229,7 @@
                     </div>
                 @empty
                     <div class="col-12 py-5 text-center">
-                        <div class="empty-state py-5">
+                        <div class="empty-state">
                             <i class="bi bi-search display-1 text-muted opacity-25 mb-4 d-block"></i>
                             <h4>No matching initiatives found</h4>
                             <p class="text-muted">Try adjusting your filters or search terms.</p>

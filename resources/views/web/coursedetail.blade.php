@@ -245,9 +245,13 @@
                             @endif
                         </div>
 
-                        <h1 class="hero-title">{{ $course->name }}</h1>
+                        <h1 class="hero-title fs-5 fs-sm-4 fs-md-2 fs-lg-1">{{ $course->name }}</h1>
+                        {{-- <h1 class="hero-title">{{ $course->name }}</h1> --}}
 
-                        <p class="text-muted lead mb-4">
+                        {{-- <p class="text-muted lead mb-4">
+                            {{ $course->short_description ? Str::limit(strip_tags($course->short_description), 200) : 'Embark on a journey of professional growth with this comprehensive course designed for industry success.' }}
+                        </p> --}}
+                        <p class="text-muted lead mb-4 fs-6 fs-md-4 fs-lg-3">
                             {{ $course->short_description ? Str::limit(strip_tags($course->short_description), 200) : 'Embark on a journey of professional growth with this comprehensive course designed for industry success.' }}
                         </p>
 
@@ -281,10 +285,10 @@
                                 <i class="bi bi-star-fill text-warning"></i>
                                 <span>{{ $course->review_stars ?? '4.5' }} ({{ $course->review_count ?? '120+' }} Reviews)</span>
                             </div>
-                            <div class="hero-meta-item">
+                            {{-- <div class="hero-meta-item">
                                 <i class="bi bi-people-fill"></i>
                                 <span>{{ ($course->enrollment_count ?? 0) }}+ Enrolled</span>
-                            </div>
+                            </div> --}}
                         </div>
 
                         <div class="d-flex flex-wrap gap-3 mt-4">
@@ -303,7 +307,7 @@
                 </div>
 
                 <!-- Course Image/Gallery -->
-                <div class="col-lg-6">
+                {{-- <div class="col-lg-6">
                     <div class="course-gallery-wrapper">
                         <div id="courseGalleryCarousel" class="carousel slide" data-bs-ride="carousel">
                             <div class="carousel-inner bg-light">
@@ -326,6 +330,74 @@
                                                  class="d-block w-100"
                                                  alt="Gallery Image"
                                                  style="height: 450px; object-fit: contain;"
+                                                 onerror="this.src='{{ asset('resource/web/assets/media/default/default-img.png') }}'">
+                                            @if($course->paid_type->value == 'free')
+                                                <div class="position-absolute top-0 end-0 m-3 badge bg-success fs-6 shadow">Free</div>
+                                            @elseif($course->paid_type->value == 'paid')
+                                                <div class="position-absolute top-0 end-0 m-3 badge bg-warning text-dark fs-6 shadow">Paid</div>
+                                            @endif
+                                        </div>
+                                    @endforeach
+                                @endif
+                            </div>
+                            @if (count($course->gallery) > 0)
+                                <button class="carousel-control-prev" type="button" data-bs-target="#courseGalleryCarousel" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon bg-dark rounded-circle p-3" aria-hidden="true" style="background-color: rgba(0,0,0,0.3) !important"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#courseGalleryCarousel" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon bg-dark rounded-circle p-3" aria-hidden="true" style="background-color: rgba(0,0,0,0.3) !important"></span>
+                                    <span class="visually-hidden">Next</span>
+                                </button>
+                            @endif
+                        </div>
+                    </div>
+                </div> --}}
+             <div class="col-lg-6">
+                 <style>
+                        /* Image styling */
+                        .course-img {
+                          height: 500px; 
+                          object-fit: contain;"
+                        }
+
+                        /* Mobile view only */
+                        @media (max-width: 576px) {
+                            .course-img {
+                                height: 500px;
+                                max-height: 250px;
+                                object-fit: cover;
+                            }
+                        }
+
+                        /* Optional UI improvement */
+                        /* .course-gallery-wrapper {
+                            border-radius: 12px;
+                            overflow: hidden;
+                        } */
+                    </style>
+                    <div class="course-gallery-wrapper">
+                        <div id="courseGalleryCarousel" class="carousel slide" data-bs-ride="carousel">
+                            <div class="carousel-inner bg-light">
+                                <div class="carousel-item active">
+                                    <img src="{{ $course->image ? asset($course->image) : asset('resource/web/assets/media/default/default-img.png') }}"
+                                         class="d-block w-100"
+                                         alt="{{ $course->name }}"
+                                         {{-- style="height: 450px; object-fit: contain;" --}}
+                                         onerror="this.src='{{ asset('resource/web/assets/media/default/default-img.png') }}'">
+                                    @if($course->paid_type->value == 'free')
+                                        <div class="position-absolute top-0 end-0 m-3 badge bg-success fs-6 shadow">Free</div>
+                                    @elseif($course->paid_type->value == 'paid')
+                                        <div class="position-absolute top-0 end-0 m-3 badge bg-warning text-dark fs-6 shadow">Paid</div>
+                                    @endif
+                                </div>
+                                @if (count($course->gallery) > 0)
+                                    @foreach ($course->gallery as $galleryImage)
+                                        <div class="carousel-item">
+                                            <img src="{{ asset($galleryImage) }}"
+                                                 class="d-block w-100"
+                                                 alt="Gallery Image"
+                                                 {{-- style="height: 450px; object-fit: contain;" --}}
                                                  onerror="this.src='{{ asset('resource/web/assets/media/default/default-img.png') }}'">
                                             @if($course->paid_type->value == 'free')
                                                 <div class="position-absolute top-0 end-0 m-3 badge bg-success fs-6 shadow">Free</div>

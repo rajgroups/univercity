@@ -388,15 +388,32 @@
                         <h5 class="card-title mb-0"><i class="bi bi-bullseye me-2 text-primary"></i>Targeting & Logistics</h5>
                     </div>
                     <div class="card-body p-4">
-                        <div class="mb-3">
+                        {{-- <div class="mb-3">
                              <label class="form-label fw-bold">Payment Type <span class="text-danger">*</span></label>
                              <select name="paid_type" class="form-select">
                                 <option value="free" {{ old('paid_type', 'free') == 'free' ? 'selected' : '' }}>Free</option>
                                 <option value="paid" {{ old('paid_type') == 'paid' ? 'selected' : '' }}>Paid</option>
                                 <option value="na" {{ old('paid_type') == 'na' ? 'selected' : '' }}>N/A</option>
                              </select>
-                        </div>
+                        </div> --}}
+                      <div class="mb-3">
+                        <label class="form-label fw-bold">
+                            Payment Type <span class="text-danger">*</span>
+                        </label>
 
+                        <select name="paid_type" id="paid_type" class="form-select">
+                            <option value="free" {{ old('paid_type', 'free') == 'free' ? 'selected' : '' }}>Free</option>
+                            <option value="paid" {{ old('paid_type') == 'paid' ? 'selected' : '' }}>Paid</option>
+                            <option value="na" {{ old('paid_type') == 'na' ? 'selected' : '' }}>N/A</option>
+                        </select>
+                    </div>
+
+                    <!-- Price Input -->
+                    <div class="mb-3 d-none" id="priceBox">
+                        <label class="form-label fw-bold">Course Price</label>
+                        <input type="text" name="price" class="form-control" placeholder="Enter price">
+                    </div>
+  
                         <div class="mb-3">
                             <label class="form-label fw-bold">Mode of Study <span class="text-danger">*</span></label>
                             <select name="mode_of_study" class="form-select">
@@ -664,4 +681,36 @@
             });
         });
     </script>
+<script>
+const paidType = document.getElementById('paid_type');
+const priceBox = document.getElementById('priceBox');
+const priceInput = document.getElementById('priceInput');
+
+function togglePrice() {
+    if (paidType.value === 'paid') {
+        priceBox.classList.remove('d-none');
+        priceInput.required = true;
+    } else {
+        priceBox.classList.add('d-none');
+        priceInput.required = false;
+    }
+}
+
+// Run when dropdown changes
+paidType.addEventListener('change', togglePrice);
+
+// Run once on page load
+togglePrice();
+</script>
+<script>
+$(document).ready(function () {
+    $('#paid_type').on('change', function () {
+        if ($(this).val() === 'paid') {
+            $('#priceBox').removeClass('d-none');
+        } else {
+            $('#priceBox').addClass('d-none');
+        }
+    }).trigger('change');
+});
+</script>
 @endpush
