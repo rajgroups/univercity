@@ -27,24 +27,24 @@
 
     {{-- Success Message --}}
     @if (session('success'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            {{ session('success') }}
+        <div class="alert alert-success alert-dismissible fade show project-form-alert" role="alert">
+            <i class="bi bi-check-circle me-2"></i>{{ session('success') }}
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     @endif
 
     {{-- Error Message (Session) --}}
     @if (session('error'))
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            {{ session('error') }}
+        <div class="alert alert-danger alert-dismissible fade show project-form-alert" role="alert">
+            <i class="bi bi-exclamation-triangle me-2"></i>{{ session('error') }}
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     @endif
 
     {{-- Error Message --}}
     @if ($errors->any())
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <strong>Please fix the following errors:</strong>
+        <div class="alert alert-danger alert-dismissible fade show project-form-alert" role="alert">
+            <strong><i class="bi bi-exclamation-circle me-2"></i>Please fix the following errors:</strong>
             <ul class="mb-0">
                 @foreach ($errors->all() as $error)
                     <li>{{ $error }}</li>
@@ -192,7 +192,7 @@
                                 <label class="form-label small text-muted text-uppercase fw-bold">Project ID</label>
                                 <input type="text" class="form-control form-control-sm fw-bold text-dark"
                                     name="project_code" value="{{ old('project_code', $project->project_code) }}"
-                                    readonly>
+                                    readonly required>
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label small text-muted text-uppercase fw-bold">Current Status</label>
@@ -206,21 +206,39 @@
                                 </select>
                             </div>
                             <div class="col-md-4">
-                                <label class="form-label small text-muted text-uppercase fw-bold">Location Scope</label>
-                                <select name="location_type" class="form-select form-select-sm select2">
+                                @php
+                                    $locationTypeValue = strtoupper(old('location_type', $project->location_type ?? ''));
+                                    $locationTypeMap = [
+                                        'RURAL' => 'RUR',
+                                        'URBAN' => 'URB',
+                                        'METRO' => 'MET',
+                                        'MIXED' => 'MIX',
+                                    ];
+                                    if (isset($locationTypeMap[$locationTypeValue])) {
+                                        $locationTypeValue = $locationTypeMap[$locationTypeValue];
+                                    }
+                                @endphp
+                                <label class="form-label small text-muted text-uppercase fw-bold">Location Type <span
+                                        class="text-danger">*</span></label>
+                                <select name="location_type"
+                                    class="form-select form-select-sm select2 @error('location_type') is-invalid @enderror" required>
+                                    <option value="">Select Location Type</option>
                                     <option value="RUR"
-                                        {{ old('location_type', $project->location_type) == 'RUR' ? 'selected' : '' }}>
-                                        Rural</option>
+                                        {{ $locationTypeValue == 'RUR' ? 'selected' : '' }}>
+                                        Rural (RUR)</option>
                                     <option value="URB"
-                                        {{ old('location_type', $project->location_type) == 'URB' ? 'selected' : '' }}>
-                                        Urban</option>
+                                        {{ $locationTypeValue == 'URB' ? 'selected' : '' }}>
+                                        Urban (URB)</option>
                                     <option value="MET"
-                                        {{ old('location_type', $project->location_type) == 'MET' ? 'selected' : '' }}>
-                                        Metro</option>
+                                        {{ $locationTypeValue == 'MET' ? 'selected' : '' }}>
+                                        Metro (MET)</option>
                                     <option value="MIX"
-                                        {{ old('location_type', $project->location_type) == 'MIX' ? 'selected' : '' }}>
-                                        Mixed</option>
+                                        {{ $locationTypeValue == 'MIX' ? 'selected' : '' }}>
+                                        Mixed (MIX)</option>
                                 </select>
+                                @error('location_type')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
                             </div>
                         </div>
                         <hr class="mb-4">
@@ -230,7 +248,7 @@
                                     <label class="form-label">Project Title <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control @error('title') is-invalid @enderror"
                                         name="title" value="{{ old('title', $project->title) }}"
-                                        placeholder="Enter Official Project Title">
+                                        placeholder="Enter Official Project Title" required>
                                     @error('title')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -257,7 +275,7 @@
                                     <label class="form-label">Slug <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control @error('slug') is-invalid @enderror"
                                         name="slug" value="{{ old('slug', $project->slug) }}"
-                                        placeholder="URL-friendly version">
+                                        placeholder="URL-friendly version" required>
                                     @error('slug')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -268,7 +286,7 @@
                                 <div class="mb-3">
                                     <label class="form-label">Category <span class="text-danger">*</span></label>
                                     <select name="category_id"
-                                        class="form-select select2 @error('category_id') is-invalid @enderror">
+                                        class="form-select select2 @error('category_id') is-invalid @enderror" required>
                                         <option value="">Select Category</option>
                                         @if (isset($categories) && $categories->count())
                                             @foreach ($categories as $category)
@@ -292,7 +310,7 @@
                             <label for="short_description" class="form-label">Short Description <span
                                     class="text-danger">*</span></label>
                             <textarea class="form-control @error('short_description') is-invalid @enderror" name="short_description"
-                                id="short_description" rows="3" placeholder="Scope of Project / Outline of Intention (2-3 lines)">{{ old('short_description', $project->short_description) }}</textarea>
+                                id="short_description" rows="3" placeholder="Scope of Project / Outline of Intention (2-3 lines)" required>{{ old('short_description', $project->short_description) }}</textarea>
                             @error('short_description')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -391,7 +409,7 @@
                                     <input type="date"
                                         class="form-control @error('planned_start_date') is-invalid @enderror"
                                         name="planned_start_date"
-                                        value="{{ old('planned_start_date', $project->planned_start_date ? $project->planned_start_date->format('Y-m-d') : '') }}">
+                                        value="{{ old('planned_start_date', $project->planned_start_date ? $project->planned_start_date->format('Y-m-d') : '') }}" required>
                                     @error('planned_start_date')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -787,7 +805,7 @@
                                     <label class="form-label">Problem / Need Statement <span
                                             class="text-danger">*</span></label>
                                     <textarea class="form-control @error('problem_statement') is-invalid @enderror" name="problem_statement"
-                                        rows="3" placeholder="Describe the problem or need this project addresses">{{ old('problem_statement', $project->problem_statement) }}</textarea>
+                                        rows="3" placeholder="Describe the problem or need this project addresses" required>{{ old('problem_statement', $project->problem_statement) }}</textarea>
                                     @error('problem_statement')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -1484,7 +1502,7 @@
                                     <label class="form-label">Sustainability Plan <span
                                             class="text-danger">*</span></label>
                                     <textarea class="form-control @error('sustainability_plan') is-invalid @enderror" name="sustainability_plan"
-                                        rows="3" placeholder="Ownership after project completion">{{ old('sustainability_plan', $project->sustainability_plan) }}</textarea>
+                                        rows="3" placeholder="Ownership after project completion" required>{{ old('sustainability_plan', $project->sustainability_plan) }}</textarea>
                                     @error('sustainability_plan')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -1857,7 +1875,7 @@
                             <div class="mb-3">
                                 <label class="form-label">CSR Invitation <span class="text-danger">*</span></label>
                                 <textarea class="form-control @error('csr_invitation') is-invalid @enderror" name="csr_invitation" rows="4"
-                                    placeholder="e.g., We seek funding from CSR...">{{ old('csr_invitation', $project->csr_invitation) }}</textarea>
+                                    placeholder="e.g., We seek funding from CSR..." required>{{ old('csr_invitation', $project->csr_invitation) }}</textarea>
                                 @error('csr_invitation')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -3080,20 +3098,21 @@
             // Location type toggle
             function toggleLocationType() {
                 let type = $('#target_location_type').val();
-                if (type === 'single') {
-                    $('#single_location_section').show(); // or .removeClass('d-none')
-                    $('#multiple_locations_section').hide();
-                } else if (type === 'multiple') {
-                    $('#single_location_section').hide();
-                    $('#multiple_locations_section').show();
-                } else {
-                    $('#single_location_section').hide();
-                    $('#multiple_locations_section').hide();
-                }
+                let showSingle = type === 'single';
+                let showMultiple = type === 'multiple';
+
+                $('#single_location_section')
+                    .toggle(showSingle)
+                    .find(':input')
+                    .prop('disabled', !showSingle);
+
+                $('#multiple_locations_section')
+                    .toggle(showMultiple)
+                    .find(':input')
+                    .prop('disabled', !showMultiple);
             }
 
-            $('#target_location_type').on('change', toggleLocationType);
-            // Initialize on load
+            $(document).on('change select2:select select2:clear', '#target_location_type', toggleLocationType);
             toggleLocationType();
 
             // Alignment categories toggle (redundant handled above)
@@ -3139,6 +3158,10 @@
 
             // Add location
             $('#add_location').on('click', function() {
+                if ($('#target_location_type').val() !== 'multiple') {
+                    $('#target_location_type').val('multiple').trigger('change');
+                }
+
                 let html = `
                 <div class="location-group mb-3 border p-3">
                     <div class="row">
@@ -3483,9 +3506,10 @@
             // Initialize based on existing values
             calculateDuration();
 
-            // Auto-show tabs that have validation errors
-            $('.is-invalid').each(function() {
-                let tabPane = $(this).closest('.tab-pane');
+            // Auto-show the first tab that has validation errors and bring the message into view.
+            let firstInvalid = $('.is-invalid:first');
+            if (firstInvalid.length) {
+                let tabPane = firstInvalid.closest('.tab-pane');
                 if (tabPane.length) {
                     let tabId = tabPane.attr('id');
                     let tabButton = $(`button[data-bs-target="#${tabId}"]`);
@@ -3494,7 +3518,22 @@
                         tab.show();
                     }
                 }
-            });
+            }
+
+            if ($('.project-form-alert').length) {
+                $('.project-form-alert:first')[0].scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center'
+                });
+            } else if (firstInvalid.length) {
+                setTimeout(function() {
+                    firstInvalid[0].scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'center'
+                    });
+                    firstInvalid.trigger('focus');
+                }, 250);
+            }
             // Stage Stepper Logic
             function updateStageUI(stage) {
                 // Update Hidden Input

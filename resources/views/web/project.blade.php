@@ -492,7 +492,7 @@
                 </div>
 
                 <!-- Project Title -->
-                <h1 class="display-4 fw-bold mb-3 text-white">{{ $project->title }}</h1>
+                <h1 class="font-weight-bold display-6 fw-bold mb-3 text-white">{{ $project->title }}</h1>
 
                 @if($project->subtitle)
                 <p class="lead mb-4 text-white">{{ $project->subtitle }}</p>
@@ -501,7 +501,7 @@
                 <!-- Quick Stats Cards -->
                 <div class="row g-3 mt-4">
                     <div class="col-md-4">
-                        <div class="card bg-white bg-opacity-10 border-0">
+                        <div class="card bg-white bg-opacity-10 border-0 h-100">
                             <div class="card-body py-3">
                                 <div class="d-flex align-items-center">
                                     <div class="bg-primary bg-opacity-25 rounded-circle p-2 me-3">
@@ -517,7 +517,7 @@
                     </div>
 
                     <div class="col-md-4">
-                        <div class="card bg-white bg-opacity-10 border-0">
+                        <div class="card bg-white bg-opacity-10 border-0 h-100">
                             <div class="card-body py-3">
                                 <div class="d-flex align-items-center">
                                     <div class="bg-success bg-opacity-25 rounded-circle p-2 me-3">
@@ -526,7 +526,7 @@
                                     <div>
                                         <small class="text-black-50 d-block">LOCATION</small>
                                         <strong class="text-black fs-6">
-                                            {{ Str::limit($project->resolved_location, 10) }}
+                                            {{ Str::limit($project->resolved_location, 25) }}
                                         </strong>
                                     </div>
                                 </div>
@@ -535,7 +535,7 @@
                     </div>
 
                     <div class="col-md-4">
-                        <div class="card bg-white bg-opacity-10 border-0">
+                        <div class="card bg-white bg-opacity-10 border-0 h-100">
                             <div class="card-body py-3">
                                 <div class="d-flex align-items-center">
                                     <div class="bg-info bg-opacity-25 rounded-circle p-2 me-3">
@@ -560,12 +560,7 @@
         </div>
     </div>
 
-    <!-- Scroll Indicator -->
-    <div class="position-absolute bottom-0 start-0 end-0 text-center pb-3">
-        <a href="#main-content" class="text-black text-decoration-none">
-            <i class="bi bi-chevron-down fs-4 animate-bounce"></i>
-        </a>
-    </div>
+    <!-- Scroll Indicator Removed -->
 </div>
 
 <!-- Main Content -->
@@ -954,6 +949,93 @@
                             </div>
                             @endif
 
+                               <!-- Location Details Section -->
+                            @if($project->target_location_type || $project->location_summary)
+                            <div class="mb-5">
+                                <h5 class="fw-bold mb-3 text-primary">
+                                    <i class="bi bi-geo-alt me-2"></i>Project Location
+                                </h5>
+                                <div class="card border-0 shadow-sm">
+                                    <div class="card-body p-4">
+                                        @if($project->target_location_type == 'single')
+                                            <h6 class="fw-bold mb-3">Single Location</h6>
+                                            <ul class="list-group list-group-flush mb-4">
+                                                @if($project->pincode)
+                                                <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-2">
+                                                    <span>Pincode:</span> <strong>{{ $project->pincode }}</strong>
+                                                </li>
+                                                @endif
+                                                @if($project->state)
+                                                <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-2">
+                                                    <span>State:</span> <strong>{{ $project->state }}</strong>
+                                                </li>
+                                                @endif
+                                                @if($project->district)
+                                                <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-2">
+                                                    <span>District:</span> <strong>{{ $project->district }}</strong>
+                                                </li>
+                                                @endif
+                                                @if($project->taluk)
+                                                <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-2">
+                                                    <span>Taluk:</span> <strong>{{ $project->taluk }}</strong>
+                                                </li>
+                                                @endif
+                                                @if($project->panchayat)
+                                                <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-2">
+                                                    <span>Panchayat:</span> <strong>{{ $project->panchayat }}</strong>
+                                                </li>
+                                                @endif
+                                                @if($project->building_name)
+                                                <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-2">
+                                                    <span>Building Name:</span> <strong>{{ $project->building_name }}</strong>
+                                                </li>
+                                                @endif
+                                                @if($project->gps_coordinates)
+                                                <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-2">
+                                                    <span>GPS Coordinates:</span> <strong>{{ $project->gps_coordinates }}</strong>
+                                                </li>
+                                                @endif
+                                            </ul>
+                                        @elseif($project->target_location_type == 'multiple' && !empty($project->multiple_locations))
+                                            <h6 class="fw-bold mb-3">Multiple Locations</h6>
+                                            @foreach($project->multiple_locations as $index => $location)
+                                                <div class="card bg-light mb-3">
+                                                    <div class="card-body py-3">
+                                                        <h6 class="fw-bold mb-2">Location {{ $index + 1 }}</h6>
+                                                        <ul class="list-group list-group-flush bg-light">
+                                                            @if(isset($location['pincode']))
+                                                            <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-1 bg-light">
+                                                                <span>Pincode:</span> <strong>{{ $location['pincode'] }}</strong>
+                                                            </li>
+                                                            @endif
+                                                            @if(isset($location['state']))
+                                                            <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-1 bg-light">
+                                                                <span>State:</span> <strong>{{ $location['state'] }}</strong>
+                                                            </li>
+                                                            @endif
+                                                            @if(isset($location['district']))
+                                                            <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-1 bg-light">
+                                                                <span>District:</span> <strong>{{ $location['district'] }}</strong>
+                                                            </li>
+                                                            @endif
+                                                            @if(isset($location['taluk']))
+                                                            <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-1 bg-light">
+                                                                <span>Taluk:</span> <strong>{{ $location['taluk'] }}</strong>
+                                                            </li>
+                                                            @endif
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        @endif
+
+                                        @if($project->location_summary)
+                                            <p class="text-muted small mt-3 mb-0"><strong>Summary:</strong> {{ $project->location_summary }}</p>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                            @endif
                             <!-- Donut Metrics -->
                             @if(!empty($project->donut_metrics))
                             <div class="mb-5">
@@ -5240,24 +5322,7 @@ document.addEventListener('DOMContentLoaded', function() {
 </div>
 
 @if($project->stage == 'upcoming' && isset($surveys) && $surveys->count() > 0)
-<!-- Floating Survey Button -->
-<div class="position-fixed animate__animated animate__fadeInUp" style="bottom: 30px; right: 30px; z-index: 9999;">
-    <button type="button" 
-            class="btn btn-primary rounded-circle shadow-lg d-flex align-items-center justify-content-center position-relative"
-            style="width: 65px; height: 65px; border: 4px solid rgba(255,255,255,0.3);"
-            data-bs-toggle="modal" 
-            data-bs-target="#surveyModal">
-        <i class="bi bi-clipboard-data-fill fs-3"></i>
-        <span class="position-absolute top-0 start-100 translate-middle p-2 bg-danger border border-light rounded-circle animate__animated animate__pulse animate__infinite">
-            <span class="visually-hidden">New Survey</span>
-        </span>
-    </button>
-    <div class="bg-white px-3 py-1 rounded shadow-sm mt-2 text-center small fw-bold text-primary animate__animated animate__fadeIn animate__delay-1s border">
-        Participate
-    </div>
-</div>
-
-<!-- Survey Modal -->
+<!-- Floating Survey Button Removed --><!-- Survey Modal -->
 <div class="modal fade" id="surveyModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content border-0 shadow-lg">
@@ -5307,7 +5372,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                                             <span class="fw-bold text-dark">{{ $question->question_text }}</span>
                                                             @if($question->is_required) <span class="text-danger ms-1">*</span> @endif
                                                         </div>
-                                                        
+
                                                         <div class="ms-0 ms-md-4">
                                                             @if($userResponse)
                                                                 <div class="p-3 bg-light rounded text-muted border-start border-4 border-success">

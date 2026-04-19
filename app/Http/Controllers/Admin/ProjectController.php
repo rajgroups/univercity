@@ -71,28 +71,47 @@ class ProjectController extends Controller
      */
     public function create()
     {
-        $categories = Category::where('status', 1)->get();
+        // dd('hi');
+        $categories = Category::where('status', 1)->where('type',1)->get();
+        // dd($categories);
+        $schemes = Announcement::where('type', 2)->where('status', 1)->get(['id', 'title', 'slug']);
+
+        return view('admin.project.add', compact('categories', 'schemes'));
+    }
+
+    /**
+     * AJAX: Get next project code for a given location type.
+     * Each location type (RUR, URB, MET, MIX) has its own separate sequential numbering.
+     * Format: ISICO-YYYY-LOC-XXXX
+     */
+    public function getNextProjectCode(Request $request)
+    {
+        $locationType = strtoupper($request->query('location_type', ''));
+        $validTypes   = ['RUR', 'URB', 'MET', 'MIX'];
+
+        if (!in_array($locationType, $validTypes)) {
+            return response()->json(['error' => 'Invalid location type'], 422);
+        }
 
         $year = date('Y');
-        $locationCode = 'LOC';
 
+        // Find the last project for THIS specific location type in the current year
         $lastProject = Project::whereYear('created_at', $year)
+            ->where('location_type', $locationType)
             ->orderBy('id', 'desc')
             ->first();
 
-        if ($lastProject) {
-            $lastCode = $lastProject->project_code;
-            $lastSequence = (int) substr($lastCode, -4);
+        if ($lastProject && $lastProject->project_code) {
+            // Extract last 4-digit sequence from existing code
+            $lastSequence = (int) substr($lastProject->project_code, -4);
             $sequence = $lastSequence + 1;
         } else {
             $sequence = 1;
         }
 
-        $projectCode = 'ISICO-' . $year . '-' . $locationCode . '-' . str_pad($sequence, 4, '0', STR_PAD_LEFT);
+        $projectCode = 'ISICO-' . $year . '-' . $locationType . '-' . str_pad($sequence, 4, '0', STR_PAD_LEFT);
 
-        $schemes = Announcement::where('type', 2)->where('status', 1)->get(['id', 'title', 'slug']);
-
-        return view('admin.project.add', compact('categories', 'projectCode', 'schemes'));
+        return response()->json(['project_code' => $projectCode]);
     }
 
     /**
@@ -235,13 +254,14 @@ class ProjectController extends Controller
             $this->saveBeneficiaries($request, $project);
 
             DB::commit();
-            // dd('hi');
-             notyf()->addSuccess('Project created successfully!');
+            notyf()->addSuccess('Project updated successfully!');
             Flasher::addSuccess('Project updated successfully!');
-            return redirect()->route('admin.project.index')->with('success','Project created successfully');
+            return redirect()
+                ->route('admin.project.edit', $project->id)
+                ->with('success', 'Project updated successfully!');
         } catch (\Exception $e) {
             DB::rollBack();
-            notyf()->addSuccess('Project update error: ' . $e->getMessage());
+            notyf()->addError('Project update error: ' . $e->getMessage());
             Log::error('Project update error: ' . $e->getMessage());
             return redirect()->back()
                 ->withInput()
@@ -272,6 +292,21 @@ class ProjectController extends Controller
      */
     private function validateProject(Request $request, $action = 'store', $project = null)
     {
+        // Normalize location type before validation to avoid legacy value mismatches.
+        if ($request->filled('location_type')) {
+            $locationType = strtoupper(trim((string) $request->input('location_type')));
+            $locationTypeMap = [
+                'RURAL' => 'RUR',
+                'URBAN' => 'URB',
+                'METRO' => 'MET',
+                'MIXED' => 'MIX',
+            ];
+            if (isset($locationTypeMap[$locationType])) {
+                $locationType = $locationTypeMap[$locationType];
+            }
+            $request->merge(['location_type' => $locationType]);
+        }
+
         $rules = [
             'project_code' => ['required', 'string', 'max:100'],
             'location_type' => ['required', 'in:RUR,URB,MET,MIX'],
@@ -432,6 +467,27 @@ class ProjectController extends Controller
             }
         }
 
+        // Keep single and multiple location data mutually exclusive.
+        if ($request->input('target_location_type') === 'single') {
+            $request->merge(['multiple_locations' => []]);
+        }
+
+        if ($request->input('target_location_type') === 'multiple') {
+            $request->merge([
+                'pincode' => null,
+                'state' => null,
+                'district' => null,
+                'taluk' => null,
+                'panchayat' => null,
+                'building_name' => null,
+                'gps_coordinates' => null,
+            ]);
+
+            if (!$request->has('multiple_locations') || !is_array($request->input('multiple_locations'))) {
+                $request->merge(['multiple_locations' => []]);
+            }
+        }
+
         // Handle alignment categories
         if ($request->has('alignment_categories')) {
             $alignmentCategories = $request->input('alignment_categories');
@@ -512,15 +568,12 @@ class ProjectController extends Controller
 
         foreach ($arrayFields as $field) {
             if (isset($data[$field]) && is_array($data[$field])) {
-                $data[$field] = json_encode($data[$field]);
+                $data[$field] = array_values($data[$field]);
             } elseif (isset($data[$field]) && is_string($data[$field])) {
-                // If it's already a string, check if it's valid JSON
                 $decoded = json_decode($data[$field], true);
-                if (json_last_error() !== JSON_ERROR_NONE) {
-                    $data[$field] = json_encode([]);
-                }
+                $data[$field] = is_array($decoded) ? array_values($decoded) : [];
             } else {
-                $data[$field] = json_encode([]);
+                $data[$field] = [];
             }
         }
 
@@ -830,7 +883,7 @@ class ProjectController extends Controller
 
             if (request()->wantsJson()) {
                 return response()->json([
-                    'success' => true, 
+                    'success' => true,
                     'message' => 'Project status updated successfully!',
                     'status' => $project->status
                 ]);
@@ -841,7 +894,7 @@ class ProjectController extends Controller
         } catch (\Exception $e) {
             if (request()->wantsJson()) {
                 return response()->json([
-                    'success' => false, 
+                    'success' => false,
                     'message' => 'Error updating project status: ' . $e->getMessage()
                 ], 500);
             }
@@ -1099,7 +1152,7 @@ class ProjectController extends Controller
 
             // Group by category to identify duplicates
             $existingGrouped = $allExisting->groupBy('category');
-            
+
             $processedIds = [];
 
             // If input exists (even if empty array, though Request::has usually implies keys exist)
@@ -1118,7 +1171,7 @@ class ProjectController extends Controller
                             // Category exists in DB
                             // Get all rows for this category
                             $rows = $existingGrouped->get($category);
-                            
+
                             // Pick the FIRST one to update (Consolidate to this one)
                             $ben = $rows->first();
                             $ben->target_number = $target;
@@ -1140,9 +1193,9 @@ class ProjectController extends Controller
                         }
                     }
                 }
-            } 
+            }
             // If the project is NOT upcoming (meaning ongoing/completed), and the input is COMPLETELY missing,
-            // it likely means the user deleted ALL rows (empty form). 
+            // it likely means the user deleted ALL rows (empty form).
             // However, verify if this request actually intended to update beneficiaries.
             // Since this is the EDIT form summary update, we should trust the absence if stage is relevant.
             // But to be safe vs partial updates, we usually rely on "has".
@@ -1152,9 +1205,9 @@ class ProjectController extends Controller
                  // Clear all if upcoming and no input
                  $processedIds = []; // This will cause all to be deleted below
             } else {
-                 // If ongoing/completed and no input, we assume NO CHANGES / Keep existing? 
+                 // If ongoing/completed and no input, we assume NO CHANGES / Keep existing?
                  // OR we assume Delete All?
-                 // Standard HTML: missing input = empty. 
+                 // Standard HTML: missing input = empty.
                  // If we assume "Delete All", we set filteredIds = [].
                  // If we assume "No Change", we set filteredIds = all IDs.
                  // Given the "update" nature, if I delete all rows, I expect them gone.
@@ -1166,7 +1219,7 @@ class ProjectController extends Controller
                  // So, if input is missing, we do nothing (preserve all), UNLESS we want to fix duplicates there too?
                  // We'll skip the delete block if input is missing for ongoing.
                  $allExistingIds = $allExisting->pluck('id')->toArray();
-                 $processedIds = $allExistingIds; 
+                 $processedIds = $allExistingIds;
             }
 
             // Execute Delete Cleanup
@@ -1199,7 +1252,7 @@ class ProjectController extends Controller
                              'reached_number' => $val,
                              'date' => $date
                          ]);
-                         
+
                          // Update Current
                          $ben->reached_number = $val;
                          $ben->save();

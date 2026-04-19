@@ -1,24 +1,25 @@
 @extends('layouts.admin.app')
 @section('content')
-    <div class="page-header">
+    <div class="page-header project-page-header">
         <div class="add-item d-flex">
             <div class="page-title">
+                <span class="project-eyebrow"><i class="bi bi-kanban me-1"></i> Project Builder</span>
                 <h4 class="fw-bold">Create Project</h4>
                 <h6>Create new Project - Starts in Upcoming Stage</h6>
             </div>
         </div>
         <ul class="table-top-head">
             <li>
-                <a data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Refresh"><i class="ti ti-refresh"></i></a>
+                <a data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Refresh"><i class="bi bi-arrow-clockwise"></i></a>
             </li>
             <li>
                 <a data-bs-toggle="tooltip" data-bs-placement="top" id="collapse-header" aria-label="Collapse"><i
-                        class="ti ti-chevron-up"></i></a>
+                        class="bi bi-chevron-up"></i></a>
             </li>
         </ul>
         <div class="page-btn mt-0">
             <a href="{{ route('admin.project.index') }}" class="btn btn-secondary">
-                <i class="feather feather-arrow-left me-2"></i>Back to List
+                <i class="bi bi-arrow-left me-2"></i>Back to List
             </a>
         </div>
     </div>
@@ -52,6 +53,30 @@
         </div>
     @endif
 
+    <div class="project-builder-summary">
+        <div class="summary-card summary-card-primary">
+            <span class="summary-icon"><i class="bi bi-lightning-charge"></i></span>
+            <div>
+                <p>Current Stage</p>
+                <h6>Upcoming Planning</h6>
+            </div>
+        </div>
+        <div class="summary-card summary-card-success">
+            <span class="summary-icon"><i class="bi bi-compass"></i></span>
+            <div>
+                <p>Workflow</p>
+                <h6>7 Guided Sections</h6>
+            </div>
+        </div>
+        <div class="summary-card summary-card-warning">
+            <span class="summary-icon"><i class="bi bi-stars"></i></span>
+            <div>
+                <p>Project ID</p>
+                <h6>Auto Generated</h6>
+            </div>
+        </div>
+    </div>
+
     <form action="{{ route('admin.project.store') }}" method="POST" enctype="multipart/form-data" class="add-product-form"
         id="projectForm">
         @csrf
@@ -69,7 +94,7 @@
                             data-bs-target="#stageSection">
                             <div class="d-flex align-items-center justify-content-between flex-fill">
                                 <h5 class="d-flex align-items-center">
-                                    <i class="feather feather-layers text-primary me-2"></i>
+                                    <i class="bi bi-layers text-primary me-2"></i>
                                     <span>Project Stage: <span class="badge bg-warning text-dark">Upcoming
                                             (Planning)</span></span>
                                 </h5>
@@ -79,31 +104,18 @@
                     <div id="stageSection" class="accordion-collapse collapse show">
                         <div class="accordion-body border-top">
                             <div class="alert alert-info">
-                                <i class="feather feather-info me-2"></i>
+                                <i class="bi bi-info-circle me-2"></i>
                                 <strong>Note:</strong> All projects start in "Upcoming" stage. You can update the stage to
                                 "Ongoing" or "Completed" later with additional details.
                             </div>
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="mb-3">
-                                        <label class="form-label">Project ID <span class="text-danger">*</span></label>
-                                        <input type="text"
-                                            class="form-control @error('project_code') is-invalid @enderror"
-                                            name="project_code" value="{{ old('project_code', $projectCode ?? '') }}"
-                                            placeholder="Auto-generated" readonly>
-                                        @error('project_code')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                        <div class="form-text">Format: ISICO-YYYY-LOC-SEQ</div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="mb-3">
                                         <label class="form-label">Project Location Type <span
                                                 class="text-danger">*</span></label>
-                                        <select name="location_type"
-                                            class="form-select select2 @error('location_type') is-invalid @enderror">
-                                            <option value="">Select Location Type</option>
+                                        <select name="location_type" id="location_type_select"
+                                            class="form-select select2 @error('location_type') is-invalid @enderror" required>
+                                            <option value="">Select Location Type First</option>
                                             <option value="RUR" {{ old('location_type') == 'RUR' ? 'selected' : '' }}>
                                                 Rural (RUR)</option>
                                             <option value="URB" {{ old('location_type') == 'URB' ? 'selected' : '' }}>
@@ -116,7 +128,29 @@
                                         @error('location_type')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
-                                        <div class="form-text">Format: DATE + Project Location Type</div>
+                                        <div class="form-text">Select first — Project ID will be auto-generated based on this</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Project ID <span class="text-danger">*</span>
+                                            <span id="project_code_badge" class="badge ms-2" style="display:none;"></span>
+                                        </label>
+                                        <div class="input-group">
+                                            <input type="text"
+                                                class="form-control @error('project_code') is-invalid @enderror"
+                                                name="project_code" id="project_code_input"
+                                                value="{{ old('project_code', '') }}"
+                                                placeholder="Select Location Type to generate ID"
+                                                readonly required>
+                                            <span class="input-group-text" id="project_code_spinner" style="display:none;">
+                                                <span class="spinner-border spinner-border-sm text-primary" role="status"></span>
+                                            </span>
+                                        </div>
+                                        @error('project_code')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                        <div class="form-text">Format: ISICO-YYYY-LOC-SEQ &nbsp;|&nbsp; Each location type has separate numbering (0001, 0002…)</div>
                                     </div>
                                 </div>
                             </div>
@@ -131,7 +165,7 @@
                             data-bs-target="#basicSection">
                             <div class="d-flex align-items-center justify-content-between flex-fill">
                                 <h5 class="d-flex align-items-center">
-                                    <i class="feather feather-info text-primary me-2"></i>
+                                    <i class="bi bi-info-circle text-primary me-2"></i>
                                     <span>Section 1: Basic Project Details</span>
                                 </h5>
                             </div>
@@ -145,7 +179,7 @@
                                         <label class="form-label">Project Title <span class="text-danger">*</span></label>
                                         <input type="text" class="form-control @error('title') is-invalid @enderror"
                                             name="title" value="{{ old('title') }}"
-                                            placeholder="Enter Official Project Title">
+                                            placeholder="Enter Official Project Title" required>
                                         @error('title')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -172,7 +206,7 @@
                                         <label class="form-label">Slug <span class="text-danger">*</span></label>
                                         <input type="text" class="form-control @error('slug') is-invalid @enderror"
                                             name="slug" value="{{ old('slug') }}"
-                                            placeholder="Auto-generated from title">
+                                            placeholder="Auto-generated from title" required>
                                         @error('slug')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -183,7 +217,7 @@
                                     <div class="mb-3">
                                         <label class="form-label">Category <span class="text-danger">*</span></label>
                                         <select name="category_id"
-                                            class="form-select select2 @error('category_id') is-invalid @enderror">
+                                            class="form-select select2 @error('category_id') is-invalid @enderror" required>
                                             <option value="">Select Category</option>
                                             @if (isset($categories) && $categories->count())
                                                 @foreach ($categories as $category)
@@ -192,16 +226,6 @@
                                                         {{ $category->name }}
                                                     </option>
                                                 @endforeach
-                                            @else
-                                                <option value="education"
-                                                    {{ old('category_id') == 'education' ? 'selected' : '' }}>Education
-                                                </option>
-                                                <option value="shg"
-                                                    {{ old('category_id') == 'shg' ? 'selected' : '' }}>SHG</option>
-                                                <option value="youth"
-                                                    {{ old('category_id') == 'youth' ? 'selected' : '' }}>Youth</option>
-                                                <option value="skill"
-                                                    {{ old('category_id') == 'skill' ? 'selected' : '' }}>Skill</option>
                                             @endif
                                         </select>
                                         @error('category_id')
@@ -217,7 +241,7 @@
                                 <label for="short_description" class="form-label">Short Description <span
                                         class="text-danger">*</span></label>
                                 <textarea class="form-control @error('short_description') is-invalid @enderror" name="short_description"
-                                    id="short_description" rows="3" placeholder="Scope of Project / Outline of Intention (2-3 lines)">{{ old('short_description') }}</textarea>
+                                    id="short_description" rows="3" placeholder="Scope of Project / Outline of Intention (2-3 lines)" required>{{ old('short_description') }}</textarea>
                                 @error('short_description')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -241,10 +265,7 @@
                                         <label class="form-label">Banner Images <span class="text-danger">*</span></label>
                                         <input type="file"
                                             class="form-control @error('banner_images') is-invalid @enderror"
-                                            name="banner_images" accept="image/*" multiple>
-                                        @error('banner_images')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
+                                            name="banner_images" accept="image/*" multiple required>
                                         @error('banner_images')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -258,7 +279,7 @@
                                                 class="text-danger">*</span></label>
                                         <input type="file"
                                             class="form-control @error('thumbnail_image') is-invalid @enderror"
-                                            name="thumbnail_image" accept="image/*">
+                                            name="thumbnail_image" accept="image/*" required>
                                         @error('thumbnail_image')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -275,7 +296,7 @@
                                                 class="text-danger">*</span></label>
                                         <input type="date"
                                             class="form-control @error('planned_start_date') is-invalid @enderror"
-                                            name="planned_start_date" value="{{ old('planned_start_date') }}">
+                                            name="planned_start_date" value="{{ old('planned_start_date') }}" required>
                                         @error('planned_start_date')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -314,7 +335,7 @@
                             data-bs-target="#locationSection">
                             <div class="d-flex align-items-center justify-content-between flex-fill">
                                 <h5 class="d-flex align-items-center">
-                                    <i class="feather feather-map-pin text-primary me-2"></i>
+                                    <i class="bi bi-geo-alt text-primary me-2"></i>
                                     <span>Section 2: Target Location Details</span>
                                 </h5>
                             </div>
@@ -325,9 +346,28 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="mb-3">
+                                        <label class="form-label">Location Coverage Level <span class="text-danger">*</span></label>
+                                        <select name="location_coverage_level" id="location_coverage_level"
+                                            class="form-select select2 @error('location_coverage_level') is-invalid @enderror">
+                                            <option value="">Select Coverage Level</option>
+                                            <option value="village" {{ old('location_coverage_level') == 'village' ? 'selected' : '' }}>Village</option>
+                                            <option value="panchayat" {{ old('location_coverage_level') == 'panchayat' ? 'selected' : '' }}>Panchayat</option>
+                                            <option value="taluk" {{ old('location_coverage_level') == 'taluk' ? 'selected' : '' }}>Taluk</option>
+                                            <option value="district" {{ old('location_coverage_level') == 'district' ? 'selected' : '' }}>District</option>
+                                            <option value="state" {{ old('location_coverage_level') == 'state' ? 'selected' : '' }}>State</option>
+                                            <option value="national" {{ old('location_coverage_level') == 'national' ? 'selected' : '' }}>National</option>
+                                        </select>
+                                        @error('location_coverage_level')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                        <div class="form-text">Select the level that best represents the geographical coverage of this project. Note: Multiple locations can still be added and each will be shown separately on the frontend.</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
                                         <label class="form-label">Location Type <span class="text-danger">*</span></label>
                                         <select name="target_location_type" id="target_location_type"
-                                            class="form-select select2 @error('target_location_type') is-invalid @enderror">
+                                            class="form-select select2 @error('target_location_type') is-invalid @enderror" required>
                                             <option value="">Select Type</option>
                                             <option value="single"
                                                 {{ old('target_location_type') == 'single' ? 'selected' : '' }}>Single
@@ -339,10 +379,13 @@
                                         @error('target_location_type')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
-                                        <div class="form-text">Select whether project has single or multiple locations
-                                        </div>
                                     </div>
                                 </div>
+                            </div>
+
+                            <div class="alert alert-info">
+                                <i class="bi bi-info-circle me-2"></i>
+                                <strong>Frontend Note:</strong> Locations will be displayed in standard address format (Venue, Village, Panchayat, Taluk, District, State, Pin Code)
                             </div>
 
                             <!-- Single Location -->
@@ -350,7 +393,77 @@
                                 style="display: {{ old('target_location_type') == 'single' ? 'block' : 'none' }};">
                                 <h6>Single Location Details</h6>
                                 <div class="row">
-                                    <div class="col-md-3">
+                                    <div class="col-md-4">
+                                        <div class="mb-3">
+                                            <label class="form-label">State <span class="text-danger">*</span></label>
+                                            <input type="text" name="state"
+                                                class="form-control @error('state') is-invalid @enderror"
+                                                value="{{ old('state') }}" placeholder="Enter state name">
+                                            @error('state')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="mb-3">
+                                            <label class="form-label">District <span class="text-danger">*</span></label>
+                                            <input type="text" name="district"
+                                                class="form-control @error('district') is-invalid @enderror"
+                                                value="{{ old('district') }}" placeholder="Enter district name">
+                                            @error('district')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="mb-3">
+                                            <label class="form-label">Taluk / Block</label>
+                                            <input type="text" name="taluk"
+                                                class="form-control @error('taluk') is-invalid @enderror"
+                                                value="{{ old('taluk') }}" placeholder="Enter taluk/block name">
+                                            @error('taluk')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="mb-3">
+                                            <label class="form-label">Panchayat / Local Body</label>
+                                            <input type="text" name="panchayat"
+                                                class="form-control @error('panchayat') is-invalid @enderror"
+                                                value="{{ old('panchayat') }}" placeholder="Enter panchayat name">
+                                            @error('panchayat')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="mb-3">
+                                            <label class="form-label">Village / Area Name</label>
+                                            <input type="text" name="village"
+                                                class="form-control @error('village') is-invalid @enderror"
+                                                value="{{ old('village') }}" placeholder="Enter village/area name">
+                                            @error('village')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="mb-3">
+                                            <label class="form-label">Building / Venue Name</label>
+                                            <input type="text" name="building_name"
+                                                class="form-control @error('building_name') is-invalid @enderror"
+                                                value="{{ old('building_name') }}" placeholder="Enter building/venue name">
+                                            @error('building_name')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
                                         <div class="mb-3">
                                             <label class="form-label">Pin Code</label>
                                             <input type="text" name="pincode"
@@ -361,66 +474,7 @@
                                             @enderror
                                         </div>
                                     </div>
-                                    <div class="col-md-3">
-                                        <div class="mb-3">
-                                            <label class="form-label">State</label>
-                                            <input type="text" name="state"
-                                                class="form-control @error('state') is-invalid @enderror"
-                                                value="{{ old('state') }}" placeholder="Enter state name">
-                                            @error('state')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="mb-3">
-                                            <label class="form-label">District</label>
-                                            <input type="text" name="district"
-                                                class="form-control @error('district') is-invalid @enderror"
-                                                value="{{ old('district') }}" placeholder="Enter district name">
-                                            @error('district')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="mb-3">
-                                            <label class="form-label">Taluk</label>
-                                            <input type="text" name="taluk"
-                                                class="form-control @error('taluk') is-invalid @enderror"
-                                                value="{{ old('taluk') }}" placeholder="Enter taluk name">
-                                            @error('taluk')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label class="form-label">Panchayat</label>
-                                            <input type="text" name="panchayat"
-                                                class="form-control @error('panchayat') is-invalid @enderror"
-                                                value="{{ old('panchayat') }}" placeholder="Enter panchayat name">
-                                            @error('panchayat')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label class="form-label">Building Name</label>
-                                            <input type="text" name="building_name"
-                                                class="form-control @error('building_name') is-invalid @enderror"
-                                                value="{{ old('building_name') }}" placeholder="Enter building name">
-                                            @error('building_name')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12">
+                                    <div class="col-md-8">
                                         <div class="mb-3">
                                             <label class="form-label">GPS Map DIGI PIN (optional)</label>
                                             <input type="text" name="gps_coordinates"
@@ -445,7 +499,77 @@
                                         @foreach (old('multiple_locations') as $index => $location)
                                             <div class="location-group mb-3 border p-3">
                                                 <div class="row">
-                                                    <div class="col-md-3">
+                                                    <div class="col-md-4">
+                                                        <label class="form-label">State <span class="text-danger">*</span></label>
+                                                        <input type="text"
+                                                            name="multiple_locations[{{ $index }}][state]"
+                                                            class="form-control @error('multiple_locations.' . $index . '.state') is-invalid @enderror"
+                                                            value="{{ $location['state'] ?? '' }}"
+                                                            placeholder="State name">
+                                                        @error('multiple_locations.' . $index . '.state')
+                                                            <div class="invalid-feedback">{{ $message }}</div>
+                                                        @enderror
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label class="form-label">District <span class="text-danger">*</span></label>
+                                                        <input type="text"
+                                                            name="multiple_locations[{{ $index }}][district]"
+                                                            class="form-control @error('multiple_locations.' . $index . '.district') is-invalid @enderror"
+                                                            value="{{ $location['district'] ?? '' }}"
+                                                            placeholder="District name">
+                                                        @error('multiple_locations.' . $index . '.district')
+                                                            <div class="invalid-feedback">{{ $message }}</div>
+                                                        @enderror
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label class="form-label">Taluk / Block</label>
+                                                        <input type="text"
+                                                            name="multiple_locations[{{ $index }}][taluk]"
+                                                            class="form-control @error('multiple_locations.' . $index . '.taluk') is-invalid @enderror"
+                                                            value="{{ $location['taluk'] ?? '' }}"
+                                                            placeholder="Taluk/block name">
+                                                        @error('multiple_locations.' . $index . '.taluk')
+                                                            <div class="invalid-feedback">{{ $message }}</div>
+                                                        @enderror
+                                                    </div>
+                                                </div>
+                                                <div class="row mt-2">
+                                                    <div class="col-md-4">
+                                                        <label class="form-label">Panchayat / Local Body</label>
+                                                        <input type="text"
+                                                            name="multiple_locations[{{ $index }}][panchayat]"
+                                                            class="form-control @error('multiple_locations.' . $index . '.panchayat') is-invalid @enderror"
+                                                            value="{{ $location['panchayat'] ?? '' }}"
+                                                            placeholder="Panchayat name">
+                                                        @error('multiple_locations.' . $index . '.panchayat')
+                                                            <div class="invalid-feedback">{{ $message }}</div>
+                                                        @enderror
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label class="form-label">Village / Area Name</label>
+                                                        <input type="text"
+                                                            name="multiple_locations[{{ $index }}][village]"
+                                                            class="form-control @error('multiple_locations.' . $index . '.village') is-invalid @enderror"
+                                                            value="{{ $location['village'] ?? '' }}"
+                                                            placeholder="Village/area name">
+                                                        @error('multiple_locations.' . $index . '.village')
+                                                            <div class="invalid-feedback">{{ $message }}</div>
+                                                        @enderror
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label class="form-label">Building / Venue Name</label>
+                                                        <input type="text"
+                                                            name="multiple_locations[{{ $index }}][building_name]"
+                                                            class="form-control @error('multiple_locations.' . $index . '.building_name') is-invalid @enderror"
+                                                            value="{{ $location['building_name'] ?? '' }}"
+                                                            placeholder="Building/venue name">
+                                                        @error('multiple_locations.' . $index . '.building_name')
+                                                            <div class="invalid-feedback">{{ $message }}</div>
+                                                        @enderror
+                                                    </div>
+                                                </div>
+                                                <div class="row mt-2">
+                                                    <div class="col-md-4">
                                                         <label class="form-label">Pin Code</label>
                                                         <input type="text"
                                                             name="multiple_locations[{{ $index }}][pincode]"
@@ -456,71 +580,18 @@
                                                             <div class="invalid-feedback">{{ $message }}</div>
                                                         @enderror
                                                     </div>
-                                                    <div class="col-md-3">
-                                                        <label class="form-label">State</label>
-                                                        <input type="text"
-                                                            name="multiple_locations[{{ $index }}][state]"
-                                                            class="form-control @error('multiple_locations.' . $index . '.state') is-invalid @enderror"
-                                                            value="{{ $location['state'] ?? '' }}"
-                                                            placeholder="State name">
-                                                        @error('multiple_locations.' . $index . '.state')
-                                                            <div class="invalid-feedback">{{ $message }}</div>
-                                                        @enderror
-                                                    </div>
-                                                    <div class="col-md-3">
-                                                        <label class="form-label">District</label>
-                                                        <input type="text"
-                                                            name="multiple_locations[{{ $index }}][district]"
-                                                            class="form-control @error('multiple_locations.' . $index . '.district') is-invalid @enderror"
-                                                            value="{{ $location['district'] ?? '' }}"
-                                                            placeholder="District name">
-                                                        @error('multiple_locations.' . $index . '.district')
-                                                            <div class="invalid-feedback">{{ $message }}</div>
-                                                        @enderror
-                                                    </div>
-                                                    <div class="col-md-3">
-                                                        <label class="form-label">Taluk</label>
-                                                        <input type="text"
-                                                            name="multiple_locations[{{ $index }}][taluk]"
-                                                            class="form-control @error('multiple_locations.' . $index . '.taluk') is-invalid @enderror"
-                                                            value="{{ $location['taluk'] ?? '' }}"
-                                                            placeholder="Taluk name">
-                                                        @error('multiple_locations.' . $index . '.taluk')
-                                                            <div class="invalid-feedback">{{ $message }}</div>
-                                                        @enderror
-                                                    </div>
-                                                </div>
-                                                <div class="row mt-2">
-                                                    <div class="col-md-6">
-                                                        <label class="form-label">Panchayat</label>
-                                                        <input type="text"
-                                                            name="multiple_locations[{{ $index }}][panchayat]"
-                                                            class="form-control @error('multiple_locations.' . $index . '.panchayat') is-invalid @enderror"
-                                                            value="{{ $location['panchayat'] ?? '' }}"
-                                                            placeholder="Panchayat name">
-                                                        @error('multiple_locations.' . $index . '.panchayat')
-                                                            <div class="invalid-feedback">{{ $message }}</div>
-                                                        @enderror
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <label class="form-label">Building Name</label>
-                                                        <input type="text"
-                                                            name="multiple_locations[{{ $index }}][building_name]"
-                                                            class="form-control @error('multiple_locations.' . $index . '.building_name') is-invalid @enderror"
-                                                            value="{{ $location['building_name'] ?? '' }}"
-                                                            placeholder="Building name">
-                                                        @error('multiple_locations.' . $index . '.building_name')
-                                                            <div class="invalid-feedback">{{ $message }}</div>
-                                                        @enderror
-                                                    </div>
                                                 </div>
                                                 <button type="button"
-                                                    class="btn btn-sm btn-danger mt-2 remove-location">Remove</button>
+                                                    class="btn btn-sm btn-outline-danger mt-2 remove-location">
+                                                    <i class="bi bi-trash me-1"></i>Remove
+                                                </button>
                                             </div>
                                         @endforeach
                                     @endif
                                 </div>
-                                <button type="button" class="btn btn-primary" id="add_location">Add Location</button>
+                                <button type="button" class="btn btn-primary" id="add_location">
+                                    <i class="bi bi-plus-circle me-1"></i>Add Location
+                                </button>
                             </div>
 
                             <div class="row mt-3">
@@ -560,7 +631,7 @@
                             data-bs-target="#strategicSection">
                             <div class="d-flex align-items-center justify-content-between flex-fill">
                                 <h5 class="d-flex align-items-center">
-                                    <i class="feather feather-target text-primary me-2"></i>
+                                    <i class="bi bi-bullseye text-primary me-2"></i>
                                     <span>Section 3: Strategic Goals, Objective & Impact Alignment</span>
                                 </h5>
                             </div>
@@ -574,7 +645,7 @@
                                         <label class="form-label">Problem / Need Statement <span
                                                 class="text-danger">*</span></label>
                                         <textarea class="form-control @error('problem_statement') is-invalid @enderror" name="problem_statement"
-                                            rows="3" placeholder="Describe the problem or need this project addresses">{{ old('problem_statement') }}</textarea>
+                                            rows="3" placeholder="Describe the problem or need this project addresses" required>{{ old('problem_statement') }}</textarea>
                                         @error('problem_statement')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -633,90 +704,17 @@
                                                 </div>
                                                 <div class="col-md-1">
                                                     <button type="button"
-                                                        class="btn btn-outline-danger remove-metric">−</button>
+                                                        class="btn btn-outline-danger remove-metric"><i class="bi bi-trash"></i></button>
                                                 </div>
                                             </div>
                                         @endforeach
                                     @endif
                                 </div>
-                                <button type="button" class="btn btn-sm btn-primary mt-2" id="add_metric">Add
-                                    Metric</button>
+                                <button type="button" class="btn btn-sm btn-primary mt-2" id="add_metric">
+                                    <i class="bi bi-plus-circle me-1"></i>Add Metric
+                                </button>
                                 <div class="form-text">Add metrics for donut chart visualization (e.g., Youth Interested:
                                     80%)</div>
-                            </div>
-
-                            <!-- Target Groups -->
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="mb-3">
-                                        <label class="form-label">Target Groups (with icons) <span
-                                                class="text-danger">*</span></label>
-                                        <div id="target_groups_wrapper">
-                                            @if (old('target_groups') && is_array(old('target_groups')))
-                                                @foreach (old('target_groups') as $index => $group)
-                                                    <div class="row mb-2 target-group-item">
-                                                        <div class="col-md-5">
-                                                            <select name="target_groups[{{ $index }}][group]"
-                                                                class="form-select select2 @error('target_groups.' . $index . '.group') is-invalid @enderror">
-                                                                <option value="">Select Group</option>
-                                                                <option value="students"
-                                                                    {{ ($group['group'] ?? '') == 'students' ? 'selected' : '' }}>
-                                                                    Students</option>
-                                                                <option value="youth"
-                                                                    {{ ($group['group'] ?? '') == 'youth' ? 'selected' : '' }}>
-                                                                    Youth</option>
-                                                                <option value="women"
-                                                                    {{ ($group['group'] ?? '') == 'women' ? 'selected' : '' }}>
-                                                                    Women</option>
-                                                                <option value="girls"
-                                                                    {{ ($group['group'] ?? '') == 'girls' ? 'selected' : '' }}>
-                                                                    Girls</option>
-                                                                <option value="children"
-                                                                    {{ ($group['group'] ?? '') == 'children' ? 'selected' : '' }}>
-                                                                    Children</option>
-                                                                <option value="schools"
-                                                                    {{ ($group['group'] ?? '') == 'schools' ? 'selected' : '' }}>
-                                                                    Schools</option>
-                                                                <option value="colleges"
-                                                                    {{ ($group['group'] ?? '') == 'colleges' ? 'selected' : '' }}>
-                                                                    Colleges</option>
-                                                                <option value="shg"
-                                                                    {{ ($group['group'] ?? '') == 'shg' ? 'selected' : '' }}>
-                                                                    Women SHG</option>
-                                                            </select>
-                                                            @error('target_groups.' . $index . '.group')
-                                                                <div class="invalid-feedback">{{ $message }}</div>
-                                                            @enderror
-                                                        </div>
-                                                        <div class="col-md-2">
-                                                            <input type="number"
-                                                                name="target_groups[{{ $index }}][count]"
-                                                                class="form-control @error('target_groups.' . $index . '.count') is-invalid @enderror"
-                                                                placeholder="Count" value="{{ $group['count'] ?? '' }}">
-                                                            @error('target_groups.' . $index . '.count')
-                                                                <div class="invalid-feedback">{{ $message }}</div>
-                                                            @enderror
-                                                        </div>
-                                                        <div class="col-md-4">
-                                                            <input type="text"
-                                                                name="target_groups[{{ $index }}][notes]"
-                                                                class="form-control"
-                                                                placeholder="Notes (e.g., Class 6-12)"
-                                                                value="{{ $group['notes'] ?? '' }}">
-                                                        </div>
-                                                        <div class="col-md-1">
-                                                            <button type="button"
-                                                                class="btn btn-outline-danger remove-target-group">−</button>
-                                                        </div>
-                                                    </div>
-                                                @endforeach
-                                            @endif
-                                        </div>
-                                        <button type="button" class="btn btn-sm btn-primary mt-2"
-                                            id="add_target_group">Add Target Group</button>
-                                        <div class="form-text">Add target beneficiary groups with count and notes</div>
-                                    </div>
-                                </div>
                             </div>
 
                             <!-- Strategic Objectives -->
@@ -737,13 +735,14 @@
                                                             <div class="invalid-feedback">{{ $message }}</div>
                                                         @enderror
                                                         <button type="button"
-                                                            class="btn btn-outline-danger remove-objective">−</button>
+                                                            class="btn btn-outline-danger remove-objective"><i class="bi bi-trash"></i></button>
                                                     </div>
                                                 @endforeach
                                             @endif
                                         </div>
-                                        <button type="button" class="btn btn-sm btn-primary mt-2" id="add_objective">Add
-                                            Objective</button>
+                                        <button type="button" class="btn btn-sm btn-primary mt-2" id="add_objective">
+                                            <i class="bi bi-plus-circle me-1"></i>Add Objective
+                                        </button>
                                         <div class="form-text">Add high-level objectives for this project</div>
                                     </div>
                                 </div>
@@ -871,7 +870,7 @@
                                                                 style="display: {{ $isSelected ? 'block' : 'none' }};">
                                                                 <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center"
                                                                     style="width: 24px; height: 24px;">
-                                                                    <i class="feather feather-check"
+                                                                    <i class="bi bi-check"
                                                                         style="font-size: 12px;"></i>
                                                                 </div>
                                                             </div>
@@ -925,12 +924,12 @@
                                                     <div
                                                         class="card-header bg-primary bg-opacity-10 border-primary d-flex justify-content-between align-items-center py-2">
                                                         <h6 class="mb-0 text-primary">
-                                                            <i class="feather feather-check-circle me-2"></i>
+                                                            <i class="bi bi-check-circle me-2"></i>
                                                             <strong>Selected SDGs ({{ count($selectedSDGs) }})</strong>
                                                         </h6>
                                                         <button type="button" class="btn btn-sm btn-outline-danger"
                                                             id="clear_all_sdgs">
-                                                            <i class="feather feather-x me-1"></i> Clear All
+                                                            <i class="bi bi-x-lg me-1"></i> Clear All
                                                         </button>
                                                     </div>
                                                     <div class="card-body p-3">
@@ -1003,7 +1002,7 @@
                                             </div>
 
                                             <div class="form-text mt-2">
-                                                <i class="feather feather-info text-info me-1"></i>
+                                                <i class="bi bi-info-circle text-info me-1"></i>
                                                 Click on SDG icons to select/unselect. Click and hold for details.
                                             </div>
                                         </div>
@@ -1058,7 +1057,7 @@
                                         <label class="form-label">Sustainability Plan <span
                                                 class="text-danger">*</span></label>
                                         <textarea class="form-control @error('sustainability_plan') is-invalid @enderror" name="sustainability_plan"
-                                            rows="3" placeholder="Ownership after project completion">{{ old('sustainability_plan') }}</textarea>
+                                            rows="3" placeholder="Ownership after project completion" required>{{ old('sustainability_plan') }}</textarea>
                                         @error('sustainability_plan')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -1071,6 +1070,184 @@
                     </div>
                 </div>
 
+                <!-- Section 4: Target Beneficiaries -->
+                <div class="accordion-item border mb-4">
+                    <h2 class="accordion-header" id="headingBeneficiaries">
+                        <div class="accordion-button collapsed bg-white" data-bs-toggle="collapse"
+                            data-bs-target="#beneficiariesSection">
+                            <div class="d-flex align-items-center justify-content-between flex-fill">
+                                <h5 class="d-flex align-items-center">
+                                    <i class="bi bi-people text-primary me-2"></i>
+                                    <span>Section 4: Target Beneficiaries <span class="text-danger">*</span></span>
+                                </h5>
+                            </div>
+                        </div>
+                    </h2>
+                    <div id="beneficiariesSection" class="accordion-collapse collapse">
+                        <div class="accordion-body border-top">
+
+                            <div class="alert alert-info mb-4">
+                                <i class="bi bi-info-circle me-2"></i>
+                                Define who this project intends to benefit. Add target numbers for each beneficiary type below.
+                            </div>
+
+                            @php
+                                $groupOptions = [
+                                    'Schools',
+                                    'Colleges / Higher Education Institutions',
+                                    'Women Self-Help Groups (SHGs)',
+                                    'Farmer Producer Organizations (FPOs)',
+                                    'Village Communities / Panchayats',
+                                    'Rural Areas',
+                                    'Urban Areas',
+                                    'Metro Cities',
+                                    'Taluk / Block Level',
+                                    'District Level',
+                                    'Training / Skill Development Centers',
+                                    'Community-Based Organizations (CBOs) / NGOs',
+                                ];
+                                $individualOptions = [
+                                    'Children',
+                                    'Students',
+                                    'Youth',
+                                    'Job Seekers / Unemployed',
+                                    'Women',
+                                    'Girls',
+                                    'Men',
+                                    'Farmers',
+                                    'Entrepreneurs / Micro-Enterprise Owners',
+                                    'Self-Employed / Informal Workers',
+                                    'Elderly Persons',
+                                    'Persons with Disabilities (PwD)',
+                                    'Economically Weaker Section (EWS)',
+                                    'Migrant / Returned Migrant Workers',
+                                ];
+                            @endphp
+
+                            {{-- INSTITUTIONS / COMMUNITIES (Group Type) --}}
+                            <div class="mb-4 border p-3 rounded bg-light">
+                                <h6 class="fw-bold mb-3 text-secondary">
+                                    <i class="bi bi-buildings me-2"></i> Institutions / Communities
+                                </h6>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered bg-white" id="beneficiary_groups_table">
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 60%">Group Category</th>
+                                                <th style="width: 35%">Target Numbers</th>
+                                                <th style="width: 5%"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="beneficiary_groups_body">
+                                            @if (old('beneficiary_groups') && is_array(old('beneficiary_groups')))
+                                                @foreach (old('beneficiary_groups') as $idx => $grp)
+                                                    <tr>
+                                                        <td>
+                                                            <select name="beneficiary_groups[{{ $idx }}][category]"
+                                                                class="form-select select2">
+                                                                <option value="">Select Group</option>
+                                                                @foreach ($groupOptions as $opt)
+                                                                    <option value="{{ $opt }}"
+                                                                        {{ ($grp['category'] ?? '') == $opt ? 'selected' : '' }}>
+                                                                        {{ $opt }}</option>
+                                                                @endforeach
+                                                            </select>
+                                                        </td>
+                                                        <td>
+                                                            <input type="number"
+                                                                name="beneficiary_groups[{{ $idx }}][target]"
+                                                                class="form-control"
+                                                                value="{{ $grp['target'] ?? '' }}"
+                                                                placeholder="e.g. 50" min="0">
+                                                        </td>
+                                                        <td>
+                                                            <button type="button"
+                                                                class="btn btn-sm btn-outline-danger remove-ben-group">
+                                                                <i class="bi bi-trash"></i>
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            @endif
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <td colspan="3">
+                                                    <button type="button" class="btn btn-sm btn-primary"
+                                                        id="add_group_btn">
+                                                        <i class="bi bi-plus-circle me-1"></i>Add Group
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+
+                            {{-- INDIVIDUALS (Individual Type) --}}
+                            <div class="mb-4 border p-3 rounded bg-light">
+                                <h6 class="fw-bold mb-3 text-secondary">
+                                    <i class="bi bi-person-lines-fill me-2"></i> Individuals (Learners / People)
+                                </h6>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered bg-white" id="beneficiary_individuals_table">
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 60%">Individual Category</th>
+                                                <th style="width: 35%">Target Numbers</th>
+                                                <th style="width: 5%"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="beneficiary_individuals_body">
+                                            @if (old('beneficiary_individuals') && is_array(old('beneficiary_individuals')))
+                                                @foreach (old('beneficiary_individuals') as $idx => $ind)
+                                                    <tr>
+                                                        <td>
+                                                            <select name="beneficiary_individuals[{{ $idx }}][category]"
+                                                                class="form-select select2">
+                                                                <option value="">Select Individual</option>
+                                                                @foreach ($individualOptions as $opt)
+                                                                    <option value="{{ $opt }}"
+                                                                        {{ ($ind['category'] ?? '') == $opt ? 'selected' : '' }}>
+                                                                        {{ $opt }}</option>
+                                                                @endforeach
+                                                            </select>
+                                                        </td>
+                                                        <td>
+                                                            <input type="number"
+                                                                name="beneficiary_individuals[{{ $idx }}][target]"
+                                                                class="form-control"
+                                                                value="{{ $ind['target'] ?? '' }}"
+                                                                placeholder="e.g. 200" min="0">
+                                                        </td>
+                                                        <td>
+                                                            <button type="button"
+                                                                class="btn btn-sm btn-outline-danger remove-ben-individual">
+                                                                <i class="bi bi-trash"></i>
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            @endif
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <td colspan="3">
+                                                    <button type="button" class="btn btn-sm btn-primary"
+                                                        id="add_individual_btn">
+                                                        <i class="bi bi-plus-circle me-1"></i>Add Individual
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Section 5: CSR & Stakeholders Engagement -->
                 <div class="accordion-item border mb-4">
                     <h2 class="accordion-header" id="headingCSR">
@@ -1078,8 +1255,8 @@
                             data-bs-target="#csrSection">
                             <div class="d-flex align-items-center justify-content-between flex-fill">
                                 <h5 class="d-flex align-items-center">
-                                    <i class="feather feather-users text-primary me-2"></i>
-                                    <span>Section 5: CSR & Stakeholders Engagement (Expectations)</span>
+                                    <i class="bi bi-handshake text-primary me-2"></i>
+                                    <span>Section 5: CSR & Stakeholders Engagement</span>
                                 </h5>
                             </div>
                         </div>
@@ -1092,7 +1269,7 @@
                                         <label class="form-label">CSR Invitation <span
                                                 class="text-danger">*</span></label>
                                         <textarea class="form-control @error('csr_invitation') is-invalid @enderror" name="csr_invitation" rows="4"
-                                            placeholder="e.g., We seek funding from CSR...">{{ old('csr_invitation') }}</textarea>
+                                            placeholder="e.g., We seek funding from CSR..." required>{{ old('csr_invitation') }}</textarea>
                                         @error('csr_invitation')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -1145,14 +1322,14 @@
                                                         </div>
                                                         <div class="col-md-2">
                                                             <button type="button"
-                                                                class="btn btn-outline-danger remove-stakeholder">−</button>
+                                                                class="btn btn-outline-danger remove-stakeholder"><i class="bi bi-trash"></i></button>
                                                         </div>
                                                     </div>
                                                 @endforeach
                                             @endif
                                         </div>
                                         <button type="button" class="btn btn-sm btn-primary mt-2"
-                                            id="add_stakeholder">Add Stakeholder</button>
+                                            id="add_stakeholder"><i class="bi bi-plus-circle me-1"></i>Add Stakeholder</button>
                                         <div class="form-text">Add key stakeholders involved in the project</div>
                                     </div>
                                 </div>
@@ -1168,7 +1345,7 @@
                             data-bs-target="#resourcesSection">
                             <div class="d-flex align-items-center justify-content-between flex-fill">
                                 <h5 class="d-flex align-items-center">
-                                    <i class="feather feather-shield text-primary me-2"></i>
+                                    <i class="bi bi-shield-check text-primary me-2"></i>
                                     <span>Section 6: Resource & Operation Compliance Risks</span>
                                 </h5>
                             </div>
@@ -1259,15 +1436,16 @@
                                                             </div>
                                                             <div class="col-md-1">
                                                                 <button type="button"
-                                                                    class="btn btn-outline-danger remove-risk">−</button>
+                                                                    class="btn btn-outline-danger remove-risk"><i class="bi bi-trash"></i></button>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 @endforeach
                                             @endif
                                         </div>
-                                        <button type="button" class="btn btn-sm btn-primary mt-2" id="add_risk">Add
-                                            Risk</button>
+                                        <button type="button" class="btn btn-sm btn-primary mt-2" id="add_risk">
+                                            <i class="bi bi-plus-circle me-1"></i>Add Risk
+                                        </button>
                                         <div class="form-text">Add operational risks with mitigation strategies and
                                             responsible persons</div>
                                     </div>
@@ -1284,7 +1462,7 @@
                             data-bs-target="#mediaSection">
                             <div class="d-flex align-items-center justify-content-between flex-fill">
                                 <h5 class="d-flex align-items-center">
-                                    <i class="feather feather-file-text text-primary me-2"></i>
+                                    <i class="bi bi-folder2-open text-primary me-2"></i>
                                     <span>Section 7: Media and Documents</span>
                                 </h5>
                             </div>
@@ -1371,14 +1549,15 @@
                                                         </div>
                                                         <div class="col-md-2">
                                                             <button type="button"
-                                                                class="btn btn-outline-danger remove-document">−</button>
+                                                                class="btn btn-outline-danger remove-document"><i class="bi bi-trash"></i></button>
                                                         </div>
                                                     </div>
                                                 @endforeach
                                             @endif
                                         </div>
-                                        <button type="button" class="btn btn-sm btn-primary mt-2" id="add_document">Add
-                                            Document</button>
+                                        <button type="button" class="btn btn-sm btn-primary mt-2" id="add_document">
+                                            <i class="bi bi-plus-circle me-1"></i>Add Document
+                                        </button>
                                         <div class="form-text">Add supporting documents like approval letters, NOC, survey
                                             reports, quotations</div>
                                     </div>
@@ -1414,14 +1593,15 @@
                                                         </div>
                                                         <div class="col-md-2">
                                                             <button type="button"
-                                                                class="btn btn-outline-danger remove-link">−</button>
+                                                                class="btn btn-outline-danger remove-link"><i class="bi bi-trash"></i></button>
                                                         </div>
                                                     </div>
                                                 @endforeach
                                             @endif
                                         </div>
-                                        <button type="button" class="btn btn-sm btn-primary mt-2" id="add_link">Add
-                                            Link</button>
+                                        <button type="button" class="btn btn-sm btn-primary mt-2" id="add_link">
+                                            <i class="bi bi-plus-circle me-1"></i>Add Link
+                                        </button>
                                         <div class="form-text">Add press coverage, YouTube videos, social media links, live
                                             survey links</div>
                                     </div>
@@ -1432,9 +1612,19 @@
                 </div>
                 <!-- Submit Section -->
                 <div class="col-lg-12">
-                    <div class="d-flex align-items-center justify-content-end mb-4">
-                        <a href="{{ route('admin.project.index') }}" class="btn btn-secondary me-2">Cancel</a>
-                        <button type="submit" class="btn btn-primary">Create Project</button>
+                    <div class="project-submit-bar d-flex align-items-center justify-content-between mb-4">
+                        <div class="submit-hint">
+                            <i class="bi bi-shield-check me-2"></i>
+                            Review required fields before creating the project.
+                        </div>
+                        <div class="d-flex align-items-center gap-2">
+                            <a href="{{ route('admin.project.index') }}" class="btn btn-light border">
+                                <i class="bi bi-x-circle me-1"></i>Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check2-circle me-1"></i>Create Project
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1443,6 +1633,340 @@
 @endsection
 @push('css')
     <style>
+        .project-page-header {
+            align-items: center;
+            padding: 18px 20px;
+            border: 1px solid #e7eaf0;
+            border-radius: 8px;
+            background:
+                linear-gradient(135deg, rgba(13, 110, 253, 0.08), rgba(25, 135, 84, 0.07)),
+                #fff;
+            box-shadow: 0 10px 30px rgba(20, 28, 42, 0.06);
+        }
+
+        .project-page-header .page-title h4 {
+            margin: 4px 0 2px;
+            color: #1f2937;
+        }
+
+        .project-page-header .page-title h6 {
+            color: #667085;
+            font-weight: 500;
+        }
+
+        .project-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            padding: 5px 10px;
+            border-radius: 8px;
+            color: #0d6efd;
+            background: rgba(13, 110, 253, 0.1);
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0;
+        }
+
+        .project-page-header .table-top-head a {
+            width: 38px;
+            height: 38px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #e7eaf0;
+            border-radius: 8px;
+            background: #fff;
+            color: #475467;
+        }
+
+        .project-builder-summary {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 16px;
+            margin: 0 0 18px;
+        }
+
+        .summary-card {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            min-height: 92px;
+            padding: 18px;
+            border: 1px solid #e7eaf0;
+            border-radius: 8px;
+            background: #fff;
+            box-shadow: 0 8px 24px rgba(20, 28, 42, 0.05);
+        }
+
+        .summary-card p {
+            margin-bottom: 4px;
+            color: #667085;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0;
+        }
+
+        .summary-card h6 {
+            margin-bottom: 0;
+            color: #1f2937;
+            font-size: 15px;
+            font-weight: 800;
+        }
+
+        .summary-icon {
+            width: 46px;
+            height: 46px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex: 0 0 46px;
+            border-radius: 8px;
+            font-size: 20px;
+        }
+
+        .summary-card-primary .summary-icon {
+            color: #0d6efd;
+            background: rgba(13, 110, 253, 0.12);
+        }
+
+        .summary-card-success .summary-icon {
+            color: #198754;
+            background: rgba(25, 135, 84, 0.12);
+        }
+
+        .summary-card-warning .summary-icon {
+            color: #b58100;
+            background: rgba(255, 193, 7, 0.18);
+        }
+
+        #projectForm {
+            --project-border: #e7eaf0;
+            --project-muted: #6c757d;
+            --project-surface: #ffffff;
+            --project-soft: #f7f9fc;
+            --project-ink: #1f2937;
+        }
+
+        #projectForm .add-product {
+            max-width: 1320px;
+            margin: 0 auto;
+        }
+
+        #projectForm .accordion-item {
+            border: 1px solid var(--project-border) !important;
+            border-radius: 8px;
+            overflow: hidden;
+            background: var(--project-surface);
+            box-shadow: 0 8px 26px rgba(20, 28, 42, 0.055);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+        }
+
+        #projectForm .accordion-item:hover {
+            border-color: #cfd8e6 !important;
+            box-shadow: 0 12px 30px rgba(20, 28, 42, 0.08);
+        }
+
+        #projectForm .accordion-button {
+            padding: 18px 20px;
+            border: 0;
+            box-shadow: none;
+        }
+
+        #projectForm .accordion-button:not(.collapsed) {
+            color: var(--project-ink);
+            background:
+                linear-gradient(135deg, rgba(13, 110, 253, 0.07), rgba(25, 135, 84, 0.05)),
+                var(--project-soft) !important;
+            box-shadow: inset 0 -1px 0 var(--project-border);
+        }
+
+        #projectForm .accordion-button h5 {
+            margin-bottom: 0;
+            font-size: 16px;
+            letter-spacing: 0;
+        }
+
+        #projectForm .accordion-button h5 i {
+            width: 34px;
+            height: 34px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            background: rgba(13, 110, 253, 0.1);
+            font-size: 17px;
+        }
+
+        #projectForm .accordion-body {
+            padding: 22px;
+            background: #fff;
+        }
+
+        #projectForm .form-label {
+            margin-bottom: 7px;
+            color: #2f3847;
+            font-weight: 600;
+        }
+
+        #projectForm .form-control,
+        #projectForm .form-select,
+        #projectForm .select2-container--default .select2-selection--single,
+        #projectForm .select2-container--default .select2-selection--multiple {
+            border-color: #dbe1ea;
+            border-radius: 8px;
+            min-height: 42px;
+            background-color: #fff;
+        }
+
+        #projectForm .select2-container--default .select2-selection--single .select2-selection__rendered {
+            line-height: 40px;
+            padding-left: 14px;
+        }
+
+        #projectForm .select2-container--default .select2-selection--single .select2-selection__arrow {
+            height: 40px;
+        }
+
+        #projectForm .input-group-text {
+            border-color: #dbe1ea;
+            border-radius: 8px;
+            background: var(--project-soft);
+        }
+
+        #projectForm .form-control:focus,
+        #projectForm .form-select:focus,
+        #projectForm .select2-container--focus .select2-selection,
+        #projectForm .select2-container--open .select2-selection {
+            border-color: #86b7fe;
+            box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.12);
+        }
+
+        #projectForm .form-text {
+            margin-top: 6px;
+            color: var(--project-muted);
+            font-size: 12px;
+        }
+
+        #projectForm .alert {
+            border-radius: 8px;
+            border: 1px solid #cfe2ff;
+        }
+
+        #projectForm .location-group,
+        #projectForm .risk-item,
+        #projectForm .metric-item,
+        #projectForm .stakeholder-item,
+        #projectForm .document-item {
+            border-color: var(--project-border) !important;
+            border-radius: 8px;
+            background: var(--project-soft);
+            padding: 14px;
+        }
+
+        #projectForm .table-responsive {
+            border: 1px solid var(--project-border);
+            border-radius: 8px;
+            background: #fff;
+        }
+
+        #projectForm .table {
+            margin-bottom: 0;
+        }
+
+        #projectForm .table thead th {
+            color: #344054;
+            background: var(--project-soft);
+            border-bottom-color: var(--project-border);
+            font-weight: 700;
+        }
+
+        #projectForm .table td,
+        #projectForm .table th {
+            vertical-align: middle;
+            border-color: var(--project-border);
+        }
+
+        #projectForm .btn {
+            border-radius: 8px;
+            font-weight: 600;
+        }
+
+        #projectForm .btn-primary {
+            box-shadow: 0 8px 18px rgba(13, 110, 253, 0.18);
+        }
+
+        #projectForm .btn-outline-danger {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 42px;
+        }
+
+        .project-submit-bar {
+            position: sticky;
+            bottom: 14px;
+            z-index: 20;
+            padding: 16px;
+            border: 1px solid #e7eaf0;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.94);
+            box-shadow: 0 12px 36px rgba(20, 28, 42, 0.12);
+            backdrop-filter: blur(10px);
+        }
+
+        .submit-hint {
+            display: flex;
+            align-items: center;
+            color: #475467;
+            font-weight: 600;
+        }
+
+        #projectForm .bg-light {
+            background-color: var(--project-soft) !important;
+        }
+
+        @media (max-width: 767.98px) {
+            .project-page-header {
+                gap: 14px;
+            }
+
+            .project-builder-summary {
+                grid-template-columns: 1fr;
+            }
+
+            #projectForm .accordion-button,
+            #projectForm .accordion-body {
+                padding: 16px;
+            }
+
+            #projectForm .accordion-button h5 {
+                align-items: flex-start !important;
+                font-size: 15px;
+                line-height: 1.35;
+            }
+
+            #projectForm .metric-item > div,
+            #projectForm .stakeholder-item > div,
+            #projectForm .document-item > div {
+                margin-bottom: 10px;
+            }
+
+            .project-submit-bar {
+                position: static;
+                flex-direction: column;
+                align-items: stretch !important;
+                gap: 14px;
+            }
+
+            .project-submit-bar .d-flex:last-child {
+                width: 100%;
+            }
+
+            .project-submit-bar .btn {
+                flex: 1;
+            }
+        }
+
         /* SDG Grid Enhanced Styling */
         #sdg_grid .sdg-card {
             transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
@@ -1755,8 +2279,8 @@
                         .toggleClass('btn-danger', isSelected)
                         .toggleClass('btn-primary', !isSelected)
                         .html(isSelected ?
-                            '<i class="feather feather-x me-1"></i>Remove Selection' :
-                            '<i class="feather feather-check me-1"></i>Select SDG');
+                            '<i class="bi bi-x-lg me-1"></i>Remove Selection' :
+                            '<i class="bi bi-check2 me-1"></i>Select SDG');
 
                     // Set button click handler
                     $('#toggleSelectBtn').off('click').on('click', function() {
@@ -1898,6 +2422,52 @@
                 placeholder: 'Write your project description here...'
             });
 
+            // ─── Auto-generate Project ID when Location Type is selected ──────────
+            var projectCodeUrl = '{{ route("admin.project.next-code") }}';
+
+            function fetchProjectCode(locationType) {
+                if (!locationType) {
+                    $('#project_code_input').val('').attr('placeholder', 'Select Location Type to generate ID');
+                    $('#project_code_badge').hide();
+                    return;
+                }
+
+                // Show spinner
+                $('#project_code_spinner').show();
+                $('#project_code_input').val('').attr('placeholder', 'Generating...');
+                $('#project_code_badge').hide();
+
+                $.get(projectCodeUrl, { location_type: locationType }, function(response) {
+                    if (response.project_code) {
+                        $('#project_code_input').val(response.project_code);
+                        $('#project_code_badge')
+                            .text('Generated')
+                            .removeClass('bg-danger bg-secondary')
+                            .addClass('bg-success text-white')
+                            .show();
+                    }
+                }).fail(function() {
+                    $('#project_code_input').attr('placeholder', 'Error generating ID');
+                    $('#project_code_badge')
+                        .text('Error')
+                        .removeClass('bg-success bg-secondary')
+                        .addClass('bg-danger text-white')
+                        .show();
+                }).always(function() {
+                    $('#project_code_spinner').hide();
+                });
+            }
+
+            // On location type change
+            $(document).on('change', '#location_type_select', function() {
+                fetchProjectCode($(this).val());
+            });
+
+            // On page load: if old() value exists (validation error redirect), auto-fetch
+            @if(old('location_type'))
+            fetchProjectCode('{{ old("location_type") }}');
+            @endif
+
             // Generate slug from title
             function generateSlug(text) {
                 return text.toString().toLowerCase()
@@ -1935,11 +2505,24 @@
             $('input[name="planned_start_date"], input[name="planned_end_date"]').on('change', calculateDuration);
 
             // Location type toggle
-            $('#target_location_type').on('change', function() {
-                let type = $(this).val();
-                $('#single_location_section').toggle(type === 'single');
-                $('#multiple_locations_section').toggle(type === 'multiple');
-            });
+            function toggleLocationType() {
+                let type = $('#target_location_type').val();
+                let showSingle = type === 'single';
+                let showMultiple = type === 'multiple';
+
+                $('#single_location_section')
+                    .toggle(showSingle)
+                    .find(':input')
+                    .prop('disabled', !showSingle);
+
+                $('#multiple_locations_section')
+                    .toggle(showMultiple)
+                    .find(':input')
+                    .prop('disabled', !showMultiple);
+            }
+
+            $(document).on('change select2:select select2:clear', '#target_location_type', toggleLocationType);
+            toggleLocationType();
 
             // Alignment categories toggle (redundant handled above)
 
@@ -1947,7 +2530,6 @@
             let locationCounter =
             {{ is_array(old('multiple_locations')) ? count(old('multiple_locations')) : 0 }};
             let metricCounter = {{ is_array(old('donut_metrics')) ? count(old('donut_metrics')) : 0 }};
-            let targetGroupCounter = {{ is_array(old('target_groups')) ? count(old('target_groups')) : 0 }};
             let objectiveCounter = {{ is_array(old('objectives')) ? count(old('objectives')) : 0 }};
             let stakeholderCounter = {{ is_array(old('stakeholders')) ? count(old('stakeholders')) : 0 }};
             let riskCounter = {{ is_array(old('risks')) ? count(old('risks')) : 0 }};
@@ -1956,43 +2538,56 @@
 
             // Add location
             $('#add_location').on('click', function() {
+                if ($('#target_location_type').val() !== 'multiple') {
+                    $('#target_location_type').val('multiple').trigger('change');
+                }
+
                 let html = `
                 <div class="location-group mb-3 border p-3">
                     <div class="row">
-                        <div class="col-md-3">
+                        <div class="col-md-4">
+                            <label class="form-label">State <span class="text-danger">*</span></label>
+                            <input type="text" name="multiple_locations[${locationCounter}][state]"
+                                class="form-control" placeholder="State name">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">District <span class="text-danger">*</span></label>
+                            <input type="text" name="multiple_locations[${locationCounter}][district]"
+                                class="form-control" placeholder="District name">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Taluk / Block</label>
+                            <input type="text" name="multiple_locations[${locationCounter}][taluk]"
+                                class="form-control" placeholder="Taluk/block name">
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-md-4">
+                            <label class="form-label">Panchayat / Local Body</label>
+                            <input type="text" name="multiple_locations[${locationCounter}][panchayat]"
+                                class="form-control" placeholder="Panchayat name">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Village / Area Name</label>
+                            <input type="text" name="multiple_locations[${locationCounter}][village]"
+                                class="form-control" placeholder="Village/area name">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Building / Venue Name</label>
+                            <input type="text" name="multiple_locations[${locationCounter}][building_name]"
+                                class="form-control" placeholder="Building/venue name">
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-md-4">
                             <label class="form-label">Pin Code</label>
                             <input type="text" name="multiple_locations[${locationCounter}][pincode]"
                                 class="form-control" placeholder="6-digit PIN">
                         </div>
-                        <div class="col-md-3">
-                            <label class="form-label">State</label>
-                            <input type="text" name="multiple_locations[${locationCounter}][state]"
-                                class="form-control" placeholder="State name">
-                        </div>
-                        <div class="col-md-3">
-                            <label class="form-label">District</label>
-                            <input type="text" name="multiple_locations[${locationCounter}][district]"
-                                class="form-control" placeholder="District name">
-                        </div>
-                        <div class="col-md-3">
-                            <label class="form-label">Taluk</label>
-                            <input type="text" name="multiple_locations[${locationCounter}][taluk]"
-                                class="form-control" placeholder="Taluk name">
-                        </div>
                     </div>
-                    <div class="row mt-2">
-                        <div class="col-md-6">
-                            <label class="form-label">Panchayat</label>
-                            <input type="text" name="multiple_locations[${locationCounter}][panchayat]"
-                                class="form-control" placeholder="Panchayat name">
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Building Name</label>
-                            <input type="text" name="multiple_locations[${locationCounter}][building_name]"
-                                class="form-control" placeholder="Building name">
-                        </div>
-                    </div>
-                    <button type="button" class="btn btn-sm btn-danger mt-2 remove-location">Remove</button>
+                    <button type="button" class="btn btn-sm btn-outline-danger mt-2 remove-location">
+                        <i class="bi bi-trash me-1"></i>Remove
+                    </button>
                 </div>`;
                 $('#multiple_locations_wrapper').append(html);
                 locationCounter++;
@@ -2015,50 +2610,11 @@
                             class="form-control" placeholder="Small Notes (optional)">
                     </div>
                     <div class="col-md-1">
-                        <button type="button" class="btn btn-outline-danger remove-metric">−</button>
+                        <button type="button" class="btn btn-outline-danger remove-metric"><i class="bi bi-trash"></i></button>
                     </div>
                 </div>`;
                 $('#donut_metrics_wrapper').append(html);
                 metricCounter++;
-            });
-
-            // Add target group
-            $('#add_target_group').on('click', function() {
-                let html = `
-                <div class="row mb-2 target-group-item">
-                    <div class="col-md-5">
-                        <select name="target_groups[${targetGroupCounter}][group]" class="form-select select2">
-                            <option value="">Select Group</option>
-                            <option value="students">Students</option>
-                            <option value="youth">Youth</option>
-                            <option value="women">Women</option>
-                            <option value="girls">Girls</option>
-                            <option value="children">Children</option>
-                            <option value="schools">Schools</option>
-                            <option value="colleges">Colleges</option>
-                            <option value="shg">Women SHG</option>
-                        </select>
-                    </div>
-                    <div class="col-md-2">
-                        <input type="number" name="target_groups[${targetGroupCounter}][count]"
-                            class="form-control" placeholder="Count">
-                    </div>
-                    <div class="col-md-4">
-                        <input type="text" name="target_groups[${targetGroupCounter}][notes]"
-                            class="form-control" placeholder="Notes (e.g., Class 6-12)">
-                    </div>
-                    <div class="col-md-1">
-                        <button type="button" class="btn btn-outline-danger remove-target-group">−</button>
-                    </div>
-                </div>`;
-                $('#target_groups_wrapper').append(html);
-                // Re-initialize Select2 for new dropdown
-                $('#target_groups_wrapper .select2:last').select2({
-                    placeholder: "Select Group",
-                    allowClear: true,
-                    width: '100%'
-                });
-                targetGroupCounter++;
             });
 
             // Add objective
@@ -2066,7 +2622,7 @@
                 let html = `
                 <div class="input-group mb-2">
                     <input type="text" name="objectives[]" class="form-control" placeholder="Enter strategic objective">
-                    <button type="button" class="btn btn-outline-danger remove-objective">−</button>
+                    <button type="button" class="btn btn-outline-danger remove-objective"><i class="bi bi-trash"></i></button>
                 </div>`;
                 $('#objectives_wrapper').append(html);
                 objectiveCounter++;
@@ -2085,7 +2641,7 @@
                             class="form-control" placeholder="Role/Contribution">
                     </div>
                     <div class="col-md-2">
-                        <button type="button" class="btn btn-outline-danger remove-stakeholder">−</button>
+                        <button type="button" class="btn btn-outline-danger remove-stakeholder"><i class="bi bi-trash"></i></button>
                     </div>
                 </div>`;
                 $('#stakeholders_wrapper').append(html);
@@ -2119,7 +2675,7 @@
                             </div>
                         </div>
                         <div class="col-md-1">
-                            <button type="button" class="btn btn-outline-danger remove-risk">−</button>
+                            <button type="button" class="btn btn-outline-danger remove-risk"><i class="bi bi-trash"></i></button>
                         </div>
                     </div>
                 </div>`;
@@ -2140,7 +2696,7 @@
                             class="form-control" accept=".pdf,.doc,.docx">
                     </div>
                     <div class="col-md-2">
-                        <button type="button" class="btn btn-outline-danger remove-document">−</button>
+                        <button type="button" class="btn btn-outline-danger remove-document"><i class="bi bi-trash"></i></button>
                     </div>
                 </div>`;
                 $('#documents_wrapper').append(html);
@@ -2160,7 +2716,7 @@
                             class="form-control" placeholder="URL">
                     </div>
                     <div class="col-md-2">
-                        <button type="button" class="btn btn-outline-danger remove-link">−</button>
+                        <button type="button" class="btn btn-outline-danger remove-link"><i class="bi bi-trash"></i></button>
                     </div>
                 </div>`;
                 $('#links_wrapper').append(html);
@@ -2174,10 +2730,6 @@
 
             $(document).on('click', '.remove-metric', function() {
                 $(this).closest('.metric-item').remove();
-            });
-
-            $(document).on('click', '.remove-target-group', function() {
-                $(this).closest('.target-group-item').remove();
             });
 
             $(document).on('click', '.remove-objective', function() {
@@ -2198,6 +2750,58 @@
 
             $(document).on('click', '.remove-link', function() {
                 $(this).closest('.row').remove();
+            });
+
+            // ─── Target Beneficiaries: Groups (Institutions / Communities) ────────
+            var groupOptions = @json($groupOptions ?? []);
+            var individualOptions = @json($individualOptions ?? []);
+            var benGroupCounter = {{ is_array(old('beneficiary_groups')) ? count(old('beneficiary_groups')) : 0 }};
+            var benIndividualCounter = {{ is_array(old('beneficiary_individuals')) ? count(old('beneficiary_individuals')) : 0 }};
+
+            function buildGroupSelect(name, selectedVal) {
+                let opts = '<option value="">Select Group</option>';
+                groupOptions.forEach(function(opt) {
+                    let sel = (opt === selectedVal) ? 'selected' : '';
+                    opts += `<option value="${opt}" ${sel}>${opt}</option>`;
+                });
+                return `<select name="${name}" class="form-select">${opts}</select>`;
+            }
+
+            function buildIndividualSelect(name, selectedVal) {
+                let opts = '<option value="">Select Individual</option>';
+                individualOptions.forEach(function(opt) {
+                    let sel = (opt === selectedVal) ? 'selected' : '';
+                    opts += `<option value="${opt}" ${sel}>${opt}</option>`;
+                });
+                return `<select name="${name}" class="form-select">${opts}</select>`;
+            }
+
+            $('#add_group_btn').on('click', function() {
+                let idx = benGroupCounter++;
+                let row = `<tr>
+                    <td>${buildGroupSelect('beneficiary_groups[' + idx + '][category]', '')}</td>
+                    <td><input type="number" name="beneficiary_groups[${idx}][target]" class="form-control" placeholder="e.g. 50" min="0"></td>
+                    <td><button type="button" class="btn btn-sm btn-outline-danger remove-ben-group"><i class="bi bi-trash"></i></button></td>
+                </tr>`;
+                $('#beneficiary_groups_body').append(row);
+            });
+
+            $('#add_individual_btn').on('click', function() {
+                let idx = benIndividualCounter++;
+                let row = `<tr>
+                    <td>${buildIndividualSelect('beneficiary_individuals[' + idx + '][category]', '')}</td>
+                    <td><input type="number" name="beneficiary_individuals[${idx}][target]" class="form-control" placeholder="e.g. 200" min="0"></td>
+                    <td><button type="button" class="btn btn-sm btn-outline-danger remove-ben-individual"><i class="bi bi-trash"></i></button></td>
+                </tr>`;
+                $('#beneficiary_individuals_body').append(row);
+            });
+
+            $(document).on('click', '.remove-ben-group', function() {
+                $(this).closest('tr').remove();
+            });
+
+            $(document).on('click', '.remove-ben-individual', function() {
+                $(this).closest('tr').remove();
             });
 
             // Form validation before submit

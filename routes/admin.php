@@ -151,6 +151,7 @@ Route::prefix('admin')->as('admin.')->group(function() {
         Route::post('/project/{project_id}/learningpathways/{id}/update', [App\Http\Controllers\Admin\LearningPathwayController::class, 'update'])->name('learningpathways.update');
         Route::delete('/project/{project_id}/learningpathways/{id}/delete', [App\Http\Controllers\Admin\LearningPathwayController::class, 'destroy'])->name('learningpathways.destroy');
 
+        Route::get('project/next-code', [ProjectController::class, 'getNextProjectCode'])->name('project.next-code');
         Route::resource('project', ProjectController::class);
         Route::patch('project/{project}/toggle-status', [ProjectController::class, 'toggleStatus'])->name('project.toggle-status');
         Route::get('project/export', [ProjectController::class, 'export'])->name('project.export');

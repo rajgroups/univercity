@@ -59,6 +59,8 @@ class Project extends Model
         'govt_schemes' => 'array',
         'risks' => 'array',
         'multiple_locations' => 'array',
+        'resources_needed_ongoing' => 'array',
+        'operational_risks_ongoing' => 'array',
         // 'banner_images' => 'array',
         'gallery_images' => 'array',
         'donut_metrics' => 'array',
@@ -159,6 +161,11 @@ class Project extends Model
 }
 
 public function getLinksAttribute($value)
+{
+    return $this->decodeArrayField($value);
+}
+
+public function getMultipleLocationsAttribute($value)
 {
     return $this->decodeArrayField($value);
 }
@@ -378,15 +385,11 @@ public function getResolvedLocationAttribute()
         return $this->district;
     }
 
-    if ($this->target_location_type === 'multiple' && $this->multiple_locations) {
-        $locations = is_string($this->multiple_locations)
-            ? json_decode($this->multiple_locations, true)
-            : $this->multiple_locations;
-
-        return $locations[0]['district'] ?? 'N/A';
+    if ($this->target_location_type === 'multiple') {
+        return 'Multiple Locations';
     }
 
-    return 'N/A';
+    return 'Multiple Locations';
 }
 
 public function getLocationCodeAttribute()

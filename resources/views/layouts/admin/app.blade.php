@@ -35,20 +35,26 @@
         </div>
         <!-- wrap @e -->
     </div>
-{{-- {!! flasher_render() !!}s --}}
+    @flasher_render
     <!-- JAVASCRIPT -->
     @include('layouts.admin.dependency.js')
     @if ($errors->any())
         @foreach ($errors->all() as $error)
             <script>
-                notyf.error("{{ $error }}");
+                notyf.error(@json($error));
             </script>
         @endforeach
     @endif
 
     @if (session('success'))
         <script>
-            notyf.success("{{ session('success') }}");
+            notyf.success(@json(session('success')));
+        </script>
+    @endif
+
+    @if (session('error'))
+        <script>
+            notyf.error(@json(session('error')));
         </script>
     @endif
     @stack('scripts')
