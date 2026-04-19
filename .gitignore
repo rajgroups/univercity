@@ -15,6 +15,7 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
+*.env
 /.ovi-knowns
 /bootstrap/cache/*
 error_log

@@ -460,7 +460,7 @@
                     @if ($courses->count() > 0)
                         <div class="row g-4">
                             @foreach ($courses as $course)
-                                <div class="col-md-6 col-xl-4">
+                                <div class="col-md-6 col-xl-4 mt-4">
                                     <div class="course-card card h-100 border-0 shadow-sm hover-lift {{ $course->availability_status == 'not_available' ? 'unavailable' : '' }}">
                                         @if($course->availability_status == 'not_available')
                                             <div class="unavailable-overlay">

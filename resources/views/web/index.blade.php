@@ -69,7 +69,7 @@
         .sidebar-page-container .sidebar .sidebar-post .post-inner .post .post-date span {
             position: relative;
             display: block;
-            font-size: 13px;
+            font-size: 10px;
             line-height: 18px;
             text-transform: uppercase;
             color: #fff;
@@ -172,12 +172,14 @@
         }
 
         .project-status-badge.badge-ongoing {
-            background: rgba(1, 125, 2, 0.88);
+            background: #ffc107;
+            /* background: rgba(1, 125, 2, 0.88); */
             color: #fff;
         }
 
         .project-status-badge.badge-upcoming {
-            background: rgba(13, 110, 200, 0.88);
+            background: #ffc107;
+            /* background: rgba(13, 110, 200, 0.88); */
             color: #fff;
         }
 
@@ -209,9 +211,14 @@
             display: none; /* Chrome/Safari/Webkit */
         }
 
-        .news-marquee-content {
-            /* No CSS animation needed - handled by JS */
+        @media (max-width: 768px) {
+            .focus-accordion .accordion-button {
+                line-height: 22px;
+            }
         }
+        /* .news-marquee-content {
+            No CSS animation needed - handled by JS
+        } */
     </style> <!-- About Section Start -->
 
     @include('layouts.web.partition.slider')
@@ -367,7 +374,7 @@
 
                 @if (!empty($operateSections) && is_array($operateSections))
                     @foreach ($operateSections as $index => $section)
-                        <div class="col-lg-4 col-md-6">
+                        <div class="col-lg-4 col-md-6 mt-3">
                             <div class="card border-0 shadow-sm h-100 p-4 text-center">
                                 <div class="mb-3">
                                     <img src="{{ asset($section['operate_icon'] ?? 'upload/icon/default-icon.png') }}"
@@ -385,7 +392,30 @@
             </div>
         </div>
     </section> <!-- How We Operate Section End -->
-    <div class="stats-section py-5 mb-5 wow fadeInUp animated d-none d-lg-block" data-wow-delay="440ms">
+    <style>
+        @media (max-width: 768px) {
+            .stats-section .border-end {
+                border-right: none !important;
+                margin-bottom: 20px;
+            }
+
+            .stats-section .col-md-3 {
+                margin-bottom: 15px;
+                margin-top: 15px;
+                border-bottom: 1px dotted;
+
+            }
+
+            .stats-section h2 {
+                font-size: 25px;
+            }
+
+            .stats-section p {
+                font-size: 15px;
+            }
+        }
+    </style>
+    <div class="stats-section py-5 mb-5 wow fadeInUp animated d-lg-block" data-wow-delay="440ms">
         <div class="container">
             <div class="modern-card p-4 py-5 bg-primary text-white">
                 <div class="row text-center g-4">
@@ -408,7 +438,7 @@
                         </div>
                     </div>
                     <div class="col-md-3">
-                        <div class="px-3">
+                        <div class="px-3 border-end border-white border-opacity-25">
                             <h2 class="fw-bold mb-1 text-white">10+</h2>
                             <p class="small mb-0 opacity-75 text-white">Training Partner</p>
                         </div>
@@ -667,8 +697,10 @@
                                                         <a href="#" target="_blank" class="share-icon-circle share-instagram" title="Instagram">
                                                             <i class="bi bi-instagram"></i>
                                                         </a>
-                                                        <a href="#" target="_blank" class="share-icon-circle share-facebook" title="Facebook">
-                                                            <img src="{{ asset('resource/web/assets/media/vector/facebook.png') }}" alt="Facebook">
+
+                                                         <a href="#" target="_blank" class="share-icon-circle share-facebook" title="Facebook">
+                                                               <i class="bi bi-facebook"></i>
+
                                                         </a>
                                                         <a href="#" target="_blank" class="share-icon-circle share-twitter" title="X (Twitter)">
                                                             <i class="bi bi-twitter-x"></i>
@@ -706,6 +738,7 @@
         :root {
             --primary-color: #018c01;
             --secondary-color: #6e8b38;
+            --yellow-color: #ffc10769;
             --text-dark: #2d3436;
             --text-light: #636e72;
             --glass-bg: rgba(255, 255, 255, 0.8);
@@ -743,7 +776,8 @@
         }
 
         .modern-card:hover .icon-box {
-            background: var(--primary-color);
+            /* background: var(--primary-color); */
+            background: var(--yellow-color);
             transform: rotate(10deg);
         }
 
@@ -826,6 +860,11 @@
             font-weight: 800;
             line-height: 1.2;
             color: var(--text-dark);
+        }
+        @media (max-width: 768px) {
+            .vibrant-title {
+                font-size: 25px;
+            }
         }
 
         .gradient-text {
@@ -940,7 +979,7 @@
             transition: var(--transition);
         }
     </style>
-    <div class="container py-5">
+    <div class="container">
         <!-- Core Values -->
         <div class="text-center mb-5">
             <div class="section-tag">
@@ -953,7 +992,7 @@
         <div class="row g-4 align-items-center">
             <div class="col-md-7">
                 <div class="row g-4">
-                    <div class="col-sm-6">
+                    <div class="col-sm-6 mt-3">
                         <div class="modern-card p-4 h-100">
                             <div class="icon-box">
                                 <img src="{{ asset('resource/web/assets/media/images/equity.png') }}" alt="Equity" width="30">
@@ -962,7 +1001,7 @@
                             <p class="text-muted small mb-0">Ensuring access to quality education for marginalized communities.</p>
                         </div>
                     </div>
-                    <div class="col-sm-6">
+                    <div class="col-sm-6 mt-3">
                         <div class="modern-card p-4 h-100">
                             <div class="icon-box">
                                 <img src="{{ asset('resource/web/assets/media/images/innovation.png') }}" alt="Innovation" width="30">
@@ -971,7 +1010,7 @@
                             <p class="text-muted small mb-0">Promoting green jobs and environmentally sustainable practices.</p>
                         </div>
                     </div>
-                    <div class="col-sm-6">
+                    <div class="col-sm-6 mt-3">
                         <div class="modern-card p-4 h-100">
                             <div class="icon-box">
                                 <img src="{{ asset('resource/web/assets/media/images/empowerment.png') }}" alt="Empowerment" width="30">
@@ -980,7 +1019,7 @@
                             <p class="text-muted small mb-0">Enhancing capabilities for economic independence and impact.</p>
                         </div>
                     </div>
-                    <div class="col-sm-6">
+                    <div class="col-sm-6 mt-3">
                         <div class="modern-card p-4 h-100">
                             <div class="icon-box">
                                 <img src="{{ asset('resource/web/assets/media/images/collarabration.png') }}" alt="Collaboration" width="30">
@@ -1056,7 +1095,7 @@
                                                             <i class="bi bi-instagram"></i>
                                                         </a>
                                                         <a href="#" target="_blank" class="share-icon-circle share-facebook" title="Facebook">
-                                                            <img src="{{ asset('resource/web/assets/media/vector/facebook.png') }}" alt="Facebook">
+                                                           <i class="bi bi-facebook"></i>
                                                         </a>
                                                         <a href="#" target="_blank" class="share-icon-circle share-twitter" title="X (Twitter)">
                                                             <i class="bi bi-twitter-x"></i>
@@ -1222,7 +1261,7 @@
                                     <i class="bi bi-building text-primary"></i>
                                 </div>
                                 <div>
-                                    <h6 class="fw-bold mb-1">Government Schemes</h6>
+                                    <h5 class="fw-bold mb-1">Government Schemes</h5>
                                     <p class="small text-muted mb-0">Partnering with State and Central programs for education and skills.</p>
                                 </div>
                             </div>
@@ -1231,7 +1270,7 @@
                                     <i class="bi bi-people text-primary"></i>
                                 </div>
                                 <div>
-                                    <h6 class="fw-bold mb-1">CSR Initiatives</h6>
+                                    <h5 class="fw-bold mb-1">CSR Initiatives</h5>
                                     <p class="small text-muted mb-0">Leveraging corporate support for community projects.</p>
                                 </div>
                             </div>
@@ -1240,7 +1279,7 @@
                                     <i class="bi bi-globe text-primary"></i>
                                 </div>
                                 <div>
-                                    <h6 class="fw-bold mb-1">International Body</h6>
+                                    <h5 class="fw-bold mb-1">International Body</h5>
                                     <p class="small text-muted mb-0">Exchanging global best practices with Indian expertise.</p>
                                 </div>
                             </div>
@@ -1253,15 +1292,15 @@
             <div class="row g-5 p-2 m-3">
                 <div class="col-md-6">
                     <!-- Message from the Founder -->
-                    <div class="text-center mb-4">
+                    <div class="text-center mb-4 mt-3">
                         <div class="section-tag">
                             <img src="{{ asset('resource/web/assets/media/hero/buld-vec.png') }}" class="bulb-vec-mini" alt="">
                             <span>FOUNDER'S MESSAGE</span>
                         </div>
                         <h3 class="fw-bold mb-4">Vision for <span class="text-primary">ISICO</span></h3>
                     </div>
-                    <div class="modern-card p-5 border-start border-primary border-5">
-                        <div class="mb-4">
+                    <div class="modern-card p-3 border-start border-primary border-5">
+                        <div class="">
                             <i class="bi bi-quote text-primary opacity-25" style="font-size: 3rem; line-height: 1;"></i>
                         </div>
                         <p class="fs-5 text-muted fst-italic mb-4" style="line-height: 1.8;">
@@ -1281,7 +1320,7 @@
                 </div>
 
                 <div class="col-md-6">
-                    <div class="text-center mb-4">
+                    <div class="text-center mb-4 mt-3">
                         <div class="section-tag">
                             <img src="{{ asset('resource/web/assets/media/hero/buld-vec.png') }}" class="bulb-vec-mini" alt="">
                             <span>FUTURE GOALS</span>
@@ -1386,6 +1425,46 @@
                 </div>
             </div>
         </div>
+        <style>
+            @media (max-width: 768px) {
+                #learningjourney .accordion-button {
+                    display: flex;
+                    align-items: flex-start;
+                    gap: 14px;
+                    font-size: 14px;
+                    line-height: 20px;
+                    padding: 12px 10px;
+                }
+
+                #learningjourney .accordion-button span {
+                    min-width: 28px;
+                    font-weight: 600;
+                }
+
+                #learningjourney .accordion-collapse p {
+                    font-size: 13px;
+                    line-height: 20px;
+                    margin-top: 8px;
+                }
+                .ai-background-v p {
+                    font-size: 15px;
+                    color: #555;
+                }
+            }
+            #learningjourney .accordion-button {
+                display: flex;
+                align-items: center;
+            }
+
+            #learningjourney .faq-number {
+                margin-right: 8px;
+                white-space: nowrap;
+            }
+
+            #learningjourney .faq-text {
+                flex: 1;
+            }
+                    </style>
     </section> <!-- Online Learning Section End -->
     <!-- Testimonial Section Start -->
     @if (!$testimonials->isEmpty())
@@ -1415,7 +1494,7 @@
                     </div>
                     <div class="col-lg-8 mt-5 mb-5">
                         <div class="slider-arrows">
-                            <a href="javascript:;" class="arrow-btn btn-prev" data-slide="testimonial-slider"></a>
+                            <a href="javascript:;" class="arrow-btn fa fa-arrow-left btn-prev" data-slide="testimonial-slider"></a>
                             <div class="testimonial-slider row">
                                 @foreach ($testimonials as $testimonial)
                                     <div class="testimonial-block col-12">
@@ -1439,6 +1518,9 @@
         </section>
     @endif
     <style>
+        a.arrow-btn.fa.fa-arrow-left.btn-prev:hover{
+                color: #ffff !important;
+        }
         .Marquees {
             overflow: hidden;
             background: #f8f9fa;

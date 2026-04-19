@@ -500,8 +500,8 @@
 
                 <!-- Quick Stats Cards -->
                 <div class="row g-3 mt-4">
-                    <div class="col-md-4">
-                        <div class="card bg-white bg-opacity-10 border-0 h-100">
+                    <div class="col-md-4 mt-3">
+                        <div class="card bg-white bg-opacity-10 border-0">
                             <div class="card-body py-3">
                                 <div class="d-flex align-items-center">
                                     <div class="bg-primary bg-opacity-25 rounded-circle p-2 me-3">
@@ -516,8 +516,8 @@
                         </div>
                     </div>
 
-                    <div class="col-md-4">
-                        <div class="card bg-white bg-opacity-10 border-0 h-100">
+                    <div class="col-md-4 mt-3">
+                        <div class="card bg-white bg-opacity-10 border-0">
                             <div class="card-body py-3">
                                 <div class="d-flex align-items-center">
                                     <div class="bg-success bg-opacity-25 rounded-circle p-2 me-3">
@@ -534,8 +534,8 @@
                         </div>
                     </div>
 
-                    <div class="col-md-4">
-                        <div class="card bg-white bg-opacity-10 border-0 h-100">
+                    <div class="col-md-4 mt-3">
+                        <div class="card bg-white bg-opacity-10 border-0">
                             <div class="card-body py-3">
                                 <div class="d-flex align-items-center">
                                     <div class="bg-info bg-opacity-25 rounded-circle p-2 me-3">
@@ -1230,7 +1230,7 @@
                                     <i class="bi bi-hand-thumbs-up text-success me-2"></i>
                                     Partner With Us
                                 </h5>
-                                <p class="card-text">{{ Str::limit($project->csr_invitation, 150) }}</p>
+                                <p class="card-text mb-3">{{ Str::limit($project->csr_invitation, 150) }}</p>
                                 <button class="btn btn-success w-100" data-bs-toggle="modal" data-bs-target="#contactModal">
                                     {{ $project->cta_button_text ?? 'Express Interest' }}
                                 </button>
