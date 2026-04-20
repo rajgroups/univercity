@@ -462,6 +462,12 @@
         width: 100% !important;
     }
 }
+
+        @media (max-width: 768px) {
+            .mobile-space {
+            margin-top: 20px; /* adjust as needed */
+           }
+        }
 </style>
 @endpush
 <!-- Hero Section - Modernized -->
@@ -471,7 +477,7 @@
         <div class="row align-items-center min-vh-70">
             <div class="col-lg-8">
                 <!-- Breadcrumb -->
-                <nav class="modern-breadcrumb" aria-label="breadcrumb">
+                <nav class="modern-breadcrumb mobile-space" aria-label="breadcrumb">
                     <ol class="breadcrumb mb-0">
                         <li class="breadcrumb-item"><a href="{{ url('/') }}">Home</a></li>
                         <li class="breadcrumb-item"><a href="{{ route('web.projects') }}">Our Projects</a></li>
@@ -4491,7 +4497,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body p-4">
-                <form id="interestForm">
+                {{-- <form id="interestForm">
                     @csrf
                     <input type="hidden" name="project_id" value="{{ $project->id }}">
                     <div class="mb-3">
@@ -4515,6 +4521,54 @@
                         <textarea name="message" class="form-control" rows="3"
                                   placeholder="I'm interested in supporting this project..."></textarea>
                     </div>
+                    <button type="submit" class="btn btn-success w-100 py-2">
+                        <i class="bi bi-send me-2"></i>Submit Interest
+                    </button>
+                </form> --}}
+                <form id="interestForm" class="needs-validation" novalidate>
+                    @csrf
+                    <input type="hidden" name="project_id" value="{{ $project->id }}">
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Name *</label>
+                        <input type="text" name="name" class="form-control" required>
+                        <div class="invalid-feedback">Please enter your name</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Email *</label>
+                        <input type="email" name="email" class="form-control" required>
+                        <div class="invalid-feedback">Please enter a valid email</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Mobile *</label>
+                        <input type="text"
+                            name="mobile"
+                            class="form-control"
+                            placeholder="10-digit mobile number"
+                            required
+                            maxlength="10"
+                            pattern="[0-9]{10}"
+                            inputmode="numeric"
+                            oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+
+                        <div class="invalid-feedback">
+                            Please enter a valid 10-digit mobile number
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Organization</label>
+                        <input type="text" name="organization" class="form-control">
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Message</label>
+                        <textarea name="message" class="form-control" rows="3"minlength="10"
+          maxlength="200"></textarea>
+                    </div>
+
                     <button type="submit" class="btn btn-success w-100 py-2">
                         <i class="bi bi-send me-2"></i>Submit Interest
                     </button>
@@ -5468,5 +5522,22 @@ document.addEventListener('DOMContentLoaded', function() {
     </div>
 </div>
 @endif
+<script>
+(() => {
+  'use strict';
 
+  const forms = document.querySelectorAll('.needs-validation');
+
+  Array.from(forms).forEach(form => {
+    form.addEventListener('submit', event => {
+      if (!form.checkValidity()) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+
+      form.classList.add('was-validated');
+    });
+  });
+})();
+</script>
 @endsection

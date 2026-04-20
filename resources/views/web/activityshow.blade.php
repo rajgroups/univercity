@@ -369,13 +369,13 @@
                                                  class="img-fluid sponsor-logo" style="max-height: 100%; max-width: 100%;">
                                         </div>
                                         @endif
- 
+
                                         @if(!empty($sponsor['name']))
                                         <h6 class="fw-bold text-dark mb-2">{{ $sponsor['name'] }}</h6>
                                         @endif
- 
+
                                         @if(!empty($sponsor['details']))
-                                        <p class="small text-muted mb-0">{{ $sponsor['details'] }}</p>
+                                        <p class="small text-muted mb-0" style="text-align: justify;">{{ $sponsor['details'] }}</p>
                                         @endif
                                     </div>
                                 </div>
@@ -537,7 +537,7 @@
                             <h3 class="fw-bold mb-3">Rules & Guidelines</h3>
 
                             <div class="border rounded bg-light p-3">
-                                <p class="mb-0 text-dark">
+                                <p class="mb-0 text-dark" style="text-align: justify;">
                                     {!! nl2br(e($event->rules)) !!}
                                 </p>
                             </div>
@@ -546,7 +546,7 @@
                     </div>
                     @endif
                     <div class="card mb-4">
-                        <div class="card-body">
+                        <div style="text-align: justify;" class="card-body">
                             <h3 class="fw-bold mb-4">About This {{ $event->is_competition ? 'Competition' : 'Activity' }}
                             </h3>
                             {!! $event->description !!}
@@ -719,28 +719,43 @@
                             @endif
                             <!-- Enquiry Form -->
                             <div class="enquiry-form card">
-                                <h5 class="fw-500 mb-3">Have Questions?</h5>
+                                <h5 class="fw-500 mb-3">Have Questions? </h5>
                                 <form id="eventEnquiryForm" action="{{ route('web.enquiry') }}" method="POST">
                                     @csrf
                                     <input type="hidden" name="event_id" value="{{ $event->id }}">
                                     <input type="hidden" name="type" value="1">
                                     <div class="mb-3">
-                                        <input type="text" class="form-control" name="name"
-                                            placeholder="Your Name" required>
-                                    </div>
+                                        <input type="text" class="form-control" name="name" id="name"
+                                            placeholder="Your Name"
+                                            required minlength="3" maxlength="30">
 
+                                        <div class="invalid-feedback">
+                                            Name must contain only letters (no numbers).
+                                        </div>
+                                    </div>
                                     <div class="mb-3">
-                                        <input type="email" class="form-control" name="email"
+                                        <input type="email" class="form-control" name="email" id="email"
                                             placeholder="Your Email" required>
+                                        <div class="invalid-feedback">
+                                            Please enter a valid email address.
+                                        </div>
                                     </div>
 
                                     <div class="mb-3">
-                                        <input type="tel" class="form-control" name="mobile"
-                                            placeholder="Phone Number">
+                                        <input type="tel" class="form-control" name="mobile" id="mobile"
+                                            placeholder="Phone Number" maxlength="10">
+                                        <div class="invalid-feedback">
+                                            Enter a valid 10-digit phone number.
+                                        </div>
                                     </div>
 
                                     <div class="mb-3">
-                                        <textarea class="form-control" name="message" rows="3" placeholder="Your Question" required></textarea>
+                                        <textarea class="form-control" name="message" id="message"
+                                            rows="3" placeholder="Your Question"
+                                            required minlength="10" maxlength="200"></textarea>
+                                        <div class="invalid-feedback">
+                                            Message must be 10–200 characters.
+                                        </div>
                                     </div>
 
                                     <button type="submit" class="btn btn-primary w-100">Submit Enquiry</button>
@@ -936,6 +951,73 @@
             });
         });
     </script>
+    <script>
+
+        // form validation
+            const nameInput = document.getElementById("name");
+
+            // Block numbers while typing
+            nameInput.addEventListener("keypress", function(e) {
+                if (/\d/.test(e.key)) {
+                    e.preventDefault();
+                    showError();
+                }
+            });
+
+            // Handle paste (in case user pastes numbers)
+            nameInput.addEventListener("input", function() {
+                if (/\d/.test(this.value)) {
+                    this.value = this.value.replace(/\d/g, '');
+                    showError();
+                } else {
+                    clearError();
+                }
+            });
+
+            function showError() {
+                nameInput.classList.add("is-invalid");
+            }
+
+            function clearError() {
+                nameInput.classList.remove("is-invalid");
+            }
+
+
+            const email = document.getElementById("email");
+            const mobile = document.getElementById("mobile");
+            const message = document.getElementById("message");
+
+            // Email validation
+            email.addEventListener("input", function () {
+                const pattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+                if (!this.value.match(pattern)) {
+                    this.classList.add("is-invalid");
+                } else {
+                    this.classList.remove("is-invalid");
+                }
+            });
+
+            // Mobile validation (only numbers + max 10 digits)
+            mobile.addEventListener("input", function () {
+                // remove non-numbers
+                this.value = this.value.replace(/\D/g, '');
+
+                if (this.value.length > 0 && this.value.length !== 10) {
+                    this.classList.add("is-invalid");
+                } else {
+                    this.classList.remove("is-invalid");
+                }
+            });
+
+            // Message validation
+            message.addEventListener("input", function () {
+                if (this.value.length < 10 || this.value.length > 200) {
+                    this.classList.add("is-invalid");
+                } else {
+                    this.classList.remove("is-invalid");
+                }
+            });
+            </script>
     @if ($errors->any())
         <script>
             document.addEventListener("DOMContentLoaded", function() {

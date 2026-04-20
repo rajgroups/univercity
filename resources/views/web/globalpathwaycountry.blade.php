@@ -99,16 +99,21 @@
                 font-size: 2.5rem;
             }
         }
+        @media (max-width: 768px) {
+            .mobile-space {
+            margin-top: 20px; /* adjust as needed */
+           }
+        }
     </style>
 
     <!-- Title Banner Section Start -->
     <section class="modern-page-banner" style="background-image: url('{{ asset('resource/web/assets/media/banner/global-bg.jpg') }}'), url('https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?q=80&w=2070&auto=format&fit=crop');">
         <div class="modern-banner-content" data-aos="fade-up">
-            <div class="modern-breadcrumb">
-                <span>Home</span>
-                <span class="mx-2">/</span>
-                <span class="text-white">Global Pathways</span>
-            </div>
+            <div class="modern-breadcrumb mobile-space">
+               <span>Home</span>
+               <span class="mx-2">/</span>
+               <span class="text-white">Global Pathways</span>
+           </div>
             <h1 class="modern-banner-title">Global Opportunities</h1>
             <h4 class="modern-banner-subtitle text-white">Explore skill development courses and career pathways across the globe.</h4>
         </div>

@@ -3,29 +3,31 @@
 @section('content')
 <div class="container-fluid">
     <!-- Page Header -->
-    <div class="page-header">
-        <div class="row align-items-center">
-            <div class="col">
-                <h3 class="page-title">Create Survey for: {{ $project->name }}</h3>
-                {{-- <ul class="breadcrumb">
-                    <li class="breadcrumb-item">
-                        <a href="{{ route('admin.survey.create') }}">Projects</a>
-                    </li>
-                    <li class="breadcrumb-item">
-                        <a href="{{ route('projects.show', $project->id) }}">{{ $project->name }}</a>
-                    </li>
-                    <li class="breadcrumb-item active">Create Survey</li>
-                </ul> --}}
-            </div>
-            <div class="col-auto">
-                {{-- <a href="{{ route('projects.show', $project->id) }}" class="btn btn-secondary">
-                    <i class="bi bi-arrow-left"></i> Back to Project
-                </a> --}}
+        <div class="page-header">
+        <div class="add-item d-flex">
+            <div class="page-title">
+                <h4 class="fw-bold">Create Survey for: </h4>
+                <h6>{{ $project->name }}</h6>
             </div>
         </div>
+        <ul class="table-top-head">
+            <li>
+                <a data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Refresh"><i class="ti ti-refresh"></i></a>
+            </li>
+            <li>
+                <a data-bs-toggle="tooltip" data-bs-placement="top" id="collapse-header" aria-label="Collapse">
+                    <i class="ti ti-chevron-up"></i>
+                </a>
+            </li>
+        </ul>
+        <div class="page-btn mt-0">
+            <a href="{{ route('admin.survey.index', $project->id) }}" class="btn btn-secondary">
+                <i class="feather feather-arrow-left me-2"></i>Back to List
+            </a>
+        </div>
     </div>
+   
     <!-- /Page Header -->
-
     <div class="row">
         <div class="col-lg-12">
             <div class="card">

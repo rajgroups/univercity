@@ -459,7 +459,7 @@
                         </div>
                     @endif
 
-                    <form action="{{ route('sendStudentDetails') }}" method="POST">
+                    {{-- <form action="{{ route('sendStudentDetails') }}" method="POST">
                         @csrf
                         <div class="row g-3">
                             <div class="col-md-6">
@@ -576,7 +576,153 @@
                             </button>
                             <button type="submit" class="btn btn-primary px-4">Submit</button>
                         </div>
+                    </form> --}}
+                    <form action="{{ route('sendStudentDetails') }}" method="POST" id="studentForm">
+                        @csrf
+
+                        <div class="row g-3">
+
+                            <!-- Student Name -->
+                            <div class="col-md-6">
+                                <label class="form-label">Student Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="student_name" id="student_name" oninput="validateTextOnly(this,'error_student_name')">
+                                <div class="text-danger small" id="error_student_name"></div>
+                            </div>
+
+                            <!-- Father Name -->
+                            <div class="col-md-6">
+                                <label class="form-label">Father Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="father_name" id="father_name" oninput="validateTextOnly(this,'error_father_name')">
+                                <div class="text-danger small" id="error_father_name"></div>
+                            </div>
+
+                           <!-- Mother Name -->
+                            <div class="col-md-6">
+                                <label class="form-label">Mother Name</label>
+                                <input type="text" class="form-control" name="mother_name" id="mother_name" oninput="validateTextOnly(this,'error_mother_name')">
+                                <div class="text-danger small" id="error_mother_name"></div>
+                            </div>
+
+                            <!-- Gender -->
+                            <div class="col-md-6">
+                                <label class="form-label">Gender <span class="text-danger">*</span></label>
+                                <select class="form-select" name="gender" id="gender">
+                                    <option value="">Choose...</option>
+                                    <option>Male</option>
+                                    <option>Female</option>
+                                    <option>Other</option>
+                                </select>
+                                <div class="text-danger small" id="error_gender"></div>
+                            </div>
+
+                            <!-- DOB -->
+                            <div class="col-md-6">
+                                <label class="form-label">Date of Birth</label>
+                                <input type="date" class="form-control" name="dob">
+                            </div>
+
+                            <!-- Mobile -->
+                            <div class="col-md-6">
+                                <label class="form-label">Mobile Number <span class="text-danger">*</span></label>
+                                <input type="tel" class="form-control" name="mobile" id="mobile">
+                                <div class="text-danger small" id="error_mobile"></div>
+                            </div>
+
+                            <!-- Email -->
+                            <div class="col-md-6">
+                                <label class="form-label">Email Id</label>
+                                <input type="email" class="form-control" name="email" id="email">
+                                <div class="text-danger small" id="error_email"></div>
+                            </div>
+
+                            <!-- State -->
+                            <div class="col-md-6">
+                                <label class="form-label">State</label>
+                                <input type="text" class="form-control" name="state">
+                            </div>
+
+                            <!-- District -->
+                            <div class="col-md-6">
+                                <label class="form-label">District</label>
+                                <input type="text" class="form-control" name="district">
+                            </div>
+
+                            <!-- City -->
+                            <div class="col-md-6">
+                                <label class="form-label">City/Town/Village</label>
+                                <input type="text" class="form-control" name="city">
+                            </div>
+
+                            <!-- Skill Sector -->
+                            <div class="col-md-6">
+                                <label class="form-label">Interested Skill Sector</label>
+                                <input type="text" class="form-control" name="skill_sector">
+                            </div>
+
+                            <!-- Level -->
+                            <div class="col-md-6">
+                                <label class="form-label">Level</label>
+                                <select class="form-select" name="level">
+                                    <option value="">Choose your level</option>
+                                    <option value="foundation">Foundation</option>
+                                    <option value="middle">Middle</option>
+                                    <option value="advanced">Advanced</option>
+                                </select>
+                            </div>
+
+                            <!-- Qualification -->
+                            <div class="col-md-6">
+                                <label class="form-label">Highest Qualification</label>
+                                <input type="text" class="form-control" name="qualification">
+                            </div>
+
+                            <!-- Status -->
+                            <div class="col-md-6">
+                                <label class="form-label">Current Status</label>
+                                <select class="form-select" name="status">
+                                    <option value="">Choose your status</option>
+                                    <option value="studying">Studying</option>
+                                    <option value="working">Working</option>
+                                    <option value="unemployed">Unemployed</option>
+                                    <option value="business">Business</option>
+                                </select>
+                            </div>
+
+                            <!-- Learning Mode -->
+                            <div class="col-md-6">
+                                <label class="form-label">Preferred Learning Mode</label>
+                                <select class="form-select" name="learning_mode">
+                                    <option value="">Choose learning mode</option>
+                                    <option value="online">Online</option>
+                                    <option value="offline">Offline</option>
+                                    <option value="hybrid">Hybrid</option>
+                                </select>
+                            </div>
+
+                            <!-- Experience -->
+                            <div class="col-md-6">
+                                <label class="form-label">Work Experience</label>
+                                <select class="form-select" name="work_experience">
+                                    <option value="">Do you have work experience?</option>
+                                    <option value="yes">Yes</option>
+                                    <option value="no">No</option>
+                                </select>
+                            </div>
+
+                        </div>
+
+                        <!-- Buttons -->
+                        <div class="d-flex justify-content-between mt-4">
+                            <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">
+                                Back
+                            </button>
+                            <button type="submit" class="btn btn-primary px-4">
+                                Submit
+                            </button>
+                        </div>
                     </form>
+
+
                 </div>
 
             </div>
@@ -647,31 +793,39 @@
                     </div>
 
                     <div class="col-md-6">
-                        <label class="form-label">Website URL</label>
-                        <input type="url" class="form-control" name="webiste" placeholder="https://example.com">
-                    </div>
-
+                    <label class="form-label">Website URL</label>
+                    <input type="url" class="form-control" name="website" id="website" placeholder="https://example.com">
+                    <div class="text-danger small" id="error_website"></div>
+                </div>
                     <!-- Contact Person Details -->
                     <div class="col-12 mt-4">
                         <h5 class="fw-bold">Contact Person Details</h5>
                     </div>
-
-                    <div class="col-md-6">
+                <!-- Contact Person Name -->
+                    <div class="col-md-6 mb-3">
                         <label class="form-label">Contact Person Name</label>
-                        <input type="text" class="form-control" placeholder="Full name" name="contact_name"
-                            required>
+                        <input type="text" class="form-control" name="contact_name" id="contact_name"  required>
+                        <div class="invalid-feedback">
+                            Contact person name is required
+                        </div>
                     </div>
 
-                    <div class="col-md-6">
+                    <!-- Designation -->
+                    <div class="col-md-6 mb-3">
                         <label class="form-label">Designation</label>
-                        <input type="text" class="form-control" placeholder="e.g. Manager"
-                            name="contact_designation" required>
+                        <input type="text" class="form-control" name="contact_designation" id="contact_designation" required>
+                        <div class="invalid-feedback">
+                            Designation is required
+                        </div>
                     </div>
 
-                    <div class="col-md-6">
+                    <!-- Contact Number -->
+                    <div class="col-md-6 mb-3">
                         <label class="form-label">Contact Number <span class="text-danger">*</span></label>
-                        <input type="tel" class="form-control" placeholder="e.g. 9876543210"
-                            name="contact_number" required>
+                        <input type="tel" class="form-control" name="contact_number" id="contact_number" required pattern="[0-9]{10}"maxlength="10" inputmode="numeric">
+                        <div class="invalid-feedback">
+                            Please enter a valid 10-digit contact number
+                        </div>
                     </div>
 
                     <div class="col-md-6">
@@ -812,8 +966,16 @@
                 <!-- Mobile Number -->
                 <div class="col-md-6">
                     <label class="form-label">Mobile Number <span class="text-danger">*</span></label>
-                    <input type="tel" class="form-control" placeholder="e.g. 9876543210"
-                        name="mobile" value="{{ old('mobile') }}" required>
+                    <input type="text" class="form-control"
+                        name="mobile"
+                        id="mobile"
+                        placeholder="e.g. 9876543210"
+                        value="{{ old('mobile') }}"
+                        pattern="[0-9]{10}"
+                        maxlength="10"
+                        inputmode="numeric"
+                        required
+                        oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                 </div>
 
                 <!-- Gender -->
@@ -924,6 +1086,7 @@
     </div>
 
 
+@push('scripts')
     <script>
         document.getElementById("userTypeForm").addEventListener("change", function(e) {
             if (e.target.name === "userType") {
@@ -932,3 +1095,102 @@
             }
         });
     </script>
+    <!-- ================= JS VALIDATION ================= -->
+<script>
+document.getElementById("studentForm").addEventListener("submit", function(e) {
+
+    let isValid = true;
+
+    // clear errors
+    document.querySelectorAll(".text-danger").forEach(el => el.innerText = "");
+
+    // Student Name
+    let studentName = document.getElementById("student_name").value.trim();
+    if (studentName === "") {
+        document.getElementById("error_student_name").innerText = "Student name is required";
+        isValid = false;
+    }
+
+    // Father Name
+    let fatherName = document.getElementById("father_name").value.trim();
+    if (fatherName === "") {
+        document.getElementById("error_father_name").innerText = "Father name is required";
+        isValid = false;
+    }
+
+    // Gender
+    let gender = document.getElementById("gender").value;
+    if (gender === "") {
+        document.getElementById("error_gender").innerText = "Please select gender";
+        isValid = false;
+    }
+
+    // Mobile
+    let mobile = document.getElementById("mobile").value.trim();
+    let mobilePattern = /^[6-9]\d{9}$/;
+
+    if (mobile === "") {
+        document.getElementById("error_mobile").innerText = "Mobile number is required";
+        isValid = false;
+    } else if (!mobilePattern.test(mobile)) {
+        document.getElementById("error_mobile").innerText = "Enter valid 10-digit mobile number";
+        isValid = false;
+    }
+
+    // Email (optional but validate if entered)
+    let email = document.getElementById("email").value.trim();
+    if (email !== "") {
+        let emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailPattern.test(email)) {
+            document.getElementById("error_email").innerText = "Enter valid email address";
+            isValid = false;
+        }
+    }
+
+    if (!isValid) {
+        e.preventDefault(); // stop submit
+    }
+
+});
+</script>
+<script>
+function validateTextOnly(input, errorId) {
+    let value = input.value;
+
+    // allow only letters + spaces
+    let regex = /^[A-Za-z\s]*$/;
+
+    if (!regex.test(value)) {
+        document.getElementById(errorId).innerText = "Only letters are allowed (no numbers)";
+        input.classList.add("is-invalid");
+
+        // remove last entered invalid character
+        input.value = value.replace(/[^A-Za-z\s]/g, "");
+    } else {
+        document.getElementById(errorId).innerText = "";
+        input.classList.remove("is-invalid");
+    }
+}
+document.getElementById("contact_number").addEventListener("input", function (e) {
+    this.value = this.value.replace(/[^0-9]/g, '');
+});
+</script>
+<script>
+(() => {
+  'use strict'
+
+  const forms = document.querySelectorAll('.needs-validation')
+
+  Array.from(forms).forEach(form => {
+    form.addEventListener('submit', event => {
+      if (!form.checkValidity()) {
+        event.preventDefault()
+        event.stopPropagation()
+      }
+
+      form.classList.add('was-validated')
+    }, false)
+  })
+})()
+</script>
+@endpush

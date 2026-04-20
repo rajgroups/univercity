@@ -68,65 +68,84 @@
                             We'd love to hear from you! Fill out the form below and we'll get in touch.
                         </p>
                                                <!-- Contact form -->
-                        <form class="row g-3" method="POST" action="{{ route('web.enquiry') }}">
-                            @csrf
-                            <input type="hidden" name="type" value="10">
+                                    <form class="row g-3 needs-validation" novalidate method="POST" action="{{ route('web.enquiry') }}">
+                                        @csrf
+                                        <input type="hidden" name="type" value="10">
 
-                            <div class="col-md-6 g-2">
-                                <div class="input-block">
-                                    <input type="text" name="name"
-                                        class="form-control @error('name') is-invalid @enderror" placeholder="Your Name"
-                                        value="{{ old('name') }}" required>
-                                </div>
-                                @error('name')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
+                                        <!-- NAME -->
+                                        <div class="col-md-6 g-2">
+                                            <div class="input-block">
+                                                <input type="text" name="name"
+                                                    class="form-control @error('name') is-invalid @enderror"
+                                                    placeholder="Your Name"
+                                                    value="{{ old('name') }}"
+                                                    required minlength="3" maxlength="30"
+                                                    pattern="[A-Za-z\s]+">
 
-                            <div class="col-md-6 g-2">
-                                <div class="input-block">
-                                    <input type="email" name="email"
-                                        class="form-control @error('email') is-invalid @enderror" placeholder="Your Email"
-                                        value="{{ old('email') }}" required>
-                                </div>
-                                @error('email')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
+                                                <div class="invalid-feedback">
+                                                    Name must be 3–30 characters and contain only letters.
+                                                </div>
+                                            </div>
+                                        </div>
 
-                            <div class="col-md-6 g-2">
-                                <div class="input-block">
-                                    <input type="tel" name="mobile"
-                                        class="form-control @error('mobile') is-invalid @enderror"
-                                        placeholder="Mobile Number" value="{{ old('mobile') }}" required>
-                                </div>
-                                @error('mobile')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
+                                        <!-- EMAIL -->
+                                        <div class="col-md-6 g-2">
+                                            <div class="input-block">
+                                                <input type="email" name="email"
+                                                    class="form-control @error('email') is-invalid @enderror"
+                                                    placeholder="Your Email"
+                                                    value="{{ old('email') }}"
+                                                    required>
 
-                            <div class="col-md-6 g-2 organization-box" style="display: none;">
-                                <div class="input-block">
-                                    <input type="text" name="organization"
-                                        class="form-control @error('organization') is-invalid @enderror"
-                                        placeholder="Company / Individual" value="{{ old('organization') }}">
-                                </div>
-                                @error('organization')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
+                                                <div class="invalid-feedback">
+                                                    Enter a valid email address.
+                                                </div>
+                                            </div>
+                                        </div>
 
-                            <div class="col-md-6 g-2 form-check">
-                                <input class="form-check-input" type="checkbox" name="is_philanthropist" value="1" id="philanthropistCheck" {{ old('is_philanthropist') ? 'checked' : '' }}>
-                                <label class="form-check-label text-white" for="philanthropistCheck">
-                                    Register as a Philanthropist or Sponsor
-                                </label>
-                            </div>
+                                        <!-- MOBILE -->
+                                        <div class="col-md-6 g-2">
+                                            <div class="input-block">
+                                                <input type="tel" name="mobile"
+                                                    class="form-control @error('mobile') is-invalid @enderror"
+                                                    placeholder="Mobile Number"
+                                                    value="{{ old('mobile') }}"
+                                                    required
+                                                    pattern="[0-9]{10}"
+                                                    maxlength="10">
 
-                            <div class="col-12">
-                                <button type="submit" class="btn cus-btn bg-white">Submit</button>
-                            </div>
-                        </form>
+                                                <div class="invalid-feedback">
+                                                    Enter a valid 10-digit mobile number.
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- ORGANIZATION -->
+                                        <div class="col-md-6 g-2 organization-box" style="display: none;">
+                                            <div class="input-block">
+                                                <input type="text" name="organization"
+                                                    class="form-control @error('organization') is-invalid @enderror"
+                                                    placeholder="Company / Individual"
+                                                    value="{{ old('organization') }}">
+                                            </div>
+                                        </div>
+
+                                        <!-- CHECKBOX -->
+                                        <div class="col-md-6 g-2 form-check">
+                                            <input class="form-check-input" type="checkbox"
+                                                name="is_philanthropist" value="1"
+                                                id="philanthropistCheck"
+                                                {{ old('is_philanthropist') ? 'checked' : '' }}>
+                                            <label class="form-check-label text-white" for="philanthropistCheck">
+                                                Register as a Philanthropist or Sponsor
+                                            </label>
+                                        </div>
+
+                                        <!-- SUBMIT -->
+                                        <div class="col-12">
+                                            <button type="submit" class="btn cus-btn bg-white">Submit</button>
+                                        </div>
+                                    </form>
                     </div>
                 </div>
 
@@ -246,5 +265,36 @@
             $('.organization-box').show();
         }
     });
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const form = document.querySelector(".needs-validation");
+    const name = form.querySelector("[name='name']");
+    const mobile = form.querySelector("[name='mobile']");
+
+    // ✅ NAME: remove numbers while typing
+    name.addEventListener("input", function () {
+        this.value = this.value.replace(/[^A-Za-z\s]/g, '');
+    });
+
+    // ✅ MOBILE: only digits, max 10
+    mobile.addEventListener("input", function () {
+        this.value = this.value.replace(/\D/g, '').slice(0, 10);
+    });
+
+    // ✅ BOOTSTRAP VALIDATION
+    form.addEventListener("submit", function (event) {
+
+        if (!form.checkValidity()) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+
+        form.classList.add("was-validated");
+
+    }, false);
+
+});
 </script>
 @endpush

@@ -50,7 +50,7 @@
                             </h4>
                             <p class="mb-0 text-black">Update the structured learning path</p>
                         </div>
-                        <a href="{{ route('admin.learningpathways.index', $project->id) }}" class="btn btn-light rounded-pill px-4">
+                        <a href="{{ route('admin.project.index', $project->id) }}" class="btn btn-light rounded-pill px-4">
                             <i class="feather icon-arrow-left me-1"></i> Back to List
                         </a>
                     </div>

@@ -144,7 +144,7 @@
             height: 100%;
             min-height: 500px;
         }
-        
+
         .map-container iframe {
             width: 100%;
             height: 100%;
@@ -234,7 +234,7 @@
                         <div class="position-absolute top-0 end-0 p-4 opacity-10">
                             <i class="bi bi-send-check display-1"></i>
                         </div>
-                        
+
                         <div class="position-relative z-1">
                             <h3 class="fw-bold mb-2">Send us a Message</h3>
                             <p class="text-muted mb-4">Fill out the form below and we will get back to you as soon as possible.</p>
@@ -243,37 +243,41 @@
                                 @csrf
                                 <!-- Type 1 is a general enquiry type in the EnquiryController -->
                                 <input type="hidden" name="type" value="1">
-                                
+
                                 <div class="row g-3">
-                                    <div class="col-md-6">
-                                        <div class="form-floating mb-3">
-                                            <input type="text" class="form-control" id="name" name="name" placeholder="John Doe" required>
-                                            <label for="name">Your Name <span class="text-danger">*</span></label>
+                                    <div class="col-md-12">
+                                        <div class="mb-3">
+                                            <input type="text" class="form-control" name="name" id="name"
+                                                placeholder="Your Name"
+                                                required minlength="3" maxlength="30">
+
+                                            <div class="invalid-feedback">
+                                                Name must contain only letters (no numbers).
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="form-floating mb-3">
-                                            <input type="email" class="form-control" id="email" name="email" placeholder="name@example.com" required>
-                                            <label for="email">Email Address <span class="text-danger">*</span></label>
+                                    <div class="mb-3">
+                                        <input type="email" class="form-control" name="email" id="email"
+                                            placeholder="Your Email" required>
+                                        <div class="invalid-feedback">
+                                            Please enter a valid email address.
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="form-floating mb-3">
-                                            <input type="tel" class="form-control" id="mobile" name="mobile" placeholder="9876543210" pattern="[0-9]+" required>
-                                            <label for="mobile">Mobile Number <span class="text-danger">*</span></label>
-                                            <div class="form-text small text-muted">Digits only, no spaces or special characters.</div>
+
+                                    <div class="mb-3">
+                                        <input type="tel" class="form-control" name="mobile" id="mobile"
+                                            placeholder="Phone Number" maxlength="10">
+                                        <div class="invalid-feedback">
+                                            Enter a valid 10-digit phone number.
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="form-floating mb-3">
-                                            <input type="text" class="form-control" id="organization" name="organization" placeholder="Your Company">
-                                            <label for="organization">Organization / Institute</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="form-floating mb-3">
-                                            <textarea class="form-control" placeholder="Leave a message here" id="message" name="message" style="height: 120px" required></textarea>
-                                            <label for="message">Message <span class="text-danger">*</span></label>
+
+                                    <div class="mb-3">
+                                        <textarea class="form-control" name="message" id="message"
+                                            rows="3" placeholder="Your Question"
+                                            required minlength="10" maxlength="200"></textarea>
+                                        <div class="invalid-feedback">
+                                            Message must be 10–200 characters.
                                         </div>
                                     </div>
                                     <div class="col-12 mt-4">
@@ -309,4 +313,67 @@
     </section>
 
     <!-- content @e -->
+    <script>
+        const nameInput = document.getElementById("name");
+
+// Block numbers while typing
+nameInput.addEventListener("keypress", function(e) {
+    if (/\d/.test(e.key)) {
+        e.preventDefault();
+        showError();
+    }
+});
+
+// Handle paste (in case user pastes numbers)
+nameInput.addEventListener("input", function() {
+    if (/\d/.test(this.value)) {
+        this.value = this.value.replace(/\d/g, '');
+        showError();
+    } else {
+        clearError();
+    }
+});
+
+function showError() {
+    nameInput.classList.add("is-invalid");
+}
+
+function clearError() {
+    nameInput.classList.remove("is-invalid");
+}
+const email = document.getElementById("email");
+const mobile = document.getElementById("mobile");
+const message = document.getElementById("message");
+
+// Email validation
+email.addEventListener("input", function () {
+    const pattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+    if (!this.value.match(pattern)) {
+        this.classList.add("is-invalid");
+    } else {
+        this.classList.remove("is-invalid");
+    }
+});
+
+// Mobile validation (only numbers + max 10 digits)
+mobile.addEventListener("input", function () {
+    // remove non-numbers
+    this.value = this.value.replace(/\D/g, '');
+
+    if (this.value.length > 0 && this.value.length !== 10) {
+        this.classList.add("is-invalid");
+    } else {
+        this.classList.remove("is-invalid");
+    }
+});
+
+// Message validation
+message.addEventListener("input", function () {
+    if (this.value.length < 10 || this.value.length > 200) {
+        this.classList.add("is-invalid");
+    } else {
+        this.classList.remove("is-invalid");
+    }
+});
+</script>
 @endsection

@@ -136,12 +136,17 @@
                 font-size: 2.5rem;
             }
         }
+        @media (max-width: 768px) {
+            .mobile-space {
+            margin-top: 20px; /* adjust as needed */
+           }
+        }
     </style>
 
     <!-- Title Banner Section Start -->
     <section class="modern-page-banner" style="background-image: url({{ asset('resource/admin/assets/img/banner-two.jpg') }});">
         <div class="modern-banner-content" data-aos="fade-up">
-            <div class="modern-breadcrumb">
+            <div class="modern-breadcrumb mobile-space">
                 <span>Home</span>
                 <span class="mx-2">/</span>
                 <span class="text-white">Collaborations</span>

@@ -5,8 +5,8 @@
         <div class="page-header">
         <div class="add-item d-flex">
             <div class="page-title">
-                <h4 class="fw-bold">Create Category</h4>
-                <h6>Create new Category</h6>
+                <h4 class="fw-bold">Create Brand</h4>
+                <h6>Create new Brand</h6>
             </div>
         </div>
         <ul class="table-top-head">
@@ -20,7 +20,7 @@
             </li>
         </ul>
         <div class="page-btn mt-0">
-            <a href="{{ route('admin.category.index') }}" class="btn btn-secondary">
+            <a href="{{ route('admin.brand.index') }}" class="btn btn-secondary">
                 <i class="feather feather-arrow-left me-2"></i>Back to List
             </a>
         </div>

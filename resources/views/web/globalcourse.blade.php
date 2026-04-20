@@ -97,6 +97,12 @@
                 font-size: 2.5rem;
             }
         }
+        
+        @media (max-width: 768px) {
+            .mobile-space {
+            margin-top: 20px; /* adjust as needed */
+           }
+        }
     </style>
 
     @php
@@ -157,7 +163,7 @@
     <!-- Title Banner Section Start -->
     <section class="modern-page-banner" style="background-image: url('{{ $bannerImage }}');">
         <div class="modern-banner-content" data-aos="fade-up">
-            <div class="modern-breadcrumb">
+            <div class="modern-breadcrumb mobile-space">
                 <a href="{{ url('/') }}" class="text-white">Home</a>
                 <span class="mx-2">/</span>
                 <span class="text-white-50">Global Pathways</span>
