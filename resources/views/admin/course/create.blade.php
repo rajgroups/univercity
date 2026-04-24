@@ -127,7 +127,12 @@
                                 <div class="input-group">
                                     <input type="number" class="form-control @error('industry_experience_years') is-invalid @enderror"
                                            name="industry_experience_years" value="{{ old('industry_experience_years', 0) }}" min="0">
-                                    <span class="input-group-text">Years</span>
+                                    <select name="industry_experience_unit" class="form-select">
+                                        <option value="days" {{ old('industry_experience_unit') == 'days' ? 'selected' : '' }}>Days</option>
+                                        <option value="weeks" {{ old('industry_experience_unit') == 'weeks' ? 'selected' : '' }}>Weeks</option>
+                                        <option value="months" {{ old('industry_experience_unit') == 'months' ? 'selected' : '' }}>Months</option>
+                                        <option value="years" {{ old('industry_experience_unit', 'years') == 'years' ? 'selected' : '' }}>Years</option>
+                                    </select>
                                 </div>
                                 <input type="text" class="form-control mt-2 @error('industry_experience_desc') is-invalid @enderror"
                                        name="industry_experience_desc" value="{{ old('industry_experience_desc') }}" placeholder="Specifics (optional)">
@@ -413,7 +418,7 @@
                         <label class="form-label fw-bold">Course Price</label>
                         <input type="text" name="price" class="form-control" placeholder="Enter price">
                     </div>
-  
+
                         <div class="mb-3">
                             <label class="form-label fw-bold">Mode of Study <span class="text-danger">*</span></label>
                             <select name="mode_of_study" class="form-select">

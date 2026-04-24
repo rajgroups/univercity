@@ -32,6 +32,14 @@
             </div>
         @endif
 
+        {{-- Error Session Message --}}
+        @if (session('error'))
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                {{ session('error') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+
         {{-- Error Message --}}
         @if ($errors->any())
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -69,11 +77,11 @@
                                     <input type="text" name="title" class="form-control px-3 py-2 shadow-sm @error('title') is-invalid @enderror" id="title" value="{{ old('title', $blog->title) }}" required placeholder="Enter main title">
                                     @error('title')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                 </div>
-                                <div class="col-md-6 mb-3">
+                                {{-- <div class="col-md-6 mb-3">
                                     <label for="menu_title" class="form-label fw-semibold">Menu Title</label>
                                     <input type="text" name="menu_title" class="form-control px-3 py-2 shadow-sm @error('menu_title') is-invalid @enderror" id="menu_title" value="{{ old('menu_title', $blog->menu_title) }}" placeholder="Enter menu title">
                                     @error('menu_title')<div class="invalid-feedback">{{ $message }}</div>@enderror
-                                </div>
+                                </div> --}}
                                 <div class="col-md-6 mb-3">
                                     <label for="category_id" class="form-label fw-semibold">Category <span class="text-danger">*</span></label>
                                     <select name="category_id" id="category_id" class="form-select px-3 py-2 shadow-sm @error('category_id') is-invalid @enderror" required>
@@ -84,11 +92,11 @@
                                     </select>
                                     @error('category_id')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                 </div>
-                                <div class="col-md-6 mb-3">
+                                {{-- <div class="col-md-6 mb-3">
                                     <label for="subtitle" class="form-label fw-semibold">Subtitle</label>
                                     <input type="text" name="subtitle" class="form-control px-3 py-2 shadow-sm @error('subtitle') is-invalid @enderror" id="subtitle" value="{{ old('subtitle', $blog->subtitle) }}" placeholder="Enter subtitle">
                                     @error('subtitle')<div class="invalid-feedback">{{ $message }}</div>@enderror
-                                </div>
+                                </div> --}}
                                 <div class="col-md-12 mb-3">
                                     <label for="slug" class="form-label fw-semibold">Slug (URL) <span class="text-danger">*</span></label>
                                     <div class="input-group shadow-sm rounded-3">
@@ -131,7 +139,7 @@
                             <div class="mb-2">
                                 <label class="form-label fw-semibold">Key Highlights (Bullet Points)</label>
                                 <p class="fs-13 text-muted mb-3">Add structured bullet points to showcase main features or outcomes in a clear list format.</p>
-                                
+
                                 <div id="bullet-points-container">
                                     <div id="bullet-points">
                                         @php
@@ -198,7 +206,7 @@
 
                 <!-- Right Column: Settings & Publishing -->
                 <div class="col-lg-4">
-                    
+
                     <!-- Publishing Card -->
                     <div class="card border-0 shadow-sm mb-4">
                         <div class="card-header bg-white border-bottom p-3">
@@ -215,7 +223,7 @@
                                 </select>
                                 @error('status')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
-                            
+
                             <div class="mb-4">
                                 <label for="type" class="form-label fw-semibold">Content Type</label>
                                 <select name="type" id="type" class="form-select px-3 py-2 shadow-sm @error('type') is-invalid @enderror">
@@ -228,7 +236,7 @@
                                 </select>
                                 @error('type')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
-                            
+
                             <hr class="text-muted border-dashed mb-4">
 
                             <div class="d-grid gap-2">
@@ -269,7 +277,7 @@
                                 </div>
                                 @error('image')<div class="text-danger mt-1 fs-14">{{ $message }}</div>@enderror
                             </div>
-                            
+
                             <div class="mb-4">
                                 <label for="banner_image" class="form-label fw-semibold">Banner Image</label>
                                 <div class="p-3 border rounded-3 bg-light text-center" style="border-style: dashed !important; border-width: 2px !important;">
@@ -289,7 +297,7 @@
                                 </div>
                                 @error('banner_image')<div class="text-danger mt-1 fs-14">{{ $message }}</div>@enderror
                             </div>
-                            
+
                             <div class="mb-3">
                                 <label class="form-label fw-semibold">Add New Gallery Images</label>
                                 <div class="p-3 border rounded-3 bg-light text-center" style="border-style: dashed !important; border-width: 2px !important;">
@@ -301,7 +309,7 @@
                                 </div>
                                 @error('gallery')<div class="text-danger mt-1 fs-14">{{ $message }}</div>@enderror
                             </div>
-                            
+
                             @if($blog->images && $blog->images->count() > 0)
                                 <div class="mb-2">
                                     <label class="form-label fw-semibold d-block">Existing Gallery (Check to Delete)</label>
@@ -378,11 +386,11 @@
                     let title = row.querySelector('.point-title').value.trim();
                     let desc = row.querySelector('.point-desc').value.trim();
                     const hidden = row.querySelector('.point-hidden');
-                    
+
                     // Replace hyphens to prevent validation issues
                     title = title.replace(/-/g, ' ');
                     desc = desc.replace(/-/g, ' ');
-                    
+
                     if (title || desc) {
                         hidden.value = title + ' - ' + desc;
                     } else {

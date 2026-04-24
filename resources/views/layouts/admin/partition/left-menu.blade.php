@@ -2,13 +2,13 @@
 		<div class="sidebar" id="sidebar">
 			<!-- Logo -->
 			<div class="sidebar-logo active">
-				<a href="/" class="logo logo-normal">
+				<a href="{{ route('admin.home') }}" class="logo logo-normal">
 					<img src="{{ asset($defaultSettings->site_logo ?? null)}}" alt="Img">
 				</a>
-				<a href="/" class="logo logo-white">
+				<a href="{{ route('admin.home') }}" class="logo logo-white">
 					<img src="{{ asset($defaultSettings->site_logo ?? null)}}" alt="Img">
 				</a>
-				<a href="/" class="logo-small">
+				<a href="{{ route('admin.home') }}" class="logo-small">
 					<img src="{{ asset($defaultSettings->site_logo ?? null)}}" alt="Img">
 				</a>
 				<a id="toggle_btn" href="javascript:void(0);">
@@ -39,7 +39,7 @@
 				</div>
 				<div class="d-flex align-items-center justify-content-between menu-item mb-3">
 					<div>
-						<a href="/" class="btn btn-sm btn-icon bg-light">
+						<a href="{{ route('admin.home') }}" class="btn btn-sm btn-icon bg-light">
 							<i class="ti ti-layout-grid-remove"></i>
 						</a>
 					</div>
@@ -52,8 +52,8 @@
 						<li class="submenu-open">
 							<h6 class="submenu-hdr">Main</h6>
 							<ul>
-								<li class="submenu">
-									<a href="{{route('admin.home')}}" class="subdrop active"><i class="ti ti-layout-grid fs-16 me-2"></i><span>Dashboard</span></a>
+								<li>
+									<a href="{{route('admin.home')}}" class="active"><i class="ti ti-layout-grid fs-16 me-2"></i><span>Dashboard</span></a>
 								</li>
 							</ul>
 						</li>

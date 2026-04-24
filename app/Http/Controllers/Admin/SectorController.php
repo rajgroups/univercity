@@ -46,10 +46,10 @@ class SectorController extends Controller
             'prefix'      => 'required|string|max:255',
             'slug'        => 'required|string|max:255|unique:sectors,slug',
             'type'        => 'required|in:1,2',
-            'image'       => 'required|image',
+            'image'       => 'nullable|image',
             'status'      => 'required|in:0,1',
             'position'    => 'required|integer|min:0',
-            'description' => 'required|string',
+            'description' => 'nullable|string',
         ]);
 
         $imagePath = null;
@@ -105,7 +105,7 @@ class SectorController extends Controller
             'slug'          => 'required|string|max:255|unique:sectors,slug,' . $sector->id,
             'type'          => 'required|in:1,2',
             'status'        => 'required|in:1,0',
-            'description'   => 'required|string',
+            'description'   => 'nullable|string',
             'position'      => 'required|integer|min:0',
             'image'         => 'nullable|image|max:2048',
         ]);

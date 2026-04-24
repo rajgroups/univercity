@@ -78,6 +78,9 @@ class WebController extends Controller
 
         // blog
         $blogs = Blog::with(['category'])
+            ->whereHas('category', function($q) {
+                $q->where('status', 1);
+            })
             ->where('status', 1)
             ->where('type', 2)
             ->latest()
@@ -113,6 +116,9 @@ class WebController extends Controller
         $program = Announcement::where('slug', $slug)
                     ->where('type', 1)
                     ->where('status', 1)
+                    ->whereHas('category', function ($q) {
+                        $q->where('status', 1);
+                    })
                     ->with('category')
                     ->firstOrFail();
 
@@ -120,6 +126,10 @@ class WebController extends Controller
         $similars = Announcement::where('type', 1)
             ->where('id', '!=', $program->id)
             ->where('category_id', $program->category_id)
+            ->where('status', 1)
+            ->whereHas('category', function ($q) {
+                $q->where('status', 1);
+            })
             ->latest()
             ->limit(5)
             ->get();
@@ -134,6 +144,9 @@ class WebController extends Controller
         $announcement = Announcement::where('slug', $slug)
                     ->where('type', 2)
                     ->where('status', 1)
+                    ->whereHas('category', function ($q) {
+                        $q->where('status', 1);
+                    })
                     ->with('category')
                     ->firstOrFail();
 
@@ -141,6 +154,10 @@ class WebController extends Controller
         $similars = Announcement::where('type', 2)
             ->where('id', '!=', $announcement->id)
             ->where('category_id', $announcement->category_id)
+            ->where('status', 1)
+            ->whereHas('category', function ($q) {
+                $q->where('status', 1);
+            })
             ->latest()
             ->limit(5)
             ->get();
@@ -372,6 +389,9 @@ class WebController extends Controller
     $query->where('publish_status', 1)
           ->whereHas('category', function($q) {
               $q->where('status', 1);
+          })
+          ->whereHas('sector', function($q) {
+              $q->where('status', 1);
           });
 
     // 🔍 Search filter (by course_title or short_description)
@@ -480,6 +500,9 @@ class WebController extends Controller
         $query = Course::with(['sector', 'category'])
             ->where('status', 1)
             ->whereHas('category', function($q) {
+                $q->where('status', 1);
+            })
+            ->whereHas('sector', function($q) {
                 $q->where('status', 1);
             });
 
@@ -608,13 +631,23 @@ class WebController extends Controller
 
         $courses = $query->paginate(12)->appends($request->all());
         $sectors = Sector::where('status', 1)->where('type', 1)->withCount(['courses' => function($q) {
-            $q->where('status', 1)->whereHas('category', function($categoryQuery) {
-                $categoryQuery->where('status', 1);
-            });
+            $q->where('status', 1)
+                ->whereHas('category', function($categoryQuery) {
+                    $categoryQuery->where('status', 1);
+                })
+                ->whereHas('sector', function($sectorQuery) {
+                    $sectorQuery->where('status', 1);
+                });
         }])->orderBy('position', 'asc')->get();
 
         $categories = Category::where('status', 1)->where('type', 5)->withCount(['courses' => function($q) {
-            $q->where('status', 1);
+            $q->where('status', 1)
+                ->whereHas('category', function($categoryQuery) {
+                    $categoryQuery->where('status', 1);
+                })
+                ->whereHas('sector', function($sectorQuery) {
+                    $sectorQuery->where('status', 1);
+                });
         }])->latest()->get();
 
         return view('web.course', compact('courses', 'sectors', 'categories'));
@@ -639,12 +672,18 @@ class WebController extends Controller
             ->whereHas('category', function($q) {
                 $q->where('status', 1);
             })
+            ->whereHas('sector', function($q) {
+                $q->where('status', 1);
+            })
             ->firstOrFail();
 
         // Get other related courses (same sector or category)
         $otherCourses = IntlCourse::where('slug', '!=', $slug)
             ->where('publish_status', 1)
             ->whereHas('category', function($q) {
+                $q->where('status', 1);
+            })
+            ->whereHas('sector', function($q) {
                 $q->where('status', 1);
             })
             ->where(function($query) use ($course) {
@@ -666,7 +705,11 @@ class WebController extends Controller
     {
         // Find Course Record From Course table
         $course = Course::where('slug', $slug)
+            ->where('status', 1)
             ->whereHas('category', function($q) {
+                $q->where('status', 1);
+            })
+            ->whereHas('sector', function($q) {
                 $q->where('status', 1);
             })
             ->first();
@@ -703,6 +746,9 @@ class WebController extends Controller
             ->where('id', '!=', $course->id)
             ->where('status', 1)
             ->whereHas('category', function($q) {
+                $q->where('status', 1);
+            })
+            ->whereHas('sector', function($q) {
                 $q->where('status', 1);
             })
             ->latest()
@@ -783,8 +829,17 @@ class WebController extends Controller
 
     public function catalog(Request $request, $mode = null)
     {
-        $projects = Project::query()->where('status', 1);
-        $announcements = Announcement::query()->where('status', 1);
+        $projects = Project::query()
+            ->where('status', 1)
+            ->whereHas('category', function ($q) {
+                $q->where('status', 1);
+            });
+
+        $announcements = Announcement::query()
+            ->where('status', 1)
+            ->whereHas('category', function ($q) {
+                $q->where('status', 1);
+            });
 
         // 1. Base Scope based on mode (or legacy URL fallback)
         if ($mode === 'projects') {
@@ -886,7 +941,12 @@ class WebController extends Controller
 
     public function blog(Request $request)
     {
-        $query = Blog::query()->with('category')->where('status', 1);
+        $query = Blog::query()
+            ->whereHas('category', function($q) {
+                $q->where('status', 1);
+            })
+            ->with('category')
+            ->where('status', 1);
 
         // Filter by category
         if ($request->filled('category_id')) {
@@ -909,7 +969,9 @@ class WebController extends Controller
         }
 
         $blogs = $query->latest()->paginate(12);
-        $categories = Category::whereHas('blogs')->get();
+        $categories = Category::where('status', 1)->whereHas('blogs', function($q) {
+            $q->where('status', 1);
+        })->get();
 
         return view('web.blog', compact('blogs', 'categories'));
     }
@@ -930,7 +992,9 @@ class WebController extends Controller
         $typeId = $typeMap[$typeSlug] ?? null;
 
         // Try to find by type and slug first
-        $query = Blog::where('slug', $slug);
+        $query = Blog::where('slug', $slug)->whereHas('category', function($q) {
+            $q->where('status', 1);
+        });
 
         if ($typeId) {
             $blog = (clone $query)->where('type', $typeId)->where('status', 1)->with(['category'])->first();
@@ -946,6 +1010,7 @@ class WebController extends Controller
         // Get similar blogs from the same category
         $similars = Blog::where('id', '!=', $blog->id)
             ->where('category_id', $blog->category_id)
+            ->where('status', 1)
             ->latest()
             ->limit(5)
             ->get();

@@ -516,7 +516,7 @@
     </section>
 
     <!-- Alignment Section -->
-    <section class="py-100 mt-5">
+    <section class="py-100 mt-5 mb-5">
         <div class="container">
             <div class="row text-center mb-60">
                 <div class="col-lg-8 mx-auto">
@@ -525,7 +525,7 @@
                 </div>
             </div>
             <div class="row g-4 align-items-center">
-                <div class="col-md-6 wow fadeInLeft">
+                <div class="col-md-12 wow fadeInLeft">
                     <div class="bg-light p-5 rounded-4 h-100 mb-4">
                         <h4 class="fw-bold mb-4">National Initiatives</h4>
                         <ul class="check-list">
@@ -535,21 +535,21 @@
                         </ul>
                     </div>
                 </div>
-                <div class="col-md-6 wow fadeInRight">
+                <div class="col-md-12 wow fadeInRight">
                     <div class="bg-primary bg-opacity-10 p-5 rounded-4 h-100">
                         <h4 class="fw-bold mb-4 text-white">Global SDG Contribution</h4>
                         <div class="row g-2">
                             @php
-                                $aboutSdgs = [4, 5, 8, 17];
+                                $aboutSdgs = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17];
                             @endphp
                             @foreach($aboutSdgs as $sdgId)
                                 @php
                                     $sdg = App\Helpers\SDGHelper::getSDGById($sdgId);
                                 @endphp
-                                <div class="col-6 col-md-3">
+                                <div class="col-6 col-md-2">
                                     <a href="https://sdgs.un.org/goals" target="_blank" class="d-block hover-lift">
-                                        <img src="{{ $sdg['image_url'] ?? '' }}" 
-                                             alt="SDG {{ $sdgId }}" 
+                                        <img src="{{ $sdg['image_url'] ?? '' }}"
+                                             alt="SDG {{ $sdgId }}"
                                              class="img-fluid rounded shadow-sm">
                                     </a>
                                 </div>
@@ -562,7 +562,7 @@
     </section>
 
     <!-- CTA Section -->
-    <section class="py-100 bg-primary position-relative overflow-hidden mt-2 mb-2">
+    {{-- <section class="py-100 bg-primary position-relative overflow-hidden mt-2 mb-2">
         <div class="banner-shape" style="bottom: auto; top: -100px; left: -100px;"></div>
         <div class="mt-3 mb-3 container position-relative z-1 text-center text-white">
             <h2 class="fw-800 display-5 mb-3 text-white">Partner With ISICO</h2>
@@ -572,5 +572,5 @@
                 <a href="{{ url('/collaboration') }}" class="btn btn-outline-light rounded-pill px-5 py-3 fw-bold">Collaborate</a>
             </div>
         </div>
-    </section>
+    </section> --}}
 @endsection

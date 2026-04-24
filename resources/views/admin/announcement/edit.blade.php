@@ -42,7 +42,7 @@
         </div>
     @endif
 
-    <form action="{{ route('admin.announcement.update', $announcement->id) }}" method="POST" enctype="multipart/form-data" class="add-product-form">
+    <form action="{{ route('admin.announcement.update', $announcement->id) }}" method="POST" enctype="multipart/form-data" class="add-product-form" id="announcement-form">
         @csrf
         @method('PUT')
 
@@ -168,33 +168,61 @@
                                 </div>
                             </div>
                             <div class="mb-3">
-    <label class="form-label">Bullet Points (key - value)</label>
+    <label class="form-label">Bullet Points</label>
+    <p class="text-muted small mb-2">Update each point with a separate title and description.</p>
     <div id="bullet-points">
         @php
-            $points = old('points', is_array($announcement->points ?? null) ? $announcement->points : json_decode($announcement->points ?? '[]', true));
+            $rawPoints = old('points', is_array($announcement->points ?? null) ? $announcement->points : json_decode($announcement->points ?? '[]', true));
+            $points = collect($rawPoints ?? [])->map(function ($point) {
+                if (is_array($point)) {
+                    return [
+                        'title' => $point['title'] ?? '',
+                        'description' => $point['description'] ?? '',
+                    ];
+                }
+
+                $parts = explode(' - ', (string) $point, 2);
+
+                return [
+                    'title' => $parts[0] ?? '',
+                    'description' => $parts[1] ?? '',
+                ];
+            })->values()->all();
+
+            if (empty($points)) {
+                $points = [['title' => '', 'description' => '']];
+            }
         @endphp
 
-        @if (!empty($points))
-            @foreach ($points as $index => $point)
-                <div class="input-group mb-2">
-                    <input type="text" name="points[]" class="form-control @error('points.' . $index) is-invalid @enderror"
-                        value="{{ $point }}" placeholder="Example: Key - Value">
-                    <button type="button" class="btn btn-outline-danger remove-bullet">−</button>
-                    @error('points.' . $index)
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
+        @foreach ($points as $index => $point)
+            <div class="bullet-point-item border rounded p-3 mb-3">
+                <div class="row g-2 align-items-start">
+                    <div class="col-md-4">
+                        <input type="text" name="points[{{ $index }}][title]"
+                            class="form-control bullet-title @error('points.' . $index . '.title') is-invalid @enderror"
+                            value="{{ $point['title'] ?? '' }}" placeholder="Title">
+                        @error('points.' . $index . '.title')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="col-md-7">
+                        <input type="text" name="points[{{ $index }}][description]"
+                            class="form-control bullet-description @error('points.' . $index . '.description') is-invalid @enderror"
+                            value="{{ $point['description'] ?? '' }}" placeholder="Description">
+                        @error('points.' . $index . '.description')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="col-md-1">
+                        <button type="button"
+                            class="btn btn-outline-{{ $loop->first ? 'secondary add' : 'danger remove' }}-bullet w-100">
+                            {{ $loop->first ? '+' : '−' }}
+                        </button>
+                    </div>
                 </div>
-            @endforeach
-            <div class="input-group mb-2">
-                <input type="text" name="points[]" class="form-control" placeholder="Example: Key - Value">
-                <button type="button" class="btn btn-outline-secondary add-bullet">+</button>
+                <div class="bullet-row-error text-danger small mt-2 d-none"></div>
             </div>
-        @else
-            <div class="input-group mb-2">
-                <input type="text" name="points[]" class="form-control" placeholder="Example: Key - Value">
-                <button type="button" class="btn btn-outline-secondary add-bullet">+</button>
-            </div>
-        @endif
+        @endforeach
     </div>
 </div>
                             <div class="col-lg-12">
@@ -366,21 +394,75 @@
                 $('input[name="slug"]').val(slug);
             });
 
+            const bulletContainer = document.getElementById('bullet-points');
+
+            function bulletRowTemplate(index) {
+                return `
+                    <div class="bullet-point-item border rounded p-3 mb-3">
+                        <div class="row g-2 align-items-start">
+                            <div class="col-md-4">
+                                <input type="text" name="points[${index}][title]" class="form-control bullet-title" placeholder="Title">
+                            </div>
+                            <div class="col-md-7">
+                                <input type="text" name="points[${index}][description]" class="form-control bullet-description" placeholder="Description">
+                            </div>
+                            <div class="col-md-1">
+                                <button type="button" class="btn btn-outline-danger remove-bullet w-100">−</button>
+                            </div>
+                        </div>
+                        <div class="bullet-row-error text-danger small mt-2 d-none"></div>
+                    </div>`;
+            }
+
+            function resetBulletValidation(row) {
+                row.querySelectorAll('.bullet-title, .bullet-description').forEach((input) => {
+                    input.classList.remove('is-invalid');
+                });
+
+                const errorBox = row.querySelector('.bullet-row-error');
+                errorBox.textContent = '';
+                errorBox.classList.add('d-none');
+            }
+
+            function validateBulletRows() {
+                let isValid = true;
+
+                bulletContainer.querySelectorAll('.bullet-point-item').forEach((row) => {
+                    resetBulletValidation(row);
+
+                    const title = row.querySelector('.bullet-title');
+                    const description = row.querySelector('.bullet-description');
+                    const titleValue = title.value.trim();
+                    const descriptionValue = description.value.trim();
+
+                    if (!titleValue && !descriptionValue) {
+                        return;
+                    }
+
+                    if (!titleValue || !descriptionValue) {
+                        isValid = false;
+                        title.classList.toggle('is-invalid', !titleValue);
+                        description.classList.toggle('is-invalid', !descriptionValue);
+
+                        const errorBox = row.querySelector('.bullet-row-error');
+                        errorBox.textContent = 'Both title and description are required for each bullet point.';
+                        errorBox.classList.remove('d-none');
+                    }
+                });
+
+                return isValid;
+            }
+
             document.addEventListener('click', function(e) {
-                // Bullet Points Logic
                 if (e.target.classList.contains('add-bullet')) {
                     e.preventDefault();
-                    const group = `
-                        <div class="input-group mb-2 border rounded p-1">
-                            <input type="text" name="points[]" class="form-control" placeholder="Example: Key - Value">
-                            <button type="button" class="btn btn-outline-danger remove-bullet">−</button>
-                        </div>`;
-                    document.getElementById('bullet-points').insertAdjacentHTML('beforeend', group);
+                    const index = bulletContainer.querySelectorAll('.bullet-point-item').length;
+                    bulletContainer.insertAdjacentHTML('beforeend', bulletRowTemplate(index));
                 }
 
                 if (e.target.classList.contains('remove-bullet')) {
                     e.preventDefault();
-                    e.target.closest('.input-group').remove();
+                    e.target.closest('.bullet-point-item').remove();
                 }
 
                 // Attachment Logic
@@ -429,6 +511,19 @@
                 if (e.target.closest('.remove-source-link')) {
                     e.preventDefault();
                     e.target.closest('.source-link-item').remove();
+                }
+            });
+
+            document.getElementById('bullet-points').addEventListener('input', function(e) {
+                const row = e.target.closest('.bullet-point-item');
+                if (row && (e.target.classList.contains('bullet-title') || e.target.classList.contains('bullet-description'))) {
+                    resetBulletValidation(row);
+                }
+            });
+
+            document.getElementById('announcement-form').addEventListener('submit', function(e) {
+                if (!validateBulletRows()) {
+                    e.preventDefault();
                 }
             });
         });

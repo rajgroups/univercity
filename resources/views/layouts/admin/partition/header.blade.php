@@ -3,13 +3,13 @@
 			<div class="main-header">
 				<!-- Logo -->
 				<div class="header-left active">
-					<a href="/" class="logo logo-normal">
+					<a href="{{ route('admin.home') }}" class="logo logo-normal">
 						<img src="{{ asset($defaultSettings->site_logo ?? null)}}" alt="Img">
 					</a>
-					<a href="/" class="logo logo-white">
+					<a href="{{ route('admin.home') }}" class="logo logo-white">
 						<img src="{{ asset($defaultSettings->site_logo ?? null)}}" alt="Img">
 					</a>
-					<a href="/" class="logo-small">
+					<a href="{{ route('admin.home') }}" class="logo-small">
 						<img src="{{ asset($defaultSettings->site_logo ?? null)}}" alt="Img">
 					</a>
 				</div>
@@ -98,11 +98,7 @@
 						</div>
 					</li> --}}
 
-					<li class="nav-item pos-nav">
-						<a href="{{ route('admin.blog.index') }}" class="btn btn-dark btn-md d-inline-flex align-items-center">
-							<i class="ti ti-device-laptop me-1"></i>Blog
-						</a>
-					</li>
+
 
 					<!-- Flag -->
 					{{-- <li class="nav-item dropdown has-arrow flag-nav nav-item-box">
@@ -156,6 +152,7 @@
 							<form id="logout-form-second" action="{{ route('admin.logout') }}" method="POST" style="display: none;">
 								@csrf
 							</form>
+							<a class="dropdown-item" href="{{ route('admin.password.change') }}"><i class="ti ti-key me-2"></i>Change Password</a>
 							<a class="dropdown-item logout pb-0" href="{{ route('admin.logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form-second').submit();"><i class="ti ti-logout me-2"></i>Logout</a>
 						</div>
 					</li>

@@ -357,6 +357,29 @@
                 </div>
             </div>
 
+            <!-- Mobile Search Bar (Comes to front on events page for mobile users) -->
+            <div class="d-block d-lg-none mb-4">
+                <form action="{{ route('web.activity') }}" method="GET">
+                    <input type="hidden" name="sort" value="{{ request('sort', 'newest_first') }}">
+                    <div class="input-group shadow-sm">
+                        <input type="text" class="form-control border-end-0 border" name="search" placeholder="Search events..." value="{{ request('search') }}">
+                        <button class="btn border border-start-0 bg-white text-primary px-3" type="submit">
+                            <i class="bi bi-search"></i>
+                        </button>
+                    </div>
+                    @if(request('categories'))
+                        @foreach(request('categories') as $cat)
+                            <input type="hidden" name="categories[]" value="{{ $cat }}">
+                        @endforeach
+                    @endif
+                    @if(request('types'))
+                        @foreach(request('types') as $type)
+                            <input type="hidden" name="types[]" value="{{ $type }}">
+                        @endforeach
+                    @endif
+                </form>
+            </div>
+
             <div class="row">
                 <!-- Desktop Filters Column -->
                 <div class="col-lg-3 d-none d-lg-block">

@@ -750,9 +750,14 @@
 
                         @foreach ($points as $index => $point)
                             @php
-                                $parts = explode(' - ', $point, 2);
-                                $title = $parts[0] ?? 'Feature';
-                                $content = $parts[1] ?? '';
+                                if (is_array($point)) {
+                                    $title = $point['title'] ?? 'Feature';
+                                    $content = $point['description'] ?? '';
+                                } else {
+                                    $parts = explode(' - ', (string) $point, 2);
+                                    $title = $parts[0] ?? 'Feature';
+                                    $content = $parts[1] ?? '';
+                                }
                                 $sectionId = 'section-' . ($index + 1);
                             @endphp
                             <div class="point-item" id="{{ $sectionId }}">
@@ -782,7 +787,11 @@
                             </a>
                             @foreach ($points as $index => $point)
                                 @php
-                                    $title = explode(' - ', $point)[0] ?? 'Detail';
+                                    if (is_array($point)) {
+                                        $title = $point['title'] ?? 'Detail';
+                                    } else {
+                                        $title = explode(' - ', (string) $point)[0] ?? 'Detail';
+                                    }
                                 @endphp
                                 <a href="#section-{{ $index + 1 }}" class="nav-link-custom ps-5 small">
                                     <i class="bi bi-dot"></i> {{ Str::limit($title, 30) }}

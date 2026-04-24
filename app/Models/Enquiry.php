@@ -24,6 +24,7 @@ class Enquiry extends Model
         'message',
         'status',
         'is_philanthropist',
+        'paid',
     ];
 
     /**

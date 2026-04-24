@@ -124,14 +124,14 @@
 				<div class="sidebar-right">
 					<!-- Logo -->
 					<div class="sidebar-logo">
-						<a href="/" class="logo logo-normal">
+						<a href="{{ route('admin.home') }}" class="logo logo-normal">
 							<img src="{{ asset($defaultSettings->site_logo ?? null)}}" alt="Img">
 						</a>
-						<a href="/" class="logo logo-white">
+						<a href="{{ route('admin.home') }}" class="logo logo-white">
 							<img src="{{ asset($defaultSettings->site_logo ?? null)}}" alt="Img">
 							{{-- <img src="{{ asset('resource/admin/assets/img/logo-white.svg')}}" alt="Img"> --}}
 						</a>
-						<a href="/" class="logo-small">
+						<a href="{{ route('admin.home') }}" class="logo-small">
 							<img src="{{ asset($defaultSettings->site_logo ?? null)}}" alt="Img">
 						</a>
 					</div>
@@ -148,7 +148,7 @@
 							<div class="tab-pane fade show active" id="dashboard">
 								<ul>
 									<li class="menu-title"><span>MAIN</span></li>
-									<li><a href="/" class="active">Admin Dashboard</a></li>
+									<li><a href="{{ route('admin.home') }}" class="active">Admin Dashboard</a></li>
 								</ul>
 							</div>
 							<div class="tab-pane fade" id="inventory">

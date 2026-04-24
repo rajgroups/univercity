@@ -392,30 +392,8 @@
             </div>
         </div>
     </section> <!-- How We Operate Section End -->
-    <style>
-        @media (max-width: 768px) {
-            .stats-section .border-end {
-                border-right: none !important;
-                margin-bottom: 20px;
-            }
-
-            .stats-section .col-md-3 {
-                margin-bottom: 15px;
-                margin-top: 15px;
-                border-bottom: 1px dotted;
-
-            }
-
-            .stats-section h2 {
-                font-size: 25px;
-            }
-
-            .stats-section p {
-                font-size: 15px;
-            }
-        }
-    </style>
-    <div class="stats-section py-5 mb-5 wow fadeInUp animated d-lg-block" data-wow-delay="440ms">
+   
+    <div class="stats-section py-5 mb-5 wow fadeInUp animated" data-wow-delay="440ms">
         <div class="container">
             <div class="modern-card p-4 py-5 bg-primary text-white">
                 <div class="row text-center g-4">
@@ -1303,7 +1281,7 @@
                         <div class="">
                             <i class="bi bi-quote text-primary opacity-25" style="font-size: 3rem; line-height: 1;"></i>
                         </div>
-                        <p class="fs-5 text-muted fst-italic mb-4" style="line-height: 1.8;">
+                        <p class="fs-6 text-muted fst-italic mb-4" style="line-height: 1.8;">
                             "{{ $settings->founder_message ?? 'Empowering the youth through skill development and quality education for a brighter future.' }}"
                         </p>
                         <hr class="opacity-10 my-4">
@@ -1430,7 +1408,7 @@
                 #learningjourney .accordion-button {
                     display: flex;
                     align-items: flex-start;
-                    gap: 14px;
+                    gap: 1px;
                     font-size: 14px;
                     line-height: 20px;
                     padding: 12px 10px;

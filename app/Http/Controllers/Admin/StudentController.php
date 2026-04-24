@@ -49,7 +49,7 @@ class StudentController extends Controller
      */
     public function edit(Student $student)
     {
-        //
+        return view('admin.student.edit', compact('student'));
     }
 
     /**
@@ -57,7 +57,14 @@ class StudentController extends Controller
      */
     public function update(Request $request, Student $student)
     {
-        //
+        $request->validate([
+            'student_name' => 'required|string|max:255',
+        ]);
+        
+        $student->update($request->all());
+        
+        notyf()->addSuccess('Student updated successfully.');
+        return redirect()->route('admin.student.index')->with('success', 'Student updated successfully.');
     }
 
     /**

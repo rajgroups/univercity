@@ -48,7 +48,8 @@
     @endif
 
     <form action="{{ route('admin.announcement.store') }}" method="POST" enctype="multipart/form-data"
-        class="add-product-form">
+        id="announcement-form"
+        class="add-product-form needs-validation" novalidate>
         @csrf
         <div class="add-product">
             <div class="accordions-items-seperate" id="accordionSpacingExample">
@@ -72,9 +73,11 @@
                                     <div class="mb-3">
                                         <label class="form-label">Announcement Title <span class="text-danger">*</span></label>
                                         <input type="text" class="form-control  @error('title') is-invalid @enderror"
-                                            name="title" value="{{ old('title') }}" placeholder="Please Enter Announcement title">
+                                            name="title" value="{{ old('title') }}" placeholder="Please Enter Announcement title" required>
                                         @error('title')
                                             <div class="invalid-feedback">{{ $message }}</div>
+                                        @else
+                                            <div class="invalid-feedback">Please enter the announcement title.</div>
                                         @enderror
                                     </div>
                                 </div>
@@ -82,9 +85,11 @@
                                     <div class="mb-3">
                                         <label class="form-label">Slug <span class="text-danger">*</span></label>
                                         <input type="text" class="form-control @error('slug') is-invalid @enderror"
-                                            name="slug" value="{{ old('slug') }}">
+                                            name="slug" value="{{ old('slug') }}" required>
                                         @error('slug')
                                             <div class="invalid-feedback">{{ $message }}</div>
+                                        @else
+                                            <div class="invalid-feedback">Please provide a valid slug.</div>
                                         @enderror
                                     </div>
                                 </div>
@@ -94,9 +99,11 @@
                             <div class="mb-3">
                                 <label for="short_description" class="form-label">Short Description <span class="text-danger">*</span> </label>
                                 <textarea class="form-control @error('short_description') is-invalid @enderror" name="short_description"
-                                    id="short_description" rows="3" class="form-control" placeholder="Brief short_description...">{{ old('short_description') }}</textarea>
-                                @error('slug')
+                                    id="short_description" rows="3" placeholder="Brief short description..." required>{{ old('short_description') }}</textarea>
+                                @error('short_description')
                                     <div class="invalid-feedback">{{ $message }}</div>
+                                @else
+                                    <div class="invalid-feedback">Please enter a short description.</div>
                                 @enderror
                             </div>
 
@@ -105,9 +112,11 @@
                                     <div class="mb-3">
                                         <label class="form-label">Image <span class="text-danger">*</span></label>
                                         <input type="file" class="form-control @error('image') is-invalid @enderror"
-                                            name="image" accept="image/*">
+                                            name="image" accept="image/*" required>
                                         @error('image')
                                             <div class="invalid-feedback">{{ $message }}</div>
+                                        @else
+                                            <div class="invalid-feedback">Please upload an image.</div>
                                         @enderror
                                         <small class="form-text text-muted">Maximum file size: 5MB. Allowed types: JPG, PNG, JPEG, etc.</small>
                                     </div>
@@ -115,10 +124,12 @@
                                 <div class="col-sm-6 col-12">
                                     <div class="mb-3">
                                         <label class="form-label">Banner Image <span class="text-danger">*</span></label>
-                                        <input type="file" class="form-control @error('image') is-invalid @enderror"
-                                            name="banner_image" accept="image/*">
+                                        <input type="file" class="form-control @error('banner_image') is-invalid @enderror"
+                                            name="banner_image" accept="image/*" required>
                                         @error('banner_image')
                                             <div class="invalid-feedback">{{ $message }}</div>
+                                        @else
+                                            <div class="invalid-feedback">Please upload a banner image.</div>
                                         @enderror
                                         <small class="form-text text-muted">Maximum file size: 5MB. Allowed types: JPG, PNG, JPEG, etc.</small>
                                     </div>
@@ -126,8 +137,7 @@
                                 <div class="col-sm-6 col-12">
                                     <div class="mb-3">
                                         <label class="form-label">Type <span class="text-danger">*</span></label>
-                                        <select name="type" class="form-select @error('type') is-invalid @enderror"
-                                            test>
+                                        <select name="type" class="form-select @error('type') is-invalid @enderror" required>
                                             <option value="">Select Type</option>
                                             <option value="1" {{ old('type') == '1' ? 'selected' : '' }}>Program
                                             </option>
@@ -136,14 +146,15 @@
                                         </select>
                                         @error('type')
                                             <div class="invalid-feedback">{{ $message }}</div>
+                                        @else
+                                            <div class="invalid-feedback">Please select a type.</div>
                                         @enderror
                                     </div>
                                 </div>
                                 <div class="col-sm-6 col-12">
                                     <div class="mb-3">
                                         <label class="form-label">Status <span class="text-danger">*</span></label>
-                                        <select name="status" class="form-select @error('status') is-invalid @enderror"
-                                            test>
+                                        <select name="status" class="form-select @error('status') is-invalid @enderror" required>
                                             <option value="">Select Status</option>
                                             <option value="1" {{ old('status') == '1' ? 'selected' : '' }}>Active
                                             </option>
@@ -152,6 +163,8 @@
                                         </select>
                                         @error('status')
                                             <div class="invalid-feedback">{{ $message }}</div>
+                                        @else
+                                            <div class="invalid-feedback">Please select a status.</div>
                                         @enderror
                                     </div>
                                 </div>
@@ -164,6 +177,8 @@
                                         <input type="text" name="subtitle" id="subtitle" class="form-control @error('subtitle') is-invalid @enderror" value="{{ old('subtitle') }}" placeholder="Enter program sub title" required>
                                         @error('subtitle')
                                             <div class="invalid-feedback">{{ $message }}</div>
+                                        @else
+                                            <div class="invalid-feedback">Please enter a sub title.</div>
                                         @enderror
                                     </div>
                                     <div class="mb-3">
@@ -178,7 +193,7 @@
                                      <!-- Category Select Dropdown -->
                                     <div class="mb-3">
                                         <label class="form-label">Category <span class="text-danger">*</span></label>
-                                        <select name="category_id" class="form-select @error('category_id') is-invalid @enderror">
+                                        <select name="category_id" class="form-select @error('category_id') is-invalid @enderror" required>
                                             <option value="">Select Category</option>
                                             @foreach ($categories as $category)
                                                 <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
@@ -188,6 +203,8 @@
                                         </select>
                                         @error('category_id')
                                             <div class="invalid-feedback">{{ $message }}</div>
+                                        @else
+                                            <div class="invalid-feedback">Please select a category.</div>
                                         @enderror
                                     </div>
                                 </div>
@@ -195,32 +212,47 @@
 
                             <!-- Bullet Points -->
                             <div class="mb-3">
-                                <label class="form-label">Bullet Points (key - value)</label>
+                                <label class="form-label">Bullet Points</label>
+                                <p class="text-muted small mb-2">Add separate title and description for each highlight.</p>
                                 <div id="bullet-points">
-                                    {{-- Loop through old 'points' to repopulate existing ones --}}
-                                    @if (old('points'))
-                                        @foreach (old('points') as $index => $point)
-                                            <div class="input-group mb-2">
-                                                <input type="text" name="points[]"
-                                                    class="form-control @error('points.' . $index) is-invalid @enderror"
-                                                    placeholder="Example: Curriculum Integration - Blending vocational skills with academics"
-                                                    value="{{ $point }}">
-                                                <button type="button"
-                                                    class="btn btn-outline-danger remove-bullet">−</button>
+                                    @php
+                                        $points = old('points', [['title' => '', 'description' => '']]);
+                                    @endphp
+
+                                    @foreach ($points as $index => $point)
+                                        <div class="bullet-point-item border rounded p-3 mb-3">
+                                            <div class="row g-2 align-items-start">
+                                                <div class="col-md-4">
+                                                    <input type="text"
+                                                        name="points[{{ $index }}][title]"
+                                                        class="form-control bullet-title @error('points.' . $index . '.title') is-invalid @enderror"
+                                                        placeholder="Title"
+                                                        value="{{ $point['title'] ?? '' }}">
+                                                    @error('points.' . $index . '.title')
+                                                        <div class="invalid-feedback">{{ $message }}</div>
+                                                    @enderror
+                                                </div>
+                                                <div class="col-md-7">
+                                                    <input type="text"
+                                                        name="points[{{ $index }}][description]"
+                                                        class="form-control bullet-description @error('points.' . $index . '.description') is-invalid @enderror"
+                                                        placeholder="Description"
+                                                        value="{{ $point['description'] ?? '' }}">
+                                                    @error('points.' . $index . '.description')
+                                                        <div class="invalid-feedback">{{ $message }}</div>
+                                                    @enderror
+                                                </div>
+                                                <div class="col-md-1">
+                                                    <button type="button"
+                                                        class="btn btn-outline-{{ $loop->first ? 'secondary add' : 'danger remove' }}-bullet w-100">
+                                                        {{ $loop->first ? '+' : '−' }}
+                                                    </button>
+                                                </div>
                                             </div>
-                                                @error('points.' . $index)
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
-                                        @endforeach
-                                    @else
-                                        {{-- Initial empty input for new announcement --}}
-                                        <div class="input-group mb-2">
-                                            <input type="text" name="points[]" class="form-control" placeholder="Example: Curriculum Integration - Blending vocational skills with academics">
-                                            <button type="button" class="btn btn-outline-secondary add-bullet">+</button>
+                                            <div class="bullet-row-error text-danger small mt-2 d-none"></div>
                                         </div>
-                                    @endif
+                                    @endforeach
                                 </div>
-                                {{-- This is for a general error related to the 'points' array itself (e.g., if it's test) --}}
                                 @error('points')
                                     <div class="text-danger mt-1">{{ $message }}</div>
                                 @enderror
@@ -352,69 +384,142 @@
     </script>
 
     <script>
-        document.addEventListener('click', function(e) {
-            // Bullet Points Logic
-            if (e.target.classList.contains('add-bullet')) {
-                e.preventDefault();
-                const group = `
-                <div class="input-group mb-2">
-                    <input type="text" name="points[]" class="form-control" placeholder="Key - Value">
-                    <button type="button" class="btn btn-outline-danger remove-bullet">−</button>
+        document.addEventListener('DOMContentLoaded', function() {
+            const bulletContainer = document.getElementById('bullet-points');
+            const announcementForm = document.getElementById('announcement-form');
+
+            function bulletRowTemplate(index) {
+                return `
+                <div class="bullet-point-item border rounded p-3 mb-3">
+                    <div class="row g-2 align-items-start">
+                        <div class="col-md-4">
+                            <input type="text" name="points[${index}][title]" class="form-control bullet-title" placeholder="Title">
+                        </div>
+                        <div class="col-md-7">
+                            <input type="text" name="points[${index}][description]" class="form-control bullet-description" placeholder="Description">
+                        </div>
+                        <div class="col-md-1">
+                            <button type="button" class="btn btn-outline-danger remove-bullet w-100">−</button>
+                        </div>
+                    </div>
+                    <div class="bullet-row-error text-danger small mt-2 d-none"></div>
                 </div>`;
-                document.getElementById('bullet-points').insertAdjacentHTML('beforeend', group);
-            }
-            if (e.target.classList.contains('remove-bullet')) {
-                e.preventDefault();
-                e.target.closest('.input-group').remove();
             }
 
-            // Attachment Logic
-            if (e.target.closest('.add-attachment')) {
-                e.preventDefault();
-                const container = document.getElementById('attachment-repeater');
-                const index = container.getElementsByClassName('attachment-item').length;
-                const html = `
-                <div class="row align-items-center mb-2 attachment-item">
-                    <div class="col-md-5">
-                        <input type="text" name="attachments[${index}][name]" class="form-control" placeholder="Document Name">
-                    </div>
-                    <div class="col-md-5">
-                        <input type="file" name="attachments[${index}][file]" class="form-control" accept="application/pdf">
-                    </div>
-                    <div class="col-md-2">
-                        <button type="button" class="btn btn-outline-danger remove-attachment w-100">−</button>
-                    </div>
-                </div>`;
-                container.insertAdjacentHTML('beforeend', html);
-            }
-            if (e.target.closest('.remove-attachment')) {
-                e.preventDefault();
-                e.target.closest('.attachment-item').remove();
+            function resetBulletValidation(row) {
+                row.querySelectorAll('.bullet-title, .bullet-description').forEach((input) => {
+                    input.classList.remove('is-invalid');
+                });
+
+                const errorBox = row.querySelector('.bullet-row-error');
+                errorBox.textContent = '';
+                errorBox.classList.add('d-none');
             }
 
-            // Source Link Logic
-            if (e.target.closest('.add-source-link')) {
-                e.preventDefault();
-                const container = document.getElementById('source-link-repeater');
-                const index = container.getElementsByClassName('source-link-item').length;
-                const html = `
-                <div class="row align-items-center mb-2 source-link-item">
-                    <div class="col-md-5">
-                        <input type="text" name="source_links[${index}][label]" class="form-control" placeholder="Link Label">
-                    </div>
-                    <div class="col-md-5">
-                        <input type="url" name="source_links[${index}][url]" class="form-control" placeholder="https://example.com">
-                    </div>
-                    <div class="col-md-2">
-                        <button type="button" class="btn btn-outline-danger remove-source-link w-100">−</button>
-                    </div>
-                </div>`;
-                container.insertAdjacentHTML('beforeend', html);
+            function validateBulletRows() {
+                let isValid = true;
+
+                bulletContainer.querySelectorAll('.bullet-point-item').forEach((row) => {
+                    resetBulletValidation(row);
+
+                    const title = row.querySelector('.bullet-title');
+                    const description = row.querySelector('.bullet-description');
+                    const titleValue = title.value.trim();
+                    const descriptionValue = description.value.trim();
+
+                    if (!titleValue && !descriptionValue) {
+                        return;
+                    }
+
+                    if (!titleValue || !descriptionValue) {
+                        isValid = false;
+                        title.classList.toggle('is-invalid', !titleValue);
+                        description.classList.toggle('is-invalid', !descriptionValue);
+
+                        const errorBox = row.querySelector('.bullet-row-error');
+                        errorBox.textContent = 'Both title and description are required for each bullet point.';
+                        errorBox.classList.remove('d-none');
+                    }
+                });
+
+                return isValid;
             }
-            if (e.target.closest('.remove-source-link')) {
-                e.preventDefault();
-                e.target.closest('.source-link-item').remove();
-            }
+
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('add-bullet')) {
+                    e.preventDefault();
+                    const index = bulletContainer.querySelectorAll('.bullet-point-item').length;
+                    bulletContainer.insertAdjacentHTML('beforeend', bulletRowTemplate(index));
+                }
+
+                if (e.target.classList.contains('remove-bullet')) {
+                    e.preventDefault();
+                    e.target.closest('.bullet-point-item').remove();
+                }
+
+                // Attachment Logic
+                if (e.target.closest('.add-attachment')) {
+                    e.preventDefault();
+                    const container = document.getElementById('attachment-repeater');
+                    const index = container.getElementsByClassName('attachment-item').length;
+                    const html = `
+                    <div class="row align-items-center mb-2 attachment-item">
+                        <div class="col-md-5">
+                            <input type="text" name="attachments[${index}][name]" class="form-control" placeholder="Document Name">
+                        </div>
+                        <div class="col-md-5">
+                            <input type="file" name="attachments[${index}][file]" class="form-control" accept="application/pdf">
+                        </div>
+                        <div class="col-md-2">
+                            <button type="button" class="btn btn-outline-danger remove-attachment w-100">−</button>
+                        </div>
+                    </div>`;
+                    container.insertAdjacentHTML('beforeend', html);
+                }
+                if (e.target.closest('.remove-attachment')) {
+                    e.preventDefault();
+                    e.target.closest('.attachment-item').remove();
+                }
+
+                // Source Link Logic
+                if (e.target.closest('.add-source-link')) {
+                    e.preventDefault();
+                    const container = document.getElementById('source-link-repeater');
+                    const index = container.getElementsByClassName('source-link-item').length;
+                    const html = `
+                    <div class="row align-items-center mb-2 source-link-item">
+                        <div class="col-md-5">
+                            <input type="text" name="source_links[${index}][label]" class="form-control" placeholder="Link Label">
+                        </div>
+                        <div class="col-md-5">
+                            <input type="url" name="source_links[${index}][url]" class="form-control" placeholder="https://example.com">
+                        </div>
+                        <div class="col-md-2">
+                            <button type="button" class="btn btn-outline-danger remove-source-link w-100">−</button>
+                        </div>
+                    </div>`;
+                    container.insertAdjacentHTML('beforeend', html);
+                }
+                if (e.target.closest('.remove-source-link')) {
+                    e.preventDefault();
+                    e.target.closest('.source-link-item').remove();
+                }
+            });
+
+            bulletContainer.addEventListener('input', function(e) {
+                const row = e.target.closest('.bullet-point-item');
+                if (row && (e.target.classList.contains('bullet-title') || e.target.classList.contains('bullet-description'))) {
+                    resetBulletValidation(row);
+                }
+            });
+
+            announcementForm.addEventListener('submit', function(e) {
+                if (!announcementForm.checkValidity() || !validateBulletRows()) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+                announcementForm.classList.add('was-validated');
+            }, false);
         });
     </script>
 @endpush

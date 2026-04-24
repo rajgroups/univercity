@@ -260,9 +260,9 @@
                                                     </li>
 
                                                     {{-- CSR Initiatives --}}
-                                                    <li>
+                                                    {{-- <li>
                                                         <a
-                                                            href="{{ route('web.blog.filter', ['category_id' => '', 'type' => 8]) }}">CSR Initiatives</a>
+                                                            href="{{ route('web.blog.filter', ['category_id' => '', 'type' => 8]) }}">CSR Initiatives</a> --}}
                                                         {{-- <ul class="sub-menu">
                                                             @foreach ($csrPrograms as $program)
                                                                 <li><a
@@ -270,7 +270,7 @@
                                                                 </li>
                                                             @endforeach
                                                         </ul> --}}
-                                                    </li>
+                                                    {{-- </li> --}}
 
                                                 </ul>
                                             </li>

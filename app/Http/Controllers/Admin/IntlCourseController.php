@@ -19,7 +19,9 @@ class IntlCourseController extends Controller
     public function index()
     {
         // List of Course
-        $courses = IntlCourse::all();
+        $courses = IntlCourse::whereHas('category', function($q) {
+            $q->where('status', 1);
+        })->get();
         return view('admin.intlcourse.list', compact('courses'));
     }
 
@@ -31,7 +33,7 @@ class IntlCourseController extends Controller
         // Create Course
         $sectors = Sector::where('status', 1)->where('type', 2)->get();
         $countrys = Country::where('status', 1)->get();
-        $categories = Category::where('type', 6)->get();
+        $categories = Category::where('status', 1)->where('type', 6)->get();
         return view('admin.intlcourse.create', compact('sectors', 'countrys', 'categories'));
     }
 
@@ -380,7 +382,7 @@ class IntlCourseController extends Controller
         // Get dropdown data
         $sectors = Sector::where('status', 1)->where('type', 2)->get();
         $countrys = Country::where('status', 1)->get();
-        $categories = Category::where('type', 6)->get();
+        $categories = Category::where('status', 1)->where('type', 6)->get();
 
         return view('admin.intlcourse.edit', compact('course', 'sectors', 'countrys', 'categories'));
     }

@@ -554,12 +554,12 @@
                                                             ({{ $course->review_count ?? '120' }} reviews)
                                                         </small>
                                                     </div>
-                                                    <div class="enrollment">
+                                                    {{-- <div class="enrollment">
                                                         <small class="text-muted">
                                                             <i class="bi bi-people me-1"></i>
                                                             {{ $course->enrollment_count }} enrolled
                                                         </small>
-                                                    </div>
+                                                    </div> --}}
                                                 </div>
                                                 <a href="{{ route('web.course.show', $course->slug) }}"
                                                     class="btn btn-primary w-100">
@@ -810,7 +810,7 @@
                             try {
                                 const mobileForm = desktopForm.cloneNode(true);
                                 mobileForm.id = 'courseFiltersMobile';
-                                
+
                                 // 1. Global ID and Label update
                                 const allElementsWithId = mobileForm.querySelectorAll('[id]');
                                 allElementsWithId.forEach(el => {
@@ -818,7 +818,7 @@
                                     if (oldId) {
                                         const newId = 'mobile_' + oldId;
                                         el.id = newId;
-                                        
+
                                         // Update associated labels
                                         try {
                                             const label = mobileForm.querySelector(`label[for="${oldId}"]`);
@@ -842,13 +842,13 @@
                                     if (collapse.id && !collapse.id.startsWith('mobile_')) {
                                         collapse.id = 'mobile_' + collapse.id;
                                     }
-                                    
+
                                     // Update parent reference so items close correctly
                                     const parent = collapse.getAttribute('data-bs-parent');
                                     if (parent && parent.startsWith('#')) {
                                         collapse.setAttribute('data-bs-parent', '#mobile_' + parent.substring(1));
                                     }
-                                    
+
                                     const labelledBy = collapse.getAttribute('aria-labelledby');
                                     if (labelledBy && !labelledBy.startsWith('mobile_')) {
                                         collapse.setAttribute('aria-labelledby', 'mobile_' + labelledBy);
@@ -863,7 +863,7 @@
                                         btn.setAttribute('data-bs-target', newTarget);
                                         btn.setAttribute('aria-controls', newTarget.substring(1));
                                     }
-                                    
+
                                     // Some themes put data-bs-parent on the button
                                     const btnParent = btn.getAttribute('data-bs-parent');
                                     if (btnParent && btnParent.startsWith('#')) {
@@ -874,7 +874,7 @@
                                 // Clear and Mount
                                 mobileFilterContent.innerHTML = '';
                                 mobileFilterContent.appendChild(mobileForm);
-                                
+
                             } catch (err) {
                                 console.error('Error cloning mobile filters:', err);
                             }

@@ -40,9 +40,12 @@
                 <form method="GET" action="{{ url()->current() }}" class="hero-search-wrapper shadow-lg rounded-pill bg-white p-2 d-flex">
                     <div class="flex-grow-1 px-3 d-flex align-items-center">
                         <i class="bi bi-search text-muted me-2"></i>
-                        <input type="text" name="search" value="{{ request('search') }}"
-                               class="form-control border-0 shadow-none border-0"
-                               placeholder="Search  projects">
+                       <input type="text" name="search" value="{{ request('search') }}"
+                            class="form-control border-0 shadow-none"
+                            placeholder="{{
+                                (isset($pageType) && $pageType === 'projects') ? 'Search projects' :
+                                ((isset($pageType) && $pageType === 'announcements') ? 'Search schemes or programs' : 'Search projects, schemes or programs')
+                            }}">
                                {{-- placeholder="Search for projects, schemes or programs..."> --}}
                     </div>
                     @if(request('type')) <input type="hidden" name="type" value="{{ request('type') }}"> @endif

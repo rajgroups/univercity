@@ -130,7 +130,7 @@
 
                             <div class="col-12">
                                 <div class="mb-3">
-                                    <label class="form-label fw-bold">Context Image <span class="text-danger">*</span></label>
+                                    <label class="form-label fw-bold">Context Image <span class="text-muted">(Optional)</span></label>
                                     <input type="file" name="image" class="form-control @error('image') is-invalid @enderror" accept="image/*">
                                     @error('image')
                                         <div class="invalid-feedback">{{ $message }}</div>
@@ -140,7 +140,7 @@
 
                             <div class="col-12">
                                 <div class="mb-3">
-                                    <label class="form-label fw-bold">Description <span class="text-danger">*</span></label>
+                                    <label class="form-label fw-bold">Description <span class="text-muted">(Optional)</span></label>
                                     <textarea name="description" id="summernote" class="form-control @error('description') is-invalid @enderror">{{ old('description') }}</textarea>
                                     <div class="form-text text-muted">Maximum 60 Words recommended for optimal display.</div>
                                     @error('description')

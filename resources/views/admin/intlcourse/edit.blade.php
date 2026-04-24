@@ -755,6 +755,15 @@ Edit New International Course </h4>
                                         <div class="card">
                                             <div class="card-body">
                                                 <div id="living-cost-container">
+                                                    <datalist id="currencyList">
+                                                        <option value="USD">USD</option>
+                                                        <option value="INR">INR</option>
+                                                        <option value="EUR">EUR</option>
+                                                        <option value="GBP">GBP</option>
+                                                        <option value="AUD">AUD</option>
+                                                        <option value="SGD">SGD</option>
+                                                        <option value="CAD">CAD</option>
+                                                    </datalist>
                                                     @php $livingCosts = $course->living_costs ?? []; @endphp
                                                     @foreach($livingCosts as $index => $cost)
                                                     <div class="fee-item mb-3">
@@ -770,11 +779,7 @@ Edit New International Course </h4>
                                                                        value="{{ $cost['amount'] ?? '' }}">
                                                             </div>
                                                             <div class="col-md-2">
-                                                                <select name="living_costs[{{ $index }}][currency]" class="form-select">
-                                                                    @foreach(['USD', 'INR', 'EUR', 'GBP', 'AUD', 'SGD', 'CAD'] as $curr)
-                                                                    <option value="{{ $curr }}" {{ ($cost['currency'] ?? '') == $curr ? 'selected' : '' }}>{{ $curr }}</option>
-                                                                    @endforeach
-                                                                </select>
+                                                                <input type="text" name="living_costs[{{ $index }}][currency]" class="form-control" list="currencyList" placeholder="Currency" value="{{ $cost['currency'] ?? 'USD' }}">
                                                             </div>
                                                             <div class="col-md-1">
                                                                 <button type="button" class="btn btn-danger btn-sm remove-living-cost">
@@ -1420,15 +1425,7 @@ $(document).ready(function() {
                            class="form-control" placeholder="Amount" step="0.01">
                 </div>
                 <div class="col-md-2">
-                    <select name="living_costs[${i}][currency]" class="form-select">
-                        <option value="USD">USD</option>
-                        <option value="INR">INR</option>
-                        <option value="EUR">EUR</option>
-                        <option value="GBP">GBP</option>
-                        <option value="AUD">AUD</option>
-                        <option value="SGD">SGD</option>
-                        <option value="CAD">CAD</option>
-                    </select>
+                    <input type="text" name="living_costs[${i}][currency]" class="form-control" list="currencyList" placeholder="Currency" value="USD">
                 </div>
                 <div class="col-md-1">
                     <button type="button" class="btn btn-danger btn-sm remove-living-cost">

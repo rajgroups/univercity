@@ -82,7 +82,7 @@
                             <th>S.No</th>
                             <th>Name</th>
                             <th>Type</th>
-                            <th>Slug</th>
+                            <th>Category Type</th>
                             <th>Created On</th>
                             <th>Status</th>
                             <th class="no-sort">Action</th>

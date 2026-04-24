@@ -155,7 +155,7 @@
 
                         <div class="mb-3">
                              <label class="form-label fw-bold">Rules & Guidelines</label>
-                             <textarea class="form-control @error('rules') is-invalid @enderror" name="rules" rows="3">{{ old('rules') }}</textarea>
+                             <textarea class="form-control @error('rules') is-invalid @enderror" name="rules" id="rules_editor" rows="3">{{ old('rules') }}</textarea>
                              @error('rules') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
                     </div>
@@ -317,6 +317,17 @@
                     ['view', ['fullscreen', 'codeview']]
                 ],
                 placeholder: 'Write detailed activity description here...'
+            });
+
+            // Initialize Summernote for Rules & Guidelines
+            $('#rules_editor').summernote({
+                height: 200,
+                toolbar: [
+                    ['style', ['bold', 'italic', 'underline', 'clear']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['view', ['fullscreen', 'codeview']]
+                ],
+                placeholder: 'Write rules & guidelines here...'
             });
 
             // Auto-generate slug from title

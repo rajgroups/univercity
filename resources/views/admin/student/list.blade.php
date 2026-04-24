@@ -70,9 +70,9 @@
                                 <a href="{{ route('admin.student.show', $student->id) }}" class="btn p-2 me-1" data-bs-toggle="tooltip" title="View">
                                     <i data-feather="eye" class="feather-eye"></i>
                                 </a>
-                                {{-- <a href="{{ route('admin.student.edit', $student->id) }}" class="btn p-2 me-1" data-bs-toggle="tooltip" title="Edit">
+                                <a href="{{ route('admin.student.edit', $student->id) }}" class="btn p-2 me-1" data-bs-toggle="tooltip" title="Edit">
                                     <i data-feather="edit" class="feather-edit"></i>
-                                </a> --}}
+                                </a>
                                 <form action="{{ route('admin.student.destroy', $student->id) }}" method="POST" style="display:inline;">
                                     @csrf
                                     @method('DELETE')

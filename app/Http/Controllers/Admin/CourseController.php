@@ -18,7 +18,12 @@ class CourseController extends Controller
      */
     public function index()
     {
-        $courses = Course::with(['sector', 'category'])->latest()->get();
+        $courses = Course::with(['sector', 'category'])
+            ->whereHas('category', function($q) {
+                $q->where('status', 1);
+            })
+            ->latest()
+            ->get();
         return view('admin.course.list', compact('courses'));
     }
 

@@ -101,9 +101,9 @@ class BlogController extends Controller
             // Create the blog/news
             $blog = Blog::create([
                 'title'             => $validated['title'],
-                'menu_title'        => $validated['menu_title'],
-                'category_id'       => $validated['category_id'],
-                'subtitle'          => $validated['subtitle'],
+                'menu_title'        => $validated['menu_title'] ?? null,
+                'category_id'       => $validated['category_id'] ?? null,
+                'subtitle'          => $validated['subtitle'] ?? null,
                 'short_description' => $validated['short_description'],
                 'slug'              => $validated['slug'],
                 'image'             => $imageName ? 'uploads/blogs/'.$imageName : null,
@@ -277,9 +277,9 @@ class BlogController extends Controller
             // Update the blog
             $blog->update([
                 'title'             => $validated['title'],
-                'menu_title'        => $validated['menu_title'],
-                'category_id'       => $validated['category_id'],
-                'subtitle'          => $validated['subtitle'],
+                'menu_title'        => $validated['menu_title'] ?? null,
+                'category_id'       => $validated['category_id'] ?? null,
+                'subtitle'          => $validated['subtitle'] ?? null,
                 'short_description' => $validated['short_description'],
                 'slug'              => $validated['slug'],
                 // Images are handled above by modifying the model instance directly

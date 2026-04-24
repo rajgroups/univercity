@@ -186,6 +186,11 @@
                             <i class="bi bi-mortarboard-fill text-primary me-1"></i>
                             {{ $course->pathway_type ?? 'Global Pathway' }}
                         </span>
+                        @if($course->internship_included)
+                            <span class="badge bg-warning text-dark fw-bold px-3 py-2 rounded-pill mb-3 ms-2 shadow-sm">
+                                <i class="bi bi-briefcase-fill me-1"></i> Internship Included
+                            </span>
+                        @endif
                         <h1 class="fw-bolder display-4 mb-3 text-white">{{ $course->course_title }}</h1>
                         <p class="lead opacity-90 mb-4 text-white">{{ $course->short_description }}</p>
 
@@ -440,7 +445,7 @@
 
                                             <div class="col-md-5 text-md-end mt-3 mt-md-0">
                                                 <button class="btn btn-light text-primary fw-bold px-4 py-3 rounded-pill shadow-sm hover-scale"
-                                                    onclick="document.getElementById('enquiryForm').scrollIntoView({behavior: 'smooth'})">
+                                                    onclick="document.getElementById('enquirySection').scrollIntoView({behavior: 'smooth'})">
                                                     Get Detailed Quote <i class="bi bi-arrow-right ms-2"></i>
                                                 </button>
                                             </div>
@@ -506,7 +511,7 @@
 
                                 {{-- Local Training Fees --}}
                                 @if($course->local_training && $course->local_training_fee && count($course->local_training_fee) > 0)
-                                <h5 class="fw-bold mb-3">Local Training Fees</h5>
+                                <h5 class="fw-bold mb-3 mt-3">Local Training Fees</h5>
                                 <div class="table-responsive mb-4">
                                     <table class="table table-borderless bg-light rounded-3 overflow-hidden">
                                         <thead class="bg-light border-bottom">
@@ -592,7 +597,7 @@
                     <!-- Additional Info Cards -->
                     <div class="row g-4 mb-4">
                         @if($course->certification_type || $course->accreditation_recognition)
-                        <div class="col-12">
+                        <div class="col-12 mt-2 mb-2">
                             <div class="bg-white rounded-4 shadow-sm p-4">
                                 <h5 class="fw-bold mb-3">Accreditation & Certification</h5>
                                 <div class="row g-4">
@@ -624,18 +629,18 @@
                         @endif
 
                         @if($course->visa_notes || $course->accommodation_notes)
-                        <div class="col-12">
+                        <div class="col-12 mt-2 mb-2">
                             <div class="bg-white rounded-4 shadow-sm p-4">
                                 <div class="row g-4">
                                     @if($course->visa_notes)
                                     <div class="col-md-6">
-                                        <h5 class="fw-bold mb-3"><i class="bi bi-passport text-danger me-2"></i>Visa Support</h5>
+                                        <h5 class="fw-bold mb-3 mt-3"><i class="bi bi-passport text-danger me-2"></i>Visa Support</h5>
                                         <p class="text-muted small mb-0">{!! strip_tags($course->visa_notes) !!}</p>
                                     </div>
                                     @endif
                                     @if($course->accommodation_notes)
                                     <div class="col-md-6">
-                                        <h5 class="fw-bold mb-3"><i class="bi bi-house-heart text-purple me-2"></i>Accommodation</h5>
+                                        <h5 class="fw-bold mb-3 mt-3"><i class="bi bi-house-heart text-purple me-2"></i>Accommodation</h5>
                                         <p class="text-muted small mb-0">{!! strip_tags($course->accommodation_notes) !!}</p>
                                     </div>
                                     @endif
@@ -645,7 +650,7 @@
                         @endif
 
                         @if($course->faqs && count($course->faqs) > 0)
-                        <div class="col-12">
+                        <div class="col-12 mt-2 mb-2">
                             <div class="bg-white rounded-4 shadow-sm p-4">
                                 <h5 class="fw-bold mb-4">Frequently Asked Questions</h5>
                                 <div class="accordion accordion-modern" id="faqAccordion">
@@ -707,7 +712,7 @@
                                     </span>
                                 </li>
                                 <li class="d-flex justify-content-between py-2 border-bottom">
-                                    <span class="text-muted">Mode</span>
+                                    <span class="text-muted">Intake Months</span>
                                     <span class="fw-bold text-dark">
                                         @if($course->mode_of_study)
                                             {{ is_array($course->mode_of_study) ? implode(', ', $course->mode_of_study) : $course->mode_of_study }}
@@ -736,7 +741,7 @@
                                 </li>
                             </ul>
 
-                            <button class="btn btn-primary w-100 btn-lg mb-2 shadow-sm lift-btn" onclick="document.getElementById('enquiryForm').scrollIntoView({behavior: 'smooth'})">
+                            <button class="btn btn-primary w-100 btn-lg mb-2 shadow-sm lift-btn" onclick="document.getElementById('enquirySection').scrollIntoView({behavior: 'smooth'})">
                                 Enquire Now <i class="bi bi-arrow-right ms-2"></i>
                             </button>
 
@@ -767,7 +772,7 @@
         </div>
     </section>
     {{-- MODERN FULL-WIDTH ENQUIRY SECTION --}}
-    <section class="enquiry-section py-5 mb-5 overflow-hidden position-relative">
+    <section id="enquirySection" class="enquiry-section py-5 mb-5 overflow-hidden position-relative">
         <div class="position-absolute top-0 start-0 w-100 h-100 bg-gradient opacity-5"></div>
         <div class="row justify-content-center position-relative z-1">
             <div class="col-xl-10">
@@ -856,9 +861,6 @@
                                         <button type="submit" class="btn btn-primary d-flex align-items-center justify-content-center gap-2 py-3 w-100 rounded-3 shadow-sm hover-lift fw-bold">
                                             Submit Inquiry <i class="bi bi-arrow-right"></i>
                                         </button>
-                                        <p class="text-center text-muted small mt-3 mb-0">
-                                            <i class="bi bi-info-circle me-1"></i> By submitting, you agree to our Terms & Privacy Policy
-                                        </p>
                                     </div>
                                 </div>
                             </form>
@@ -880,7 +882,7 @@
                 <!-- Swiper Navigation Buttons Here if needed -->
             </div>
 
-            <div class="swiper mySwiper">
+            <div class="swiper globalCourseSwiper">
                 <div class="swiper-wrapper">
                     @foreach($otherCourses as $relatedCourse)
                     <div class="swiper-slide h-auto">
@@ -923,7 +925,7 @@
 
 @push('scripts')
 <script>
-    var swiper = new Swiper(".mySwiper", {
+    var swiper = new Swiper(".globalCourseSwiper", {
         slidesPerView: 1,
         spaceBetween: 24,
         loop: true,

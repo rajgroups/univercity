@@ -10,6 +10,42 @@ use Illuminate\Support\Str;
 
 class AnnouncementController extends Controller
 {
+    private function pointRules(): array
+    {
+        return [
+            'points'                => 'nullable|array',
+            'points.*.title'        => 'nullable|string|max:255|required_with:points.*.description',
+            'points.*.description'  => 'nullable|string|max:500|required_with:points.*.title',
+        ];
+    }
+
+    private function normalizePoints(?array $points): ?string
+    {
+        if (empty($points)) {
+            return null;
+        }
+
+        $normalized = collect($points)
+            ->map(function ($point) {
+                $title = trim((string) data_get($point, 'title', ''));
+                $description = trim((string) data_get($point, 'description', ''));
+
+                if ($title === '' && $description === '') {
+                    return null;
+                }
+
+                return [
+                    'title' => $title,
+                    'description' => $description,
+                ];
+            })
+            ->filter()
+            ->values()
+            ->all();
+
+        return !empty($normalized) ? json_encode($normalized) : null;
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -49,13 +85,6 @@ class AnnouncementController extends Controller
             'type'              => 'required|in:1,2',
             'status'            => 'required|in:0,1',
             'description'       => 'nullable|string',
-            'points'            => 'nullable|array',
-            'points.*'          => [
-                'nullable',
-                'string',
-                'max:255',
-                'regex:/^[^-\n]+ - [^-\n]+$/'
-            ],
             'category_id'       => 'nullable|exists:category,id',
             'duration'          => 'nullable|string|max:191',
             'attachments'       => 'nullable|array',
@@ -64,7 +93,7 @@ class AnnouncementController extends Controller
             'source_links'       => 'nullable|array',
             'source_links.*.label' => 'nullable|string|max:255',
             'source_links.*.url'   => 'nullable|url|max:255',
-        ]);
+        ] + $this->pointRules());
 
 
         // Convert type/status to int
@@ -120,7 +149,7 @@ class AnnouncementController extends Controller
         $validated['source_links'] = !empty($sourceLinks) ? json_encode($sourceLinks) : null;
 
         // Save points JSON
-        $validated['points'] = $request->filled('points') ? json_encode(array_filter($request->input('points'))) : null;
+        $validated['points'] = $this->normalizePoints($request->input('points'));
 
         $announcement = Announcement::create($validated);
 
@@ -178,13 +207,6 @@ class AnnouncementController extends Controller
             'gallery.*'             => 'nullable|image|mimes:jpeg,png,jpg,gif|max:3072', // gallery images
             'image'                 => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'banner_image'          => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'points'            => 'nullable|array',
-            'points.*'          => [
-                'nullable',
-                'string',
-                'max:255',
-                'regex:/^[^-\n]+ - [^-\n]+$/'
-            ],
             'category_id'       => 'nullable|exists:category,id',
             'duration'          => 'nullable|string|max:191',
             'attachments'       => 'nullable|array',
@@ -193,7 +215,7 @@ class AnnouncementController extends Controller
             'source_links'       => 'nullable|array',
             'source_links.*.label' => 'nullable|string|max:255',
             'source_links.*.url'   => 'nullable|url|max:255',
-        ]);
+        ] + $this->pointRules());
 
         // Handle image upload
         if ($request->hasFile('image')) {
@@ -295,7 +317,7 @@ class AnnouncementController extends Controller
         $announcement->source_links = !empty($sourceLinks) ? json_encode($sourceLinks) : null;
 
         // Save bullet points as JSON
-        $announcement->points = json_encode(array_filter($request->points ?? [])); // Save cleaned array
+        $announcement->points = $this->normalizePoints($request->input('points'));
 
         $announcement->save();
         notyf()->addSuccess('Announcement updated successfully.');

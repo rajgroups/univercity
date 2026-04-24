@@ -760,7 +760,8 @@ Add New International Course </h4>
                                                                        class="form-control" placeholder="Amount" step="0.01">
                                                             </div>
                                                             <div class="col-md-2">
-                                                                <select name="living_costs[0][currency]" class="form-select">
+                                                                <input type="text" name="living_costs[0][currency]" class="form-control" list="currencyList" placeholder="Currency" value="USD">
+                                                                <datalist id="currencyList">
                                                                     <option value="USD">USD</option>
                                                                     <option value="INR">INR</option>
                                                                     <option value="EUR">EUR</option>
@@ -768,7 +769,7 @@ Add New International Course </h4>
                                                                     <option value="AUD">AUD</option>
                                                                     <option value="SGD">SGD</option>
                                                                     <option value="CAD">CAD</option>
-                                                                </select>
+                                                                </datalist>
                                                             </div>
                                                             <div class="col-md-1">
                                                                 <button type="button" class="btn btn-danger btn-sm remove-living-cost">
@@ -1526,15 +1527,7 @@ $(document).ready(function() {
                            class="form-control" placeholder="Amount" step="0.01">
                 </div>
                 <div class="col-md-2">
-                    <select name="living_costs[${i}][currency]" class="form-select">
-                        <option value="USD">USD</option>
-                        <option value="INR">INR</option>
-                        <option value="EUR">EUR</option>
-                        <option value="GBP">GBP</option>
-                        <option value="AUD">AUD</option>
-                        <option value="SGD">SGD</option>
-                        <option value="CAD">CAD</option>
-                    </select>
+                    <input type="text" name="living_costs[${i}][currency]" class="form-control" list="currencyList" placeholder="Currency" value="USD">
                 </div>
                 <div class="col-md-1">
                     <button type="button" class="btn btn-danger btn-sm remove-living-cost">

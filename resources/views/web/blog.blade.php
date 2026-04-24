@@ -256,10 +256,10 @@
 @php
     $currentType = request('type');
     $currentCategory = request('category_id');
-    
+
     $heroTitle = "Insights & Perspectives";
     $heroSubtitle = "Exploring the future of skill development, innovation, and entrepreneurship in the modern Indian landscape.";
-    
+
     if ($currentType) {
         $typeLabel = match((int)$currentType) {
             1 => 'Our Blogs',
@@ -272,7 +272,7 @@
         };
         $heroTitle = $typeLabel;
     }
-    
+
     if ($currentCategory) {
         $cat = $categories->where('id', $currentCategory)->first();
         if ($cat) {
@@ -295,7 +295,7 @@
 </div>
 
 <div class="container pb-5">
-    
+
     {{-- FILTER FORM --}}
     <div class="filter-wrapper mb-5 d-none d-lg-block">
         <form method="GET" action="{{ route('web.blog.filter') }}" id="blogFilterFormDesktop">
@@ -332,7 +332,7 @@
                         <span class="input-group-text bg-white border-end-0 border-radius-custom-left">
                             <i class="bi bi-search text-muted"></i>
                         </span>
-                        <input type="text" name="search" id="search_desktop" value="{{ request('search') }}" 
+                        <input type="text" name="search" id="search_desktop" value="{{ request('search') }}"
                                class="form-control form-control-custom border-start-0" placeholder="Keywords...">
                     </div>
                 </div>
@@ -363,7 +363,7 @@
     {{-- RESULTS GRID --}}
     <div class="row g-4">
         @forelse($blogs as $blog)
-            <div class="col-lg-4 col-md-6">
+            <div class="col-lg-4 col-md-6 m-1">
                 <article class="blog-card">
                     <div class="blog-card-img-wrapper">
                         @php
@@ -457,19 +457,19 @@
         if ($desktopFilters.length && $mobileContainer.length) {
             // Clone form content
             const $clonedForm = $desktopFilters.clone();
-            
+
             // Adjust IDs and layout for mobile
             $clonedForm.attr('id', 'blogFilterFormMobile');
-            
+
             // Remove the desktop actions column (last col-md-3)
             $clonedForm.find('.col-md-3').last().remove();
-            
+
             // Change remaining column widths to 12 for vertical layout
             $clonedForm.find('.col-md-3').removeClass('col-md-3').addClass('col-12 mb-3');
-            
+
             // Fix search input icon spacing/border if needed
             $clonedForm.find('.border-radius-custom-left').removeClass('border-radius-custom-left');
-            
+
             // Add a dedicated mobile submit button
             const mobileBtn = `
                 <div class="col-12 mt-4 d-grid gap-2">
@@ -482,7 +482,7 @@
                 </div>
             `;
             $clonedForm.find('.row').append(mobileBtn);
-            
+
             $mobileContainer.html($clonedForm);
         }
     });

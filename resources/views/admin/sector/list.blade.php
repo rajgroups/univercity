@@ -67,7 +67,7 @@
                             <th>Sector</th>
                             <th>Position</th>
                             <th>Type</th>
-                            <th>Slug</th>
+                            <th>Sector Code</th>
                             <th>Created On</th>
                             <th>Status</th>
                             <th class="no-sort text-center">Action</th>

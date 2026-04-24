@@ -10,7 +10,7 @@
     <meta name="keywords" content="">
     <meta name="author" content="pos Admin">
     <meta name="robots" content="index, follow">
-    <title>{{ asset($defaultSettings->site_title ?? null) }} - Login</title>
+    <title>{{ $defaultSettings->site_title ?? 'Admin' }} - Login</title>
 
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="{{ asset($defaultSettings->favicon ?? null) }}">
@@ -92,7 +92,7 @@
             <!-- Title -->
             <div class="login-title">
                 <h3>Sign In</h3>
-                <p class="text-muted">Access the ISICO panel using your email and passcode.</p>
+                <p class="text-muted">Access the {{ $defaultSettings->site_title ?? 'Admin' }} panel using your email and passcode.</p>
             </div>
 
             <!-- Error Handling -->

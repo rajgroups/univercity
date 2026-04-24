@@ -8,6 +8,8 @@ use App\Models\Category;
 use App\Models\Course;
 use App\Models\Project;
 use App\Models\Sector;
+use App\Models\Enquiry;
+use App\Models\Student;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -40,6 +42,16 @@ class DashboardController extends Controller
                 'total' => Blog::count(),
                 'active' => Blog::where('status', 1)->count(),
                 'inactive' => Blog::where('status', 0)->count(),
+            ],
+            'enquiries' => [
+                'total' => Enquiry::count(),
+                'active' => Enquiry::where('status', 1)->count(),
+                'inactive' => Enquiry::where('status', 0)->count(),
+            ],
+            'students' => [
+                'total' => Student::count(),
+                'active' => Student::where('status', 'active')->count(),
+                'inactive' => Student::where('status', 'inactive')->count(),
             ],
         ];
 

@@ -62,7 +62,7 @@
                         <tr>
                             <th>S.No</th>
                             <th>Name</th>
-                            <th>Slug</th>
+                            <th>Code</th>
                             <th>Created On</th>
                             <th>Status</th>
                             <th class="no-sort">Action</th>
@@ -74,7 +74,7 @@
                                 {{-- <td><input type="checkbox" class="select-item" value="{{ $item->id }}"></td> --}}
                                 <td>{{ $loop->index + 1 }}</td>
                                 <td><span class="text-gray-9">{{ $item->course_title }}</span></td>
-                                <td>{{ $item->slug }}</td>
+                                <td>{{ $item->course_code ?? null }}</td>
                                 <td>{{ $item->created_at->format('d M Y') }}</td>
 
                                 <td>

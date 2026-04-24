@@ -199,7 +199,9 @@
                              <div class="col-lg-3 col-md-6">
                                 <div class="course-card">
                                     <a href="{{ route('web.course.index', ['sectors' => $item->id]) }}" class="card-img">
-                                        <img src="{{ asset($item->image)}}" alt="img">
+                                        <img src="{{ $item->image ? asset($item->image) : asset('resource/web/assets/media/default/default-img.png') }}" 
+                                             onerror="this.src='{{ asset('resource/web/assets/media/default/default-img.png') }}'" 
+                                             alt="img">
                                     </a>
                                     <div class="card-content">
                                         {{-- <a href="{{ route('web.course.index', ['sectors' => $item->id]) }}" class="h5 

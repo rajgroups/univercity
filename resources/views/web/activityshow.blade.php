@@ -222,7 +222,7 @@
 
                         <span class="event-badge modern-success text-white">
                             <i class="fas {{ $event->entry_fee > 0 ? 'fa-ticket-alt' : 'fa-gift' }} me-2"></i>
-                            {{ $event->entry_fee > 0 ? 'Paid: ₹' . number_format($event->entry_fee, 2) : 'Free' }}
+                            {{ $event->entry_fee > 0 ? 'Entry Fee : ₹' . number_format($event->entry_fee, 2) : 'Free' }}
                         </span>
 
                         <span class="event-badge text-white" style="background: rgba(255,255,255,0.15); backdrop-filter: blur(4px);">
@@ -538,7 +538,7 @@
 
                             <div class="border rounded bg-light p-3">
                                 <p class="mb-0 text-dark" style="text-align: justify;">
-                                    {!! nl2br(e($event->rules)) !!}
+                                    {!! $event->rules !!}
                                 </p>
                             </div>
 

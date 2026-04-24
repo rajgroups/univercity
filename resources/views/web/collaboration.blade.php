@@ -173,8 +173,6 @@
                                     Partnerships</a>
                                 <a href="#government" class="list-group-item list-group-item-action">Government
                                     Collaborations</a>
-                                <a href="#strategic" class="list-group-item list-group-item-action">Strategic
-                                    Partnerships</a>
                                 <a href="#international" class="list-group-item list-group-item-action">International
                                     Partnerships</a>
                                 <a href="#academic" class="list-group-item list-group-item-action">Academic
@@ -182,9 +180,11 @@
                                 <a href="#ngo" class="list-group-item list-group-item-action">NGOs and Social Development</a>
                                 <a href="#volunteer" class="list-group-item list-group-item-action">Volunteer
                                     Collaboration</a>
+                                 <a href="#strategic" class="list-group-item list-group-item-action">Strategic
+                                    Partnerships</a>
                             </div>
                             <div class="card-footer p-3 bg-light border-0">
-                                <button class="btn btn-warning w-100 py-3 fw-bold rounded-3 shadow-sm text-white" 
+                                <button class="btn btn-warning w-100 py-3 fw-bold rounded-3 shadow-sm text-white"
                                     data-bs-toggle="modal" data-bs-target="#registerModal"
                                     style="background-color: #FF671F; border: none;">
                                     <i class="bi bi-pencil-square me-2"></i>Register Now
@@ -201,7 +201,7 @@
                         <div class="card shadow-sm">
                             <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
                                 <h2 class="h4 mb-0 text-white">Corporate Partnerships</h2>
-                                <button class="btn btn-warning btn-sm fw-bold border-0 shadow-sm px-3" 
+                                <button class="btn btn-warning btn-sm fw-bold border-0 shadow-sm px-3"
                                     data-bs-toggle="modal" data-bs-target="#registerModal"
                                     style="background-color: #FF671F;">
                                     Register Now
@@ -462,7 +462,7 @@
                         <div class="card shadow-sm">
                             <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
                                 <h2 class="h4 mb-0 text-white">Government Collaborations</h2>
-                                <button class="btn btn-warning btn-sm fw-bold border-0 shadow-sm px-3" 
+                                <button class="btn btn-warning btn-sm fw-bold border-0 shadow-sm px-3"
                                     data-bs-toggle="modal" data-bs-target="#registerModal"
                                     style="background-color: #FF671F;">
                                     Register Now
@@ -593,7 +593,7 @@
                         <div class="card shadow-sm">
                             <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
                                 <h2 class="h4 mb-0 text-white">Strategic Partnerships</h2>
-                                <button class="btn btn-warning btn-sm fw-bold border-0 shadow-sm px-3" 
+                                <button class="btn btn-warning btn-sm fw-bold border-0 shadow-sm px-3"
                                     data-bs-toggle="modal" data-bs-target="#registerModal"
                                     style="background-color: #FF671F;">
                                     Register Now
@@ -747,7 +747,7 @@
                         <div class="card shadow-sm">
                             <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
                                 <h2 class="h4 mb-0 text-white">International Partnerships</h2>
-                                <button class="btn btn-warning btn-sm fw-bold border-0 shadow-sm px-3" 
+                                <button class="btn btn-warning btn-sm fw-bold border-0 shadow-sm px-3"
                                     data-bs-toggle="modal" data-bs-target="#registerModal"
                                     style="background-color: #FF671F;">
                                     Register Now
@@ -999,7 +999,7 @@
                         <div class="card shadow-sm">
                             <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
                                 <h2 class="h4 mb-0 text-white">Academic Collaborations</h2>
-                                <button class="btn btn-warning btn-sm fw-bold border-0 shadow-sm px-3" 
+                                <button class="btn btn-warning btn-sm fw-bold border-0 shadow-sm px-3"
                                     data-bs-toggle="modal" data-bs-target="#registerModal"
                                     style="background-color: #FF671F;">
                                     Register Now
@@ -1232,7 +1232,7 @@
                         <div class="card shadow-sm border-0">
                             <div class="card-header bg-primary text-white py-3 d-flex justify-content-between align-items-center">
                                 <h2 class="h4 mb-0 text-white"><i class="bi bi-diagram-3-fill me-2"></i>NGOs and Social Development</h2>
-                                <button class="btn btn-warning btn-sm fw-bold border-0 shadow-sm px-3" 
+                                <button class="btn btn-warning btn-sm fw-bold border-0 shadow-sm px-3"
                                     data-bs-toggle="modal" data-bs-target="#registerModal"
                                     onclick="document.getElementById('collaborationType').value='NGO'"
                                     style="background-color: #FF671F;">
@@ -1284,7 +1284,7 @@
                         <div class="card shadow-sm border-0">
                             <div class="card-header bg-primary text-white py-3 d-flex justify-content-between align-items-center">
                                 <h2 class="h4 mb-0 text-white"><i class="bi bi-people-fill me-2"></i>Volunteer Collaboration</h2>
-                                <button class="btn btn-warning btn-sm fw-bold border-0 shadow-sm px-3" 
+                                <button class="btn btn-warning btn-sm fw-bold border-0 shadow-sm px-3"
                                     data-bs-toggle="modal" data-bs-target="#registerModal"
                                     onclick="document.getElementById('collaborationType').value='Volunteer'"
                                     style="background-color: #FF671F;">
@@ -1395,7 +1395,7 @@
                         <div class="card-body p-5">
                             <h2 class="text-center mb-4 text-primary">Partner With Us</h2>
                             <p class="text-center mb-5 text-muted">Interested in collaborating? Fill out the form below and our team will get back to you.</p>
-                            
+
                             <form action="{{ route('web.enquiry') }}" method="POST">
                                 @csrf
                                 <input type="hidden" name="type" value="4">

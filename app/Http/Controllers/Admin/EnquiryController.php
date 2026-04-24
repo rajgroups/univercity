@@ -48,7 +48,7 @@ class EnquiryController extends Controller
      */
     public function edit(Enquiry $enquiry)
     {
-        //
+        return view('admin.enquiry.edit', compact('enquiry'));
     }
 
     /**
@@ -56,7 +56,15 @@ class EnquiryController extends Controller
      */
     public function update(Request $request, Enquiry $enquiry)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+            'mobile' => 'required',
+        ]);
+        
+        $enquiry->update($request->all());
+        
+        notyf()->addSuccess('Enquiry updated successfully.');
+        return redirect()->route('admin.enquiry.index')->with('success', 'Enquiry updated successfully.');
     }
 
     /**
