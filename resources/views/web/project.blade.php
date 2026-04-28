@@ -955,6 +955,30 @@
                             </div>
                             @endif
 
+                            <!-- Key Stakeholders Block -->
+                            @if($stakeholders->count() > 0)
+                            <div class="mb-5">
+                                <h5 class="fw-bold mb-3"><i class="bi bi-people-fill me-2 text-primary"></i>Key Stakeholders</h5>
+                                <div class="row g-3">
+                                    @foreach($stakeholders as $sh)
+                                    <div class="col-md-6">
+                                        <div class="card border-0 shadow-sm rounded-3 h-100 p-3 hover-lift">
+                                            <div class="d-flex align-items-center">
+                                                <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
+                                                    <i class="bi bi-people-fill fs-4"></i>
+                                                </div>
+                                                <div>
+                                                    <h6 class="fw-bold mb-1">{{ $sh->full_name }}</h6>
+                                                    <small class="text-muted"><i class="bi bi-briefcase me-1"></i>{{ $sh->designation ?? 'Project Stakeholder' }}</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                            @endif
+
                                <!-- Location Details Section -->
                             @if($project->target_location_type || $project->location_summary)
                             <div class="mb-5">
@@ -1251,170 +1275,10 @@
 
         <!-- Milestones Tab -->
         <div class="tab-pane fade" id="milestones" role="tabpanel">
-
             @if(isset($milestones) && $milestones->count() > 0)
-
-                <!-- View Switch Tabs -->
-                <ul class="nav nav-pills mb-4" id="milestoneViewTab" role="tablist">
-                    <li class="nav-item">
-                        <button class="nav-link" data-bs-toggle="pill"
-                            data-bs-target="#milestone-card-view" type="button">
-                            <i class="bi bi-grid-3x3-gap me-1"></i> Card View
-                        </button>
-                    </li>
-                    <li class="nav-item">
-                        <button class="nav-link active" data-bs-toggle="pill"
-                            data-bs-target="#milestone-table-view" type="button">
-                            <i class="bi bi-table me-1"></i> Table View
-                        </button>
-                    </li>
-
-                     <li class="nav-item">
-                        <button class="nav-link" data-bs-toggle="pill"
-                            data-bs-target="#milestone-list-view" type="button">
-                            <i class="bi bi-table me-1"></i> list View
-                        </button>
-                    </li>
-                </ul>
-
                 <div class="tab-content">
-
-                    <!-- ================= CARD VIEW ================= -->
-                    <div class="tab-pane fade" id="milestone-card-view">
-
-                        <div class="row g-4">
-                            @foreach($milestones->sortBy('phase') as $milestone)
-                            <div class="col-12 col-md-6 col-lg-4">
-                                <div class="card border-0 shadow-sm h-100">
-                                    <div class="card-body p-4">
-
-                                        <div class="d-flex justify-content-between mb-3">
-                                            <div>
-                                                <span class="badge bg-primary bg-opacity-10 text-white mb-2">
-                                                    {{ $milestone->phase }}
-                                                </span>
-                                                <h6 class="fw-bold mb-1">{{ $milestone->task_name }}</h6>
-                                            </div>
-                                            <span class="badge
-                                                @switch($milestone->status)
-                                                    @case('completed') bg-success @break
-                                                    @case('in-progress') bg-warning text-dark @break
-                                                    @default bg-secondary
-                                                @endswitch">
-                                                {{ ucfirst($milestone->status) }}
-                                            </span>
-                                        </div>
-
-                                        <!-- Progress -->
-                                        <div class="mb-3">
-                                            <div class="progress" style="height:6px;">
-                                                <div class="progress-bar
-                                                    {{ $milestone->progress == 100 ? 'bg-success' : 'bg-primary' }}"
-                                                    style="width: {{ $milestone->progress }}%">
-                                                </div>
-                                            </div>
-                                            <small class="text-muted">{{ $milestone->progress }}% completed</small>
-                                        </div>
-
-                                        <!-- Dates -->
-                                        <div class="d-flex justify-content-between small text-muted mb-2">
-                                            <span>
-                                                <i class="bi bi-calendar"></i>
-                                                {{ $milestone->planned_start_date ? date('d M', strtotime($milestone->planned_start_date)) : 'TBD' }}
-                                            </span>
-                                            <span>
-                                                <i class="bi bi-flag"></i>
-                                                {{ ucfirst($milestone->priority) }}
-                                            </span>
-                                        </div>
-
-                                        @if($milestone->notes)
-                                        <div class="mt-3 p-2 bg-light rounded small">
-                                            <i class="bi bi-sticky me-1"></i>{{ $milestone->notes }}
-                                        </div>
-                                        @endif
-
-                                    </div>
-                                </div>
-                            </div>
-                            @endforeach
-                        </div>
-
-                    </div>
-
-                    <!-- ================= TABLE VIEW ================= -->
-                    <div class="tab-pane fade show active" id="milestone-table-view">
-
-                        <div class="table-responsive">
-                            <table class="table table-hover align-middle">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>Phase</th>
-                                        <th>Task</th>
-                                        <th>Status</th>
-                                        <th>Progress</th>
-                                        <th>Start</th>
-                                        <th>End</th>
-                                        <th>Priority</th>
-                                        <th>In Charge</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($milestones->sortBy('phase') as $milestone)
-                                    <tr>
-                                        <td>
-                                            <span class="badge bg-primary bg-opacity-10 text-white">
-                                                {{ $milestone->phase }}
-                                            </span>
-                                        </td>
-                                        <td class="fw-semibold">{{ $milestone->task_name }}</td>
-                                        <td>
-                                            <span class="badge
-                                                @switch($milestone->status)
-                                                    @case('completed') bg-success @break
-                                                    @case('in-progress') bg-warning text-dark @break
-                                                    @default bg-secondary
-                                                @endswitch">
-                                                {{ ucfirst($milestone->status) }}
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <div class="progress" style="height:5px;">
-                                                <div class="progress-bar
-                                                    {{ $milestone->progress == 100 ? 'bg-success' : 'bg-primary' }}"
-                                                    style="width: {{ $milestone->progress }}%">
-                                                </div>
-                                            </div>
-                                            <small>{{ $milestone->progress }}%</small>
-                                        </td>
-                                        <td>
-                                            {{ $milestone->planned_start_date ? date('d M Y', strtotime($milestone->planned_start_date)) : 'TBD' }}
-                                        </td>
-                                        <td>
-                                            {{ $milestone->planned_end_date ? date('d M Y', strtotime($milestone->planned_end_date)) : 'TBD' }}
-                                        </td>
-                                        <td>
-                                            <span class="badge text-white
-                                                @switch($milestone->priority)
-                                                    @case('high') bg-danger @break
-                                                    @case('urgent') bg-danger @break
-                                                    @case('medium') bg-warning @break
-                                                    @default bg-info
-                                                @endswitch">
-                                                {{ ucfirst($milestone->priority) }}
-                                            </span>
-                                        </td>
-                                        <td>{{ $milestone->in_charge ?? '-' }}</td>
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-
-                    </div>
-
                      <!-- ================= List VIEW ================= -->
-                    <div class="tab-pane fade" id="milestone-list-view">
+                    <div class="tab-pane fade show active" id="milestone-list-view">
                         @php
                             $phasesList = ['P1', 'P2', 'P3', 'P4', 'P5', 'P6', 'P7'];
 
@@ -1445,9 +1309,21 @@
                                         $phaseStatusesMap[$p] = 'pending';
                                     }
                                 } else {
-                                    $hasPastTasks = $milestones->where('phase', '<', $p)->where('status', '!=', 'completed')->count() == 0
-                                                   && $milestones->where('phase', '<', $p)->count() > 0;
-                                    $phaseStatusesMap[$p] = $hasPastTasks && !$foundActive ? 'finished' : 'pending';
+                                    $phaseStatusesMap[$p] = 'empty';
+                                }
+                            }
+
+                            foreach ($phasesList as $p) {
+                                if ($phaseStatusesMap[$p] === 'empty') {
+                                    $hasLaterStartedPhase = false;
+                                    foreach ($phasesList as $lp) {
+                                        // Compare strings like 'P1', 'P2' etc. String comparison works here since format is fixed.
+                                        if (strcmp($lp, $p) > 0 && in_array($phaseStatusesMap[$lp], ['finished', 'current'])) {
+                                            $hasLaterStartedPhase = true;
+                                            break;
+                                        }
+                                    }
+                                    $phaseStatusesMap[$p] = $hasLaterStartedPhase ? 'finished' : 'pending';
                                 }
                             }
 
@@ -1504,146 +1380,102 @@
                                 </div>
                             </div>
 
-                            <!-- Phase Cards -->
-                            <div class="row g-3">
+                            <!-- Phase-wise Task Accordions -->
+                            <div class="accordion milestone-accordion mt-4" id="milestoneAccordion">
                                 @foreach($phasesList as $p)
                                     @php
                                         $status = $phaseStatusesMap[$p];
-                                        $cardClass = $status == 'finished' ? 'phase-finished' : ($status == 'current' ? 'phase-current' : 'phase-pending');
-                                        $badgeClass = 'badge-' . $status;
-                                        $statusText = $status == 'current' ? 'Current phase' : ucfirst($status);
-
-                                        $info = $phaseKnowledge[$p];
-                                        $layerName = $info['layer'];
+                                        $items = $milestones->where('phase', $p)->sortBy('id'); // Wait, sortBy 'id' to preserve order? Yes.
+                                        $isDisabled = ($status == 'pending');
+                                        
+                                        // Which one should be open? Use the single 'current' phase. 
+                                        // If none is current (e.g. all completed), open the last one!
+                                        $isOpen = false;
+                                        if ($status == 'current') {
+                                            $isOpen = true;
+                                        } elseif (!in_array('current', $phaseStatusesMap) && $p == 'P7') {
+                                            $isOpen = true; // All finished, open P7.
+                                        }
                                     @endphp
-                                    <div class="col-lg-4 col-md-6">
-                                        <div class="phase-card {{ $cardClass }}">
-                                            <div class="phase-header">
-                                                <div>
-                                                    <div class="phase-number">{{ $p }}</div>
-                                                    <div class="phase-title">{{ $info['title'] }}</div>
+                                    <div class="accordion-item mb-3 border rounded shadow-sm {{ $isDisabled ? 'opacity-75' : '' }}">
+                                        <h2 class="accordion-header" id="heading{{ $p }}">
+                                            <button class="accordion-button {{ $isOpen ? '' : 'collapsed' }} {{ $isDisabled ? '' : '' }}" 
+                                                    type="button" 
+                                                    data-bs-toggle="{{ $isDisabled ? '' : 'collapse' }}" 
+                                                    data-bs-target="{{ $isDisabled ? '' : '#collapse' . $p }}" 
+                                                    aria-expanded="{{ $isOpen ? 'true' : 'false' }}" 
+                                                    aria-controls="collapse{{ $p }}">
+                                                <div class="d-flex align-items-center w-100 justify-content-between pe-3">
+                                                    <div>
+                                                        <span class="badge bg-primary me-2">{{ $p }}</span>
+                                                        <strong>{{ $phaseKnowledge[$p]['title'] }}</strong>
+                                                    </div>
+                                                    <div>
+                                                        @if($status == 'finished')
+                                                            <span class="badge bg-success"><i class="bi bi-check-circle me-1"></i>Completed</span>
+                                                        @elseif($status == 'current')
+                                                            <span class="badge bg-warning text-dark"><i class="bi bi-hourglass-split me-1"></i>In Progress</span>
+                                                        @else
+                                                            <span class="badge bg-secondary"><i class="bi bi-lock-fill me-1"></i>Locked</span>
+                                                        @endif
+                                                    </div>
                                                 </div>
-                                                <span class="{{ $badgeClass }}">{{ $statusText }}</span>
-                                            </div>
-                                            <div class="d-flex align-items-center mb-2">
-                                                <span class="layer-badge layer-{{ strtolower($layerName) }} me-2">Layer: {{ $layerName }}</span>
-                                            </div>
-                                            <p class="small text-secondary mb-0">
-                                                @if($status == 'finished')
-                                                    <i class="bi bi-check-circle-fill text-success me-1"></i>
-                                                @elseif($status == 'current')
-                                                    <i class="bi bi-play-circle-fill text-warning me-1"></i>
+                                            </button>
+                                        </h2>
+                                        <div id="collapse{{ $p }}" class="accordion-collapse collapse {{ $isOpen ? 'show' : '' }}" aria-labelledby="heading{{ $p }}" data-bs-parent="#milestoneAccordion">
+                                            <div class="accordion-body p-0">
+                                                @if($items->isEmpty())
+                                                    <div class="p-4 text-center text-muted">No tasks defined for this phase yet.</div>
                                                 @else
-                                                    <i class="bi bi-clock-history me-1"></i>
+                                                    <div class="table-responsive">
+                                                        <table class="table table-hover mb-0">
+                                                            <thead class="table-light">
+                                                                <tr>
+                                                                    <th width="10%">Step</th>
+                                                                    <th width="25%">Title</th>
+                                                                    <th width="15%">Tentative Date</th>
+                                                                    <th width="15%">In-Charge</th>
+                                                                    <th width="20%">Notes</th>
+                                                                    <th width="15%">Status</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                @foreach($items->values() as $idx => $m)
+                                                                <tr>
+                                                                    <td>{{ $idx + 1 }}/{{ $items->count() }}</td>
+                                                                    <td class="fw-medium">{{ $m->task_name }}</td>
+                                                                    <td>
+                                                                        @php
+                                                                          $startDate = $m->planned_start_date ?? $m->start_date;
+                                                                          $endDate = $m->planned_end_date ?? $m->end_date;
+                                                                          if($startDate && $endDate) {
+                                                                              echo date('d M Y', strtotime($startDate)) . ' - ' . date('d M Y', strtotime($endDate));
+                                                                          } else {
+                                                                              echo '—';
+                                                                          }
+                                                                        @endphp
+                                                                    </td>
+                                                                    <td>{{ $m->in_charge ?? '—' }}</td>
+                                                                    <td class="small text-muted">{{ $m->notes ?? '—' }}</td>
+                                                                    <td>
+                                                                        @if($m->status == 'completed')
+                                                                            <span class="badge bg-success">Completed</span>
+                                                                        @elseif($m->status == 'in-progress')
+                                                                            <span class="badge bg-warning text-dark">In Progress</span>
+                                                                        @else
+                                                                            <span class="badge bg-secondary">Pending</span>
+                                                                        @endif
+                                                                    </td>
+                                                                </tr>
+                                                                @endforeach
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
                                                 @endif
-                                                {{ $p }}: {{ $info['note'] }}
-                                            </p>
+                                            </div>
                                         </div>
                                     </div>
                                 @endforeach
-                            </div>
-
-                            <!-- Milestone Planner Table -->
-                            <div class="table-container">
-                                <div
-                                    class="table-header-custom d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center">
-                                    <div class="d-flex align-items-center mb-2 mb-md-0">
-                                        <i class="bi bi-list-task fs-5 me-2"></i>
-                                        <h2 class="h5 mb-0 text-white">Admin · Milestone Planner</h2>
-                                    </div>
-                                    <div class="d-flex align-items-center">
-                                        <small class="text-white-50 me-3 d-none d-md-block">Showing All – {{ $milestones->count() }} items</small>
-                                        <select class="form-select form-select-sm w-auto" id="milestonePhaseFilter">
-                                            <option value="all">All Phases</option>
-                                            @foreach($milestones->pluck('phase')->unique()->sort() as $ph)
-                                                <option value="{{ $ph }}">Phase {{ substr($ph, 1) }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="table-responsive">
-                                    <table class="table table-hover mb-0">
-                                        <thead>
-                                            <tr>
-                                                <th width="10%">Phase</th>
-                                                <th width="8%">Step</th>
-                                                <th width="22%">Title</th>
-                                                <th width="12%">Planned Date</th>
-                                                <th width="15%">Owner</th>
-                                                <th width="20%">Notes</th>
-                                                <th width="13%">Status</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach($milestones->groupBy('phase')->sortBy(fn($val, $key) => $key) as $phaseName => $items)
-                                                @php
-                                                    $layerName = 'Unknown';
-                                                    foreach($layers as $lname => $lphases) {
-                                                        if(in_array($phaseName, $lphases)) $layerName = strtolower($lname);
-                                                    }
-                                                @endphp
-                                                <tr class="phase-section-header {{ $layerName }}" data-phase="{{ $phaseName }}">
-                                                    <td colspan="7" class="fw-bold">
-                                                        <i class="bi bi-{{ substr($phaseName, 1) }}-circle-fill me-2"></i>Phase {{ substr($phaseName, 1) }} - {{ ucfirst($layerName) }}
-                                                    </td>
-                                                </tr>
-
-                                                @foreach($items as $idx => $m)
-                                                    @php
-                                                        $mStatus = $m->status == 'completed' ? 'finished' : ($m->status == 'in-progress' ? 'current' : 'pending');
-                                                    @endphp
-                                                    <tr data-phase="{{ $phaseName }}">
-                                                        <td class="fw-medium">{{ $phaseName }}</td>
-                                                        <td><span class="badge bg-light text-dark">{{ $idx + 1 }}/{{ $items->count() }}</span></td>
-                                                        <td class="{{ $m->status == 'pending' ? 'text-muted' : '' }}">
-                                                            @if($m->status == 'completed')
-                                                                <i class="bi bi-check-circle-fill text-success me-1"></i>
-                                                            @endif
-                                                            {{ $m->task_name }}
-                                                        </td>
-                                                        <td>{{ $m->planned_start_date ? $m->planned_start_date->format('Y-m-d') : '—' }}</td>
-                                                        <td><span class="badge bg-light text-dark">{{ $m->in_charge ?? '—' }}</span></td>
-                                                        <td class="text-muted small">{{ Str::limit($m->notes, 40) ?? '—' }}</td>
-                                                        <td><span class="status-{{ $mStatus }}">{{ ucfirst($mStatus) }}</span></td>
-                                                    </tr>
-                                                @endforeach
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
-
-                                <!-- Summary -->
-                                <div class="summary-box m-3">
-                                    <div class="row">
-                                        <div class="col-md-4">
-                                            <div class="summary-item">
-                                                <span><strong>Current Phase:</strong></span>
-                                                <span class="badge-current">{{ collect($phaseStatusesMap)->search('current') ?: 'N/A' }}</span>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="summary-item">
-                                                <span><strong>Completed Phases:</strong></span>
-                                                <span class="text-success">
-                                                    {{ collect($phaseStatusesMap)->filter(fn($s) => $s == 'finished')->keys()->implode(', ') ?: 'None' }}
-                                                </span>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="summary-item">
-                                                <span><strong>Pending Phases:</strong></span>
-                                                <span class="text-danger">
-                                                    {{ collect($phaseStatusesMap)->filter(fn($s) => $s == 'pending')->keys()->implode(', ') ?: 'None' }}
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="mt-2 small text-muted">
-                                        <i class="bi bi-info-circle me-1"></i>
-                                        Tasks: {{ $milestones->count() }} total • {{ $milestones->where('status', 'completed')->count() }} finished • {{ $milestones->where('status', 'in-progress')->count() }} current • {{ $milestones->where('status', 'pending')->count() }} pending
-                                    </div>
-                                </div>
                             </div>
                         </div>
                         <script>
@@ -1712,206 +1544,7 @@
                     <p class="text-muted mt-3">No milestones available</p>
                 </div>
             @endif
-            <!-- ================= ROADMAP VIEW ================= -->
-            <div class="card border-0 shadow-sm mt-5 overflow-hidden rounded-4">
-                <div class="card-header bg-white border-0 py-4 px-4">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <h5 class="fw-bold mb-0 d-flex align-items-center">
-                            <i class="bi bi-diagram-3-fill text-primary me-3 fs-4"></i>
-                            Project Roadmap <span class="text-muted ms-2 fw-normal fs-6">(Execution Phases)</span>
-                        </h5>
-                        <div class="d-flex gap-2">
-                            <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-3">P1 - P7</span>
-                        </div>
-                    </div>
-                </div>
 
-                <div class="card-body p-0">
-                    <div class="roadmap-wrapper p-4 p-lg-5 bg-light bg-opacity-10">
-                        @php
-                            // Group milestones by phase (P1, P2, ...)
-                            $groupedMilestones = $milestones->groupBy('phase');
-
-                            // Status helper for modern Roadmap
-                            if (!function_exists('getPhaseStatus')) {
-                                function getPhaseStatus($items) {
-                                    if ($items->where('status', 'completed')->count() === $items->count()) {
-                                        return 'completed';
-                                    }
-                                    if ($items->where('status', 'in-progress')->count() > 0) {
-                                        return 'in-progress';
-                                    }
-                                    return 'pending';
-                                }
-                            }
-                        @endphp
-
-                        <div class="roadmap-track-container">
-                            <div class="roadmap-track">
-                                @foreach(['P1', 'P2', 'P3', 'P4', 'P5', 'P6', 'P7'] as $phase)
-                                    @php
-                                        $items = $groupedMilestones->get($phase) ?? collect();
-                                        $status = $items->isEmpty() ? 'pending' : getPhaseStatus($items);
-                                    @endphp
-                                    <div class="roadmap-step {{ $status }}">
-                                        <div class="roadmap-node" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $items->count() }} Milestones">
-                                            {{ $phase }}
-                                            @if($status == 'completed')
-                                                <i class="bi bi-check-lg position-absolute top-0 start-100 translate-middle bg-success text-white rounded-circle p-1 shadow-sm" style="font-size: 0.8rem;"></i>
-                                            @endif
-                                        </div>
-                                        <div class="roadmap-content">
-                                            <h6 class="roadmap-title mb-1">{{ $items->isEmpty() ? 'Planned' : ($items->first()->task_name ?? 'Phase ' . $phase) }}</h6>
-                                            <span class="roadmap-status">{{ ucfirst($status) }}</span>
-                                            @if(!$items->isEmpty())
-                                                <div class="mt-2">
-                                                    <div class="progress" style="height: 4px; width: 40px; margin: 0 auto;">
-                                                        <div class="progress-bar bg-{{ $status == 'completed' ? 'success' : ($status == 'in-progress' ? 'warning' : 'secondary') }}"
-                                                             style="width: {{ $items->avg('progress') }}%"></div>
-                                                    </div>
-                                                </div>
-                                            @endif
-                                        </div>
-                                    </div>
-                                @endforeach
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            @push('css')
-            <style>
-                .roadmap-track-container {
-                    overflow-x: auto;
-                    padding: 40px 0 20px;
-                    scrollbar-width: thin;
-                }
-
-                .roadmap-track-container::-webkit-scrollbar {
-                    height: 6px;
-                }
-
-                .roadmap-track-container::-webkit-scrollbar-thumb {
-                    background: #dee2e6;
-                    border-radius: 10px;
-                }
-
-                .roadmap-track {
-                    display: flex;
-                    justify-content: space-between;
-                    min-width: 900px;
-                    position: relative;
-                }
-
-                /* Background Connectors */
-                .roadmap-track::before {
-                    content: '';
-                    position: absolute;
-                    top: 30px;
-                    left: 50px;
-                    right: 50px;
-                    height: 4px;
-                    background: #f1f3f5;
-                    z-index: 1;
-                    border-radius: 10px;
-                }
-
-                .roadmap-step {
-                    flex: 1;
-                    position: relative;
-                    z-index: 2;
-                    text-align: center;
-                }
-
-                .roadmap-node {
-                    width: 60px;
-                    height: 60px;
-                    background: #fff;
-                    border-radius: 20px; /* Squircle shape */
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    margin: 0 auto 20px;
-                    box-shadow: 0 8px 20px rgba(0,0,0,0.06);
-                    font-weight: 800;
-                    font-size: 1.1rem;
-                    color: #adb5bd;
-                    position: relative;
-                    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-                    border: 2px solid #f8f9fa;
-                }
-
-                /* Connector Progress Enhancement */
-                .roadmap-step.completed::after {
-                    content: '';
-                    position: absolute;
-                    top: 30px;
-                    left: 50%;
-                    width: 100%;
-                    height: 4px;
-                    background: #198754;
-                    z-index: -1;
-                }
-
-                .roadmap-step:last-child.completed::after {
-                    display: none;
-                }
-
-                /* Status Variations */
-                .roadmap-step.completed .roadmap-node {
-                    background: linear-gradient(135deg, #198754 0%, #20c997 100%);
-                    color: #fff;
-                    box-shadow: 0 10px 20px rgba(25, 135, 84, 0.2);
-                    border: none;
-                }
-
-                .roadmap-step.in-progress .roadmap-node {
-                    background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
-                    color: #fff;
-                    box-shadow: 0 10px 20px rgba(245, 158, 11, 0.2);
-                    border: none;
-                    animation: roadmap-pulse 2s infinite;
-                }
-
-                .roadmap-step.completed .roadmap-title { color: #198754; }
-                .roadmap-step.in-progress .roadmap-title { color: #d97706; }
-
-                .roadmap-title {
-                    font-weight: 700;
-                    font-size: 0.85rem;
-                    margin-bottom: 4px;
-                    display: -webkit-box;
-                    -webkit-line-clamp: 2;
-                    -webkit-box-orient: vertical;
-                    overflow: hidden;
-                    height: 2.4em;
-                    padding: 0 10px;
-                }
-
-                .roadmap-status {
-                    font-size: 0.7rem;
-                    font-weight: 700;
-                    text-transform: uppercase;
-                    letter-spacing: 0.5px;
-                    color: #adb5bd;
-                }
-
-                .roadmap-step.completed .roadmap-status { color: #198754; opacity: 0.8; }
-                .roadmap-step.in-progress .roadmap-status { color: #f59e0b; }
-
-                @keyframes roadmap-pulse {
-                    0% { transform: scale(1); box-shadow: 0 10px 20px rgba(245, 158, 11, 0.2); }
-                    50% { transform: scale(1.05); box-shadow: 0 15px 30px rgba(245, 158, 11, 0.4); }
-                    100% { transform: scale(1); box-shadow: 0 10px 20px rgba(245, 158, 11, 0.2); }
-                }
-
-                @media (max-width: 991px) {
-                    .roadmap-track { min-width: 800px; }
-                    .roadmap-node { width: 50px; height: 50px; border-radius: 15px; }
-                }
-            </style>
-            @endpush
         </div>
 
         <!-- Budget Tab -->
@@ -1965,6 +1598,12 @@
                                         </tr>
                                     </tfoot>
                                 </table>
+                            </div>
+                            @else
+                            <div class="text-center py-5">
+                                <i class="bi bi-folder-x display-4 text-muted mb-3 d-block"></i>
+                                <h6 class="text-muted fw-bold mb-0">No records found</h6>
+                                <p class="text-muted small">There is no cost breakdown data available for this project.</p>
                             </div>
                             @endif
                         </div>
@@ -2914,7 +2553,7 @@
                                             @endphp
                                             <div class="gauge-bg" style="background:conic-gradient(var(--isico-primary) 0deg {{ $deg }}deg, #e8f5ef {{ $deg }}deg 360deg);"></div>
                                             <div class="gauge-inner">
-                                                <div class="fs-1 fw-bold text-primary">{{ $confidence }}%</div>
+                                                <div class="fs-5 fw-bold text-primary">{{ $confidence }}%</div>
                                                 <div class="text-muted" style="font-size:0.85rem;">Confidence</div>
                                             </div>
                                         </div>
@@ -5376,7 +5015,12 @@ document.addEventListener('DOMContentLoaded', function() {
 </div>
 
 @if($project->stage == 'upcoming' && isset($surveys) && $surveys->count() > 0)
-<!-- Floating Survey Button Removed --><!-- Survey Modal -->
+<!-- Floating Survey Button -->
+<button type="button" class="btn btn-primary rounded-pill shadow-lg text-white" data-bs-toggle="modal" data-bs-target="#surveyModal" style="position: fixed; bottom: 30px; right: 30px; z-index: 1050; padding: 12px 24px; font-weight: bold; border: 2px solid white;">
+    <i class="bi bi-clipboard-data me-2"></i> Project Survey
+</button>
+
+<!-- Survey Modal -->
 <div class="modal fade" id="surveyModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content border-0 shadow-lg">
@@ -5419,6 +5063,37 @@ document.addEventListener('DOMContentLoaded', function() {
                                         @endif
 
                                             <div class="survey-conversation">
+                                                <div class="mb-4">
+                                                    <h5 class="fw-bold border-bottom pb-2 mb-3">Basic Details (Compulsory)</h5>
+                                                    <div class="row g-3">
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label class="form-label fw-bold">Name <span class="text-danger">*</span></label>
+                                                                <input type="text" class="form-control" name="name" required placeholder="Enter your name">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label class="form-label fw-bold">Email ID <span class="text-danger">*</span></label>
+                                                                <input type="email" class="form-control" name="email" required placeholder="Enter your email">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label class="form-label fw-bold">Mobile</label>
+                                                                <input type="text" class="form-control" name="mobile" placeholder="Enter your mobile number">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label class="form-label fw-bold">Location</label>
+                                                                <input type="text" class="form-control" name="location" placeholder="Enter your location">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <h5 class="fw-bold border-bottom pb-2 mb-3 mt-4">Start Survey Questions</h5>
                                                 @foreach($survey->questions as $qIndex => $question)
                                                     <div class="mb-4 animate__animated animate__fadeInUp" style="animation-delay: {{ $qIndex * 100 }}ms;">
                                                         <div class="mb-2 d-flex align-items-center">

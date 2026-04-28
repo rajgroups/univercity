@@ -75,8 +75,9 @@ class ProjectController extends Controller
         $categories = Category::where('status', 1)->where('type',1)->get();
         // dd($categories);
         $schemes = Announcement::where('type', 2)->where('status', 1)->get(['id', 'title', 'slug']);
+        $dbStakeholders = \App\Models\Stakeholder::where('status', 1)->get();
 
-        return view('admin.project.add', compact('categories', 'schemes'));
+        return view('admin.project.add', compact('categories', 'schemes', 'dbStakeholders'));
     }
 
     /**
@@ -119,10 +120,13 @@ class ProjectController extends Controller
      */
     public function store(Request $request)
     {
+        \Log::info('Project store attempted');
+        
         $this->prepareSDGInput($request);
         $this->prepareArrayInputs($request);
 
         $validated = $this->validateProject($request, 'store');
+        \Log::info('Project validation passed');
 
         try {
             DB::beginTransaction();
@@ -152,7 +156,6 @@ class ProjectController extends Controller
                 . $project->location_type . '-'
                 . str_pad($project->id, 4, '0', STR_PAD_LEFT);
 
-            // Log::info($projectCode);
             // 🔹 STEP 3: UPDATE SAME RECORD
             $project->update([
                 'project_code' => $projectCode,
@@ -162,13 +165,16 @@ class ProjectController extends Controller
             $this->saveBeneficiaries($request, $project);
 
             DB::commit();
+            \Log::info('Project created successfully', ['id' => $project->id]);
             notyf()->addSuccess('Project created successfully!');
             return redirect()->route('admin.project.index');
 
         } catch (\Exception $e) {
             DB::rollBack();
+            \Log::error('Project creation exception: ' . $e->getMessage());
+            \Log::error($e->getTraceAsString());
             notyf()->addError('Project creation error: ' . $e->getMessage());
-            return redirect()->back()->withInput();
+            return redirect()->back()->withInput()->with('error', 'Critical Error: ' . $e->getMessage());
         }
 
     }
@@ -198,8 +204,9 @@ class ProjectController extends Controller
         $project->links = $project->links ?? [];
 
         $schemes = Announcement::where('type', 2)->where('status', 1)->get(['id', 'title', 'slug']);
+        $dbStakeholders = \App\Models\Stakeholder::where('status', 1)->get();
 
-        return view('admin.project.edit', compact('project', 'categories', 'schemes'));
+        return view('admin.project.edit', compact('project', 'categories', 'schemes', 'dbStakeholders'));
     }
 
     /**
@@ -1040,7 +1047,21 @@ class ProjectController extends Controller
     public function createMilestone($projectid)
     {
         $project = Project::findOrFail($projectid);
-        $stakeholders = Stakeholder::where('status', 'active')->get();
+        
+        // Load only project-specific stakeholders
+        $projectStakeholderIds = [];
+        if (is_array($project->stakeholders)) {
+            $projectStakeholderIds = $project->stakeholders;
+        } elseif (is_string($project->stakeholders)) {
+            $decoded = json_decode($project->stakeholders, true);
+            if (is_array($decoded)) {
+                $projectStakeholderIds = $decoded;
+            }
+        }
+        $stakeholders = empty($projectStakeholderIds) 
+            ? \App\Models\Stakeholder::where('status', 1)->get() 
+            : \App\Models\Stakeholder::whereIn('id', $projectStakeholderIds)->where('status', 1)->get();
+
         $milestones = ProjectMilestone::where('project_id', $projectid)->get();
 
         return view('admin.project.milestone', compact('project', 'stakeholders', 'milestones'));

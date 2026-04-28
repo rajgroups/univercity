@@ -40,7 +40,10 @@ class Project extends Model
         'actual_start_date', 'actual_end_date',
 
         // Media and Documents
-        'gallery_images', 'before_photo', 'expected_photo', 'documents', 'links'
+        'gallery_images', 'before_photo', 'expected_photo', 'documents', 'links',
+
+        // Financials
+        'crowdfunding_active', 'funding_target', 'amount_raised'
     ];
 
     protected $casts = [
@@ -67,6 +70,9 @@ class Project extends Model
         'documents' => 'array',
         'links' => 'array',
         'risks' => 'array',
+        'crowdfunding_active' => 'boolean',
+        'funding_target' => 'decimal:2',
+        'amount_raised' => 'decimal:2',
     ];
 
     public function category()

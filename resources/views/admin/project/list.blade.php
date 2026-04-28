@@ -413,7 +413,7 @@
                     <!-- Pagination -->
                     {{-- <div class="pagination-info">
                         <nav aria-label="Page navigation">
-                            {{ $projects->links('vendor.pagination.bootstrap-5') }}
+                            {{ $projects->links('pagination::bootstrap-5') }}
                         </nav>
                     </div> --}}
 

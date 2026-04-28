@@ -3,14 +3,17 @@
 @section('content')
 <div class="container-fluid">
     <!-- Page Header -->
-    <div class="page-header">
-        <div class="row align-items-center">
-            <div class="col">
-                <h3 class="page-title">Edit Survey: {{ $project->title }}</h3>
+    <div class="page-header d-flex justify-content-between align-items-center">
+        <div class="add-item d-flex">
+            <div class="page-title">
+                <h3 class="page-title fw-bold">Edit Survey: {{ $project->title }}</h3>
             </div>
-            <div class="col-auto">
-                 <a href="{{ route('admin.survey.index', $project->id) }}" class="btn btn-secondary">
-                    <i class="feather feather-arrow-left me-2"></i> Back to List
+        </div>
+        
+        <div class="d-flex align-items-center gap-2">
+            <div class="page-btn mt-0">
+                <a href="{{ route('admin.survey.index', $project->id) }}" class="btn btn-secondary">
+                    <i class="feather feather-arrow-left me-2"></i>Back to List
                 </a>
             </div>
         </div>

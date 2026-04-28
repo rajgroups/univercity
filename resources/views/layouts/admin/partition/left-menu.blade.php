@@ -81,6 +81,13 @@
 										{{-- <li><a href="{{ route('admin.sectors.create') }}">Add Sector</a></li> --}}
 									</ul>
 								</li>
+								<li class="submenu">
+									<a href="javascript:void(0);" class=""><i class="ti ti-users fs-16 me-2"></i><span>Stakeholder</span><span class="menu-arrow"></span></a>
+									<ul style="display: none;">
+										<li><a href="{{ route('admin.stakeholder.index') }}">Stakeholder List</a></li>
+										<li><a href="{{ route('admin.stakeholder.create') }}">Add Stakeholder</a></li>
+									</ul>
+								</li>
 							</ul>
 						</li>
 

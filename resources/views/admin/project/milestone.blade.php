@@ -82,10 +82,65 @@
         </div>
     </div>
     <div class="card-body">
-        <div id="taskCardsContainer">
-            <!-- Task cards will be dynamically added here -->
-            @if($milestones->count() > 0)
-                @foreach($milestones as $milestone)
+        <div id="taskCardsContainer" class="d-none"></div>
+
+        @php
+            $phasesList = ['P1', 'P2', 'P3', 'P4', 'P5', 'P6', 'P7'];
+            $phaseKnowledge = [
+                'P1' => 'Need Assessment & Scoping',
+                'P2' => 'Partnerships & CSR Outreach',
+                'P3' => 'Procurement & Planning',
+                'P4' => 'Installation & Launch',
+                'P5' => 'Training & Mid Review',
+                'P6' => 'Audit & External Review',
+                'P7' => 'Handover & Sustainability',
+            ];
+            $unlockedPhase = 'P1';
+            foreach($phasesList as $p) {
+                $pTasks = $milestones->where('phase', $p);
+                if($pTasks->count() > 0 && $pTasks->where('status', '!=', 'completed')->count() == 0) {
+                    $unlockedPhase = (int)substr($p, 1) < 7 ? 'P' . ((int)substr($p, 1) + 1) : 'P7';
+                } else {
+                    break;
+                }
+            }
+        @endphp
+
+        <div class="accordion" id="adminPhaseAccordion">
+        @foreach($phasesList as $p)
+            @php
+                $isLocked = (int)substr($p, 1) > (int)substr($unlockedPhase, 1);
+                $isOpen = ($p === $unlockedPhase);
+                $phaseTasks = $milestones->where('phase', $p);
+            @endphp
+            <div class="accordion-item mb-3 border rounded shadow-sm {{ $isLocked ? 'opacity-75 bg-light' : '' }}">
+                <h2 class="accordion-header" id="heading{{ $p }}">
+                    <button class="accordion-button {{ $isOpen ? '' : 'collapsed' }} {{ $isLocked ? 'disabled' : '' }}" 
+                            type="button" 
+                            data-bs-toggle="{{ $isLocked ? '' : 'collapse' }}" 
+                            data-bs-target="{{ $isLocked ? '' : '#collapse' . $p }}" 
+                            aria-expanded="{{ $isOpen ? 'true' : 'false' }}">
+                        <div class="d-flex align-items-center w-100 justify-content-between pe-3">
+                            <div>
+                                <span class="badge bg-primary me-2">{{ $p }}</span>
+                                <strong>{{ $phaseKnowledge[$p] }}</strong>
+                            </div>
+                            <div>
+                                @if($isLocked)
+                                    <span class="badge bg-secondary"><i class="ti ti-lock me-1"></i>Locked</span>
+                                @elseif($phaseTasks->count() > 0 && $phaseTasks->where('status', '!=', 'completed')->count() == 0)
+                                    <span class="badge bg-success"><i class="ti ti-check me-1"></i>Completed</span>
+                                @else
+                                    <span class="badge bg-warning text-dark"><i class="ti ti-pencil me-1"></i>Open</span>
+                                @endif
+                            </div>
+                        </div>
+                    </button>
+                </h2>
+                <div id="collapse{{ $p }}" class="accordion-collapse collapse {{ $isOpen ? 'show' : '' }}" data-bs-parent="#adminPhaseAccordion">
+                    <div class="accordion-body bg-light">
+                        <div class="task-container" id="container-{{ $p }}">
+                            @foreach($phaseTasks as $milestone)
                     <div class="card task-card mb-4" data-task-id="{{ $milestone->id }}" data-db-id="{{ $milestone->id }}">
                         <div class="card-header bg-light d-flex justify-content-between align-items-center">
                             <div>
@@ -261,10 +316,18 @@
                             </div>
                         </div>
                     </div>
-                @endforeach
-            @endif
+                            @endforeach
+                        </div>
+                        <div class="mt-3 text-center">
+                            <button class="btn btn-outline-primary" onclick="addTaskCard('{{ $p }}')" {{ $isLocked ? 'disabled' : '' }}>
+                                <i class="ti ti-plus me-1"></i>Add Task to Phase {{ $p }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endforeach
         </div>
-    </div>
 </div>
 
 <!-- Task Card Template (Hidden) -->
@@ -565,7 +628,7 @@ $(document).ready(function () {
     });
 
     // Update phase badges for existing cards
-    $('.task-card').each(function() {
+    $('.task-card').not('#taskCardTemplate .task-card').each(function() {
         updatePhaseBadge($(this));
     });
 
@@ -589,7 +652,7 @@ $(document).ready(function () {
     });
 
     // Disable editing for existing cards
-    $('.task-card').each(function() {
+    $('.task-card').not('#taskCardTemplate .task-card').each(function() {
         disableEditing($(this));
     });
 });
@@ -716,27 +779,24 @@ function updateSelectedStakeholders() {
 }
 
 // Add new task card
-function addTaskCard() {
+function addTaskCard(phase) {
     taskCounter++;
 
     // Clone the template
     const template = document.getElementById('taskCardTemplate').innerHTML;
     const newCard = template.replace('data-task-id=""', `data-task-id="${taskCounter}"`);
 
-    // Append to container
-    $('#taskCardsContainer').append(newCard);
+    // Append to container for THIS phase
+    $(`#container-${phase}`).append(newCard);
 
     // Get the newly added card
-    const $newCard = $('#taskCardsContainer .task-card').last();
+    const $newCard = $(`#container-${phase} .task-card`).last();
 
     // Update task number
     $newCard.find('.task-number').text(`Task #${taskCounter}`);
 
-    // Initialize select2 for phase dropdown
-    $newCard.find('.select2-dynamic').select2({
-        width: '100%',
-        placeholder: "Select Phase"
-    });
+    // Set the phase automatically and disable the dropdown to lock it to this phase
+    $newCard.find('.phase-select').val(phase).trigger('change').prop('disabled', true);
 
     // Initialize select2 for stakeholder dropdown
     $newCard.find('.stakeholder-select-task').select2({
@@ -762,17 +822,13 @@ function addTaskCard() {
         $(this).val('');
     });
 
-    // Update phase badge when phase changes
-    $newCard.find('.phase-select').on('change', function() {
-        updatePhaseBadge($newCard);
-    });
+    // Update phase badge
+    updatePhaseBadge($newCard);
 
     // Update progress display
     $newCard.find('.progress-slider').on('input', function() {
         const value = $(this).val();
         $newCard.find('.progress-value').text(value + '%');
-
-        // Update status based on progress
         if (value == 100) {
             $newCard.find('.status-select').val('completed');
         } else if (value > 0) {
@@ -783,10 +839,7 @@ function addTaskCard() {
     // Make card editable by default
     enableEditing($newCard);
 
-    // Show success message
-    showToast('New task card added!', 'success');
-
-    // Scroll to new card
+    showToast('New task card added to Phase ' + phase + '!', 'success');
     $newCard[0].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
@@ -915,6 +968,17 @@ function validateTask($card) {
         $card.find('.task-name').removeClass('is-invalid');
     }
 
+    // In-Charge (Stakeholder) selection is legally mandated by the backend validation
+    if (!$card.find('.stakeholder-select-task').val()) {
+        $card.find('.stakeholder-select-task').addClass('is-invalid');
+        // also flag select2 container next to it
+        $card.find('.stakeholder-select-task').next('.select2-container').find('.select2-selection').addClass('border-danger');
+        isValid = false;
+    } else {
+        $card.find('.stakeholder-select-task').removeClass('is-invalid');
+        $card.find('.stakeholder-select-task').next('.select2-container').find('.select2-selection').removeClass('border-danger');
+    }
+
     return isValid;
 }
 
@@ -966,7 +1030,7 @@ function saveAllTasks() {
     let savedCount = 0;
 
     // Collect all tasks
-    $('.task-card').each(function() {
+    $('.task-card').not('#taskCardTemplate .task-card').each(function() {
         const $card = $(this);
 
         if ($card.data('marked-for-delete')) {
@@ -1194,7 +1258,7 @@ function addMilestoneCard(milestone, index) {
 // Export tasks
 function exportTasks(format) {
     const tasks = [];
-    $('.task-card').each(function() {
+    $('.task-card').not('#taskCardTemplate .task-card').each(function() {
         if (!$(this).data('marked-for-delete')) {
             tasks.push(getTaskData($(this)));
         }
@@ -1225,11 +1289,13 @@ function refreshPage() {
 
 // Toast notification function
 function showToast(message, type = 'info') {
+    if (type === 'error') type = 'danger'; // Map 'error' to bootstrap's 'danger' class
+    
     // Remove existing toasts
     $('.toast-container').remove();
 
     // Create toast container
-    const toastContainer = $('<div class="toast-container position-fixed bottom-0 end-0 p-3"></div>');
+    const toastContainer = $('<div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1055;"></div>');
 
     // Create toast
     const toastId = 'toast-' + Date.now();

@@ -254,6 +254,25 @@
                                                 </div>
                                             </div>
                                             <div class="card-body">
+                                                <div class="row align-items-center mb-4 bg-light p-3 rounded-3">
+                                                    <div class="col-md-5">
+                                                        <label class="form-label fw-semibold text-muted small mb-1">Search Course</label>
+                                                        <div class="input-group">
+                                                            <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
+                                                            <input type="text" id="course-search-input" class="form-control border-start-0" placeholder="Type course name...">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-5">
+                                                        <label class="form-label fw-semibold text-muted small mb-1">Filter by Sector</label>
+                                                        <select id="course-sector-filter" class="form-select">
+                                                            <option value="">All Sectors</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-2 mt-4 text-end">
+                                                        <button type="button" class="btn btn-outline-secondary w-100" id="clear-course-filters">Clear</button>
+                                                    </div>
+                                                </div>
+
                                                 <div class="row g-4" id="courses-grid">
                                                     <!-- Course cards will be dynamically added here -->
                                                     <div class="col-12 text-center py-5">
@@ -457,17 +476,16 @@
 
 <template id="course-card-template">
     <div class="col-md-6 col-lg-4 col-xl-3">
-        <div class="course-card card h-100 border-0 shadow-sm hover-lift cursor-pointer select-course-wrapper" data-id="COURSE_ID">
+        <div class="course-card card h-100 border-0 shadow-sm hover-lift cursor-pointer select-course-wrapper" data-id="COURSE_ID" data-name="COURSE_NAME" data-sector="SECTOR_ID">
+            <div class="position-absolute top-0 end-0 p-2 course-selected-badge" style="display: none; z-index: 10;">
+                <span class="badge bg-primary fs-6 shadow"><i class="bi bi-check-circle-fill me-1"></i>Selected</span>
+            </div>
             <div class="position-relative">
                 <img src="PLACEHOLDER_IMAGE" class="card-img-top" alt="COURSE_NAME" style="height: 200px; object-fit: cover;">
                 <div class="card-img-overlay d-flex justify-content-between align-items-start p-3">
                     <span class="badge bg-badge-mode">MODE_LABEL</span>
                     <span class="badge bg-badge-paid">PAID_LABEL</span>
                 </div>
-                <!-- Selection Overlay -->
-                <!-- <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center bg-primary bg-opacity-75 selection-overlay" style="display: none;">
-                    <i class="bi bi-check-circle-fill text-white display-3"></i>
-                </div> -->
             </div>
             <div class="card-body d-flex flex-column">
                 <h6 class="card-title text-primary mb-2 line-clamp-2" style="min-height: 3rem;">COURSE_NAME</h6>
@@ -498,13 +516,14 @@
                         </div>
                     </div>
                     
+                    
                     <button type="button" class="btn btn-outline-primary w-100 select-course-btn" data-id="COURSE_ID">
                         <i class="bi bi-plus-circle me-1"></i> Select Course
                     </button>
                     
-                    <div class="form-check form-switch mt-2">
-                        <input class="form-check-input course-featured-check" type="checkbox" role="switch" id="feat_COURSE_ID">
-                        <label class="form-check-label small text-muted" for="feat_COURSE_ID">Mark Featured</label>
+                    <div class="form-check form-switch mt-3 py-2 px-3 bg-light rounded" style="border: 1px solid #e9ecef;">
+                        <input class="form-check-input course-featured-check" type="checkbox" role="switch" id="feat_COURSE_ID" style="margin-top: 0.3em;">
+                        <label class="form-check-label small fw-semibold text-dark ms-2" for="feat_COURSE_ID">Highlight as Featured</label>
                     </div>
                 </div>
             </div>
@@ -728,8 +747,17 @@
         }
 
         // Course Management
+        let fetchedCoursesData = [];
+        
         function fetchCourses() {
-            if (addedSectors.length === 0) {
+            let primarySectorId = $('#primary_sector_id').val();
+            let sectorsToFetch = [...addedSectors];
+            
+            if (primarySectorId && !sectorsToFetch.includes(primarySectorId)) {
+                sectorsToFetch.push(primarySectorId);
+            }
+
+            if (sectorsToFetch.length === 0) {
                 $('#courses-grid').html(`
                     <div class="col-12 text-center py-5">
                         <div class="display-1 text-muted mb-4">
@@ -750,11 +778,13 @@
                 url: "{{ route('admin.courses.by.sectors') }}",
                 method: 'POST',
                 data: {
-                    sectors: addedSectors,
+                    sectors: sectorsToFetch,
                     _token: '{{ csrf_token() }}'
                 },
                 success: function(data) {
                     $('#course-fetching-msg').hide();
+                    fetchedCoursesData = data;
+                    updateSectorFilterDropdown(data);
                     renderCourses(data);
                 },
                 error: function(xhr, status, error) {
@@ -768,6 +798,51 @@
                         <h5 class="text-danger mb-3">Error fetching courses</h5>
                         <p class="text-muted">Please try again later.</p>
                     </div>`);
+                }
+            });
+        }
+        
+        function updateSectorFilterDropdown(courses) {
+            const filterDropdown = $('#course-sector-filter');
+            filterDropdown.empty();
+            filterDropdown.append('<option value="">All Sectors</option>');
+            
+            let uniqueSectors = {};
+            courses.forEach(c => {
+                if(c.sector) {
+                    uniqueSectors[c.sector_id] = c.sector.name;
+                }
+            });
+            
+            for(let id in uniqueSectors) {
+                filterDropdown.append(`<option value="${id}">${uniqueSectors[id]}</option>`);
+            }
+        }
+        
+        $('#course-search-input').on('keyup', filterRenderedCourses);
+        $('#course-sector-filter').on('change', filterRenderedCourses);
+        $('#clear-course-filters').on('click', function() {
+            $('#course-search-input').val('');
+            $('#course-sector-filter').val('');
+            filterRenderedCourses();
+        });
+        
+        function filterRenderedCourses() {
+            let searchTerm = $('#course-search-input').val().toLowerCase();
+            let sectorFilter = $('#course-sector-filter').val();
+            
+            $('.course-card-wrapper-col').each(function() {
+                let card = $(this).find('.select-course-wrapper');
+                let name = card.data('name').toLowerCase();
+                let sector = card.data('sector').toString();
+                
+                let matchesSearch = name.includes(searchTerm);
+                let matchesSector = sectorFilter === '' || sector === sectorFilter;
+                
+                if (matchesSearch && matchesSector) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
                 }
             });
         }
@@ -837,9 +912,10 @@
 
                 let card = template
                     .replace(/PLACEHOLDER_IMAGE/g, imageUrl)
-                    .replace(/COURSE_NAME/g, course.name)
+                    .replace(/COURSE_NAME/g, course.name.replace(/"/g, '&quot;'))
                     .replace(/PROVIDER_NAME/g, provider)
                     .replace(/SECTOR_NAME/g, sectorName)
+                    .replace(/SECTOR_ID/g, course.sector_id || '')
                     .replace(/LANGUAGE_COUNT/g, langCount)
                     .replace(/DURATION/g, duration)
                     .replace(/ENROLLMENT_COUNT/g, course.enrollment_count || 0)
@@ -847,13 +923,15 @@
                     .replace(/MODE_LABEL/g, modeLabel)
                     .replace(/PAID_LABEL/g, paidLabel)
                     .replace(/bg-badge-paid/g, 'bg-' + paidBadgeClass)
-                    .replace(/bg-badge-mode/g, 'bg-' + modeBadgeClass);
+                    .replace(/bg-badge-mode/g, 'bg-' + modeBadgeClass)
+                    .replace('col-md-6 col-lg-4 col-xl-3', 'col-md-6 col-lg-4 col-xl-3 course-card-wrapper-col');
                 
                 const $card = $(card);
                 
                 // Initialize Selection State
                 if (isSelected) {
                     $card.find('.course-card').addClass('border-primary border-3');
+                    $card.find('.course-selected-badge').show();
                     $card.find('.select-course-btn')
                         .removeClass('btn-outline-primary')
                         .addClass('btn-primary')
@@ -881,12 +959,14 @@
                 // Deselect
                 selectedCourses = selectedCourses.filter(id => id !== courseId);
                 $courseCard.removeClass('border-primary border-3').addClass('animate__animated animate__headShake');
+                $courseCard.find('.course-selected-badge').hide();
                 $btn.removeClass('btn-primary').addClass('btn-outline-primary')
                     .html('<i class="bi bi-plus-circle me-1"></i> Select Course');
             } else {
                 // Select
                 selectedCourses.push(courseId);
                 $courseCard.addClass('border-primary border-3 animate__animated animate__bounceIn');
+                $courseCard.find('.course-selected-badge').show();
                 $btn.removeClass('btn-outline-primary').addClass('btn-primary')
                     .html('<i class="bi bi-check-circle me-1"></i> Selected');
             }

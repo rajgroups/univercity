@@ -18,6 +18,7 @@ use App\Http\Controllers\Admin\ProjectController;
 use App\Http\Controllers\Admin\SurveyController;
 use App\Http\Controllers\Admin\SectorController;
 use App\Http\Controllers\Admin\SettingController;
+use App\Http\Controllers\Admin\StakeholderController;
 use App\Http\Controllers\Admin\StudentController;
 use App\Http\Controllers\Admin\TestimonialController;
 use App\Http\Controllers\admin\UserController;
@@ -89,6 +90,9 @@ Route::prefix('admin')->as('admin.')->group(function() {
         // organization Routes
         Route::resource('volunteer',VolunteerController::class);
 
+        // Stakeholder Routes
+        Route::resource('stakeholder', StakeholderController::class);
+
         // Country Routes
         Route::resource('country',CountryController::class);
 
@@ -131,6 +135,8 @@ Route::prefix('admin')->as('admin.')->group(function() {
              Route::post('project/estimator/import', 'importFromEstimation')->name('project.estmator.import');
              Route::post('project/estimator/utilization', 'storeUtilization')->name('project.estmator.utilization.store');
              Route::delete('project/estimator/utilization/{id}', 'deleteUtilization')->name('project.estmator.utilization.delete');
+             Route::post('project/estimator/stage', 'updateProjectStage')->name('project.estmator.stage.update');
+             Route::post('project/estimator/crowdfunding/toggle', 'toggleCrowdfunding')->name('project.estmator.crowdfunding.toggle');
         });
         // field Log
         Route::get('/projet/fieldlog', [ProjectController::class,'createMilestone']);
@@ -142,6 +148,7 @@ Route::prefix('admin')->as('admin.')->group(function() {
         Route::post('/survey/{project_id}/survey/{id}/update', [SurveyController::class, 'update'])->name('survey.update');
         Route::delete('/survey/{project_id}/survey/{id}/delete', [SurveyController::class, 'destroy'])->name('survey.destroy');
         Route::get('/survey/{project_id}/survey/{id}/responses', [SurveyController::class, 'responses'])->name('survey.responses');
+        Route::get('/survey/{project_id}/survey/{id}/export', [SurveyController::class, 'export'])->name('survey.export');
 
         // Learning Pathways Routes
         Route::get('/project/{project_id}/learningpathways', [App\Http\Controllers\Admin\LearningPathwayController::class, 'index'])->name('learningpathways.index');

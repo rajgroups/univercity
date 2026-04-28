@@ -8,6 +8,8 @@ use App\Models\Survey;
 use App\Models\SurveyQuestion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use App\Exports\SurveyResponsesExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class SurveyController extends Controller
 {
@@ -170,4 +172,11 @@ class SurveyController extends Controller
 
         return view('admin.survey.responses', compact('project', 'survey'));
     }
+
+    public function export($project_id, $id)
+    {
+        $survey = Survey::findOrFail($id);
+        $fileName = 'survey_responses_' . Str::slug($survey->title) . '_' . date('Y_m_d_H_i_s') . '.xlsx';
+        return Excel::download(new SurveyResponsesExport($id), $fileName);
+}
 }

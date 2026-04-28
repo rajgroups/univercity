@@ -26,6 +26,10 @@ class WebProjectSurveyController extends Controller
             $response = new SurveyResponse();
             $response->survey_id = $request->survey_id;
             $response->user_id = auth()->id() ?? null; // Nullable if guest
+            $response->name = $request->name;
+            $response->email = $request->email;
+            $response->mobile = $request->mobile;
+            $response->location = $request->location;
             $response->answers = $request->answers;
             $response->ip_address = $request->ip();
             $response->save();

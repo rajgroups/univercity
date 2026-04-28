@@ -16,6 +16,7 @@
         "laravel/socialite": "^5.16",
         "laravel/tinker": "^2.8",
         "league/flysystem-google-cloud-storage": "^3.0",
+        "maatwebsite/excel": "^3.1",
         "php-flasher/flasher-laravel": "^1.15",
         "php-flasher/flasher-notyf-laravel": "^1.15",
         "php-flasher/flasher-toastr-laravel": "^1.15",

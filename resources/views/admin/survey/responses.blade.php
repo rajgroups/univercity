@@ -1,13 +1,16 @@
 @extends('layouts.admin.app')
 @section('content')
-    <div class="page-header">
+    <div class="page-header d-flex justify-content-between align-items-center">
         <div class="add-item d-flex">
             <div class="page-title">
                 <h4 class="fw-bold">Survey Responses</h4>
                 <h6>{{ $survey->title }} ({{ $project->title }})</h6>
             </div>
         </div>
-        <div class="page-btn mt-0">
+        <div class="page-btn mt-0 d-flex gap-2">
+            <a href="{{ route('admin.survey.export', ['project_id' => $project->id, 'id' => $survey->id]) }}" class="btn btn-success">
+                <i class="feather feather-download me-2"></i>Export Report
+            </a>
             <a href="{{ route('admin.survey.index', $project->id) }}" class="btn btn-secondary">
                 <i class="feather feather-arrow-left me-2"></i>Back to Surveys
             </a>
@@ -59,7 +62,15 @@
                                     <td>{{ $loop->iteration }}</td>
                                     <td>
                                         <div class="d-flex align-items-center">
-                                            @if($response->user)
+                                            @if($response->name)
+                                                <div class="avatar-sm bg-soft-info rounded-circle me-2 d-flex align-items-center justify-content-center">
+                                                    <span class="text-info fw-bold">{{ substr($response->name, 0, 1) }}</span>
+                                                </div>
+                                                <div>
+                                                    <h6 class="mb-0">{{ $response->name }}</h6>
+                                                    <small class="text-muted">{{ $response->email }}</small>
+                                                </div>
+                                            @elseif($response->user)
                                                 <div class="avatar-sm bg-soft-info rounded-circle me-2 d-flex align-items-center justify-content-center">
                                                     <span class="text-info fw-bold">{{ substr($response->user->name, 0, 1) }}</span>
                                                 </div>
@@ -118,7 +129,7 @@
                                                         <i class="feather feather-user fs-3 text-primary"></i>
                                                     </div>
                                                     <div>
-                                                        <h6 class="mb-1 fw-bold">{{ $response->user ? $response->user->name : 'Anonymous User' }}</h6>
+                                                        <h6 class="mb-1 fw-bold">{{ $response->name ?? ($response->user ? $response->user->name : 'Anonymous User') }}</h6>
                                                         <p class="mb-0 text-muted small">
                                                             Submitted on {{ $response->created_at->format('F d, Y \a\t h:i A') }}
                                                         </p>

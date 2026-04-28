@@ -6,244 +6,199 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         if (!Schema::hasTable('stakeholders')) {
             Schema::create('stakeholders', function (Blueprint $table) {
-            $table->id();
+                $table->id();
 
-            // Basic Information
-            $table->string('stakeholder_id')->unique()->comment('Auto-generated stakeholder ID like STKH-001');
-            $table->string('first_name');
-            $table->string('last_name');
-            $table->string('full_name')->virtualAs('CONCAT(first_name, " ", last_name)');
+                /*
+                |--------------------------------------------------------------------------
+                | Basic Information
+                |--------------------------------------------------------------------------
+                */
+                $table->string('stakeholder_id')->unique()
+                    ->comment('Auto-generated stakeholder code like STKH-001');
 
-            // Contact Information
-            $table->string('email')->unique();
-            $table->string('phone')->nullable();
-            $table->string('alternate_phone')->nullable();
+                $table->string('first_name');
+                $table->string('last_name');
 
-            // Company/Organization Details
-            $table->string('company_name',100)->nullable();
-            $table->string('designation',100)->nullable();
-            $table->string('department', 100)->nullable();
+                $table->string('full_name')
+                    ->virtualAs('CONCAT(first_name, " ", last_name)');
 
-            // Stakeholder Type & Classification
-            $table->enum('type', [
-                'internal',
-                'external',
-                'client',
-                'vendor',
-                'partner',
-                'government',
-                'community',
-                'investor'
-            ])->default('internal');
+                /*
+                |--------------------------------------------------------------------------
+                | Contact Information
+                |--------------------------------------------------------------------------
+                */
+                $table->string('email')->unique();
+                $table->string('phone')->nullable();
+                $table->string('alternate_phone')->nullable();
 
-            $table->enum('category', [
-                'primary',
-                'secondary',
-                'influencer',
-                'decision_maker',
-                'approver',
-                'user',
-                'supplier',
-                'regulator'
-            ])->default('primary');
+                /*
+                |--------------------------------------------------------------------------
+                | Company / Organization
+                |--------------------------------------------------------------------------
+                */
+                $table->string('company_name', 100)->nullable();
+                $table->string('designation', 100)->nullable();
+                $table->string('department', 100)->nullable();
 
-            // Communication Preferences
-            $table->json('communication_preferences')->nullable()->comment('Preferred communication channels');
-            $table->string('preferred_language')->default('en');
+                /*
+                |--------------------------------------------------------------------------
+                | Stakeholder Type
+                |--------------------------------------------------------------------------
+                | 1 = ISICO Core Admin
+                | 2 = Training Partner
+                | 3 = Learner
+                | 4 = Volunteer
+                | 5 = Funding Partner
+                |--------------------------------------------------------------------------
+                */
+                $table->tinyInteger('type')
+                    ->default(1)
+                    ->comment('1=ISICO Core, 2=Training Partner, 3=Learner, 4=Volunteer, 5=Funding Partner');
 
-            // Address Information
-            $table->string('address_line_1')->nullable();
-            $table->string('address_line_2')->nullable();
-            $table->string('city')->nullable();
-            $table->string('state')->nullable();
-            $table->string('country')->nullable();
-            $table->string('postal_code')->nullable();
+                /*
+                |--------------------------------------------------------------------------
+                | Stakeholder Classification / Sub Type
+                |--------------------------------------------------------------------------
+                | ADMIN:
+                | 1 = Super Admin
+                | 2 = Program Admin
+                | 3 = Coordinator
+                |
+                | TRAINING PARTNER:
+                | 4 = Training Organization
+                | 5 = Individual Trainer
+                |
+                | LEARNER:
+                | 6 = Individual Learner
+                | 7 = Group Leader
+                |
+                | VOLUNTEER:
+                | 8 = Field Volunteer
+                | 9 = Survey Volunteer
+                | 10 = Mentor Volunteer
+                |
+                | FUNDING PARTNER:
+                | 11 = CSR
+                | 12 = Donor
+                | 13 = Sponsor
+                | 14 = Foundation
+                |--------------------------------------------------------------------------
+                */
+                $table->tinyInteger('classification')
+                    ->default(1)
+                    ->comment('Stakeholder sub-type classification');
 
-            // Professional Details
-            $table->string('industry')->nullable();
-            $table->string('expertise_area')->nullable();
-            $table->text('biography')->nullable();
+                /*
+                |--------------------------------------------------------------------------
+                | Communication Preferences
+                |--------------------------------------------------------------------------
+                */
+                $table->json('communication_preferences')->nullable();
+                $table->string('preferred_language')->default('en');
 
-            // Social Media & Links
-            $table->string('linkedin_url')->nullable();
-            $table->string('twitter_url')->nullable();
-            $table->string('website_url')->nullable();
+                /*
+                |--------------------------------------------------------------------------
+                | Address
+                |--------------------------------------------------------------------------
+                */
+                $table->string('address_line_1')->nullable();
+                $table->string('address_line_2')->nullable();
+                $table->string('city')->nullable();
+                $table->string('state')->nullable();
+                $table->string('country')->nullable();
+                $table->string('postal_code')->nullable();
 
-            // Stakeholder Engagement Metrics
-            $table->integer('engagement_level')->default(1)->comment('1-5 scale');
-            $table->enum('influence_level', ['low', 'medium', 'high', 'critical'])->default('medium');
-            $table->enum('interest_level', ['low', 'medium', 'high'])->default('medium');
+                /*
+                |--------------------------------------------------------------------------
+                | Professional Details
+                |--------------------------------------------------------------------------
+                */
+                $table->string('industry')->nullable();
+                $table->string('expertise_area')->nullable();
+                $table->text('biography')->nullable();
 
-            // Project Relations (Pivot data would be in separate table)
-            $table->json('assigned_projects')->nullable()->comment('Array of project IDs');
-            $table->json('involved_phases')->nullable()->comment('Array of phases involved in');
+                /*
+                |--------------------------------------------------------------------------
+                | Social Links
+                |--------------------------------------------------------------------------
+                */
+                $table->string('linkedin_url')->nullable();
+                $table->string('twitter_url')->nullable();
+                $table->string('website_url')->nullable();
 
-            // Status & Timestamps
-            $table->enum('status', [
-                'active',
-                'inactive',
-                'pending',
-                'archived',
-                'blocked'
-            ])->default('active');
+                /*
+                |--------------------------------------------------------------------------
+                | Engagement Metrics
+                |--------------------------------------------------------------------------
+                */
+                $table->tinyInteger('engagement_level')
+                    ->default(1)
+                    ->comment('1-5 scale');
 
-            $table->date('last_contacted')->nullable();
-            $table->date('next_follow_up')->nullable();
+                $table->tinyInteger('influence_level')
+                    ->default(2)
+                    ->comment('1=Low, 2=Medium, 3=High, 4=Critical');
 
-            // Additional Metadata
-            $table->json('metadata')->nullable()->comment('Custom fields or additional data');
-            $table->text('notes')->nullable();
+                $table->tinyInteger('interest_level')
+                    ->default(2)
+                    ->comment('1=Low, 2=Medium, 3=High');
 
-            // Soft Deletes & Timestamps
-            $table->softDeletes();
-            $table->timestamps();
+                /*
+                |--------------------------------------------------------------------------
+                | Project Relations
+                |--------------------------------------------------------------------------
+                */
+                $table->json('assigned_projects')->nullable();
+                $table->json('involved_phases')->nullable();
 
-            // Indexes for performance
-            $table->index(['type', 'status']);
-            $table->index(['category', 'engagement_level']);
-            $table->index(['company_name', 'designation']);
-            $table->index('last_contacted');
-        });
+                /*
+                |--------------------------------------------------------------------------
+                | Status
+                |--------------------------------------------------------------------------
+                | 1 = Active
+                | 2 = Inactive
+                | 3 = Pending
+                | 4 = Archived
+                | 5 = Blocked
+                |--------------------------------------------------------------------------
+                */
+                $table->tinyInteger('status')
+                    ->default(1)
+                    ->comment('1=Active, 2=Inactive, 3=Pending, 4=Archived, 5=Blocked');
+
+                $table->date('last_contacted')->nullable();
+                $table->date('next_follow_up')->nullable();
+
+                /*
+                |--------------------------------------------------------------------------
+                | Extra Metadata
+                |--------------------------------------------------------------------------
+                */
+                $table->json('metadata')->nullable();
+                $table->text('notes')->nullable();
+
+                $table->softDeletes();
+                $table->timestamps();
+
+                /*
+                |--------------------------------------------------------------------------
+                | Indexes
+                |--------------------------------------------------------------------------
+                */
+                $table->index(['type', 'status']);
+                $table->index(['classification', 'engagement_level']);
+                $table->index(['company_name', 'designation']);
+                $table->index('last_contacted');
+            });
+        }
     }
 
-        // Create stakeholder_project pivot table
-        if (!Schema::hasTable('stakeholder_project')) {
-            Schema::create('stakeholder_project', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('stakeholder_id')->constrained()->onDelete('cascade');
-            $table->foreignId('project_id')->constrained()->onDelete('cascade');
-            $table->enum('role', [
-                'project_manager',
-                'team_member',
-                'client_representative',
-                'vendor',
-                'consultant',
-                'approver',
-                'reviewer',
-                'observer'
-            ])->default('team_member');
-            $table->enum('access_level', ['view', 'edit', 'admin', 'owner'])->default('view');
-            $table->json('assigned_phases')->nullable()->comment('Phases assigned to this stakeholder');
-            $table->decimal('involvement_percentage', 5, 2)->nullable()->comment('Percentage involvement in project');
-            $table->date('start_date')->nullable();
-            $table->date('end_date')->nullable();
-            $table->boolean('is_active')->default(true);
-            $table->text('notes')->nullable();
-            $table->timestamps();
-
-            $table->unique(['stakeholder_id', 'project_id']);
-            $table->index(['project_id', 'role']);
-        });
-    }
-
-        // Create stakeholder_communication_log table
-        if (!Schema::hasTable('stakeholder_communications')) {
-            Schema::create('stakeholder_communications', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('stakeholder_id')->constrained()->onDelete('cascade');
-            $table->foreignId('project_id')->nullable()->constrained()->onDelete('cascade');
-            $table->foreignId('communicator_id')->nullable()->constrained('users')->onDelete('set null');
-
-            $table->enum('communication_type', [
-                'email',
-                'meeting',
-                'phone_call',
-                'video_conference',
-                'presentation',
-                'report',
-                'notification'
-            ]);
-
-            $table->string('subject');
-            $table->text('message')->nullable();
-            $table->json('attachments')->nullable();
-            $table->enum('direction', ['incoming', 'outgoing', 'internal']);
-            $table->enum('priority', ['low', 'medium', 'high', 'urgent'])->default('medium');
-
-            // Response tracking
-            $table->boolean('requires_response')->default(false);
-            $table->boolean('response_received')->default(false);
-            $table->timestamp('response_due_date')->nullable();
-            $table->timestamp('response_received_at')->nullable();
-
-            // Status
-            $table->enum('status', [
-                'scheduled',
-                'sent',
-                'delivered',
-                'read',
-                'responded',
-                'cancelled',
-                'failed'
-            ])->default('scheduled');
-
-            // Feedback
-            $table->integer('satisfaction_score')->nullable()->comment('1-5 scale');
-            $table->text('feedback')->nullable();
-
-            $table->timestamp('sent_at')->nullable();
-            $table->timestamp('read_at')->nullable();
-
-            $table->timestamps();
-
-            // Indexes
-            // Laravel will automatically generate a shorter name
-            $table->index(['stakeholder_id', 'communication_type'], 'stk_comm_type_idx');
-            $table->index(['project_id', 'status']);
-            $table->index('response_due_date');
-        });
-    }
-
-        // Create stakeholder_feedback table
-        if (!Schema::hasTable('stakeholder_feedbacks')) {
-            Schema::create('stakeholder_feedbacks', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('stakeholder_id')->constrained()->onDelete('cascade');
-            $table->foreignId('project_id')->constrained()->onDelete('cascade');
-            $table->foreignId('feedback_by')->nullable()->constrained('users')->onDelete('set null');
-
-            $table->enum('feedback_type', [
-                'satisfaction',
-                'performance',
-                'collaboration',
-                'communication',
-                'delivery',
-                'general'
-            ]);
-
-            $table->integer('rating')->comment('1-5 or 1-10 scale');
-            $table->text('comments');
-            $table->json('aspects')->nullable()->comment('Specific aspects rated');
-
-            $table->enum('sentiment', ['positive', 'neutral', 'negative'])->nullable();
-            $table->boolean('is_anonymous')->default(false);
-            $table->boolean('action_required')->default(false);
-            $table->text('action_taken')->nullable();
-            $table->timestamp('action_completed_at')->nullable();
-
-            $table->timestamps();
-
-            $table->index(['stakeholder_id', 'project_id']);
-            $table->index(['feedback_type', 'rating']);
-        });
-    }
-    }
-
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        Schema::dropIfExists('stakeholder_feedbacks');
-        Schema::dropIfExists('stakeholder_communications');
-        Schema::dropIfExists('stakeholder_project');
         Schema::dropIfExists('stakeholders');
     }
 };

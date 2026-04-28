@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 @section('content')
-    <div class="page-header">
+    <div class="page-header d-flex justify-content-between align-items-center">
         <div class="add-item d-flex">
             <div class="page-title">
                 <h4 class="fw-bold">Survey for {{ $project->title }}</h4>

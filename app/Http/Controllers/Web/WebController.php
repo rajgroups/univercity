@@ -177,29 +177,6 @@ class WebController extends Controller
         $project = Project::where('slug', $slug)
             ->where('category_id', $category->id)
             ->where('status', 1)
-            ->with([
-                'category',
-                'milestones',
-                'estimation.items',
-                'donors',
-                'fundings',
-                'utilizations',
-                'feedbacks',
-                'surveys' => function($query) {
-                    $query->with(['responses' => function($q) {
-                        if (auth()->check()) {
-                            $q->where('user_id', auth()->id());
-                        } else {
-                            $q->whereNull('id'); // No responses for guests
-                        }
-                    }, 'questions']);
-                },
-                'learningPathway.sectors',
-                'learningPathway.flows.sector',
-                'learningPathway.courses.sector',
-                'learningPathway.roadmaps',
-                'beneficiaries.updates', // Eager load beneficiaries and updates
-            ])
             ->firstOrFail();
 
         // 3️⃣ Extract data for view
@@ -228,10 +205,21 @@ class WebController extends Controller
             'roles' => $feedbacks->groupBy('role')->map->count(),
         ];
 
-        // 5️⃣ Resolve stakeholders from milestones
-        // Note: We need to import Stakeholder m    odel or use full path
-        $stakeholderIds = $milestones->pluck('stakeholder_id')->filter()->unique();
-        $stakeholders = \App\Models\Stakeholder::whereIn('id', $stakeholderIds)->get()->keyBy('id');
+        // 5️⃣ Resolve stakeholders from project & milestones
+        $projectStakeholderIds = [];
+        if (is_array($project->stakeholders)) {
+            $projectStakeholderIds = $project->stakeholders;
+        } elseif (is_string($project->stakeholders)) {
+            $decoded = json_decode($project->stakeholders, true);
+            $projectStakeholderIds = is_array($decoded) ? $decoded : [];
+        }
+
+        $milestoneStakeholderIds = $milestones->pluck('stakeholder_id')->filter()->toArray();
+        $allStakeholderIds = collect(array_merge($projectStakeholderIds, $milestoneStakeholderIds))->unique()->filter();
+
+        $stakeholders = \App\Models\Stakeholder::whereIn('id', $allStakeholderIds)
+            ->where('status', 1)
+            ->get()->keyBy('id');
 
         // 5.1️⃣ Calculate budget totals
         $totalRaised = $donors->sum('amount');
@@ -279,7 +267,6 @@ class WebController extends Controller
             'donors',
             'fundings',
             'utilizations',
-            'stakeholders',
             'stakeholders',
             'surveys',
             'feedbacks',

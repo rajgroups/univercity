@@ -3,29 +3,32 @@
 @section('content')
 <div class="container-fluid">
     <!-- Page Header -->
-        <div class="page-header">
-        <div class="add-item d-flex">
-            <div class="page-title">
-                <h4 class="fw-bold">Create Survey for: </h4>
-                <h6>{{ $project->name }}</h6>
+        <div class="page-header d-flex justify-content-between align-items-center">
+            <div class="add-item d-flex">
+                <div class="page-title">
+                    <h4 class="fw-bold">Create Survey for: </h4>
+                    <h6>{{ $project->name }}</h6>
+                </div>
+            </div>
+            
+            <div class="d-flex align-items-center gap-2">
+                <ul class="table-top-head mb-0 p-0 d-flex align-items-center gap-2" style="list-style: none;">
+                    <li>
+                        <a data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Refresh"><i class="ti ti-refresh"></i></a>
+                    </li>
+                    <li>
+                        <a data-bs-toggle="tooltip" data-bs-placement="top" id="collapse-header" aria-label="Collapse">
+                            <i class="ti ti-chevron-up"></i>
+                        </a>
+                    </li>
+                </ul>
+                <div class="page-btn mt-0">
+                    <a href="{{ route('admin.survey.index', $project->id) }}" class="btn btn-secondary">
+                        <i class="feather feather-arrow-left me-2"></i>Back to List
+                    </a>
+                </div>
             </div>
         </div>
-        <ul class="table-top-head">
-            <li>
-                <a data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Refresh"><i class="ti ti-refresh"></i></a>
-            </li>
-            <li>
-                <a data-bs-toggle="tooltip" data-bs-placement="top" id="collapse-header" aria-label="Collapse">
-                    <i class="ti ti-chevron-up"></i>
-                </a>
-            </li>
-        </ul>
-        <div class="page-btn mt-0">
-            <a href="{{ route('admin.survey.index', $project->id) }}" class="btn btn-secondary">
-                <i class="feather feather-arrow-left me-2"></i>Back to List
-            </a>
-        </div>
-    </div>
    
     <!-- /Page Header -->
     <div class="row">

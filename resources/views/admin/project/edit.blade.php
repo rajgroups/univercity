@@ -1906,66 +1906,28 @@
                         <div class="col-md-12">
                             <div class="mb-3">
                                 <label class="form-label">Stakeholders (Optional)</label>
-                                <div id="stakeholders_wrapper">
-                                    @php
-                                        $stakeholders = old('stakeholders', $project->stakeholders);
-                                    @endphp
-
-                                    @if ($stakeholders && is_array($stakeholders) && count($stakeholders) > 0)
-                                        @foreach ($stakeholders as $index => $stakeholder)
-                                            <div class="row mb-2 stakeholder-item">
-                                                <div class="col-md-5">
-                                                    <input type="text"
-                                                        name="stakeholders[{{ $index }}][name]"
-                                                        class="form-control @error('stakeholders.' . $index . '.name') is-invalid @enderror"
-                                                        placeholder="Stakeholder Name"
-                                                        value="{{ $stakeholder['name'] ?? '' }}">
-                                                    @error('stakeholders.' . $index . '.name')
-                                                        <div class="invalid-feedback">{{ $message }}</div>
-                                                    @enderror
-                                                </div>
-                                                <div class="col-md-5">
-                                                    <input type="text"
-                                                        name="stakeholders[{{ $index }}][role]"
-                                                        class="form-control" placeholder="Role/Contribution"
-                                                        value="{{ $stakeholder['role'] ?? '' }}">
-                                                </div>
-                                                <div class="col-md-2">
-                                                    <button type="button"
-                                                        class="btn btn-outline-danger remove-stakeholder">−</button>
-                                                </div>
-                                            </div>
-                                        @endforeach
-                                    @elseif(old('stakeholders') && is_array(old('stakeholders')))
-                                        @foreach (old('stakeholders') as $index => $stakeholder)
-                                            <div class="row mb-2 stakeholder-item">
-                                                <div class="col-md-5">
-                                                    <input type="text"
-                                                        name="stakeholders[{{ $index }}][name]"
-                                                        class="form-control @error('stakeholders.' . $index . '.name') is-invalid @enderror"
-                                                        placeholder="Stakeholder Name"
-                                                        value="{{ $stakeholder['name'] ?? '' }}">
-                                                    @error('stakeholders.' . $index . '.name')
-                                                        <div class="invalid-feedback">{{ $message }}</div>
-                                                    @enderror
-                                                </div>
-                                                <div class="col-md-5">
-                                                    <input type="text"
-                                                        name="stakeholders[{{ $index }}][role]"
-                                                        class="form-control" placeholder="Role/Contribution"
-                                                        value="{{ $stakeholder['role'] ?? '' }}">
-                                                </div>
-                                                <div class="col-md-2">
-                                                    <button type="button"
-                                                        class="btn btn-outline-danger remove-stakeholder">−</button>
-                                                </div>
-                                            </div>
-                                        @endforeach
-                                    @endif
-                                </div>
-                                <button type="button" class="btn btn-sm btn-primary mt-2" id="add_stakeholder">Add
-                                    Stakeholder</button>
-                                <div class="form-text">Add key stakeholders involved in the project</div>
+                                @php
+                                    $selectedStakeholders = old('stakeholders', $project->stakeholders ?? []);
+                                    $normalizedStakeholders = [];
+                                    if (is_array($selectedStakeholders)) {
+                                        foreach ($selectedStakeholders as $stItem) {
+                                            if (is_array($stItem)) {
+                                                // Handle backwards compatibility (ignoring old structure locally, 
+                                                // or could be mapped here. We just skip them for clean form logic).
+                                            } else {
+                                                $normalizedStakeholders[] = (string) $stItem;
+                                            }
+                                        }
+                                    }
+                                @endphp
+                                <select class="form-select select2-multiple" name="stakeholders[]" multiple>
+                                    @foreach($dbStakeholders as $st)
+                                        <option value="{{ $st->id }}" {{ in_array((string)$st->id, $normalizedStakeholders) ? 'selected' : '' }}>
+                                            {{ $st->full_name }} {{ $st->designation ? '('.$st->designation.')' : '' }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                <div class="form-text">Select key stakeholders involved in the project</div>
                             </div>
                         </div>
                     </div>
@@ -3358,25 +3320,7 @@
                 objectiveCounter++;
             });
 
-            // Add stakeholder
-            $('#add_stakeholder').on('click', function() {
-                let html = `
-                <div class="row mb-2 stakeholder-item">
-                    <div class="col-md-5">
-                        <input type="text" name="stakeholders[${stakeholderCounter}][name]"
-                            class="form-control" placeholder="Stakeholder Name">
-                    </div>
-                    <div class="col-md-5">
-                        <input type="text" name="stakeholders[${stakeholderCounter}][role]"
-                            class="form-control" placeholder="Role/Contribution">
-                    </div>
-                    <div class="col-md-2">
-                        <button type="button" class="btn btn-outline-danger remove-stakeholder">−</button>
-                    </div>
-                </div>`;
-                $('#stakeholders_wrapper').append(html);
-                stakeholderCounter++;
-            });
+
 
             // Add risk
             $('#add_risk').on('click', function() {
@@ -3677,6 +3621,100 @@
             // Initialize Stage UI
             updateStageUI('{{ $project->stage }}');
 
+            // Server-side validation handling
+            @if($errors->any())
+                // Open all accordions if there's a server-side error
+                $('.accordion-collapse').collapse('show');
+                
+                // Show toast for server-side errors
+                if (typeof notyf !== 'undefined') {
+                    notyf.error("Please fix the validation errors marked in red.");
+                } else if (typeof Notyf !== 'undefined') {
+                    const notyfInstance = new Notyf();
+                    notyfInstance.error("Please fix the validation errors marked in red.");
+                }
+                
+                // Scroll to the top error box
+                $('html, body').animate({
+                    scrollTop: $('.alert-danger').first().offset().top - 100
+                }, 500);
+            @else
+                // Auto-show only sections that have validation errors (fallback)
+                $('.is-invalid').each(function() {
+                    $(this).closest('.accordion-collapse').collapse('show');
+                });
+            @endif
+
+            // Client-side HTML5 Validation handling
+            document.addEventListener('invalid', function(e) {
+                let $elem = $(e.target);
+                $elem.addClass('is-invalid');
+                
+                // Open ALL accordions instead of just the hidden one
+                $('.accordion-collapse').collapse('show');
+
+                // If in a hidden tab (like ongoing), switch to it
+                let $tabPane = $elem.closest('.tab-pane');
+                if ($tabPane.length > 0 && !$tabPane.hasClass('active')) {
+                    let tabId = $tabPane.attr('id');
+                    let triggerEl = document.querySelector(`button[data-bs-target="#${tabId}"]`);
+                    if (triggerEl) {
+                        new bootstrap.Tab(triggerEl).show();
+                    }
+                }
+                
+                // Add inline validation message if it doesn't exist
+                let errorMessage = e.target.validationMessage || "This field is required.";
+                if ($elem.next('.html5-invalid-feedback').length === 0 && !$elem.next().hasClass('invalid-feedback')) {
+                    if ($elem.hasClass('select2-hidden-accessible')) {
+                        $elem.next('.select2-container').after(`<div class="invalid-feedback html5-invalid-feedback d-block">${errorMessage}</div>`);
+                    } else {
+                        $elem.after(`<div class="invalid-feedback html5-invalid-feedback d-block">${errorMessage}</div>`);
+                    }
+                } else {
+                    $elem.siblings('.html5-invalid-feedback').text(errorMessage).addClass('d-block');
+                }
+                
+                // Handle Select2 hidden inputs border
+                if ($elem.hasClass('select2-hidden-accessible')) {
+                    $elem.next('.select2-container').find('.select2-selection').css('border-color', '#dc3545');
+                }
+                
+                // Show a toast only once per submit attempt
+                if (!window.validationToastShown) {
+                    window.validationToastShown = true;
+                    setTimeout(() => { window.validationToastShown = false; }, 3000);
+                    
+                    if (typeof notyf !== 'undefined') {
+                        notyf.error('Validation Error: Please fill all required fields.');
+                    } else if (typeof Notyf !== 'undefined') {
+                        const notyfInstance = new Notyf();
+                        notyfInstance.error('Validation Error: Please fill all required fields.');
+                    }
+                    
+                    // Focus the first invalid element after a short delay to allow accordions to open
+                    setTimeout(() => { 
+                        let firstInvalid = $('.is-invalid:visible').first();
+                        if(firstInvalid.length) {
+                            $('html, body').animate({ scrollTop: firstInvalid.offset().top - 150 }, 300);
+                            firstInvalid.focus();
+                        }
+                    }, 400);
+                }
+            }, true);
+
+            // Remove HTML5 error when user inputs value
+            $('input, select, textarea').on('input change', function() {
+                var $this = $(this);
+                if ($this.hasClass('is-invalid') && this.checkValidity()) {
+                    $this.removeClass('is-invalid');
+                    $this.siblings('.html5-invalid-feedback').removeClass('d-block').hide();
+                    if ($this.hasClass('select2-hidden-accessible')) {
+                        $this.next('.select2-container').find('.select2-selection').css('border-color', '');
+                        $this.next('.select2-container').next('.html5-invalid-feedback').removeClass('d-block').hide();
+                    }
+                }
+            });
         });
     </script>
 @endpush
