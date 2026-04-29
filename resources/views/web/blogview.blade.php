@@ -33,7 +33,7 @@
     <div class="hero-overlay position-absolute top-0 start-0 w-100 h-100"></div>
     <div class="container position-relative z-2">
         <span class="badge bg-primary px-3 py-2 rounded-pill text-uppercase fw-bold mb-3 tracking-wide">{{ $typeLabel }}</span>
-        <h1 class="display-3 fw-bold mb-4 hero-title text-white">{{ $blog->title }}</h1>
+        <h1 class="display-3 fw-bold mb-4 text-white fs-4">{{ $blog->title }}</h1>
         <div class="d-flex align-items-center justify-content-center gap-4 text-white-50 fs-6 fw-medium">
             <div class="d-flex align-items-center gap-2">
                 <i class="bi bi-person-circle"></i>
