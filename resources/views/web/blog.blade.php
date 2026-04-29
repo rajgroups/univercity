@@ -363,7 +363,7 @@
     {{-- RESULTS GRID --}}
     <div class="row g-4">
         @forelse($blogs as $blog)
-            <div class="col-lg-4 col-md-6 m-1">
+            <div class="col-lg-4 col-md-6">
                 <article class="blog-card">
                     <div class="blog-card-img-wrapper">
                         @php
