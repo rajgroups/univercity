@@ -655,10 +655,13 @@ $(document).ready(function () {
     $('.task-card').not('#taskCardTemplate .task-card').each(function() {
         disableEditing($(this));
     });
+
+    refreshPhaseAccordionState(false);
 });
 
 let taskCounter = {{ $milestones->count() }};
 let stakeholderCounter = 0;
+const phaseSequence = ['P1', 'P2', 'P3', 'P4', 'P5', 'P6', 'P7'];
 
 // Add new stakeholder field
 function addStakeholderField() {
@@ -780,6 +783,13 @@ function updateSelectedStakeholders() {
 
 // Add new task card
 function addTaskCard(phase) {
+    phase = phase || getCurrentUnlockedPhase();
+
+    if (!phase) {
+        showToast('No unlocked phase is available right now.', 'warning');
+        return;
+    }
+
     taskCounter++;
 
     // Clone the template
@@ -841,6 +851,87 @@ function addTaskCard(phase) {
 
     showToast('New task card added to Phase ' + phase + '!', 'success');
     $newCard[0].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function isPhaseCompleted(phase) {
+    const $cards = $(`#container-${phase} .task-card`);
+
+    if ($cards.length === 0) {
+        return false;
+    }
+
+    let completed = true;
+
+    $cards.each(function() {
+        const status = (($(this).find('.status-select').val()) || '').toLowerCase();
+        if (status !== 'completed') {
+            completed = false;
+            return false;
+        }
+    });
+
+    return completed;
+}
+
+function getCurrentUnlockedPhase() {
+    let unlockedPhase = phaseSequence[0];
+
+    for (let i = 0; i < phaseSequence.length; i++) {
+        const phase = phaseSequence[i];
+        if (isPhaseCompleted(phase)) {
+            unlockedPhase = phaseSequence[Math.min(i + 1, phaseSequence.length - 1)];
+        } else {
+            break;
+        }
+    }
+
+    return unlockedPhase;
+}
+
+function refreshPhaseAccordionState(openUnlockedPhase = true) {
+    const unlockedPhase = getCurrentUnlockedPhase();
+    const unlockedIndex = parseInt(unlockedPhase.replace('P', ''), 10);
+
+    phaseSequence.forEach((phase) => {
+        const phaseIndex = parseInt(phase.replace('P', ''), 10);
+        const isLocked = phaseIndex > unlockedIndex;
+        const isCompleted = isPhaseCompleted(phase);
+        const $item = $(`#heading${phase}`).closest('.accordion-item');
+        const $button = $(`#heading${phase} .accordion-button`);
+        const $collapse = $(`#collapse${phase}`);
+        const $addButton = $(`#container-${phase}`).siblings('.mt-3').find('button');
+        const badgeHtml = isLocked
+            ? '<span class="badge bg-secondary"><i class="ti ti-lock me-1"></i>Locked</span>'
+            : isCompleted
+                ? '<span class="badge bg-success"><i class="ti ti-check me-1"></i>Completed</span>'
+                : '<span class="badge bg-warning text-dark"><i class="ti ti-pencil me-1"></i>Open</span>';
+
+        $item.toggleClass('opacity-75 bg-light', isLocked);
+        $button.toggleClass('disabled', isLocked);
+        $button.attr('data-bs-toggle', isLocked ? '' : 'collapse');
+        $button.attr('data-bs-target', isLocked ? '' : `#collapse${phase}`);
+        $button.attr('aria-expanded', openUnlockedPhase && phase === unlockedPhase ? 'true' : 'false');
+        $button.find('.d-flex.align-items-center.w-100.justify-content-between.pe-3 > div').last().html(badgeHtml);
+        $addButton.prop('disabled', isLocked);
+
+        if (isLocked) {
+            $collapse.removeClass('show');
+        }
+    });
+
+    if (openUnlockedPhase) {
+        phaseSequence.forEach((phase) => {
+            const collapseEl = document.getElementById(`collapse${phase}`);
+            if (!collapseEl) return;
+
+            const collapseInstance = bootstrap.Collapse.getOrCreateInstance(collapseEl, { toggle: false });
+            if (phase === unlockedPhase) {
+                collapseInstance.show();
+            } else {
+                collapseInstance.hide();
+            }
+        });
+    }
 }
 
 // Update phase badge
@@ -997,6 +1088,7 @@ function getTaskData($card) {
     }
 
     return {
+        client_id: $card.data('task-id'),
         id: $card.data('db-id') || null,
         project_id: $('#project_id_hidden').val(),
         stakeholder_id: $card.find('.stakeholder-select-task').val(),
@@ -1077,7 +1169,7 @@ function saveToServer(tasksData, tasksToDelete) {
                 // Update task cards with database IDs
                 if (response.updated_tasks) {
                     response.updated_tasks.forEach(task => {
-                        $(`.task-card[data-task-id="${task.client_id}"]`).data('db-id', task.id);
+                        $(`.task-card[data-task-id="${task.client_id}"]`).attr('data-db-id', task.id).data('db-id', task.id);
                     });
                 }
 
@@ -1088,6 +1180,7 @@ function saveToServer(tasksData, tasksToDelete) {
 
                 // Update task numbers
                 updateTaskNumbers();
+                refreshPhaseAccordionState(true);
 
                 showToast('Tasks saved to database successfully!', 'success');
             } else {
