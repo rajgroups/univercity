@@ -10,18 +10,18 @@
         <ul class="table-top-head">
             <li>
                 <a href="#" data-bs-toggle="tooltip" data-bs-placement="top" title="Refresh" onclick="location.reload()">
-                    <i class="feather feather-rotate-ccw"></i>
+                    <i class="bi bi-arrow-counterclockwise fs-5"></i>
                 </a>
             </li>
             <li>
                 <a href="#" data-bs-toggle="tooltip" data-bs-placement="top" id="collapse-header" title="Collapse">
-                    <i class="feather feather-chevron-up"></i>
+                    <i class="bi bi-chevron-up fs-5"></i>
                 </a>
             </li>
         </ul>
         <div class="page-btn mt-0">
-            <a href="{{ route('admin.stakeholder.create') }}" class="btn btn-primary">
-                <i class="feather feather-plus me-2"></i>Create New Stakeholder
+            <a href="{{ route('admin.stakeholder.create') }}" class="btn btn-primary fs-6">
+                <i class="bi bi-plus-lg me-2"></i>Create New Stakeholder
             </a>
         </div>
     </div>
@@ -45,16 +45,16 @@
         <div class="card-body">
             <form action="{{ route('admin.stakeholder.index') }}" method="GET" class="row g-3">
                 <div class="col-md-3">
-                    <label class="form-label">Search</label>
+                    <label class="form-label fs-6">Search</label>
                     <div class="input-group">
-                        <span class="input-group-text"><i class="feather feather-search"></i></span>
-                        <input type="text" class="form-control" name="search" placeholder="Search by name, email..."
+                        <span class="input-group-text"><i class="bi bi-search"></i></span>
+                        <input type="text" class="form-control fs-6" name="search" placeholder="Search by name, email..."
                             value="{{ request('search') }}">
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <label class="form-label">Type</label>
-                    <select class="form-select" name="type">
+                    <label class="form-label fs-6">Type</label>
+                    <select class="form-select fs-6" name="type">
                         <option value="">All Types</option>
                         <option value="1" {{ request('type') == '1' ? 'selected' : '' }}>ISICO Core</option>
                         <option value="2" {{ request('type') == '2' ? 'selected' : '' }}>Training Partner</option>
@@ -64,8 +64,8 @@
                     </select>
                 </div>
                 <div class="col-md-3">
-                    <label class="form-label">Status</label>
-                    <select class="form-select" name="status">
+                    <label class="form-label fs-6">Status</label>
+                    <select class="form-select fs-6" name="status">
                         <option value="">All Statuses</option>
                         <option value="1" {{ request('status') == '1' ? 'selected' : '' }}>Active</option>
                         <option value="2" {{ request('status') == '2' ? 'selected' : '' }}>Inactive</option>
@@ -73,15 +73,15 @@
                     </select>
                 </div>
                 <div class="col-md-3 d-flex align-items-end">
-                    <button type="submit" class="btn btn-primary w-100">
-                        <i class="feather feather-filter me-1"></i> Filter
+                    <button type="submit" class="btn btn-primary w-100 fs-6">
+                        <i class="bi bi-funnel me-1"></i> Filter
                     </button>
                 </div>
             </form>
             @if (request()->anyFilled(['search', 'type', 'status']))
                 <div class="mt-3">
-                    <a href="{{ route('admin.stakeholder.index') }}" class="btn btn-sm btn-outline-secondary">
-                        <i class="feather feather-x me-1"></i> Clear Filters
+                    <a href="{{ route('admin.stakeholder.index') }}" class="btn btn-sm btn-outline-secondary fs-6">
+                        <i class="bi bi-x-lg me-1"></i> Clear Filters
                     </a>
                 </div>
             @endif
@@ -94,7 +94,7 @@
             <div class="table-responsive">
                 <table class="table table-hover">
                     <thead>
-                        <tr>
+                        <tr class="fs-6">
                             <th width="100">ID</th>
                             <th>Name / Email</th>
                             <th>Type</th>
@@ -105,64 +105,64 @@
                     </thead>
                     <tbody>
                         @forelse($stakeholders ?? [] as $stakeholder)
-                            <tr>
+                            <tr class="fs-6">
                                 <td>
-                                    <span class="badge bg-light text-dark">#{{ $stakeholder->stakeholder_id }}</span>
+                                    <span class="badge bg-light text-dark fs-6">#{{ $stakeholder->stakeholder_id }}</span>
                                 </td>
                                 <td>
                                     <div class="d-flex align-items-center">
                                         <div class="flex-grow-1">
-                                            <h6 class="mb-1">
-                                                <a href="{{ route('admin.stakeholder.show', $stakeholder->id) }}" class="text-dark">
+                                            <h5 class="mb-1">
+                                                <a href="{{ route('admin.stakeholder.show', $stakeholder->id) }}" class="text-dark fw-semibold">
                                                     {{ $stakeholder->full_name }}
                                                 </a>
-                                            </h6>
-                                            <p class="text-muted mb-0 small">
-                                                <i class="feather feather-mail me-1"></i> {{ $stakeholder->email }}
+                                            </h5>
+                                            <p class="text-muted mb-0 fs-6">
+                                                <i class="bi bi-envelope me-1"></i> {{ $stakeholder->email }}
                                                 <br>
-                                                <i class="feather feather-phone me-1"></i> {{ $stakeholder->phone ?? 'N/A' }}
+                                                <i class="bi bi-telephone me-1"></i> {{ $stakeholder->phone ?? 'N/A' }}
                                             </p>
                                         </div>
                                     </div>
                                 </td>
                                 <td>
                                     @switch($stakeholder->type)
-                                        @case(1) <span class="badge bg-primary">ISICO Core</span> @break
-                                        @case(2) <span class="badge bg-info">Training Partner</span> @break
-                                        @case(3) <span class="badge bg-warning text-dark">Learner</span> @break
-                                        @case(4) <span class="badge bg-success">Volunteer</span> @break
-                                        @case(5) <span class="badge bg-secondary">Funding Partner</span> @break
-                                        @default <span class="badge bg-light text-dark">Other</span>
+                                        @case(1) <span class="badge bg-primary fs-6">ISICO Core</span> @break
+                                        @case(2) <span class="badge bg-info fs-6">Training Partner</span> @break
+                                        @case(3) <span class="badge bg-warning text-dark fs-6">Learner</span> @break
+                                        @case(4) <span class="badge bg-success fs-6">Volunteer</span> @break
+                                        @case(5) <span class="badge bg-secondary fs-6">Funding Partner</span> @break
+                                        @default <span class="badge bg-light text-dark fs-6">Other</span>
                                     @endswitch
                                 </td>
                                 <td>
-                                    <div class="text-dark">{{ $stakeholder->company_name ?? 'N/A' }}</div>
-                                    <small class="text-muted">{{ $stakeholder->designation ?? 'No Designation' }}</small>
+                                    <div class="text-dark fw-medium fs-6">{{ $stakeholder->company_name ?? 'N/A' }}</div>
+                                    <div class="text-muted fs-6">{{ $stakeholder->designation ?? 'No Designation' }}</div>
                                 </td>
                                 <td>
                                     @if($stakeholder->status == 1)
-                                        <span class="badge bg-success">Active</span>
+                                        <span class="badge bg-success fs-6">Active</span>
                                     @elseif($stakeholder->status == 2)
-                                        <span class="badge bg-secondary">Inactive</span>
+                                        <span class="badge bg-secondary fs-6">Inactive</span>
                                     @elseif($stakeholder->status == 3)
-                                        <span class="badge bg-warning text-dark">Pending</span>
+                                        <span class="badge bg-warning text-dark fs-6">Pending</span>
                                     @else
-                                        <span class="badge bg-dark">Other</span>
+                                        <span class="badge bg-dark fs-6">Other</span>
                                     @endif
                                 </td>
                                 <td class="text-center">
                                     <div class="btn-group" role="group">
                                         <a href="{{ route('admin.stakeholder.show', $stakeholder->id) }}" class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip" title="View">
-                                            <i class="feather feather-eye"></i>
+                                            <i class="bi bi-eye fs-5"></i>
                                         </a>
                                         <a href="{{ route('admin.stakeholder.edit', $stakeholder->id) }}" class="btn btn-sm btn-outline-info" data-bs-toggle="tooltip" title="Edit">
-                                            <i class="feather feather-edit"></i>
+                                            <i class="bi bi-pencil-square fs-5"></i>
                                         </a>
                                         <form action="{{ route('admin.stakeholder.destroy', $stakeholder->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this stakeholder?');">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-sm btn-outline-danger" data-bs-toggle="tooltip" title="Delete">
-                                                <i class="feather feather-trash-2"></i>
+                                                <i class="bi bi-trash fs-5"></i>
                                             </button>
                                         </form>
                                     </div>
@@ -170,13 +170,13 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="text-center py-4">
+                                <td colspan="6" class="text-center py-5">
                                     <div class="empty-state">
-                                        <i class="feather feather-users text-muted" style="font-size: 48px;"></i>
-                                        <h5 class="mt-3">No stakeholders found</h5>
-                                        <p class="text-muted">Get started by creating a new stakeholder.</p>
-                                        <a href="{{ route('admin.stakeholder.create') }}" class="btn btn-primary mt-2">
-                                            <i class="feather feather-plus me-2"></i>Create Stakeholder
+                                        <i class="bi bi-people text-muted" style="font-size: 48px;"></i>
+                                        <h4 class="mt-3">No stakeholders found</h4>
+                                        <p class="text-muted fs-6">Get started by creating a new stakeholder.</p>
+                                        <a href="{{ route('admin.stakeholder.create') }}" class="btn btn-primary mt-2 fs-6">
+                                            <i class="bi bi-plus-lg me-2"></i>Create Stakeholder
                                         </a>
                                     </div>
                                 </td>

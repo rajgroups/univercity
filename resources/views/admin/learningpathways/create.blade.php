@@ -3,8 +3,44 @@
 @push('css')
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 <style>
+    .learning-pathway-shell {
+        background:
+            radial-gradient(circle at top left, rgba(13, 110, 253, 0.14), transparent 30%),
+            radial-gradient(circle at top right, rgba(25, 135, 84, 0.12), transparent 28%),
+            linear-gradient(180deg, #f8fbff 0%, #f7f8fc 100%);
+    }
+    .learning-pathway-card {
+        backdrop-filter: blur(10px);
+        background: rgba(255, 255, 255, 0.95);
+        border: 1px solid rgba(255, 255, 255, 0.8);
+    }
+    .learning-pathway-header {
+        background: linear-gradient(135deg, #0f4c81 0%, #0d6efd 52%, #1aa179 100%);
+    }
     .top-32 {
         top: 32%;
+    }
+    .pathway-validation-summary {
+        display: none;
+        border: 1px solid rgba(220, 53, 69, 0.18);
+        background: linear-gradient(135deg, rgba(220, 53, 69, 0.08), rgba(255, 243, 205, 0.7));
+        color: #842029;
+        border-radius: 1rem;
+        box-shadow: 0 20px 45px rgba(132, 32, 41, 0.08);
+    }
+    .pathway-validation-summary.show {
+        display: block;
+    }
+    .pathway-panel {
+        border-radius: 1.25rem;
+        box-shadow: 0 18px 45px rgba(15, 76, 129, 0.08);
+        overflow: hidden;
+    }
+    .pathway-nav {
+        background: rgba(255, 255, 255, 0.72);
+        border-radius: 1.5rem;
+        padding: 1.25rem 1rem;
+        box-shadow: inset 0 0 0 1px rgba(13, 110, 253, 0.08), 0 16px 40px rgba(15, 76, 129, 0.07);
     }
     /* Course Card Styles */
     .hover-lift {
@@ -23,6 +59,46 @@
     .cursor-pointer {
         cursor: pointer;
     }
+    .pathway-step-trigger {
+        cursor: pointer;
+        transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+    .pathway-step-trigger:hover {
+        transform: translateY(-2px);
+    }
+    .pathway-step-trigger:not(.active-step) {
+        opacity: 0.75;
+    }
+    .pathway-step-trigger.active-step .rounded-circle {
+        box-shadow: 0 0 0 0.35rem rgba(13, 110, 253, 0.15);
+    }
+    .pathway-step-trigger.active-step .small {
+        color: #0d6efd !important;
+    }
+    .pathway-step-trigger.has-error .rounded-circle {
+        border-color: #dc3545 !important;
+        box-shadow: 0 0 0 0.35rem rgba(220, 53, 69, 0.15);
+    }
+    .pathway-step-trigger.has-error .small,
+    .pathway-step-trigger.has-error .fs-2 {
+        color: #dc3545 !important;
+    }
+    .step-action-bar {
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0), rgba(13, 110, 253, 0.03));
+    }
+    .step-title {
+        letter-spacing: -0.02em;
+    }
+    .is-invalid {
+        border-color: #dc3545 !important;
+        box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.12) !important;
+    }
+    .invalid-feedback.dynamic-feedback {
+        display: block;
+        font-size: 0.875rem;
+        font-weight: 600;
+        margin-top: 0.55rem;
+    }
     .card-img-overlay .badge {
         backdrop-filter: blur(10px);
         background-color: rgba(255, 255, 255, 0.9);
@@ -37,12 +113,12 @@
 @endpush
 
 
-<div class="container-fluid">
+<div class="container-fluid learning-pathway-shell py-4 py-lg-5">
     <div class="row">
         <div class="col-12">
             <!-- Main Card with gradient header -->
-            <div class="card shadow-lg border-0 rounded-4">
-                <div class="card-header bg-gradient text-white py-4 rounded-top-4">
+            <div class="card learning-pathway-card shadow-lg border-0 rounded-4">
+                <div class="card-header learning-pathway-header text-white py-4 rounded-top-4 border-0">
                     <div class="d-flex align-items-center justify-content-between">
                         <div>
                             <h4 class="card-title mb-0 fw-bold">
@@ -59,9 +135,21 @@
                 <div class="card-body p-4">
                     <form action="{{ route('admin.learningpathways.store', $project->id) }}" method="POST" id="learningPathwayForm">
                         @csrf
+
+                        <div id="pathway-validation-summary" class="pathway-validation-summary mb-4 px-4 py-3">
+                            <div class="d-flex align-items-start gap-3">
+                                <div class="fs-4 pt-1">
+                                    <i class="bi bi-exclamation-octagon-fill"></i>
+                                </div>
+                                <div>
+                                    <div class="fw-bold mb-1">Please complete the required fields before continuing.</div>
+                                    <div class="small mb-0" id="pathway-validation-summary-text">Some mandatory fields are still empty.</div>
+                                </div>
+                            </div>
+                        </div>
                         
                         <!-- Progress Indicator -->
-                        <div class="mb-5">
+                        <div class="mb-5 pathway-nav">
                             <div class="d-none d-md-flex justify-content-between align-items-center position-relative">
                                 <div class="position-absolute top-32 start-0 end-0 translate-middle-y">
                                     <div class="progress" style="height: 4px;">
@@ -71,13 +159,16 @@
                                 
                                 <div class="d-flex justify-content-between w-100">
                                     @foreach(['sector', 'flow', 'courses', 'roadmap', 'outcomes'] as $index => $tab)
-                                    <div class="d-flex flex-column align-items-center position-relative">
-                                        <div class="rounded-circle bg-white border border-3 border-primary d-flex align-items-center justify-content-center mb-2" 
+                                    <button type="button"
+                                            class="btn p-0 border-0 bg-transparent d-flex flex-column align-items-center position-relative pathway-step-trigger"
+                                            data-target="#{{ $tab }}"
+                                            data-step="{{ $index + 1 }}">
+                                        <div class="rounded-circle bg-white border border-3 border-primary d-flex align-items-center justify-content-center mb-2"
                                              style="width: 50px; height: 50px; z-index: 1;">
                                             <span class="fs-2 fw-bold text-primary">{{ $index + 1 }}</span>
                                         </div>
                                         <span class="small fw-semibold text-muted">{{ ucfirst($tab) }}</span>
-                                    </div>
+                                    </button>
                                     @endforeach
                                 </div>
                             </div>
@@ -86,10 +177,10 @@
                             <div class="d-md-none">
                                 <div class="d-flex justify-content-between align-items-center mb-3">
                                     <span class="text-muted small">Step <span id="current-step">1</span> of 5</span>
-                                    <span class="badge bg-primary rounded-pill">Sectors</span>
+                                    <span class="badge bg-primary rounded-pill" id="current-step-label">Sector</span>
                                 </div>
                                 <div class="progress">
-                                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 20%"></div>
+                                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 20%" id="progress-bar-mobile"></div>
                                 </div>
                             </div>
                         </div>
@@ -100,9 +191,9 @@
                             <div class="tab-pane fade show active" id="sector" role="tabpanel">
                                 <div class="row g-4">
                                     <div class="col-lg-12">
-                                        <div class="card border-primary border-2">
+                                        <div class="card pathway-panel border-primary border-2">
                                             <div class="card-body p-4">
-                                                <h5 class="card-title text-primary mb-4">
+                                                <h5 class="card-title step-title text-primary mb-4">
                                                     <i class="bi bi-building me-2"></i>Select Primary Sector
                                                 </h5>
                                                 <div class="mb-4">
@@ -123,7 +214,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="card mt-4 border-warning border-2">
+                                        <div class="card pathway-panel mt-4 border-warning border-2">
                                             <div class="card-body p-4">
                                                 <h5 class="card-title text-warning mb-4">
                                                     <i class="bi bi-layers me-2"></i>Associated Sectors
@@ -180,7 +271,7 @@
                                 </div>
 
                                 <!-- Navigation -->
-                                <div class="d-flex justify-content-between mt-5 pt-4 border-top">
+                                <div class="d-flex justify-content-between mt-5 pt-4 border-top step-action-bar">
                                     <div></div>
                                     <button type="button" class="btn btn-primary btn-lg px-5 btn-next" data-next="#flow">
                                         Next: Flow <i class="bi bi-arrow-right ms-2"></i>
@@ -192,7 +283,7 @@
                             <div class="tab-pane fade" id="flow" role="tabpanel">
                                 <div class="row">
                                     <div class="col-lg-10 mx-auto">
-                                        <div class="card border-info">
+                                        <div class="card pathway-panel border-info">
                                             <div class="card-header bg-info bg-opacity-10 border-bottom">
                                                 <h5 class="mb-0 text-info">
                                                     <i class="bi bi-diagram-3 me-2"></i>Multidisciplinary Flow Design
@@ -217,7 +308,7 @@
                                 </div>
 
                                 <!-- Navigation -->
-                                <div class="d-flex justify-content-between mt-5 pt-4 border-top">
+                                <div class="d-flex justify-content-between mt-5 pt-4 border-top step-action-bar">
                                     <button type="button" class="btn btn-outline-primary btn-lg px-5 btn-prev" data-prev="#sector">
                                         <i class="bi bi-arrow-left me-2"></i> Previous
                                     </button>
@@ -240,7 +331,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="card border-success">
+                                        <div class="card pathway-panel border-success">
                                             <div class="card-header bg-success bg-opacity-10 border-bottom">
                                                 <div class="d-flex justify-content-between align-items-center">
                                                     <h5 class="mb-0 text-success">
@@ -292,7 +383,7 @@
                                 </div>
 
                                 <!-- Navigation -->
-                                <div class="d-flex justify-content-between mt-5 pt-4 border-top">
+                                <div class="d-flex justify-content-between mt-5 pt-4 border-top step-action-bar">
                                     <button type="button" class="btn btn-outline-primary btn-lg px-5 btn-prev" data-prev="#flow">
                                         <i class="bi bi-arrow-left me-2"></i> Previous
                                     </button>
@@ -306,7 +397,7 @@
                             <div class="tab-pane fade" id="roadmap" role="tabpanel">
                                 <div class="row">
                                     <div class="col-lg-10 mx-auto">
-                                        <div class="card border-purple">
+                                        <div class="card pathway-panel border-purple">
                                             <div class="card-header bg-purple bg-opacity-10 border-bottom">
                                                 <h5 class="mb-0 text-purple">
                                                     <i class="bi bi-map me-2"></i>Learning Roadmap
@@ -331,7 +422,7 @@
                                 </div>
 
                                 <!-- Navigation -->
-                                <div class="d-flex justify-content-between mt-5 pt-4 border-top">
+                                <div class="d-flex justify-content-between mt-5 pt-4 border-top step-action-bar">
                                     <button type="button" class="btn btn-outline-primary btn-lg px-5 btn-prev" data-prev="#courses">
                                         <i class="bi bi-arrow-left me-2"></i> Previous
                                     </button>
@@ -345,7 +436,7 @@
                             <div class="tab-pane fade" id="outcomes" role="tabpanel">
                                 <div class="row">
                                     <div class="col-lg-10 mx-auto">
-                                        <div class="card border-success">
+                                        <div class="card pathway-panel border-success">
                                             <div class="card-header bg-success bg-opacity-10 border-bottom">
                                                 <h5 class="mb-0 text-success">
                                                     <i class="bi bi-check-circle me-2"></i>Learning Outcomes & Finalization
@@ -373,7 +464,7 @@
                                 </div>
 
                                 <!-- Navigation -->
-                                <div class="d-flex justify-content-between mt-5 pt-4 border-top">
+                                <div class="d-flex justify-content-between mt-5 pt-4 border-top step-action-bar">
                                     <button type="button" class="btn btn-outline-primary btn-lg px-5 btn-prev" data-prev="#roadmap">
                                         <i class="bi bi-arrow-left me-2"></i> Previous
                                     </button>
@@ -548,58 +639,171 @@
         // Progress tracking
         let currentStep = 1;
         const totalSteps = 5;
+        const stepLabels = {
+            1: 'Sector',
+            2: 'Flow',
+            3: 'Courses',
+            4: 'Roadmap',
+            5: 'Outcomes'
+        };
         
         function updateProgress() {
             const progress = (currentStep / totalSteps) * 100;
             $('#progress-bar').css('width', progress + '%');
+            $('#progress-bar-mobile').css('width', progress + '%');
             $('#current-step').text(currentStep);
+            $('#current-step-label').text(stepLabels[currentStep] || 'Step');
+            $('.pathway-step-trigger').removeClass('active-step');
+            $(`.pathway-step-trigger[data-step="${currentStep}"]`).addClass('active-step');
+        }
+
+        function goToStep(target, options = {}) {
+            const $targetTab = $(target);
+
+            if ($targetTab.length === 0) {
+                return;
+            }
+
+            const nextStep = parseInt($(`.pathway-step-trigger[data-target="${target}"]`).data('step'), 10);
+            const $currentTab = $('.tab-pane.active');
+
+            if ($currentTab.attr('id') === $targetTab.attr('id')) {
+                return;
+            }
+
+            $('.tab-pane').removeClass('show active animate__animated animate__fadeInLeft animate__fadeInRight animate__fadeOutLeft animate__fadeOutRight');
+            $targetTab.addClass(`show active animate__animated ${options.animationClass || 'animate__fadeInRight'}`);
+
+            currentStep = nextStep || currentStep;
+            updateProgress();
+
+            if (target === '#courses') {
+                fetchCourses();
+            }
+        }
+
+        function getValidationMessage(field) {
+            if (field.validationMessage) {
+                return field.validationMessage;
+            }
+
+            return 'This field is required.';
+        }
+
+        function getStepNumberFromTab($tab) {
+            if (!$tab || !$tab.length) {
+                return null;
+            }
+
+            return parseInt($(`.pathway-step-trigger[data-target="#${$tab.attr('id')}"]`).data('step'), 10) || null;
+        }
+
+        function showValidationSummary(message, stepNumber = null) {
+            const defaultMessage = 'Some mandatory fields are still empty.';
+            $('#pathway-validation-summary-text').text(message || defaultMessage);
+            $('#pathway-validation-summary').addClass('show');
+
+            $('.pathway-step-trigger').removeClass('has-error');
+            if (stepNumber) {
+                $(`.pathway-step-trigger[data-step="${stepNumber}"]`).addClass('has-error');
+            }
+        }
+
+        function hideValidationSummary() {
+            $('#pathway-validation-summary').removeClass('show');
+            $('.pathway-step-trigger').removeClass('has-error');
+        }
+
+        function clearFieldValidation($field) {
+            $field.removeClass('is-invalid');
+            $field.siblings('.invalid-feedback.dynamic-feedback').remove();
+
+            if ($field.parent().hasClass('input-group')) {
+                $field.parent().siblings('.invalid-feedback.dynamic-feedback').remove();
+            }
+        }
+
+        function showFieldValidation($field, message) {
+            clearFieldValidation($field);
+            $field.addClass('is-invalid');
+
+            const feedback = $(`<div class="invalid-feedback dynamic-feedback">${message}</div>`);
+
+            if ($field.parent().hasClass('input-group')) {
+                $field.parent().after(feedback);
+            } else {
+                $field.after(feedback);
+            }
+        }
+
+        function validateLearningPathwayForm() {
+            let firstInvalidField = null;
+
+            $('#learningPathwayForm').find('[required]').each(function() {
+                const $field = $(this);
+
+                clearFieldValidation($field);
+
+                if (!this.checkValidity()) {
+                    showFieldValidation($field, getValidationMessage(this));
+
+                    if (!firstInvalidField) {
+                        firstInvalidField = $field;
+                    }
+                }
+            });
+
+            return firstInvalidField;
+        }
+
+        function validateRequiredFields($scope) {
+            let firstInvalidField = null;
+            const $requiredFields = $scope.find('[required]').filter(':visible');
+
+            $requiredFields.each(function() {
+                const $field = $(this);
+
+                clearFieldValidation($field);
+
+                if (!this.checkValidity()) {
+                    showFieldValidation($field, getValidationMessage(this));
+
+                    if (!firstInvalidField) {
+                        firstInvalidField = $field;
+                    }
+                }
+            });
+
+            return firstInvalidField;
         }
 
         // Wizard navigation
         $('.btn-next').on('click', function(e) {
             e.preventDefault();
-            const target = $(this).data('next');
-            const currentTab = $('.tab-pane.active');
-            
-            // Simple validation for current tab
-            let isValid = true;
-            currentTab.find('[required]').each(function() {
-                if (!$(this).val()) {
-                    isValid = false;
-                    $(this).addClass('is-invalid');
-                    $(this).after('<div class="invalid-feedback">This field is required</div>');
-                }
-            });
-            
-            if (isValid) {
-                // Add animation
-                currentTab.removeClass('show active').addClass('animate__animated animate__fadeOutLeft');
-                
+            const $currentTab = $('.tab-pane.active');
+            const firstInvalid = validateRequiredFields($currentTab);
+
+            if (firstInvalid) {
+                const stepNumber = getStepNumberFromTab($currentTab);
+                showValidationSummary('Please fill all mandatory fields in this step before moving to the next one.', stepNumber);
                 setTimeout(() => {
-                    $(target).addClass('show active animate__animated animate__fadeInRight');
-                    currentStep++;
-                    updateProgress();
-                    
-                    // If moving to courses tab, fetch courses
-                    if (target === '#courses') {
-                        fetchCourses();
-                    }
-                }, 300);
+                    firstInvalid.trigger('focus');
+                }, 50);
+                return;
             }
+
+            hideValidationSummary();
+            goToStep($(this).data('next'), { animationClass: 'animate__fadeInRight' });
         });
 
         $('.btn-prev').on('click', function(e) {
             e.preventDefault();
-            const target = $(this).data('prev');
-            const currentTab = $('.tab-pane.active');
-            
-            currentTab.removeClass('show active').addClass('animate__animated animate__fadeOutRight');
-            
-            setTimeout(() => {
-                $(target).addClass('show active animate__animated animate__fadeInLeft');
-                currentStep--;
-                updateProgress();
-            }, 300);
+            goToStep($(this).data('prev'), { animationClass: 'animate__fadeInLeft' });
+        });
+
+        $('.pathway-step-trigger').on('click', function(e) {
+            e.preventDefault();
+            goToStep($(this).data('target'));
         });
 
         // Sector Management
@@ -995,11 +1199,31 @@
 
         // Form submission
         $('#learningPathwayForm').on('submit', function(e) {
-            e.preventDefault();
+            const firstInvalid = validateLearningPathwayForm();
+
+            if (firstInvalid) {
+                e.preventDefault();
+                e.stopPropagation();
+                const invalidTab = firstInvalid.closest('.tab-pane');
+                const stepNumber = getStepNumberFromTab(invalidTab);
+
+                showValidationSummary('Please complete the highlighted mandatory fields before creating the learning pathway.', stepNumber);
+
+                if (invalidTab.length) {
+                    goToStep(`#${invalidTab.attr('id')}`);
+                }
+
+                setTimeout(() => {
+                    firstInvalid.trigger('focus');
+                }, 50);
+
+                return;
+            }
+
+            hideValidationSummary();
             
             // Show loading state
             const submitBtn = $(this).find('button[type="submit"]');
-            const originalText = submitBtn.html();
             submitBtn.prop('disabled', true).html(`
                 <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
                 Creating Pathway...
@@ -1010,6 +1234,17 @@
                 // For demo purposes - actually submit the form
                 this.submit();
             }, 1500);
+        });
+
+        // Clear invalid styling as soon as a field becomes valid.
+        $('#learningPathwayForm').on('input change', ':input', function() {
+            if (this.checkValidity()) {
+                clearFieldValidation($(this));
+
+                if ($('#learningPathwayForm').find('.is-invalid').length === 0) {
+                    hideValidationSummary();
+                }
+            }
         });
 
         // Initialize with one flow step
@@ -1056,6 +1291,8 @@
                 ]
             });
         }
+
+        updateProgress();
     });
 </script>
 @endpush

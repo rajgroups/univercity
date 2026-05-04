@@ -69,7 +69,7 @@
             @endphp
 
             @forelse($surveys as $index => $survey)
-                @include('admin.survey.partials.card', ['index' => $index, 'survey' => $survey])
+                @include('admin.feedback.partials.card', ['index' => $index, 'survey' => $survey])
             @empty
                 <div class="text-center py-5 bg-white border rounded mb-4 empty-state">
                     <i class="feather feather-file-text display-4 text-muted mb-3 d-block"></i>
