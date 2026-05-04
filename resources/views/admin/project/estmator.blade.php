@@ -394,9 +394,9 @@
 {{-- ================= 6. UTILIZATION (Ongoing Stage Only) ================= --}}
 <div class="card mt-4 {{ $project->stage == 'ongoing' ? '' : 'd-none' }}" id="utilizationSection">
     <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
-        <h5 class="mb-0">Financial Utilization Details (Ongoing)</h5>
+        <h5 class="mb-0 text-white">Financial Utilization Details (Ongoing)</h5>
         <div>
-            <button class="btn btn-sm btn-outline-light me-2" onclick="importFromEstimation()">
+            <button class="btn btn-sm btn-outline-light me-2 text-white" onclick="importFromEstimation()">
                 <i class="ti ti-download me-1"></i>Import Estimates
             </button>
             <button class="btn btn-sm btn-success" onclick="addUtilizationRow()">
