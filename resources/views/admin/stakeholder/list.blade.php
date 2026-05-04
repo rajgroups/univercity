@@ -10,12 +10,12 @@
         <ul class="table-top-head">
             <li>
                 <a href="#" data-bs-toggle="tooltip" data-bs-placement="top" title="Refresh" onclick="location.reload()">
-                    <i class="bi bi-arrow-counterclockwise fs-5"></i>
+                    <i class="bi bi-arrow-counterclockwise "></i>
                 </a>
             </li>
             <li>
                 <a href="#" data-bs-toggle="tooltip" data-bs-placement="top" id="collapse-header" title="Collapse">
-                    <i class="bi bi-chevron-up fs-5"></i>
+                    <i class="bi bi-chevron-up "></i>
                 </a>
             </li>
         </ul>
@@ -153,16 +153,16 @@
                                 <td class="text-center">
                                     <div class="btn-group" role="group">
                                         <a href="{{ route('admin.stakeholder.show', $stakeholder->id) }}" class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip" title="View">
-                                            <i class="bi bi-eye fs-5"></i>
+                                            <i class="bi bi-eye "></i>
                                         </a>
                                         <a href="{{ route('admin.stakeholder.edit', $stakeholder->id) }}" class="btn btn-sm btn-outline-info" data-bs-toggle="tooltip" title="Edit">
-                                            <i class="bi bi-pencil-square fs-5"></i>
+                                            <i class="bi bi-pencil-square "></i>
                                         </a>
                                         <form action="{{ route('admin.stakeholder.destroy', $stakeholder->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this stakeholder?');">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-sm btn-outline-danger" data-bs-toggle="tooltip" title="Delete">
-                                                <i class="bi bi-trash fs-5"></i>
+                                                <i class="bi bi-trash "></i>
                                             </button>
                                         </form>
                                     </div>
