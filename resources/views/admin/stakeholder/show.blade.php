@@ -8,10 +8,10 @@
             </div>
         </div>
         <div class="page-btn mt-0">
-            <a href="{{ route('admin.stakeholder.index') }}" class="btn btn-secondary me-2 fs-6">
+            <a href="{{ route('admin.stakeholder.index') }}" class="btn btn-secondary me-2  ">
                 <i class="bi bi-arrow-left me-2"></i>Back to List
             </a>
-            <a href="{{ route('admin.stakeholder.edit', $stakeholder->id) }}" class="btn btn-info fs-6">
+            <a href="{{ route('admin.stakeholder.edit', $stakeholder->id) }}" class="btn btn-info  ">
                 <i class="bi bi-pencil-square me-2"></i>Edit
             </a>
         </div>
@@ -27,28 +27,28 @@
                     </div>
                     <h3 class="mb-1 fw-bold">{{ $stakeholder->full_name }}</h3>
                     <p class="text-muted mb-2 fs-5">{{ $stakeholder->designation ?? 'Stakeholder' }} at {{ $stakeholder->company_name ?? 'N/A' }}</p>
-                    
-                    <span class="badge bg-light text-dark mb-3 px-3 py-2 border fs-6">#{{ $stakeholder->stakeholder_id }}</span>
-                    
+
+                    <span class="badge bg-light text-dark mb-3 px-3 py-2 border  ">#{{ $stakeholder->stakeholder_id }}</span>
+
                     <div class="d-flex justify-content-center gap-2 mb-4">
                         @if($stakeholder->status == 1)
-                            <span class="badge bg-success fs-6">Active</span>
+                            <span class="badge bg-success  ">Active</span>
                         @elseif($stakeholder->status == 2)
-                            <span class="badge bg-secondary fs-6">Inactive</span>
+                            <span class="badge bg-secondary  ">Inactive</span>
                         @else
-                            <span class="badge bg-warning text-dark fs-6">Status: {{ $stakeholder->status }}</span>
+                            <span class="badge bg-warning text-dark  ">Status: {{ $stakeholder->status }}</span>
                         @endif
 
                         @switch($stakeholder->type)
-                            @case(1) <span class="badge bg-primary fs-6">ISICO Core</span> @break
-                            @case(2) <span class="badge bg-info fs-6">Training Partner</span> @break
-                            @case(3) <span class="badge bg-warning text-dark fs-6">Learner</span> @break
-                            @case(4) <span class="badge bg-success fs-6">Volunteer</span> @break
-                            @case(5) <span class="badge bg-secondary fs-6">Funding Partner</span> @break
+                            @case(1) <span class="badge bg-primary  ">ISICO Core</span> @break
+                            @case(2) <span class="badge bg-info  ">Training Partner</span> @break
+                            @case(3) <span class="badge bg-warning text-dark  ">Learner</span> @break
+                            @case(4) <span class="badge bg-success  ">Volunteer</span> @break
+                            @case(5) <span class="badge bg-secondary  ">Funding Partner</span> @break
                         @endswitch
                     </div>
 
-                    <ul class="list-group list-group-flush text-start fs-6">
+                    <ul class="list-group list-group-flush text-start  ">
                         <li class="list-group-item px-0">
                             <strong><i class="bi bi-envelope me-2 text-muted"></i>Email</strong><br>
                             <a href="mailto:{{ $stakeholder->email }}">{{ $stakeholder->email }}</a>
@@ -83,7 +83,7 @@
         <div class="col-lg-8 col-md-12 mb-4">
             <div class="card h-100">
                 <div class="card-body">
-                    <ul class="nav nav-tabs nav-tabs-solid mb-4 fs-6" role="tablist">
+                    <ul class="nav nav-tabs nav-tabs-solid mb-4  " role="tablist">
                         <li class="nav-item">
                             <a class="nav-link active" data-bs-toggle="tab" href="#basic-info" role="tab">Overview</a>
                         </li>
@@ -95,31 +95,31 @@
                         </li>
                     </ul>
 
-                    <div class="tab-content fs-6">
+                    <div class="tab-content  ">
                         <!-- Overview Tab -->
                         <div class="tab-pane show active" id="basic-info" role="tabpanel">
                             <h4 class="mb-3">Organizational Details</h4>
                             <div class="row mb-4">
-                                <div class="col-sm-4 text-muted mb-1 fs-6">Company/Organization</div>
-                                <div class="col-sm-8 fw-semibold mb-3 fs-6">{{ $stakeholder->company_name ?? 'N/A' }}</div>
-                                
-                                <div class="col-sm-4 text-muted mb-1 fs-6">Department</div>
-                                <div class="col-sm-8 fw-semibold mb-3 fs-6">{{ $stakeholder->department ?? 'N/A' }}</div>
+                                <div class="col-sm-4 text-muted mb-1  ">Company/Organization</div>
+                                <div class="col-sm-8 fw-semibold mb-3  ">{{ $stakeholder->company_name ?? 'N/A' }}</div>
 
-                                <div class="col-sm-4 text-muted mb-1 fs-6">Classification ID</div>
-                                <div class="col-sm-8 fw-semibold mb-3 fs-6">{{ $stakeholder->classification }}</div>
-                                
-                                <div class="col-sm-4 text-muted mb-1 fs-6">Engagement Level</div>
-                                <div class="col-sm-8 fw-semibold mb-3 fs-6">
+                                <div class="col-sm-4 text-muted mb-1  ">Department</div>
+                                <div class="col-sm-8 fw-semibold mb-3  ">{{ $stakeholder->department ?? 'N/A' }}</div>
+
+                                <div class="col-sm-4 text-muted mb-1  ">Classification ID</div>
+                                <div class="col-sm-8 fw-semibold mb-3  ">{{ $stakeholder->classification }}</div>
+
+                                <div class="col-sm-4 text-muted mb-1  ">Engagement Level</div>
+                                <div class="col-sm-8 fw-semibold mb-3  ">
                                     <div class="progress mt-1" style="height: 8px; width: 120px;">
                                         <div class="progress-bar bg-primary" role="progressbar" style="width: {{ ($stakeholder->engagement_level / 5) * 100 }}%"></div>
                                     </div>
-                                    <span class="fs-6">{{ $stakeholder->engagement_level }} / 5</span>
+                                    <span class=" ">{{ $stakeholder->engagement_level }} / 5</span>
                                 </div>
                             </div>
-                            
+
                             <h4 class="mb-3">Biography</h4>
-                            <p class="text-muted fs-6">{{ $stakeholder->biography ?? 'No biography provided.' }}</p>
+                            <p class="text-muted  ">{{ $stakeholder->biography ?? 'No biography provided.' }}</p>
                         </div>
 
                         <!-- Professional Tab -->
