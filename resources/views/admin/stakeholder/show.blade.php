@@ -26,7 +26,7 @@
                         {{ strtoupper(substr($stakeholder->first_name, 0, 1)) }}{{ strtoupper(substr($stakeholder->last_name, 0, 1)) }}
                     </div>
                     <h3 class="mb-1 fw-bold">{{ $stakeholder->full_name }}</h3>
-                    <p class="text-muted mb-2 fs-5">{{ $stakeholder->designation ?? 'Stakeholder' }} at {{ $stakeholder->company_name ?? 'N/A' }}</p>
+                    <p class="text-muted mb-2 ">{{ $stakeholder->designation ?? 'Stakeholder' }} at {{ $stakeholder->company_name ?? 'N/A' }}</p>
 
                     <span class="badge bg-light text-dark mb-3 px-3 py-2 border  ">#{{ $stakeholder->stakeholder_id }}</span>
 
@@ -127,23 +127,23 @@
                             <div class="row">
                                 <div class="col-md-6 mb-4">
                                     <h5 class="text-muted mb-2">Industry</h5>
-                                    <div class="fs-5 fw-medium">{{ $stakeholder->industry ?? 'N/A' }}</div>
+                                    <div class="fw-medium">{{ $stakeholder->industry ?? 'N/A' }}</div>
                                 </div>
                                 <div class="col-md-6 mb-4">
                                     <h5 class="text-muted mb-2">Expertise Area</h5>
-                                    <div class="fs-5 fw-medium">{{ $stakeholder->expertise_area ?? 'N/A' }}</div>
+                                    <div class="fw-medium">{{ $stakeholder->expertise_area ?? 'N/A' }}</div>
                                 </div>
                                 <div class="col-md-6 mb-4">
                                     <h5 class="text-muted mb-2">Preferred Language</h5>
-                                    <div class="fs-5 fw-medium">{{ strtoupper($stakeholder->preferred_language) }}</div>
+                                    <div class="fw-medium">{{ strtoupper($stakeholder->preferred_language) }}</div>
                                 </div>
                                 <div class="col-md-6 mb-4">
                                     <h5 class="text-muted mb-2">Influence Level</h5>
-                                    <div class="fs-5 fw-medium">{{ $stakeholder->influence_level }} / 4</div>
+                                    <div class="fw-medium">{{ $stakeholder->influence_level }} / 4</div>
                                 </div>
                                 <div class="col-md-6 mb-4">
                                     <h5 class="text-muted mb-2">Interest Level</h5>
-                                    <div class="fs-5 fw-medium">{{ $stakeholder->interest_level }} / 3</div>
+                                    <div class="fw-medium">{{ $stakeholder->interest_level }} / 3</div>
                                 </div>
                             </div>
                         </div>
@@ -153,7 +153,7 @@
                             <div class="card bg-light border-0">
                                 <div class="card-body">
                                     @if($stakeholder->address_line_1 || $stakeholder->city || $stakeholder->state)
-                                        <address class="mb-0 fs-5">
+                                        <address class="mb-0 ">
                                             <strong>{{ $stakeholder->address_line_1 }}</strong><br>
                                             @if($stakeholder->address_line_2)
                                                 {{ $stakeholder->address_line_2 }}<br>
@@ -164,7 +164,7 @@
                                             @endif
                                         </address>
                                     @else
-                                        <p class="text-muted mb-0 fs-5">No address details provided.</p>
+                                        <p class="text-muted mb-0 ">No address details provided.</p>
                                     @endif
                                 </div>
                             </div>
