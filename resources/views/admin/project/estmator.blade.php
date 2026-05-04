@@ -270,7 +270,7 @@
     <div class="card-header d-flex justify-content-between align-items-center">
         <h5 class="mb-0">Crowdfunding Activation</h5>
         <div class="form-check form-switch">
-            <input class="form-check-input" type="checkbox" id="crowdfundingToggle" 
+            <input class="form-check-input" type="checkbox" id="crowdfundingToggle"
                    {{ $project->crowdfunding_active ? 'checked' : '' }} onchange="toggleCrowdfunding(this)">
             <label class="form-check-label" for="crowdfundingToggle">Enable Crowdfunding Section</label>
         </div>
@@ -392,7 +392,7 @@
 </div>
 
 {{-- ================= 6. UTILIZATION (Ongoing Stage Only) ================= --}}
-<div class="card mt-4 {{ $project->stage == 'Ongoing' ? '' : 'd-none' }}" id="utilizationSection">
+<div class="card mt-4 {{ $project->stage == 'ongoing' ? '' : 'd-none' }}" id="utilizationSection">
     <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
         <h5 class="mb-0">Financial Utilization Details (Ongoing)</h5>
         <div>
@@ -594,10 +594,10 @@ function toggleCrowdfunding(el) {
 function updateCrowdTarget(el) {
     const val = $(el).val();
     // Simplified: save target to project table
-    $.post("{{ route('admin.project.estmator.crowdfunding.toggle') }}", { // Reusing stage or creating target route? 
+    $.post("{{ route('admin.project.estmator.crowdfunding.toggle') }}", { // Reusing stage or creating target route?
         _token: CSRF_TOKEN,
         project_id: PROJECT_ID,
-        active: $('#crowdfundingToggle').is(':checked') ? 1 : 0, 
+        active: $('#crowdfundingToggle').is(':checked') ? 1 : 0,
         target: val // Controller needs to handle target if passed
     }, function(res) {
         updateFinancialSummary();
@@ -692,9 +692,9 @@ function calculateFundingBalance(el) {
     const sanction = parseFloat(row.find('.funding-sanction').val()) || 0;
     const received = parseFloat(row.find('.funding-amount').val()) || 0;
     const balance = sanction - received;
-    
+
     row.find('.funding-balance').text('₹ ' + balance.toLocaleString());
-    
+
     const statusSelect = row.find('.funding-status-select');
     if (received >= sanction && sanction > 0) statusSelect.val('Received');
     else if (received > 0) statusSelect.val('Partially Received');
@@ -824,15 +824,15 @@ function updateCrowdSummary() {
         const status = $(this).find('.donor-status').val();
         if (status === 'Received' || status === 'Partially Received') raised += amt;
     });
-    
+
     // Update labels and progress
     const target = parseFloat($('#fundraisingTarget').val()) || 1; // avoid div by 0
     const percent = (raised / target) * 100;
-    
+
     $('#summaryCrowd').text('₹ ' + raised.toLocaleString());
     $('#crowdProgressVal').text(percent.toFixed(1) + '%');
     $('#crowdProgressBar').css('width', Math.min(percent, 100) + '%');
-    
+
     updateFinancialSummary();
 }
 
@@ -940,20 +940,20 @@ function updateFinancialSummary() {
     const csr = parseFloat($('#summaryCSR').text().replace(/[^0-9.]/g, '')) || 0;
     const crowd = parseFloat($('#summaryCrowd').text().replace(/[^0-9.]/g, '')) || 0;
     const est = parseFloat($('#overviewTotalCost').text().replace(/[^0-9.]/g, '')) || 0;
-    
+
     const available = csr + crowd;
     $('#summaryAvailable, #overviewTotalAvailable').text('₹ ' + available.toLocaleString());
-    
+
     let spent = 0;
     $('#utilizationTable tr').each(function() {
         const val = parseFloat($(this).find('.actual-amount').val());
         if (!isNaN(val)) spent += val;
     });
-    
+
     const balance = available - spent;
     $('#summaryBalance').text('₹ ' + balance.toLocaleString());
     $('#summaryBalance').toggleClass('text-danger', balance < 0).toggleClass('text-success', balance >= 0);
-    
+
     // Progress status in header
     const statusEl = $('#overviewFundingStatus');
     if (est > 0) {
