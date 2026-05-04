@@ -285,8 +285,10 @@ class ProjectEstimatorController extends Controller
         $request->validate([
             'project_id' => 'required|exists:projects,id',
             'item_name' => 'required|string',
+            'estimated_amount' => 'nullable|numeric|min:0',
             'actual_amount' => 'required|numeric|min:0',
             'funding_source' => 'required|in:CSR,Crowdfunding',
+            'status' => 'nullable|in:Pending,Approved,Paid',
         ]);
 
         try {
@@ -326,6 +328,7 @@ class ProjectEstimatorController extends Controller
                 'actual_amount' => $actualAmt,
                 'phase' => $request->phase,
                 'funding_source' => $request->funding_source,
+                'status' => $request->status ?: 'Pending',
             ];
 
             if (isset($filePath)) {

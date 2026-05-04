@@ -1,5 +1,32 @@
 @extends('layouts.admin.app')
 @section('content')
+    @php
+        $communicationPreferencesText = old(
+            'communication_preferences_text',
+            is_array($stakeholder->communication_preferences)
+                ? implode("\n", $stakeholder->communication_preferences)
+                : ($stakeholder->communication_preferences ?? '')
+        );
+        $assignedProjectsText = old(
+            'assigned_projects_text',
+            is_array($stakeholder->assigned_projects)
+                ? implode("\n", $stakeholder->assigned_projects)
+                : ($stakeholder->assigned_projects ?? '')
+        );
+        $involvedPhasesText = old(
+            'involved_phases_text',
+            is_array($stakeholder->involved_phases)
+                ? implode("\n", $stakeholder->involved_phases)
+                : ($stakeholder->involved_phases ?? '')
+        );
+        $metadataText = old(
+            'metadata_text',
+            !empty($stakeholder->metadata)
+                ? json_encode($stakeholder->metadata, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)
+                : ''
+        );
+    @endphp
+
     <div class="page-header">
         <div class="add-item d-flex">
             <div class="page-title">
@@ -169,6 +196,42 @@
                     <div class="col-md-4 mb-3">
                         <label class="form-label">Interest Level (1-3)</label>
                         <input type="number" class="form-control" name="interest_level" value="{{ old('interest_level', $stakeholder->interest_level) }}" min="1" max="3">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Last Contacted</label>
+                        <input type="date" class="form-control" name="last_contacted" value="{{ old('last_contacted', optional($stakeholder->last_contacted)->format('Y-m-d')) }}">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Next Follow Up</label>
+                        <input type="date" class="form-control" name="next_follow_up" value="{{ old('next_follow_up', optional($stakeholder->next_follow_up)->format('Y-m-d')) }}">
+                    </div>
+                </div>
+
+                <h5 class="mb-3 text-primary border-bottom pb-2 mt-4">Additional Data</h5>
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Communication Preferences</label>
+                        <textarea class="form-control" name="communication_preferences_text" rows="4" placeholder="Email&#10;Phone&#10;WhatsApp">{{ $communicationPreferencesText }}</textarea>
+                        <small class="text-muted">Enter one item per line or comma separated.</small>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Assigned Projects</label>
+                        <textarea class="form-control" name="assigned_projects_text" rows="4" placeholder="Project Alpha&#10;Project Beta">{{ $assignedProjectsText }}</textarea>
+                        <small class="text-muted">Enter one project per line or comma separated.</small>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Involved Phases</label>
+                        <textarea class="form-control" name="involved_phases_text" rows="4" placeholder="Planning&#10;Execution&#10;Review">{{ $involvedPhasesText }}</textarea>
+                        <small class="text-muted">Enter one phase per line or comma separated.</small>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Metadata (JSON)</label>
+                        <textarea class="form-control font-monospace" name="metadata_text" rows="4" placeholder='{"source":"manual","priority":"high"}'>{{ $metadataText }}</textarea>
+                        <small class="text-muted">Optional JSON object for extra structured details.</small>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Internal Notes</label>
+                        <textarea class="form-control" name="notes" rows="4" placeholder="Add any internal notes about this stakeholder...">{{ old('notes', $stakeholder->notes) }}</textarea>
                     </div>
                 </div>
 

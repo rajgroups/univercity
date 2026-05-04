@@ -168,6 +168,42 @@
                         <label class="form-label">Interest Level (1-3)</label>
                         <input type="number" class="form-control" name="interest_level" value="{{ old('interest_level', 2) }}" min="1" max="3">
                     </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Last Contacted</label>
+                        <input type="date" class="form-control" name="last_contacted" value="{{ old('last_contacted') }}">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Next Follow Up</label>
+                        <input type="date" class="form-control" name="next_follow_up" value="{{ old('next_follow_up') }}">
+                    </div>
+                </div>
+
+                <h5 class="mb-3 text-primary border-bottom pb-2 mt-4">Additional Data</h5>
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Communication Preferences</label>
+                        <textarea class="form-control" name="communication_preferences_text" rows="4" placeholder="Email&#10;Phone&#10;WhatsApp">{{ old('communication_preferences_text') }}</textarea>
+                        <small class="text-muted">Enter one item per line or comma separated.</small>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Assigned Projects</label>
+                        <textarea class="form-control" name="assigned_projects_text" rows="4" placeholder="Project Alpha&#10;Project Beta">{{ old('assigned_projects_text') }}</textarea>
+                        <small class="text-muted">Enter one project per line or comma separated.</small>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Involved Phases</label>
+                        <textarea class="form-control" name="involved_phases_text" rows="4" placeholder="Planning&#10;Execution&#10;Review">{{ old('involved_phases_text') }}</textarea>
+                        <small class="text-muted">Enter one phase per line or comma separated.</small>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Metadata (JSON)</label>
+                        <textarea class="form-control font-monospace" name="metadata_text" rows="4" placeholder='{"source":"manual","priority":"high"}'>{{ old('metadata_text') }}</textarea>
+                        <small class="text-muted">Optional JSON object for extra structured details.</small>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Internal Notes</label>
+                        <textarea class="form-control" name="notes" rows="4" placeholder="Add any internal notes about this stakeholder...">{{ old('notes') }}</textarea>
+                    </div>
                 </div>
 
                 <div class="row mt-4">

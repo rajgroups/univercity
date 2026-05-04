@@ -21,6 +21,7 @@ class Stakeholder extends Model
         'designation',
         'department',
         'type',
+        'classification',
         'category',
         'communication_preferences',
         'preferred_language',

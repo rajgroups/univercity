@@ -409,9 +409,11 @@
             <table class="table table-bordered align-middle">
                 <thead class="table-light">
                     <tr>
-                        <th>Item Description</th>
+                        <th>Actual Spending Details</th>
                         <th>Phase</th>
+                        <th>Budgeted (₹)</th>
                         <th>Source</th>
+                        <th>Status</th>
                         <th>Actual Spent (₹)</th>
                         <th width="15%">Upload Quote/Invoice</th>
                         <th>Actions</th>
@@ -421,17 +423,35 @@
                     @foreach($utilizations as $item)
                     <tr data-id="{{ $item->id }}">
                         <td>
-                            <div class="fw-bold small">{{ $item->item_name }}</div>
-                            <div class="text-muted x-small">{{ $item->category }}</div>
+                            <input type="text" class="form-control form-control-sm item-name mb-2" value="{{ $item->item_name }}" placeholder="Expense Description" oninput="markUnsaved(this)">
+                            <select class="form-select form-select-sm category" onchange="markUnsaved(this)">
+                                @foreach(['Hardware', 'Software & Content', 'Training', 'Logistics', 'Travel Allowance', 'Survey', 'Food & Beverage', 'Marketing & Advertisements', 'Salary-HR', 'Admin Cost', 'Miscellaneous'] as $cat)
+                                <option value="{{ $cat }}" {{ $item->category == $cat ? 'selected' : '' }}>{{ $cat }}</option>
+                                @endforeach
+                            </select>
                         </td>
-                        <td><span class="badge bg-secondary">{{ $item->phase }}</span></td>
+                        <td>
+                            <select class="form-select form-select-sm phase" onchange="markUnsaved(this)">
+                                @foreach(['P1','P2','P3','P4','P5','P6','P7'] as $phase)
+                                <option value="{{ $phase }}" {{ $item->phase == $phase ? 'selected' : '' }}>{{ $phase }}</option>
+                                @endforeach
+                            </select>
+                        </td>
+                        <td><input type="number" class="form-control form-control-sm estimated-amount" value="{{ floor($item->estimated_amount) }}" min="0" step="1" oninput="markUnsaved(this)"></td>
                         <td>
                             <select class="form-select form-select-sm funding-source-select" onchange="markUnsaved(this)">
                                 <option value="CSR" {{ $item->funding_source == 'CSR' ? 'selected' : '' }}>CSR</option>
                                 <option value="Crowdfunding" {{ $item->funding_source == 'Crowdfunding' ? 'selected' : '' }}>Crowdfunding</option>
                             </select>
                         </td>
-                        <td><input type="number" class="form-control form-control-sm actual-amount" value="{{ $item->actual_amount }}" oninput="markUnsaved(this)"></td>
+                        <td>
+                            <select class="form-select form-select-sm utilization-status" onchange="markUnsaved(this)">
+                                @foreach(['Pending', 'Approved', 'Paid'] as $status)
+                                <option value="{{ $status }}" {{ ($item->status ?? 'Pending') == $status ? 'selected' : '' }}>{{ $status }}</option>
+                                @endforeach
+                            </select>
+                        </td>
+                        <td><input type="number" class="form-control form-control-sm actual-amount" value="{{ floor($item->actual_amount) }}" min="0" step="1" oninput="markUnsaved(this)"></td>
                         <td>
                             <input type="file" class="form-control form-control-sm file-input" onchange="markUnsaved(this)">
                             @if($item->file_path)
@@ -833,13 +853,21 @@ function addUtilizationRow() {
                 <option>P1</option><option>P2</option><option>P3</option><option>P4</option><option>P5</option><option>P6</option><option>P7</option>
             </select>
         </td>
+        <td><input type="number" class="form-control form-control-sm estimated-amount" value="0" min="0" step="1" oninput="markUnsaved(this)"></td>
         <td>
             <select class="form-select form-select-sm funding-source-select" onchange="markUnsaved(this)">
                 <option value="CSR">CSR</option>
                 <option value="Crowdfunding">Crowdfunding</option>
             </select>
         </td>
-        <td><input type="number" class="form-control form-control-sm actual-amount" value="0" oninput="markUnsaved(this)"></td>
+        <td>
+            <select class="form-select form-select-sm utilization-status" onchange="markUnsaved(this)">
+                <option value="Pending">Pending</option>
+                <option value="Approved">Approved</option>
+                <option value="Paid">Paid</option>
+            </select>
+        </td>
+        <td><input type="number" class="form-control form-control-sm actual-amount" value="0" min="0" step="1" oninput="markUnsaved(this)"></td>
         <td><input type="file" class="form-control form-control-sm file-input" onchange="markUnsaved(this)"></td>
         <td>
             <div class="btn-group">
@@ -857,11 +885,13 @@ function saveUtilizationRow(btn) {
     formData.append('_token', CSRF_TOKEN);
     formData.append('project_id', PROJECT_ID);
     formData.append('id', row.data('id'));
-    formData.append('item_name', row.find('.item-name, .fw-bold').text() || row.find('.item-name').val());
-    formData.append('category', row.find('.category').val() || row.find('.x-small').text());
+    formData.append('item_name', row.find('.item-name').val());
+    formData.append('category', row.find('.category').val());
+    formData.append('estimated_amount', row.find('.estimated-amount').val());
     formData.append('actual_amount', row.find('.actual-amount').val());
-    formData.append('phase', row.find('.phase').val() || row.find('.badge').text());
+    formData.append('phase', row.find('.phase').val());
     formData.append('funding_source', row.find('.funding-source-select').val());
+    formData.append('status', row.find('.utilization-status').val());
 
     const fileInput = row.find('.file-input')[0];
     if (fileInput.files.length > 0) formData.append('file', fileInput.files[0]);

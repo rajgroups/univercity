@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Stakeholder;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 
 class StakeholderController extends Controller
 {
@@ -80,7 +79,16 @@ class StakeholderController extends Controller
             'engagement_level' => 'required|integer|min:1|max:5',
             'influence_level' => 'required|integer|min:1|max:4',
             'interest_level' => 'required|integer|min:1|max:3',
+            'last_contacted' => 'nullable|date',
+            'next_follow_up' => 'nullable|date',
+            'communication_preferences_text' => 'nullable|string',
+            'assigned_projects_text' => 'nullable|string',
+            'involved_phases_text' => 'nullable|string',
+            'metadata_text' => 'nullable|string',
+            'notes' => 'nullable|string',
         ]);
+
+        $validated = $this->prepareStakeholderPayload($validated, $request);
 
         // Generate auto ID if not provided by model observer
         $lastStakeholder = Stakeholder::orderBy('id', 'desc')->first();
@@ -141,7 +149,16 @@ class StakeholderController extends Controller
             'engagement_level' => 'required|integer|min:1|max:5',
             'influence_level' => 'required|integer|min:1|max:4',
             'interest_level' => 'required|integer|min:1|max:3',
+            'last_contacted' => 'nullable|date',
+            'next_follow_up' => 'nullable|date',
+            'communication_preferences_text' => 'nullable|string',
+            'assigned_projects_text' => 'nullable|string',
+            'involved_phases_text' => 'nullable|string',
+            'metadata_text' => 'nullable|string',
+            'notes' => 'nullable|string',
         ]);
+
+        $validated = $this->prepareStakeholderPayload($validated, $request);
 
         $stakeholder->update($validated);
 
@@ -156,5 +173,61 @@ class StakeholderController extends Controller
         $stakeholder->delete();
 
         return redirect()->route('admin.stakeholder.index')->with('success', 'Stakeholder deleted successfully.');
+    }
+
+    private function prepareStakeholderPayload(array $validated, Request $request): array
+    {
+        $validated['communication_preferences'] = $this->parseLineList($request->input('communication_preferences_text'));
+        $validated['assigned_projects'] = $this->parseLineList($request->input('assigned_projects_text'));
+        $validated['involved_phases'] = $this->parseLineList($request->input('involved_phases_text'));
+        $validated['metadata'] = $this->parseMetadata($request->input('metadata_text'));
+
+        unset(
+            $validated['communication_preferences_text'],
+            $validated['assigned_projects_text'],
+            $validated['involved_phases_text'],
+            $validated['metadata_text']
+        );
+
+        return $validated;
+    }
+
+    private function parseLineList(?string $value): ?array
+    {
+        if ($value === null) {
+            return null;
+        }
+
+        $normalized = str_replace(["\r\n", "\r"], "\n", trim($value));
+
+        if ($normalized === '') {
+            return null;
+        }
+
+        $parts = preg_split('/[\n,]+/', $normalized);
+        $parts = array_values(array_filter(array_map('trim', $parts), fn ($item) => $item !== ''));
+
+        return empty($parts) ? null : $parts;
+    }
+
+    private function parseMetadata(?string $value): ?array
+    {
+        if ($value === null) {
+            return null;
+        }
+
+        $trimmed = trim($value);
+
+        if ($trimmed === '') {
+            return null;
+        }
+
+        $decoded = json_decode($trimmed, true);
+
+        if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+            return $decoded;
+        }
+
+        return ['notes' => $trimmed];
     }
 }
