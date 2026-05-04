@@ -1387,8 +1387,8 @@
                                         $status = $phaseStatusesMap[$p];
                                         $items = $milestones->where('phase', $p)->sortBy('id'); // Wait, sortBy 'id' to preserve order? Yes.
                                         $isDisabled = ($status == 'pending');
-                                        
-                                        // Which one should be open? Use the single 'current' phase. 
+
+                                        // Which one should be open? Use the single 'current' phase.
                                         // If none is current (e.g. all completed), open the last one!
                                         $isOpen = false;
                                         if ($status == 'current') {
@@ -1399,11 +1399,11 @@
                                     @endphp
                                     <div class="accordion-item mb-3 border rounded shadow-sm {{ $isDisabled ? 'opacity-75' : '' }}">
                                         <h2 class="accordion-header" id="heading{{ $p }}">
-                                            <button class="accordion-button {{ $isOpen ? '' : 'collapsed' }} {{ $isDisabled ? '' : '' }}" 
-                                                    type="button" 
-                                                    data-bs-toggle="{{ $isDisabled ? '' : 'collapse' }}" 
-                                                    data-bs-target="{{ $isDisabled ? '' : '#collapse' . $p }}" 
-                                                    aria-expanded="{{ $isOpen ? 'true' : 'false' }}" 
+                                            <button class="accordion-button {{ $isOpen ? '' : 'collapsed' }} {{ $isDisabled ? '' : '' }}"
+                                                    type="button"
+                                                    data-bs-toggle="{{ $isDisabled ? '' : 'collapse' }}"
+                                                    data-bs-target="{{ $isDisabled ? '' : '#collapse' . $p }}"
+                                                    aria-expanded="{{ $isOpen ? 'true' : 'false' }}"
                                                     aria-controls="collapse{{ $p }}">
                                                 <div class="d-flex align-items-center w-100 justify-content-between pe-3">
                                                     <div>
@@ -3150,7 +3150,7 @@
                                             <i class="bi bi-check-circle text-success"></i>
                                         </div>
                                         <div class="flex-grow-1">
-                                            <h6 class="mb-1 text-secondary">{{ is_array($resource) ? ($resource['item'] ?? 'Resource') : trim($resource) }}</h6>
+                                            <p>{{ is_array($resource) ? ($resource['item'] ?? 'Resource') : trim($resource) }}</p>
                                             @if(is_array($resource) && isset($resource['note']))
                                             <p class="text-muted small mb-0">{{ $resource['note'] }}</p>
                                             @endif
