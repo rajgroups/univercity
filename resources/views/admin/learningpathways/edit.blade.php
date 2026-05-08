@@ -541,6 +541,11 @@
                                             </div>
                                             @endforeach
                                         </div>
+                                        <div class="text-center mt-3 mb-4">
+                                            <button type="button" class="btn btn-outline-dark w-100 py-3" id="add-flow-step-bottom" style="border-style: dashed !important; border-width: 2px;">
+                                                <i class="bi bi-plus-circle me-2"></i> Add Another Step
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -677,6 +682,11 @@
                                                 </div>
                                             </div>
                                             @endforeach
+                                        </div>
+                                        <div class="text-center mt-3 mb-4">
+                                            <button type="button" class="btn btn-outline-dark w-100 py-3" id="add-roadmap-step-bottom" style="border-style: dashed !important; border-width: 2px;">
+                                                <i class="bi bi-plus-circle me-2"></i> Add Another Milestone
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -1103,7 +1113,7 @@
         // --- Flow Management ---
         let flowIndex = {{ $learningPathway->flows->count() }};
         
-        $('#add-flow-step').on('click', function() {
+        $('#add-flow-step, #add-flow-step-bottom').on('click', function() {
             const template = $('#flow-step-template').html();
             const newStep = template.replace(/INDEX/g, flowIndex++);
             const $newStep = $(newStep);
@@ -1136,7 +1146,7 @@
         // --- Roadmap Management ---
         let roadmapIndex = {{ $learningPathway->roadmaps->count() }};
         
-        $('#add-roadmap-step').on('click', function() {
+        $('#add-roadmap-step, #add-roadmap-step-bottom').on('click', function() {
             const template = $('#roadmap-step-template').html();
             const newStep = template.replace(/INDEX/g, roadmapIndex++);
             const $newStep = $(newStep);
