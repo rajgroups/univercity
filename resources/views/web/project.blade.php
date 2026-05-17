@@ -4551,6 +4551,10 @@
         new Swiper(".roadmap-swiper", {
             slidesPerView: 1,
             spaceBetween: 16,
+            pagination: {
+                el: ".swiper-pagination",
+                clickable: true,
+            },
             breakpoints: {
                 640: { slidesPerView: 2, spaceBetween: 16 },
                 1024: { slidesPerView: 4, spaceBetween: 16 },
@@ -4561,6 +4565,10 @@
         new Swiper(".flow-swiper", {
             slidesPerView: 1,
             spaceBetween: 20,
+            pagination: {
+                el: ".swiper-pagination",
+                clickable: true,
+            },
             breakpoints: {
                 640: { slidesPerView: 2, spaceBetween: 20 },
                 1024: { slidesPerView: 4, spaceBetween: 20 },

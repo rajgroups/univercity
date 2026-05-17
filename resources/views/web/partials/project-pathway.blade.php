@@ -123,7 +123,7 @@
                         <p class="text-muted mb-4">A universal, project-agnostic framework guiding learners from awareness to sustainable income or employment.</p>
 
                         <!-- Swiper Implementation for Flow (in Roadmap Style) -->
-                        <div class="swiper roadmap-swiper">
+                        <div class="swiper roadmap-swiper pb-5">
                             <div class="swiper-wrapper">
                                 @forelse($learningPathway->flows as $index => $flow)
                                 <div class="swiper-slide h-auto">
@@ -154,6 +154,7 @@
                                 </div>
                                 @endforelse
                             </div>
+                            <div class="swiper-pagination"></div>
                         </div>
 
                         <div class="alert mt-4 rounded-3 text-center" style="background: #eef7ee; border: none;">
@@ -178,7 +179,7 @@
                             <div class="d-none d-lg-block position-absolute start-0 end-0" style="height: 4px; background: #e5e7eb; border-radius: 4px; z-index: 0; top: 46px; transform: translateY(-50%);"></div>
 
                             <!-- Swiper Implementation for Roadmap (in Flow Style) -->
-                            <div class="swiper flow-swiper">
+                            <div class="swiper flow-swiper pb-5">
                                 <div class="swiper-wrapper">
                                     @forelse($learningPathway->roadmaps as $index => $step)
                                     <div class="swiper-slide h-auto">
@@ -209,6 +210,7 @@
                                     </div>
                                     @endforelse
                                 </div>
+                                <div class="swiper-pagination"></div>
                             </div>
                         </div>
 
