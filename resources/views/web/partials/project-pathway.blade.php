@@ -133,8 +133,15 @@
                                             <small class="fw-bold text-muted d-block mb-1">STEP {{ $index + 1 }}</small>
                                             <h6 class="fw-bold mb-2" style="color: {{ ['#4caf50', '#66bb6a', '#2196f3', '#9c27b0', '#f9a825'][$index % 5] }}">{{ $flow->step_title }}</h6>
                                             <p class="small text-muted mb-2 lh-sm">{{ $flow->description }}</p>
-                                            @if($flow->skills_text)
-                                                <span class="badge bg-light text-dark border px-2 py-1 rounded-pill small" style="background: #eef2ff; color: #3f51b5;">{{ $flow->skills_text }}</span>
+                                           @if($flow->skills_text)
+                                                @foreach(explode(',', $flow->skills_text) as $skill)
+                                                    <span 
+                                                        class="badge bg-light text-dark border px-2 py-1 rounded-pill small me-1"
+                                                        style="background: #eef2ff; color: #3f51b5;"
+                                                    >
+                                                        {{ trim($skill) }}
+                                                    </span>
+                                                @endforeach
                                             @endif
                                         </div>
                                     </div>
