@@ -19,11 +19,12 @@ class CourseController extends Controller
     public function index()
     {
         $courses = Course::with(['sector', 'category'])
-            ->whereHas('category', function($q) {
-                $q->where('status', 1);
-            })
+            // ->whereHas('category', function($q) {
+            //     $q->where('status', 1);
+            // })
             ->latest()
             ->get();
+        // dd($courses);
         return view('admin.course.list', compact('courses'));
     }
 
@@ -473,16 +474,19 @@ class CourseController extends Controller
     // }
 
     public function getBySectors(Request $request) {
+        // We now fetch ALL active courses so the user can select courses from ANY sector,
+        // even those not explicitly chosen in Step 1.
         $sectorIds = $request->input('sectors', []);
 
-        if (empty($sectorIds)) {
-            return response()->json([], 200);
+        $query = Course::with('sector:id,name')->where('status', 1);
+
+        // Optionally order courses from selected sectors first
+        if (!empty($sectorIds)) {
+            $sectorIdsString = implode(',', array_map('intval', $sectorIds));
+            $query->orderByRaw("sector_id IN ($sectorIdsString) DESC");
         }
 
-        $courses = Course::with('sector:id,name')
-                        ->whereIn('sector_id', $sectorIds)
-                        ->where('status', 1) // Active courses only
-                        ->select(
+        $courses = $query->select(
                             'id',
                             'name',
                             'level',

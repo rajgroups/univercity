@@ -56,6 +56,8 @@ class LearningPathwayController extends Controller
             'primary_sector_id' => 'required|exists:sectors,id',
             'sector_ids' => 'nullable|array', 
             'sector_order' => 'nullable|string', // Changed to string
+            'flow_title' => 'required|string',
+            'roadmap_title' => 'required|string',
             'courses' => 'nullable|array',
             'courses.*' => 'exists:courses,id', // Adjusted validation
             'learning_outcomes' => 'nullable|string',
@@ -67,6 +69,8 @@ class LearningPathwayController extends Controller
             $learningPathway = LearningPathway::create([
                 'project_id' => $project->id,
                 'primary_sector_id' => $request->primary_sector_id,
+                'flow_title' => $request->flow_title,
+                'roadmap_title' => $request->roadmap_title,
                 'learning_outcomes' => $request->learning_outcomes,
             ]);
 
@@ -141,12 +145,14 @@ class LearningPathwayController extends Controller
             DB::commit();
             notyf()->addSuccess('Learning Pathway created successfully.');
             // Redirect to Edit after creation since it's a singleton
-            return redirect()->route('admin.learningpathways.edit', ['project_id' => $project->id, 'id' => $learningPathway->id]);
+            return redirect()->route('admin.learningpathways.edit', ['project_id' => $project->id, 'id' => $learningPathway->id])
+                             ->with('success', 'Learning Pathway created successfully.');
 
         } catch (\Exception $e) {
             DB::rollBack();
             notyf()->addError('Error creating Learning Pathway: ' . $e->getMessage());
-            return redirect()->back()->withInput();
+            return redirect()->back()->withInput()
+                             ->with('error', 'Error creating Learning Pathway: ' . $e->getMessage());
         }
     }
 
@@ -178,6 +184,8 @@ class LearningPathwayController extends Controller
             'primary_sector_id' => 'required|exists:sectors,id',
             'sector_ids' => 'nullable|array', 
             'sector_order' => 'nullable|string',
+            'flow_title' => 'required|string',
+            'roadmap_title' => 'required|string',
             'courses' => 'nullable|array',
             'learning_outcomes' => 'nullable|string',
         ]);
@@ -186,6 +194,8 @@ class LearningPathwayController extends Controller
         try {
             $learningPathway->update([
                 'primary_sector_id' => $request->primary_sector_id,
+                'flow_title' => $request->flow_title,
+                'roadmap_title' => $request->roadmap_title,
                 'learning_outcomes' => $request->learning_outcomes,
             ]);
 
@@ -258,12 +268,14 @@ class LearningPathwayController extends Controller
 
             DB::commit();
             notyf()->addSuccess('Learning Pathway updated successfully.');
-            return redirect()->route('admin.learningpathways.edit', ['project_id' => $project->id, 'id' => $learningPathway->id]);
+            return redirect()->route('admin.learningpathways.edit', ['project_id' => $project->id, 'id' => $learningPathway->id])
+                             ->with('success', 'Learning Pathway updated successfully.');
 
         } catch (\Exception $e) {
             DB::rollBack();
             notyf()->addError('Error updating Learning Pathway: ' . $e->getMessage());
-            return redirect()->back()->withInput();
+            return redirect()->back()->withInput()
+                             ->with('error', 'Error updating Learning Pathway: ' . $e->getMessage());
         }
     }
 

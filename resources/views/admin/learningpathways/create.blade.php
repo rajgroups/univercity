@@ -2,6 +2,7 @@
 @section('content')
 @push('css')
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
 <style>
     :root {
         --primary-color: #4361ee;
@@ -486,6 +487,11 @@
                                             </button>
                                         </div>
 
+                                        <div class="mb-4">
+                                            <label class="form-label fw-bold">Flow Title <span class="required-asterisk">*</span></label>
+                                            <input type="text" class="form-control form-control-lg" name="flow_title" placeholder="Enter the main title for this learning flow" required>
+                                        </div>
+
                                         <div id="flow-container">
                                             <!-- Flow steps will be dynamically added here -->
                                         </div>
@@ -582,6 +588,11 @@
                                             </button>
                                         </div>
 
+                                        <div class="mb-4">
+                                            <label class="form-label fw-bold">Roadmap Title <span class="required-asterisk">*</span></label>
+                                            <input type="text" class="form-control form-control-lg" name="roadmap_title" placeholder="Enter the main title for this roadmap" required>
+                                        </div>
+
                                         <div id="roadmap-container">
                                             <!-- Roadmap steps dynamically added -->
                                         </div>
@@ -616,7 +627,7 @@
                                             </div>
                                             <div class="card-body">
                                                 <div class="mb-4">
-                                                    <label class="form-label fs-6">What will students achieve? <span class="required-asterisk">*</span></label>
+                                                    <label class="form-label ">What will students achieve? <span class="required-asterisk">*</span></label>
                                                     <textarea name="learning_outcomes" id="editor" class="form-control" rows="8" required
                                                               placeholder="Example: By completing this pathway, students will be able to..."></textarea>
                                                     <div class="invalid-feedback dynamic-feedback" id="editor-feedback" style="display: none;">Learning outcomes description is required.</div>
@@ -783,7 +794,7 @@
 
 @push('scripts')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
 <script>
     $(document).ready(function() {
         // Initialize Select2 if present

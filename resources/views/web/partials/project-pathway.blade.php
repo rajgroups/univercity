@@ -119,22 +119,22 @@
                 <!-- LEARNING PATH -->
                 <div class="card border-0 shadow-sm mb-4">
                     <div class="card-body p-4">
-                        <h4 class="fw-bold mb-2">🧭 Standard ISICO Learning Path (Customizable)</h4>
+                        <h4 class="fw-bold mb-2">🧭 {{ $learningPathway->roadmap_title ?? 'Standard ISICO Learning Path (Customizable)' }}</h4>
                         <p class="text-muted mb-4">A universal, project-agnostic framework guiding learners from awareness to sustainable income or employment.</p>
 
-                        <!-- Swiper Implementation for Roadmap -->
+                        <!-- Swiper Implementation for Flow (in Roadmap Style) -->
                         <div class="swiper roadmap-swiper">
                             <div class="swiper-wrapper">
-                                @forelse($learningPathway->roadmaps as $index => $step)
+                                @forelse($learningPathway->flows as $index => $flow)
                                 <div class="swiper-slide h-auto">
                                     <div class="card h-100 border-0 shadow-sm rounded-3 p-3 position-relative" style="background: #fafbfd; border: 1px solid #e5e7eb;">
-                                        <div class="position-absolute top-0 start-0 bottom-0 ms-2 my-2 rounded-pill" style="width: 4px; background-color: {{ $step->color ?? ['#4caf50', '#66bb6a', '#2196f3', '#9c27b0', '#f9a825'][$index % 5] }};"></div>
+                                        <div class="position-absolute top-0 start-0 bottom-0 ms-2 my-2 rounded-pill" style="width: 4px; background-color: {{ ['#4caf50', '#66bb6a', '#2196f3', '#9c27b0', '#f9a825'][$index % 5] }};"></div>
                                         <div class="ps-3">
                                             <small class="fw-bold text-muted d-block mb-1">STEP {{ $index + 1 }}</small>
-                                            <h6 class="fw-bold mb-2" style="color: {{ $step->color ?? ['#4caf50', '#66bb6a', '#2196f3', '#9c27b0', '#f9a825'][$index % 5] }}">{{ $step->title }}</h6>
-                                            <p class="small text-muted mb-2 lh-sm">{{ $step->description }}</p>
-                                            @if($step->badge_text)
-                                                <span class="badge bg-light text-dark border px-2 py-1 rounded-pill small" style="background: #eef2ff; color: #3f51b5;">{{ $step->badge_text }}</span>
+                                            <h6 class="fw-bold mb-2" style="color: {{ ['#4caf50', '#66bb6a', '#2196f3', '#9c27b0', '#f9a825'][$index % 5] }}">{{ $flow->step_title }}</h6>
+                                            <p class="small text-muted mb-2 lh-sm">{{ $flow->description }}</p>
+                                            @if($flow->skills_text)
+                                                <span class="badge bg-light text-dark border px-2 py-1 rounded-pill small" style="background: #eef2ff; color: #3f51b5;">{{ $flow->skills_text }}</span>
                                             @endif
                                         </div>
                                     </div>
@@ -142,7 +142,7 @@
                                 @empty
                                 <div class="swiper-slide">
                                     <div class="col-12 py-3">
-                                        <p class="text-muted">No roadmap steps defined.</p>
+                                        <p class="text-muted">No flow steps defined.</p>
                                     </div>
                                 </div>
                                 @endforelse
@@ -158,7 +158,7 @@
                 <!-- MULTIDISCIPLINARY MODEL -->
                 <div class="card border-0 shadow-sm mb-4">
                     <div class="card-body p-4">
-                        <h4 class="fw-bold mb-2">🔗 Multidisciplinary Integrated Skill-to-Income Model</h4>
+                        <h4 class="fw-bold mb-2">🔗 {{ $learningPathway->flow_title ?? 'Multidisciplinary Integrated Skill-to-Income Model' }}</h4>
                         <p class="text-muted mb-4">A flat, professional timeline model showing how ISICO integrates multiple sectors into a complete Skill-to-Income ecosystem.</p>
 
                         <p class="text-muted" style="font-size: 0.95rem; max-width: 900px;">
@@ -168,31 +168,36 @@
                         <!-- FLAT TIMELINE AXIS -->
                         <div class="py-4 position-relative">
 
-                            <div class="d-none d-lg-block position-absolute start-0 end-0 top-50 translate-middle-y" style="height: 4px; background: #e5e7eb; border-radius: 4px; z-index: 0; margin-top: -47px;"></div>
+                            <div class="d-none d-lg-block position-absolute start-0 end-0" style="height: 4px; background: #e5e7eb; border-radius: 4px; z-index: 0; top: 46px; transform: translateY(-50%);"></div>
 
-                            <!-- Swiper Implementation for Flow -->
+                            <!-- Swiper Implementation for Roadmap (in Flow Style) -->
                             <div class="swiper flow-swiper">
                                 <div class="swiper-wrapper">
-                                    @forelse($learningPathway->flows as $index => $flow)
+                                    @forelse($learningPathway->roadmaps as $index => $step)
                                     <div class="swiper-slide h-auto">
                                         <div class="text-center position-relative" style="z-index: 1;">
                                             <div class="d-inline-flex align-items-center justify-content-center rounded-circle text-white fw-bold mb-3 shadow-sm"
-                                                 style="width: 44px; height: 44px; background-color: {{ ['#4caf50', '#ff9800', '#2196f3', '#9c27b0'][$index % 4] }};">
+                                                 style="width: 44px; height: 44px; background-color: {{ $step->color ?? ['#4caf50', '#ff9800', '#2196f3', '#9c27b0'][$index % 4] }};">
                                                 {{ $index + 1 }}
                                             </div>
 
                                             <div class="card border-0 shadow-sm rounded-4 p-3 h-100" style="background-color: {{ ['#e8f5e9', '#fff3e0', '#e3f2fd', '#f3e5f5'][$index % 4] }};">
-                                                <h6 class="fw-bold mb-2" style="color: {{ ['#2e7d32', '#ef6c00', '#1565c0', '#7b1fa2'][$index % 4] }};">
-                                                    {{ $flow->step_title }}
+                                                <h6 class="fw-bold mb-2" style="color: {{ $step->color ?? ['#2e7d32', '#ef6c00', '#1565c0', '#7b1fa2'][$index % 4] }};">
+                                                    {{ $step->title }}
                                                 </h6>
-                                                <p class="small text-muted mb-0">{{ $flow->description }}</p>
+                                                <p class="small text-muted mb-0">{{ $step->description }}</p>
+                                                @if($step->badge_text)
+                                                    <div class="mt-2">
+                                                        <span class="badge text-white rounded-pill small" style="background-color: {{ $step->color ?? '#6c757d' }}">{{ $step->badge_text }}</span>
+                                                    </div>
+                                                @endif
                                             </div>
                                         </div>
                                     </div>
                                     @empty
                                     <div class="swiper-slide">
                                         <div class="col-12 py-3 text-center">
-                                            <p class="text-muted">No flow steps defined.</p>
+                                            <p class="text-muted">No roadmap steps defined.</p>
                                         </div>
                                     </div>
                                     @endforelse

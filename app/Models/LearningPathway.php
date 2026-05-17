@@ -12,6 +12,8 @@ class LearningPathway extends Model
     protected $fillable = [
         'project_id',
         'primary_sector_id',
+        'flow_title',
+        'roadmap_title',
         'learning_outcomes',
     ];
 

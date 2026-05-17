@@ -2,6 +2,7 @@
 @section('content')
 @push('css')
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
 <style>
     :root {
         --primary-color: #4361ee;
@@ -501,6 +502,11 @@
                                             </button>
                                         </div>
 
+                                        <div class="mb-4">
+                                            <label class="form-label fw-bold">Flow Title <span class="required-asterisk">*</span></label>
+                                            <input type="text" class="form-control form-control-lg" name="flow_title" value="{{ $learningPathway->flow_title ?? '' }}" placeholder="Enter the main title for this learning flow" required>
+                                        </div>
+
                                         <div id="flow-container">
                                             @foreach($learningPathway->flows as $index => $flow)
                                             <div class="pathway-panel mb-4 flow-item">
@@ -643,6 +649,11 @@
                                             <button type="button" class="btn btn-dark" id="add-roadmap-step">
                                                 <i class="bi bi-plus-circle me-2"></i> Add Milestone
                                             </button>
+                                        </div>
+
+                                        <div class="mb-4">
+                                            <label class="form-label fw-bold">Roadmap Title <span class="required-asterisk">*</span></label>
+                                            <input type="text" class="form-control form-control-lg" name="roadmap_title" value="{{ $learningPathway->roadmap_title ?? '' }}" placeholder="Enter the main title for this roadmap" required>
                                         </div>
 
                                         <div id="roadmap-container">
@@ -880,6 +891,7 @@
 
 @push('scripts')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
 
 <script>
     $(document).ready(function() {
@@ -1192,7 +1204,7 @@
                 sectorsToFetch.push(parseInt(primarySectorId));
             }
 
-            if (sectorsToFetch.length === 0) {
+            if (sectorsToFetch.length === 0 && selectedCourses.length === 0) {
                 $('#courses-grid').html(`
                     <div class="col-12 text-center py-5 bg-white rounded-3 border border-dashed">
                         <i class="bi bi-inboxes text-muted" style="font-size: 3rem;"></i>
@@ -1210,6 +1222,7 @@
                 method: 'POST',
                 data: {
                     sectors: sectorsToFetch,
+                    selected_courses: selectedCourses,
                     _token: '{{ csrf_token() }}'
                 },
                 success: function(data) {
